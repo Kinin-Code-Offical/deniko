@@ -19,7 +19,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Prisma istemcisini oluştur (schema.prisma'yı okur)
+# Prisma generate'in çalışması için geçici/sahte bir URL veriyoruz.
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
+# Prisma istemcisini oluştur
 RUN npx prisma generate
 
 # Next.js projesini build et
