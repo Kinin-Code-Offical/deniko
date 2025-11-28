@@ -56,4 +56,3 @@ images:
 options:
   logging: CLOUD_LOGGING_ONLY
   # Hızlandırmak için daha güçlü makine kullanalım (Maliyeti çok az etkiler çünkü süre kısalır)
-  machineType: 'E2_HIGHCPU_8'
