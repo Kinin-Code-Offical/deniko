@@ -1,34 +1,59 @@
 steps:
-  # 1. Docker İmajını Oluştur
+  # -------------------------------------------------------------------------
+  # 1. ADIM: Önceki İmajı Çek (Cache Hazırlığı)
+  # -------------------------------------------------------------------------
+  # Amacı: Eğer daha önce build aldıysak, o imajı indirip "kopya çekmek" için kullanacağız.
+  # '|| exit 0' kısmı: Eğer ilk kez çalışıyorsa hata verip durmasın, devam etsin diye.
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/deniko-web', '.']
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull gcr.io/$PROJECT_ID/deniko-web:latest || exit 0']
 
-  # 2. İmajı Google Container Registry'ye Gönder (Push)
+  # -------------------------------------------------------------------------
+  # 2. ADIM: Build İşlemi (Cache Kullanarak)
+  # -------------------------------------------------------------------------
+  # '--cache-from': Sihirli komut budur. Değişmeyen kısımları (npm install vb.) atlar.
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/deniko-web']
+    args: [
+      'build',
+      '-t', 'gcr.io/$PROJECT_ID/deniko-web:latest',
+      '--cache-from', 'gcr.io/$PROJECT_ID/deniko-web:latest',
+      '.'
+    ]
 
-  # 3. Cloud Run'a Dağıt (Deploy)
+  # -------------------------------------------------------------------------
+  # 3. ADIM: İmajı Gönder (Push)
+  # -------------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/deniko-web:latest']
+
+  # -------------------------------------------------------------------------
+  # 4. ADIM: Cloud Run'a Dağıt (Deploy)
+  # -------------------------------------------------------------------------
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'deniko-web'                 # Cloud Run Servis Adı
+      - 'deniko-web'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/deniko-web'
+      - 'gcr.io/$PROJECT_ID/deniko-web:latest'
       - '--region'
-      - 'europe-west1'               # Lokasyon (Belçika - Türkiye'ye hızlı)
+      - 'europe-west1'
       - '--platform'
       - 'managed'
-      - '--allow-unauthenticated'    # Public erişim
+      - '--allow-unauthenticated'
       - '--port'
       - '8080'
-      # Cloud SQL Bağlantısı (Aşağıdaki INSTANCE_CONNECTION_NAME kısmını dolduracağız)
+      # Cloud SQL Bağlantı Adını buraya tekrar yazman gerekebilir
+      # Veya Cloud Run ayarlarında zaten kayıtlıysa bu satırı silebilirsin ama durması garanti olur.
       - '--add-cloudsql-instances'
-      - 'deniko:europe-west1:deniko-sql' 
+      - 'deniko:europe-west1:deniko-sql' # <-- BURAYI KENDİ BAĞLANTINLA GÜNCELLE
 
 images:
-  - 'gcr.io/$PROJECT_ID/deniko-web'
+  - 'gcr.io/$PROJECT_ID/deniko-web:latest'
 
+# Log ayarı (Hata almamak için eklemiştik)
 options:
   logging: CLOUD_LOGGING_ONLY
+  # Hızlandırmak için daha güçlü makine kullanalım (Maliyeti çok az etkiler çünkü süre kısalır)
+  machineType: 'E2_HIGHCPU_8'
