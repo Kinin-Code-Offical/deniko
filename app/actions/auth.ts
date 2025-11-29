@@ -39,7 +39,9 @@ export async function login(formData: z.infer<typeof loginSchema>) {
                     return { success: false, message: "Hatalı e-posta veya şifre." }
                 default:
                     // Check if the error message contains "Email not verified"
-                    if (error.cause?.err?.message === "Email not verified") {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const cause = error.cause as any
+                    if (cause?.err?.message === "Email not verified") {
                         return { success: false, message: "Lütfen e-posta adresinizi doğrulayın." }
                     }
                     return { success: false, message: "Bir hata oluştu." }
