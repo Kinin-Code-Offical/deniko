@@ -3,6 +3,8 @@
         "register": {
             "title": "Join Deniko",
             "subtitle": "Professional tutoring management platform",
+            "hero_title": "Join Us",
+            "hero_desc": "Take your place in this big family with thousands of students and teachers.",
             "role_select": "Select Account Type",
             "student": "Student",
             "student_desc": "I want to learn and grow",
@@ -39,6 +41,8 @@
         "login": {
             "title": "Welcome to Deniko",
             "subtitle": "Professional tutoring management platform",
+            "hero_title": "A New Era in Education",
+            "hero_desc": "Welcome to the modern and effective education platform that brings teachers and students together.",
             "card_title": "Login",
             "card_desc": "Login with Google or your email address",
             "google_login": "Continue with Google",
@@ -58,6 +62,38 @@
             "subtitle": "Please fill in the missing information to continue.",
             "submit": "Save and Continue",
             "submitting": "Saving..."
+        }
+    },
+    "common": {
+        "back_to_home": "Back to Home"
+    },
+    "home": {
+        "hero_title": "Digitize Your Education Life",
+        "hero_subtitle": "Smart assistant designed for teachers and students. Lesson schedule, student tracking, and performance analytics in one platform.",
+        "get_started": "Discover Deniko",
+        "login": "Login",
+        "features": {
+            "title": "Powerful Tools for Education",
+            "f1_title": "Smart Scheduling",
+            "f1_desc": "Optimize your lesson schedule, prevent conflicts, and use your time efficiently.",
+            "f2_title": "Student Portfolio",
+            "f2_desc": "Create custom progress reports, notes, and homework tracking for each student.",
+            "f3_title": "Data-Driven Analysis",
+            "f3_desc": "Review success charts, identify gaps, and focus on goals."
+        },
+        "how_it_works": {
+            "title": "How Deniko Works?",
+            "step1_title": "Create Your Profile",
+            "step1_desc": "Create your digital identity by selecting your instructor or student role.",
+            "step2_title": "Organize Your Schedule",
+            "step2_desc": "Set lesson hours, availability, and work calendar.",
+            "step3_title": "Increase Efficiency",
+            "step3_desc": "Focus on the education process with automatic reminders and analytics."
+        },
+        "cta": {
+            "title": "Be Part of Modern Education",
+            "subtitle": "Leave traditional methods behind. Make your education process more organized and efficient with Deniko.",
+            "button": "Start Now"
         }
     }
 }

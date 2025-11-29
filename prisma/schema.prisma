@@ -240,7 +240,7 @@ enum RelationStatus {
 model Classroom {
   id   String @id @default(uuid())
   name String // "12-A", "LGS Grubu"
-  year Int // 2024
+  year Int // 2025
 
   students StudentProfile[]
 

@@ -5,6 +5,8 @@ import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 
 export default async function RegisterPage({
     params,
@@ -12,6 +14,17 @@ export default async function RegisterPage({
     params: Promise<{ lang: Locale }>
 }) {
     const { lang } = await params
+    const session = await auth()
+
+    if (session?.user) {
+        // @ts-expect-error - Role is added to user type in auth.ts
+        if (session.user.role) {
+            redirect(`/${lang}/dashboard`)
+        } else {
+            redirect(`/${lang}/onboarding`)
+        }
+    }
+
     const dictionary = await getDictionary(lang)
 
     return (
@@ -54,7 +67,7 @@ export default async function RegisterPage({
 
                 {/* Footer */}
                 <div className="relative z-10 text-blue-200 text-sm">
-                    © 2024 Deniko. All rights reserved.
+                    © 2025 Deniko. All rights reserved.
                 </div>
             </div>
 

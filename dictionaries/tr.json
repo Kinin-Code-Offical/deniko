@@ -1,9 +1,11 @@
 {
     "auth": {
         "register": {
-            "title": "Deniko'ya Katılın",
+            "title": "Deniko'ya Katıl",
             "subtitle": "Profesyonel özel ders yönetim platformu",
-            "role_select": "Hesap Türü Seçiniz",
+            "hero_title": "Aramıza Katılın",
+            "hero_desc": "Binlerce öğrenci ve öğretmenin yer aldığı bu büyük ailede yerinizi alın.",
+            "role_select": "Hesap Türü Seçin",
             "student": "Öğrenci",
             "student_desc": "Ders almak ve gelişmek istiyorum",
             "teacher": "Öğretmen",
@@ -39,6 +41,8 @@
         "login": {
             "title": "Deniko'ya Hoş Geldiniz",
             "subtitle": "Profesyonel özel ders yönetim platformu",
+            "hero_title": "Eğitimde Yeni Bir Dönem",
+            "hero_desc": "Öğretmen ve öğrencileri bir araya getiren, modern ve etkili eğitim platformuna hoş geldiniz.",
             "card_title": "Giriş Yap",
             "card_desc": "Google ile veya e-posta adresinle giriş yap",
             "google_login": "Google ile Devam Et",
@@ -58,6 +62,38 @@
             "subtitle": "Devam etmek için lütfen eksik bilgilerinizi giriniz.",
             "submit": "Kaydet ve Devam Et",
             "submitting": "Kaydediliyor..."
+        }
+    },
+    "common": {
+        "back_to_home": "Ana Sayfaya Dön"
+    },
+    "home": {
+        "hero_title": "Eğitim Hayatınızı Dijitalleştirin",
+        "hero_subtitle": "Öğretmenler ve öğrenciler için tasarlanmış akıllı asistan. Ders programı, öğrenci takibi ve performans analizleri tek bir platformda.",
+        "get_started": "Deniko'yu Keşfet",
+        "login": "Giriş Yap",
+        "features": {
+            "title": "Eğitim İçin Güçlü Araçlar",
+            "f1_title": "Akıllı Planlama",
+            "f1_desc": "Ders programınızı optimize edin, çakışmaları önleyin ve zamanınızı verimli kullanın.",
+            "f2_title": "Öğrenci Portföyü",
+            "f2_desc": "Her öğrenci için özel gelişim raporları, notlar ve ödev takibi oluşturun.",
+            "f3_title": "Veri Odaklı Analiz",
+            "f3_desc": "Başarı grafiklerini inceleyin, eksikleri belirleyin ve hedeflere odaklanın."
+        },
+        "how_it_works": {
+            "title": "Deniko Nasıl Çalışır?",
+            "step1_title": "Profilinizi Oluşturun",
+            "step1_desc": "Eğitmen veya öğrenci rolünüzü seçerek dijital kimliğinizi oluşturun.",
+            "step2_title": "Programınızı Düzenleyin",
+            "step2_desc": "Ders saatlerini, müsaitlik durumunu ve çalışma takviminizi ayarlayın.",
+            "step3_title": "Verimliliği Artırın",
+            "step3_desc": "Otomatik hatırlatmalar ve analizlerle eğitim sürecine odaklanın."
+        },
+        "cta": {
+            "title": "Modern Eğitimin Bir Parçası Olun",
+            "subtitle": "Klasik yöntemleri geride bırakın. Deniko ile eğitim sürecinizi daha organize ve verimli hale getirin.",
+            "button": "Hemen Başlayın"
         }
     }
 }
