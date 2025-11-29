@@ -1,0 +1,56 @@
+{
+    "auth": {
+        "register": {
+            "title": "Deniko'ya Katılın",
+            "subtitle": "Profesyonel özel ders yönetim platformu",
+            "role_select": "Hesap Türü Seçiniz",
+            "student": "Öğrenci",
+            "student_desc": "Ders almak ve gelişmek istiyorum",
+            "teacher": "Öğretmen",
+            "teacher_desc": "Ders vermek ve yönetmek istiyorum",
+            "first_name": "Ad",
+            "last_name": "Soyad",
+            "email": "E-posta",
+            "phone": "Telefon Numarası",
+            "password": "Şifre",
+            "password_confirm": "Şifre Tekrarı",
+            "submit": "Kayıt Ol",
+            "submitting": "Kayıt Yapılıyor...",
+            "have_account": "Zaten hesabınız var mı?",
+            "login_link": "Giriş Yap",
+            "success_title": "Kayıt Başarılı!",
+            "success_desc": "E-posta adresinize bir doğrulama bağlantısı gönderdik. Lütfen gelen kutunuzu kontrol ediniz.",
+            "errors": {
+                "user_exists": "Bu e-posta adresi zaten kullanımda",
+                "generic": "Kayıt sırasında bir hata oluştu.",
+                "invalid_data": "Geçersiz form verileri"
+            },
+            "validation": {
+                "first_name_min": "Ad en az 2 karakter olmalıdır",
+                "last_name_min": "Soyad en az 2 karakter olmalıdır",
+                "email_invalid": "Geçerli bir e-posta adresi giriniz",
+                "phone_min": "Geçerli bir telefon numarası giriniz",
+                "role_required": "Lütfen bir rol seçiniz",
+                "password_min": "Şifre en az 8 karakter olmalıdır",
+                "password_regex": "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir",
+                "password_mismatch": "Şifreler eşleşmiyor"
+            }
+        },
+        "login": {
+            "title": "Deniko'ya Hoş Geldiniz",
+            "subtitle": "Profesyonel özel ders yönetim platformu",
+            "card_title": "Giriş Yap",
+            "card_desc": "Google ile veya e-posta adresinle giriş yap",
+            "or_email": "Veya E-posta ile",
+            "email": "E-posta",
+            "password": "Şifre",
+            "submit": "Giriş Yap",
+            "no_account": "Hesabınız yok mu?",
+            "register_link": "Kayıt Ol",
+            "validation": {
+                "email_invalid": "Geçerli bir e-posta adresi giriniz",
+                "password_required": "Şifre gereklidir"
+            }
+        }
+    }
+}

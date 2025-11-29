@@ -7,6 +7,8 @@ import bcrypt from "bcryptjs"
 import { randomBytes } from "crypto"
 import { sendVerificationEmail } from "@/lib/email"
 import { AuthError } from "next-auth"
+import { getDictionary } from "@/lib/get-dictionary"
+import { Locale } from "@/i18n-config"
 
 export async function googleSignIn() {
     await signIn("google", { redirectTo: "/onboarding" })
@@ -17,7 +19,7 @@ const loginSchema = z.object({
     password: z.string().min(1, "Şifre gereklidir"),
 })
 
-export async function login(formData: z.infer<typeof loginSchema>) {
+export async function login(formData: z.infer<typeof loginSchema>, lang: string = "tr") {
     const validatedFields = loginSchema.safeParse(formData)
 
     if (!validatedFields.success) {
@@ -30,7 +32,7 @@ export async function login(formData: z.infer<typeof loginSchema>) {
         await signIn("credentials", {
             email,
             password,
-            redirectTo: "/dashboard",
+            redirectTo: `/${lang}/dashboard`,
         })
     } catch (error) {
         if (error instanceof AuthError) {
@@ -52,18 +54,32 @@ export async function login(formData: z.infer<typeof loginSchema>) {
 }
 
 const registerSchema = z.object({
+    firstName: z.string().min(2, "Ad en az 2 karakter olmalıdır"),
+    lastName: z.string().min(2, "Soyad en az 2 karakter olmalıdır"),
     email: z.string().email("Geçerli bir e-posta adresi giriniz"),
-    password: z.string().min(8, "Şifre en az 8 karakter olmalıdır"),
+    phoneNumber: z.string().min(10, "Geçerli bir telefon numarası giriniz"),
+    role: z.enum(["TEACHER", "STUDENT"]),
+    password: z.string()
+        .min(8, "Şifre en az 8 karakter olmalıdır")
+        .regex(/[A-Z]/, "En az bir büyük harf içermelidir")
+        .regex(/[a-z]/, "En az bir küçük harf içermelidir")
+        .regex(/[0-9]/, "En az bir rakam içermelidir")
+        .regex(/[^A-Za-z0-9]/, "En az bir özel karakter içermelidir"),
+    confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Şifreler eşleşmiyor",
+    path: ["confirmPassword"],
 })
 
-export async function registerUser(formData: z.infer<typeof registerSchema>) {
+export async function registerUser(formData: z.infer<typeof registerSchema>, lang: string = "tr") {
+    const dict = await getDictionary(lang as Locale)
     const validatedFields = registerSchema.safeParse(formData)
 
     if (!validatedFields.success) {
-        return { success: false, message: "Geçersiz form verileri" }
+        return { success: false, message: dict.auth.register.errors.invalid_data }
     }
 
-    const { email, password } = validatedFields.data
+    const { email, password, firstName, lastName, role, phoneNumber } = validatedFields.data
 
     try {
         // 1. Check if user exists
@@ -72,7 +88,7 @@ export async function registerUser(formData: z.infer<typeof registerSchema>) {
         })
 
         if (existingUser) {
-            return { success: false, message: "Bu e-posta adresi zaten kullanımda" }
+            return { success: false, message: dict.auth.register.errors.user_exists }
         }
 
         // 2. Hash password
@@ -83,6 +99,11 @@ export async function registerUser(formData: z.infer<typeof registerSchema>) {
             data: {
                 email,
                 password: hashedPassword,
+                firstName,
+                lastName,
+                role,
+                phoneNumber,
+                name: `${firstName} ${lastName}`,
                 emailVerified: null,
             },
         })
@@ -102,10 +123,10 @@ export async function registerUser(formData: z.infer<typeof registerSchema>) {
         // 5. Send Email
         await sendVerificationEmail(email, token)
 
-        return { success: true, message: "Doğrulama bağlantısı e-posta adresinize gönderildi." }
+        return { success: true, message: dict.auth.register.success_desc }
     } catch (error) {
         console.error("Registration Error:", error)
-        return { success: false, message: "Kayıt sırasında bir hata oluştu." }
+        return { success: false, message: dict.auth.register.errors.generic }
     }
 }
 
@@ -137,17 +158,16 @@ export async function verifyEmail(token: string) {
             where: { id: existingUser.id },
             data: {
                 emailVerified: new Date(),
-                email: verificationToken.identifier // Update email just in case it changed during verification flow (unlikely here but good practice)
+                email: existingUser.email, // Required for update, but doesn't change
             },
         })
 
         await db.verificationToken.delete({
-            where: { token },
+            where: { id: verificationToken.id },
         })
 
-        return { success: true, message: "E-posta adresiniz başarıyla doğrulandı!" }
+        return { success: true, message: "E-posta adresi başarıyla doğrulandı." }
     } catch (error) {
-        console.error("Verification Error:", error)
         return { success: false, message: "Doğrulama sırasında bir hata oluştu." }
     }
 }

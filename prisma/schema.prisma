@@ -35,6 +35,7 @@ model User {
   emailVerified DateTime? // Email doğrulama tarihi
   image         String? // Profil fotoğrafı URL
   password      String? // OAuth kullananlar için boş olabilir (Nullable)
+  phoneNumber   String? // Telefon numarası
 
   role     Role    @default(STUDENT)
   isActive Boolean @default(true) // Hesap dondurma kontrolü
@@ -136,8 +137,9 @@ model TeacherProfile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  branch String // Örn: Matematik
-  bio    String? // Eğitmen hakkında kısa bilgi
+  phoneNumber String? // İletişim numarası
+  branch      String // Örn: Matematik
+  bio         String? // Eğitmen hakkında kısa bilgi
 
   // İlişkiler
   studentRelations StudentTeacherRelation[] // Tüm aktif/pasif öğrencileri

@@ -53,3 +53,11 @@
 - `components/` -> Feature-specific components (e.g., `components/auth/login-form.tsx`).
 - `lib/` -> Utilities, database client, auth config.
 - `prisma/` -> Schema and migrations.
+
+## 6. Language Settings
+- **Primary Language:** Turkish (for user-facing text).
+- **Code Comments:** English (for clarity and consistency).
+- **Date Format:** Use `DD.MM.YYYY` for all date representations.
+- **Strategy:** Implement the i18n structure using the **Next.js App Router standard** (creating `i18n-config.ts` and middleware to handle locale routing).
+- **Locales:** Define two primary locales: `tr` (Turkish - Default) and `en` (English).
+- **Language Switcher Component:** Create a reusable component (e.g., `components/ui/language-switcher.tsx`) that displays a simple dropdown or button group for the user to switch between `tr` and `en`.. 

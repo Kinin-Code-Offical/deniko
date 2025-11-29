@@ -1,0 +1,56 @@
+{
+    "auth": {
+        "register": {
+            "title": "Join Deniko",
+            "subtitle": "Professional tutoring management platform",
+            "role_select": "Select Account Type",
+            "student": "Student",
+            "student_desc": "I want to learn and grow",
+            "teacher": "Teacher",
+            "teacher_desc": "I want to teach and manage",
+            "first_name": "First Name",
+            "last_name": "Last Name",
+            "email": "Email",
+            "phone": "Phone Number",
+            "password": "Password",
+            "password_confirm": "Confirm Password",
+            "submit": "Register",
+            "submitting": "Registering...",
+            "have_account": "Already have an account?",
+            "login_link": "Login",
+            "success_title": "Registration Successful!",
+            "success_desc": "We sent a verification link to your email address. Please check your inbox.",
+            "errors": {
+                "user_exists": "This email address is already in use",
+                "generic": "An error occurred during registration.",
+                "invalid_data": "Invalid form data"
+            },
+            "validation": {
+                "first_name_min": "First name must be at least 2 characters",
+                "last_name_min": "Last name must be at least 2 characters",
+                "email_invalid": "Please enter a valid email address",
+                "phone_min": "Please enter a valid phone number",
+                "role_required": "Please select a role",
+                "password_min": "Password must be at least 8 characters",
+                "password_regex": "Password must contain at least one uppercase, one lowercase, one number and one special character",
+                "password_mismatch": "Passwords do not match"
+            }
+        },
+        "login": {
+            "title": "Welcome to Deniko",
+            "subtitle": "Professional tutoring management platform",
+            "card_title": "Login",
+            "card_desc": "Login with Google or your email address",
+            "or_email": "Or with Email",
+            "email": "Email",
+            "password": "Password",
+            "submit": "Login",
+            "no_account": "Don't have an account?",
+            "register_link": "Register",
+            "validation": {
+                "email_invalid": "Please enter a valid email address",
+                "password_required": "Password is required"
+            }
+        }
+    }
+}
