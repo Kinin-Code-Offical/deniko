@@ -1,11 +1,10 @@
 # --------------------------------------------------------
 # 1. AŞAMA: Bağımlılıkları Yükle (Dependencies)
 # --------------------------------------------------------
+# Alpine 3.20 kullanarak temel güvenliği sağlıyoruz ama update komutunu siliyoruz.
 FROM node:20-alpine3.20 AS deps
-# ÖNCE GÜNCELLEME: Mevcut paketlerdeki açıkları kapat (apk upgrade)
-# SONRA YÜKLEME: Prisma için gerekli libc6-compat'i yükle
-RUN apk update && apk upgrade && apk add --no-cache libc6-compat
-
+# Sadece Prisma için gerekli kütüphaneyi kuruyoruz (Çok hızlıdır)
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Paket dosyalarını kopyala
@@ -34,9 +33,6 @@ RUN npm run build
 # 3. AŞAMA: Çalıştır (Runner - Production)
 # --------------------------------------------------------
 FROM node:20-alpine3.20 AS runner
-# Burada da işletim sistemini güncellemek güvenlik için iyidir
-RUN apk update && apk upgrade
-
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -47,6 +43,7 @@ ENV HOSTNAME="0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Dosyaları kopyala
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
