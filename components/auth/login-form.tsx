@@ -28,6 +28,7 @@ import { toast } from "sonner"
 import Link from "next/link"
 import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
+import { ResendAlert } from "@/components/auth/resend-alert"
 
 interface LoginFormProps {
     dictionary: any
@@ -38,6 +39,7 @@ export function LoginForm({ dictionary, lang }: LoginFormProps) {
     const d = dictionary.auth.login
     const [isPending, startTransition] = useTransition()
     const [showPassword, setShowPassword] = useState(false)
+    const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null)
 
     const formSchema = z.object({
         email: z.string().email(d.validation.email_invalid),
@@ -53,9 +55,13 @@ export function LoginForm({ dictionary, lang }: LoginFormProps) {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
+        setUnverifiedEmail(null) // Reset state on new attempt
         startTransition(async () => {
             const result = await login(values, lang)
             if (result && !result.success) {
+                if (result.error === "NOT_VERIFIED" && result.email) {
+                    setUnverifiedEmail(result.email)
+                }
                 toast.error(result.message)
             }
         })
@@ -67,6 +73,10 @@ export function LoginForm({ dictionary, lang }: LoginFormProps) {
                 <h1 className="text-3xl font-bold text-slate-900">{d.title}</h1>
                 <p className="text-slate-600">{d.subtitle}</p>
             </div>
+
+            {unverifiedEmail && (
+                <ResendAlert email={unverifiedEmail} />
+            )}
 
             <div className="space-y-6">
                 <GoogleLoginButton text={d.google_login} />

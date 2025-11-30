@@ -3,7 +3,7 @@
 /* The line `import { signIn } from "@/auth"` is importing the `signIn` function from a module located
 at the path `@/auth`. This function is likely used for handling user authentication, such as signing
 in users using different methods like Google sign-in or credentials sign-in. */
-import { signIn } from "@/auth"
+import { signIn, signOut } from "@/auth"
 import { db } from "@/lib/db"
 import { z } from "zod"
 import bcrypt from "bcryptjs"
@@ -12,6 +12,10 @@ import { sendVerificationEmail } from "@/lib/email"
 import { AuthError } from "next-auth"
 import { getDictionary } from "@/lib/get-dictionary"
 import { Locale } from "@/i18n-config"
+
+export async function logout() {
+    await signOut({ redirectTo: "/login" })
+}
 
 export async function googleSignIn() {
     await signIn("google", { redirectTo: "/onboarding" })
@@ -47,12 +51,53 @@ export async function login(formData: z.infer<typeof loginSchema>, lang: string 
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const cause = error.cause as any
                     if (cause?.err?.message === "Email not verified") {
-                        return { success: false, message: "Lütfen e-posta adresinizi doğrulayın." }
+                        return { success: false, error: "NOT_VERIFIED", email: email, message: "Lütfen e-posta adresinizi doğrulayın." }
                     }
                     return { success: false, message: "Bir hata oluştu." }
             }
         }
         throw error
+    }
+}
+
+export async function resendVerificationCode(email: string) {
+    try {
+        const user = await db.user.findUnique({
+            where: { email },
+        })
+
+        if (!user) {
+            return { success: false, message: "Kullanıcı bulunamadı." }
+        }
+
+        if (user.emailVerified) {
+            return { success: false, message: "E-posta zaten doğrulanmış." }
+        }
+
+        // Delete existing tokens
+        await db.verificationToken.deleteMany({
+            where: { identifier: email },
+        })
+
+        // Generate new token
+        const token = randomBytes(32).toString("hex")
+        const expires = new Date(new Date().getTime() + 24 * 60 * 60 * 1000) // 24 hours
+
+        await db.verificationToken.create({
+            data: {
+                identifier: email,
+                token,
+                expires,
+            },
+        })
+
+        // Send Email
+        await sendVerificationEmail(email, token, "tr") // Defaulting to TR for now, or pass lang if needed
+
+        return { success: true, message: "Doğrulama kodu gönderildi." }
+    } catch (error) {
+        console.error("Resend Verification Error:", error)
+        return { success: false, message: "Bir hata oluştu." }
     }
 }
 

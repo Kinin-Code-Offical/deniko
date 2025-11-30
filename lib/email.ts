@@ -1,11 +1,16 @@
 import nodemailer from "nodemailer"
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    pool: true, // <--- SİHİRLİ AYAR BU (Bağlantıyı açık tutar)
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465, false for other ports
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
+    maxConnections: 5, // Aynı anda kaç bağlantı açsın?
+    maxMessages: 100,  // Bir bağlantıdan kaç mail atsın?
 })
 
 const emailContent = {

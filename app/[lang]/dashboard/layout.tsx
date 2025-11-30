@@ -29,12 +29,8 @@ export default async function DashboardLayout({
         redirect(`/${lang}/login`)
     }
 
-    // If user has no role or no profile, redirect to onboarding
-    if (
-        !user.role ||
-        (user.role === "TEACHER" && !user.teacherProfile) ||
-        (user.role === "STUDENT" && !user.studentProfile)
-    ) {
+    // Enforce Onboarding Completion
+    if (!user.isOnboardingCompleted) {
         redirect(`/${lang}/onboarding`)
     }
 

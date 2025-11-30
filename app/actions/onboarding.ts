@@ -3,16 +3,49 @@
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { revalidatePath } from "next/cache"
-import { redirect } from "next/navigation"
+import bcrypt from "bcryptjs"
 
-export async function selectRole(role: "TEACHER" | "STUDENT") {
+export async function completeOnboarding(data: {
+    role: "TEACHER" | "STUDENT",
+    phoneNumber: string,
+    password?: string,
+    confirmPassword?: string,
+    userId?: string // Fallback for debugging
+}) {
     const session = await auth()
+    console.log("Session in Action:", session)
 
-    if (!session?.user?.id) {
-        throw new Error("Unauthorized")
+    // Prioritize session ID, fallback to provided userId (DEBUG ONLY)
+    const userId = session?.user?.id || data.userId
+
+    if (!userId) {
+        return { success: false, error: "Oturum bulunamadı. Lütfen tekrar giriş yapın." }
     }
 
-    const userId = session.user.id
+    const { role, phoneNumber, password, confirmPassword } = data
+
+    // Validation
+    if (!phoneNumber) {
+        return { success: false, error: "Telefon numarası gereklidir." }
+    }
+
+    if (!password || !confirmPassword) {
+        return { success: false, error: "Şifre alanları gereklidir." }
+    }
+
+    if (password !== confirmPassword) {
+        return { success: false, error: "Şifreler eşleşmiyor." }
+    }
+
+    if (password.length < 8) {
+        return { success: false, error: "Şifre en az 8 karakter olmalıdır." }
+    }
+
+    // Regex for password complexity: Uppercase, lowercase, number, symbol
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+        return { success: false, error: "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir." }
+    }
 
     // Check if user already has a profile to prevent overwriting
     const existingUser = await db.user.findUnique({
@@ -24,15 +57,23 @@ export async function selectRole(role: "TEACHER" | "STUDENT") {
     })
 
     if (existingUser?.teacherProfile || existingUser?.studentProfile) {
-        return redirect("/dashboard")
+        return { success: true }
     }
 
     try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         await db.$transaction(async (tx) => {
-            // 1. Update User Role
+            // 1. Update User Role, Phone Number and Password
             await tx.user.update({
                 where: { id: userId },
-                data: { role },
+                data: {
+                    role,
+                    phoneNumber,
+                    password: hashedPassword,
+                    isOnboardingCompleted: true,
+                    emailVerified: new Date() // Verify email upon onboarding completion
+                },
             })
 
             // 2. Create Profile
@@ -52,11 +93,12 @@ export async function selectRole(role: "TEACHER" | "STUDENT") {
                 })
             }
         })
+
+        revalidatePath("/")
+        revalidatePath("/dashboard")
+        return { success: true }
     } catch (error) {
         console.error("Onboarding Error:", error)
-        throw new Error("Failed to create profile")
+        return { success: false, error: "Bir hata oluştu. Lütfen tekrar deneyin." }
     }
-
-    revalidatePath("/")
-    redirect("/dashboard")
 }

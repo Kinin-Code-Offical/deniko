@@ -1,106 +1,113 @@
-Deniko - Master System Instructions & Rules
+. Project Context & Status
 
-1. Project Context & Identity
+Deniko is a professional SaaS platform for hybrid tutors.
 
-Deniko is a high-end, professional SaaS platform for hybrid tutors (freelance & institution-based). It manages academic processes, finances, and communication.
+    Current Phase: Post-Launch / Core Feature Development.
 
-    Design Philosophy: "Sophisticated Simplicity." Use a 50/50 split layout for entry pages. High-end, trustworthy, and clean.
+    Completed Modules:
 
-    Brand Assets: Use /public/logo.svg (preferred) or /public/logo.png for branding. The primary color is the Deep Blue found in the logo.
+        Infrastructure: Deployed on Google Cloud Run (Dockerized), Domain connected (deniko.net).
+
+        Authentication: Google Auth + Manual Register (Bcrypt) + Email Verification (Nodemailer) + Resend Cooldown.
+
+        Onboarding: Role selection (Teacher/Student) + Profile completion (Phone/Password) + "Draft User" protection.
+
+        UI Base: 50/50 Split Layout for Auth, Shadcn/UI integration, Branding (Deep Blue SVG Logo).
 
 2. Tech Stack (Strict Versions)
 
-    Framework: Next.js 15 (App Router) with Internationalization (i18n) routing ([locale]).
+    Framework: Next.js 15 (App Router) with i18n routing ([locale]).
 
     Language: TypeScript (Strict mode).
 
     Database: PostgreSQL (Google Cloud SQL) via Prisma ORM v6.
 
-    Auth: NextAuth.js (Auth.js) v5 Beta.
+    Auth: NextAuth.js (Auth.js) v5 Beta (Prisma Adapter).
 
     UI: Tailwind CSS v4 + Shadcn/UI.
 
-    Infrastructure: Google Cloud Run (Docker Standalone).
+    State Management: Server Actions (Mutations) + React Server Components (Fetching).
 
-3. Critical Architecture & Workflows
+3. Coding Standards & Architecture
 
-A. Internationalization (i18n) - MANDATORY
+A. Next.js & Server Actions
 
-    Structure: All pages must reside under app/[locale]/....
+    Server First: Fetch data directly in Server Components using db (Prisma). Use use client ONLY for interactive leaf components (forms, buttons, charts).
 
-    Config: Use i18n-config.ts to define locales: ['tr', 'en'] (default tr).
+    Mutations: Use Server Actions for all create/update/delete operations.
 
-    Middleware: Middleware must handle locale detection and redirection strictly.
+        Validation: Always validate inputs with Zod schemas inside the action.
 
-    Components: Use a LanguageSwitcher component in the top-right of Auth/Public pages.
+        Auth Check: Always call await auth() inside actions. If session is null, throw error.
 
-B. Authentication & Security (Fixed Logic)
+        Revalidation: Use revalidatePath after mutations.
 
-    Google & Manual Merge: To fix "OAuthAccountNotLinked" errors, set allowDangerousEmailAccountLinking: true in the Google Provider config within auth.ts. This allows a manual email user to later sign in with Google.
+B. Database & Prisma (Business Logic)
 
-    Registration (Manual):
+    Singleton: Always import db from @/lib/db.
 
-        Collect: firstName, lastName, email, phone (with country code), password, role.
+    Shadow Accounts: Understand the StudentProfile model. It may NOT have a userId (Shadow Account created by Teacher). Handle nullable userId.
 
-        Validation: Zod schema must enforce:
+    Transactions: Use db.$transaction for multi-step writes (e.g., Creating a User AND a Profile).
 
-            Password: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char.
+C. UI/UX Guidelines
 
-            Phone: Valid format with country code.
+    Design System: "Sophisticated Simplicity". Clean, high-end, trustworthy.
 
-        Verification: Send an email via Nodemailer (lib/email.ts). Redirect to /verify.
+    Components: Reuse components/ui/*.
 
-    Onboarding Loop Fix:
+    Colors: Primary Brand: Blue-600. Backgrounds: Slate-50 to Blue-50 gradients.
 
-        In app/[locale]/onboarding/page.tsx, check: if (session.user.role) redirect('/dashboard'). Never show onboarding if the role is already set.
+    Responsive: All dashboards (Tables, Cards) must be mobile-friendly (use Sheet for sidebars on mobile).
 
-C. UI/UX Standards (The "Premium" Look)
+    Language: Default content language is Turkish.
 
-    Auth Layout (Login/Register):
+4. Specific Module Rules (Do Not Break These)
 
-        50/50 Split Screen:
+Auth & Onboarding
 
-            Left: Deep Blue/Gradient background, Logo, and a contextual Illustration/Tagline.
+    Redirects: Do not mess with the login/register redirect logic. It handles "Already Logged In" states.
 
-            Right: Clean white form, centered.
+    Verification: Manual users MUST have emailVerified. Google users get it automatically via auth.ts.
 
-        Back Button: Every auth page must have a "Go Back" (< ChevronLeft) button at the top left.
+    Onboarding: Users cannot access /dashboard if isOnboardingCompleted is false.
 
-    Components:
+Dashboard Architecture (Next Step)
 
-        Use DenikoLogo.tsx (rendering the SVG) for crisp branding.
+    Route: /dashboard is a layout shell.
 
-        Forms must use react-hook-form + zod with proper error messages translated via i18n.
+    Role Separation:
 
-        Buttons: Use Shadcn buttons with loading states (useTransition or useFormStatus).
+        Teacher: Sees "Students", "Schedule", "Finance".
 
-4. Directory Structure Rules
+        Student: Sees "My Lessons", "Homework", "Exams".
+
+    Navigation: Use config/site.ts to manage menu items per role.
+
+5. Docker & Deployment Safety
+
+    Environment: Never hardcode secrets. Use process.env.
+
+    Build: Ensure no new package breaks the standalone output.
+
+    Images: If using next/image, ensure external domains (Google, Storage) are allowed in next.config.ts.
+
+6. Directory Structure
 
 Plaintext
 
 app/
   [locale]/
-    login/page.tsx
-    register/page.tsx
-    onboarding/page.tsx
-    dashboard/page.tsx
-    layout.tsx (Root layout with i18n provider)
+    (auth)/       -> login, register, verify, onboarding
+    dashboard/    -> Protected routes (layout.tsx checks role)
+      page.tsx    -> Dispatches to TeacherView or StudentView
+      students/   -> Student management
+      finance/    -> Payment tracking
 components/
-  ui/ (Shadcn primitives)
-  auth/ (LoginForm, RegisterForm, GoogleButton)
-  dashboard/ (Shell, Nav, UserNav)
-  shared/ (DenikoLogo, LanguageSwitcher, BackButton)
+  ui/             -> Shadcn primitives
+  dashboard/      -> Shell, Sidebar, Nav
+  features/       -> Specific modules (e.g. StudentTable, AddLessonForm)
 lib/
-  db.ts (Prisma Singleton)
-  auth.ts (NextAuth Config)
-  email.ts (Nodemailer Logic)
-  validations/ (Zod schemas)
-messages/ (JSON files for tr/en translations)
-
-5. Development Safety Checks
-
-    Before generating code: Always import db from @/lib/db, never instantiate new PrismaClient().
-
-    Docker compatibility: Ensure output: "standalone" is in next.config.ts.
-
-    Environment: Never hardcode secrets. Use process.env.
+  db.ts           -> Prisma client
+  auth.ts         -> NextAuth config
+  email.ts        -> Mailer utility

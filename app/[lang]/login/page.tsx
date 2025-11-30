@@ -7,6 +7,8 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
+import { db } from "@/lib/db"
+import { logout } from "@/app/actions/auth"
 
 export default async function LoginPage({
     params,
@@ -17,11 +19,18 @@ export default async function LoginPage({
     const session = await auth()
 
     if (session?.user) {
-        // @ts-expect-error - Role is added to user type in auth.ts
-        if (session.user.role) {
-            redirect(`/${lang}/dashboard`)
+        const user = await db.user.findUnique({
+            where: { id: session.user.id }
+        })
+
+        if (user && user.isActive !== false) {
+            if (user.role) {
+                redirect(`/${lang}/dashboard`)
+            } else {
+                redirect(`/${lang}/onboarding`)
+            }
         } else {
-            redirect(`/${lang}/onboarding`)
+            await logout()
         }
     }
 

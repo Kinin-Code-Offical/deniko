@@ -6,6 +6,7 @@ import { db } from "@/lib/db"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 import { SignJWT } from "jose"
+import { Role } from "@prisma/client"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(db),
@@ -21,7 +22,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     lastName: profile.family_name,
                     email: profile.email,
                     image: profile.picture,
-                    emailVerified: profile.email_verified ? new Date() : null,
+                    // Email verification will happen after onboarding completion
+                    emailVerified: null,
                 }
             },
         }),
@@ -55,6 +57,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ],
     callbacks: {
         async signIn({ user, account }) {
+            // Allow dangerous linking for Google (handled in provider config usually, but we can check here)
+
             if (account?.provider === "google") {
                 if (!user.email) return false
 
@@ -62,33 +66,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     where: { email: user.email },
                 })
 
-                if (existingUser) return true
+                if (existingUser) {
+                    // Check if user is active
+                    if (existingUser.isActive === false) return false
+                    return true
+                }
 
-                // User does not exist, create a token and redirect to onboarding
-                const secret = new TextEncoder().encode(process.env.AUTH_SECRET)
-                const token = await new SignJWT({
-                    email: user.email,
-                    name: user.name,
-                    image: user.image,
-                    googleId: user.id,
-                })
-                    .setProtectedHeader({ alg: "HS256" })
-                    .setExpirationTime("1h")
-                    .sign(secret)
-
-                return `/onboarding?token=${token}`
+                // User does not exist, allow creation
+                return true
             }
+
+            // For credentials, we also want to check isActive if not already done in authorize
+            if (user.email) {
+                const existingUser = await db.user.findUnique({ where: { email: user.email } })
+                if (existingUser && existingUser.isActive === false) return false
+            }
+
             return true
         },
         async session({ session, token }) {
+            // Strict validation: If token is invalid/null, invalidate session
+            if (!token || !token.sub) return null as any
+
             if (token.sub && session.user) {
                 session.user.id = token.sub
             }
 
             if (token.role && session.user) {
-                // @ts-expect-error - Role is added to user type
-                session.user.role = token.role
+                session.user.role = token.role as Role
             }
+
+            if (session.user) {
+                session.user.isOnboardingCompleted = token.isOnboardingCompleted as boolean
+            }
+
             return session
         },
         async jwt({ token }) {
@@ -98,13 +109,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 where: { id: token.sub }
             });
 
-            if (!existingUser) return token;
+            // If user is deleted or inactive, invalidate token
+            if (!existingUser || existingUser.isActive === false) {
+                return null;
+            }
 
             token.role = existingUser.role;
+            token.isOnboardingCompleted = existingUser.isOnboardingCompleted;
             return token;
         }
     },
     pages: {
         signIn: "/login",
+        newUser: "/onboarding" // Redirect new users here
     },
 })
