@@ -77,7 +77,7 @@ export default async function JoinPage({
         <div className="flex h-screen w-full items-center justify-center bg-muted/50 p-4">
             <JoinCard
                 token={token}
-                studentName={`${profile.tempFirstName} ${profile.tempLastName}`}
+                studentName={session.user.name || "Student"}
                 teacherName={teacherName}
                 lang={lang}
             />

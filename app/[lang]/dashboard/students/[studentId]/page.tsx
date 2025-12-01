@@ -42,6 +42,9 @@ export default async function StudentDetailPage({
         },
         include: {
             user: true,
+            teacherRelations: {
+                where: { teacherId: user.teacherProfile.id }
+            },
             lessons: {
                 where: { teacherId: user.teacherProfile.id },
                 orderBy: { startTime: 'desc' }

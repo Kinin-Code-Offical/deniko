@@ -41,7 +41,10 @@ export default async function StudentsPage({ params }: { params: Promise<{ lang:
 
     const students = relations.map(rel => ({
         id: rel.student.id,
-        name: rel.student.user?.name || `${rel.student.tempFirstName || ''} ${rel.student.tempLastName || ''}`.trim(),
+        name: rel.student.isClaimed && rel.student.user?.name
+            ? rel.student.user.name
+            : `${rel.student.tempFirstName || ''} ${rel.student.tempLastName || ''}`.trim(),
+        email: rel.student.isClaimed ? rel.student.user?.email : null,
         status: rel.student.isClaimed ? "CLAIMED" : "SHADOW",
         studentNo: rel.student.studentNo,
         inviteToken: rel.student.inviteToken,

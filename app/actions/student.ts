@@ -258,3 +258,176 @@ export async function getStudentProfileByToken(token: string) {
         return null
     }
 }
+
+const updateStudentSchema = z.object({
+    studentId: z.string(),
+    name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
+    surname: z.string().min(2, "Soyisim en az 2 karakter olmalıdır"),
+    studentNo: z.string().optional(),
+    grade: z.string().optional(),
+    phoneNumber: z.string().optional(),
+    parentName: z.string().optional(),
+    parentPhone: z.string().optional(),
+    parentEmail: z.string().email().optional().or(z.literal("")),
+    avatarUrl: z.string().optional(),
+})
+
+export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
+    const session = await auth()
+
+    if (!session?.user?.id) {
+        return { success: false, error: "Unauthorized" }
+    }
+
+    const validatedFields = updateStudentSchema.safeParse(data)
+
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid fields" }
+    }
+
+    const { studentId, name, surname, studentNo, grade, phoneNumber, parentName, parentPhone, parentEmail, avatarUrl } = validatedFields.data
+
+    try {
+        const user = await db.user.findUnique({
+            where: { id: session.user.id },
+            include: { teacherProfile: true },
+        })
+
+        if (!user?.teacherProfile) {
+            return { success: false, error: "Teacher profile not found" }
+        }
+
+        const studentProfile = await db.studentProfile.findUnique({
+            where: { id: studentId },
+        })
+
+        if (!studentProfile) {
+            return { success: false, error: "Student not found" }
+        }
+
+        // Check if relation exists
+        const relation = await db.studentTeacherRelation.findUnique({
+            where: {
+                teacherId_studentId: {
+                    teacherId: user.teacherProfile.id,
+                    studentId: studentId
+                }
+            }
+        })
+
+        if (!relation) {
+            return { success: false, error: "No relation found with this student" }
+        }
+
+        if (studentProfile.isClaimed) {
+            // CLAIMED: Only update Custom Name/Avatar in Relation
+            await db.studentTeacherRelation.update({
+                where: { id: relation.id },
+                data: {
+                    customName: `${name} ${surname}`,
+                    customAvatar: avatarUrl
+                }
+            })
+
+            revalidatePath(`/dashboard/students/${studentId}`)
+            return { success: true, message: "Öğrenci bilgileri güncellendi (Kısıtlı Erişim)" }
+
+        } else {
+            // SHADOW: Update Profile directly
+            await db.studentProfile.update({
+                where: { id: studentId },
+                data: {
+                    tempFirstName: name,
+                    tempLastName: surname,
+                    studentNo,
+                    gradeLevel: grade,
+                    phoneNumber,
+                    parentName,
+                    parentPhone,
+                    parentEmail,
+                    avatarUrl
+                }
+            })
+
+            revalidatePath(`/dashboard/students/${studentId}`)
+            return { success: true, message: "Öğrenci bilgileri güncellendi" }
+        }
+
+    } catch (error) {
+        logger.error({ context: "updateStudent", error }, "Failed to update student")
+        return { success: false, error: "Güncelleme başarısız" }
+    }
+}
+
+export async function unlinkStudent(studentId: string) {
+    const session = await auth()
+    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+
+    try {
+        const user = await db.user.findUnique({
+            where: { id: session.user.id },
+            include: { teacherProfile: true },
+        })
+
+        if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+
+        await db.studentTeacherRelation.update({
+            where: {
+                teacherId_studentId: {
+                    teacherId: user.teacherProfile.id,
+                    studentId: studentId
+                }
+            },
+            data: { status: "ARCHIVED" }
+        })
+
+        revalidatePath("/dashboard/students")
+        return { success: true, message: "Öğrenci arşivlendi" }
+    } catch (error) {
+        logger.error({ context: "unlinkStudent", error }, "Failed to archive student")
+        return { success: false, error: "İşlem başarısız" }
+    }
+}
+
+export async function deleteStudent(studentId: string) {
+    const session = await auth()
+    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+
+    try {
+        const user = await db.user.findUnique({
+            where: { id: session.user.id },
+            include: { teacherProfile: true },
+        })
+
+        if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+
+        const studentProfile = await db.studentProfile.findUnique({
+            where: { id: studentId }
+        })
+
+        if (!studentProfile) return { success: false, error: "Student not found" }
+
+        if (!studentProfile.isClaimed && studentProfile.creatorTeacherId === user.teacherProfile.id) {
+            // Shadow student created by this teacher -> Delete Profile (cascades relation)
+            await db.studentProfile.delete({
+                where: { id: studentId }
+            })
+        } else {
+            // Claimed OR not created by this teacher -> Delete Relation only
+            await db.studentTeacherRelation.delete({
+                where: {
+                    teacherId_studentId: {
+                        teacherId: user.teacherProfile.id,
+                        studentId: studentId
+                    }
+                }
+            })
+        }
+
+        revalidatePath("/dashboard/students")
+        return { success: true, message: "Öğrenci silindi" }
+    } catch (error) {
+        logger.error({ context: "deleteStudent", error }, "Failed to delete student")
+        return { success: false, error: "Silme işlemi başarısız" }
+    }
+}

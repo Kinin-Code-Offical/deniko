@@ -32,28 +32,26 @@ export function JoinCard({ token, studentName, teacherName, lang }: { token: str
     return (
         <Card className="w-full max-w-md">
             <CardHeader>
-                <CardTitle>Join Class</CardTitle>
+                <CardTitle>{lang === 'tr' ? 'Davetiyeyi Kabul Et' : 'Accept Invitation'}</CardTitle>
                 <CardDescription>
-                    You have been invited to join a class on Deniko.
+                    {lang === 'tr'
+                        ? `Sayın ${studentName}, ${teacherName} sizi öğrencisi olarak eklemek istiyor.`
+                        : `Dear ${studentName}, ${teacherName} wants to add you as a student.`
+                    }
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="rounded-lg border p-4">
-                    <div className="text-sm font-medium text-muted-foreground">Teacher</div>
-                    <div className="text-lg font-semibold">{teacherName}</div>
-                </div>
-                <div className="rounded-lg border p-4">
-                    <div className="text-sm font-medium text-muted-foreground">Student Profile</div>
-                    <div className="text-lg font-semibold">{studentName}</div>
-                </div>
+            <CardContent>
+                <p className="text-sm text-muted-foreground">
+                    {lang === 'tr'
+                        ? "Kabul ederek bu sınıfa katılacak ve derslerinizi buradan takip edebileceksiniz."
+                        : "By accepting, you will join this class and be able to track your lessons here."
+                    }
+                </p>
             </CardContent>
-            <CardFooter className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => router.push(`/${lang}/dashboard`)}>
-                    Cancel
-                </Button>
-                <Button onClick={handleJoin} disabled={loading}>
+            <CardFooter>
+                <Button className="w-full" onClick={handleJoin} disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Accept Invite
+                    {lang === 'tr' ? 'Kabul Et ve Birleştir' : 'Accept and Join'}
                 </Button>
             </CardFooter>
         </Card>

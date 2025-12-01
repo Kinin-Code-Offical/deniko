@@ -1,93 +1,60 @@
-// --------------------------------------------------------
-// DENIKO - PROFESSIONAL TUTORING MANAGEMENT SYSTEM SCHEMA
-// --------------------------------------------------------
-
 generator client {
   provider      = "prisma-client-js"
-  // Prisma 6 için de bu ayar Cloud Run'da çalışması için şarttır
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL") // Transaction Pool (PgBouncer) - Uygulama burayı kullanır
-  directUrl = env("DIRECT_URL") // Session Mode - Sadece Prisma Migrate burayı kullanır
-}
-
-// ========================================================
-// 1. KULLANICI & GÜVENLİK (USER & AUTHENTICATION)
-// ========================================================
-
-enum Role {
-  ADMIN
-  TEACHER
-  STUDENT
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id String @id @default(uuid())
-
-  // Kimlik Bilgileri
-  name          String? // Google/Apple'dan gelen tam isim
-  firstName     String? // Manuel kayıt için
-  lastName      String? // Manuel kayıt için
-  email         String?   @unique
-  emailVerified DateTime? // Email doğrulama tarihi
-  image         String? // Profil fotoğrafı URL
-  password      String? // OAuth kullananlar için boş olabilir (Nullable)
-  phoneNumber   String? // Telefon numarası
-
-  role                  Role? // Rol seçimi onboarding'de yapılacak
-  isActive              Boolean @default(true) // Hesap dondurma kontrolü
-  isOnboardingCompleted Boolean @default(false) // Onboarding tamamlandı mı?
-  isMarketingConsent    Boolean @default(false) // IYS (İleti Yönetim Sistemi) onayı
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // --- İlişkiler ---
-
-  // Auth.js (NextAuth) Bağlantıları
-  accounts Account[]
-  sessions Session[]
-
-  // Profil Detayları
-  teacherProfile TeacherProfile?
-  studentProfile StudentProfile?
-
-  // Cihaz & Bildirim
-  devices       Device[] // Mobil cihazlar (FCM Token)
-  notifications Notification[] // Uygulama içi bildirimler
-
-  // İletişim & Ajanda
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
-
-  todos          Todo[]
-  calendarEvents Event[]
+  id                    String          @id @default(uuid())
+  name                  String?
+  firstName             String?
+  lastName              String?
+  email                 String?         @unique
+  emailVerified         DateTime?
+  image                 String?
+  password              String?
+  phoneNumber           String?
+  role                  Role?
+  isActive              Boolean         @default(true)
+  isOnboardingCompleted Boolean         @default(false)
+  isMarketingConsent    Boolean         @default(false)
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  accounts              Account[]
+  devices               Device[]
+  calendarEvents        Event[]
+  receivedMessages      Message[]       @relation("ReceivedMessages")
+  sentMessages          Message[]       @relation("SentMessages")
+  notifications         Notification[]
+  sessions              Session[]
+  studentProfile        StudentProfile?
+  teacherProfile        TeacherProfile?
+  todos                 Todo[]
 }
 
-// OAuth Hesapları (Google, Apple vb.)
 model Account {
   id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
-// Web Oturumları
 model Session {
   id           String   @id @default(uuid())
   sessionToken String   @unique
@@ -96,7 +63,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// Email Doğrulama ve Şifre Sıfırlama Tokenları
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -114,23 +80,290 @@ model PasswordResetToken {
   @@unique([email, token])
 }
 
-// ========================================================
-// 2. MOBİL CİHAZ YÖNETİMİ (PUSH NOTIFICATION)
-// ========================================================
-
 model Device {
-  id     String @id @default(uuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String     @id @default(uuid())
+  userId     String
+  deviceType DeviceType
+  deviceId   String?
+  model      String?
+  fcmToken   String?
+  lastActive DateTime   @default(now())
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  deviceType DeviceType // IOS, ANDROID, WEB
-  deviceId   String? // Cihazın Unique ID'si
-  model      String? // Örn: "iPhone 14 Pro"
-  fcmToken   String?    @db.Text // Firebase Cloud Messaging Token
+  @@unique([userId, deviceId])
+}
 
-  lastActive DateTime @default(now())
+model TeacherProfile {
+  id               String                   @id @default(uuid())
+  userId           String                   @unique
+  phoneNumber      String?
+  branch           String
+  bio              String?
+  classes          Classroom[]
+  lessons          Lesson[]
+  payments         Payment[]
+  scheduleItems    ScheduleItem[]
+  createdStudents  StudentProfile[]         @relation("CreatedStudents")
+  studentRelations StudentTeacherRelation[]
+  user             User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  @@unique([userId, deviceId]) // Çifte kayıt engelleme
+model StudentProfile {
+  id                String                   @id @default(uuid())
+  userId            String?                  @unique
+  tempFirstName     String?
+  tempLastName      String?
+  creatorTeacherId  String?
+  inviteToken       String?                  @unique
+  isClaimed         Boolean                  @default(false)
+  studentNo         String?
+  gradeLevel        String?
+  parentName        String?
+  parentPhone       String?
+  parentEmail       String?
+  classroomId       String?
+  phoneNumber       String?
+  avatarUrl         String?
+  attendances       Attendance[]
+  submissions       HomeworkSubmission[]
+  homeworkTrackings HomeworkTracking[]
+  payments          Payment[]
+  grades            SchoolExam[]
+  classroom         Classroom?               @relation(fields: [classroomId], references: [id])
+  creatorTeacher    TeacherProfile?          @relation("CreatedStudents", fields: [creatorTeacherId], references: [id])
+  user              User?                    @relation(fields: [userId], references: [id])
+  teacherRelations  StudentTeacherRelation[]
+  trialExams        TrialExam[]
+  lessons           Lesson[]                 @relation("LessonToStudentProfile")
+
+  @@index([studentNo])
+  @@index([inviteToken])
+}
+
+model StudentTeacherRelation {
+  id           String         @id @default(uuid())
+  teacherId    String
+  studentId    String
+  isCreator    Boolean        @default(false)
+  status       RelationStatus @default(ACTIVE)
+  privateNotes String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  customAvatar String?
+  customName   String?
+  student      StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher      TeacherProfile @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([teacherId, studentId])
+}
+
+model Classroom {
+  id        String           @id @default(uuid())
+  name      String
+  year      Int
+  teacherId String?
+  teacher   TeacherProfile?  @relation(fields: [teacherId], references: [id])
+  lessons   Lesson[]
+  schedule  ScheduleItem[]
+  students  StudentProfile[]
+}
+
+model ScheduleItem {
+  id          String          @id @default(uuid())
+  dayOfWeek   Int
+  startTime   String
+  endTime     String
+  subject     String
+  classroomId String
+  teacherId   String?
+  classroom   Classroom       @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  teacher     TeacherProfile? @relation(fields: [teacherId], references: [id])
+}
+
+model Lesson {
+  id           String           @id @default(uuid())
+  title        String
+  startTime    DateTime
+  endTime      DateTime
+  type         LessonType       @default(PRIVATE)
+  status       LessonStatus     @default(SCHEDULED)
+  location     LessonLocation   @default(ONLINE)
+  locationNote String?
+  price        Decimal?         @db.Decimal(10, 2)
+  currency     String           @default("TRY")
+  isPaid       Boolean          @default(false)
+  teacherId    String
+  classroomId  String?
+  createdAt    DateTime         @default(now())
+  attendances  Attendance[]
+  homeworks    Homework[]
+  classroom    Classroom?       @relation(fields: [classroomId], references: [id])
+  teacher      TeacherProfile   @relation(fields: [teacherId], references: [id])
+  materials    Material[]
+  payments     Payment[]        @relation("LessonPayment")
+  students     StudentProfile[] @relation("LessonToStudentProfile")
+}
+
+model Payment {
+  id                 String         @id @default(uuid())
+  amount             Decimal        @db.Decimal(10, 2)
+  date               DateTime       @default(now())
+  type               PaymentType
+  note               String?
+  isVisibleToStudent Boolean        @default(false)
+  studentId          String
+  teacherId          String
+  student            StudentProfile @relation(fields: [studentId], references: [id])
+  teacher            TeacherProfile @relation(fields: [teacherId], references: [id])
+  lessons            Lesson[]       @relation("LessonPayment")
+}
+
+model Homework {
+  id           String             @id @default(uuid())
+  title        String
+  content      String?
+  assignedDate DateTime           @default(now())
+  dueDate      DateTime
+  lessonId     String
+  lesson       Lesson             @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  trackings    HomeworkTracking[]
+}
+
+model HomeworkTracking {
+  id          String         @id @default(uuid())
+  homeworkId  String
+  studentId   String
+  status      HomeworkStatus @default(PENDING)
+  studentNote String?
+  teacherNote String?
+  fileUrl     String?
+  checkedAt   DateTime?
+  homework    Homework       @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
+  student     StudentProfile @relation(fields: [studentId], references: [id])
+}
+
+model HomeworkSubmission {
+  id          String         @id @default(uuid())
+  fileUrl     String?
+  note        String?
+  submittedAt DateTime       @default(now())
+  studentId   String
+  student     StudentProfile @relation(fields: [studentId], references: [id])
+}
+
+model SchoolExam {
+  id        String         @id @default(uuid())
+  title     String
+  score     Float
+  date      DateTime
+  subject   String
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id])
+}
+
+model TrialExam {
+  id         String            @id @default(uuid())
+  title      String
+  date       DateTime
+  category   ExamCategory
+  publisher  String?
+  studentId  String
+  totalNet   Float?
+  totalScore Float?
+  student    StudentProfile    @relation(fields: [studentId], references: [id])
+  results    TrialExamResult[]
+}
+
+model TrialExamResult {
+  id              String    @id @default(uuid())
+  trialExamId     String
+  lessonName      String
+  correctCount    Int
+  incorrectCount  Int
+  emptyCount      Int
+  net             Float
+  mistakeTopics   String[]
+  mistakeAnalysis String?
+  trialExam       TrialExam @relation(fields: [trialExamId], references: [id], onDelete: Cascade)
+}
+
+model Attendance {
+  id        String           @id @default(uuid())
+  lessonId  String
+  studentId String
+  status    AttendanceStatus
+  note      String?
+  lesson    Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  student   StudentProfile   @relation(fields: [studentId], references: [id])
+}
+
+model Todo {
+  id           String    @id @default(uuid())
+  content      String
+  isCompleted  Boolean   @default(false)
+  dueDate      DateTime?
+  reminderTime DateTime?
+  priority     Priority  @default(MEDIUM)
+  userId       String
+  createdAt    DateTime  @default(now())
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  isAllDay    Boolean   @default(false)
+  remindAt    DateTime?
+  color       String?
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id         String    @id @default(uuid())
+  content    String?
+  fileUrl    String?
+  fileType   String?
+  fileName   String?
+  createdAt  DateTime  @default(now())
+  isRead     Boolean   @default(false)
+  readAt     DateTime?
+  senderId   String
+  receiverId String
+  receiver   User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  sender     User      @relation("SentMessages", fields: [senderId], references: [id])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  title     String
+  body      String
+  route     String?
+  relatedId String?
+  type      NotificationType
+  isRead    Boolean          @default(false)
+  userId    String
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Material {
+  id        String   @id @default(uuid())
+  title     String
+  url       String
+  type      FileType
+  lessonId  String
+  createdAt DateTime @default(now())
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
 }
 
 enum DeviceType {
@@ -139,185 +372,11 @@ enum DeviceType {
   WEB
 }
 
-// ========================================================
-// 3. ÖĞRETMEN & ÖĞRENCİ PROFİLLERİ (CORE LOGIC)
-// ========================================================
-
-model TeacherProfile {
-  id     String @id @default(uuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  phoneNumber String? // İletişim numarası
-  branch      String // Örn: Matematik
-  bio         String? // Eğitmen hakkında kısa bilgi
-
-  // İlişkiler
-  studentRelations StudentTeacherRelation[] // Tüm aktif/pasif öğrencileri
-  createdStudents  StudentProfile[]         @relation("CreatedStudents") // Gölge hesap olarak ekledikleri
-
-  classes       Classroom[]
-  lessons       Lesson[]
-  payments      Payment[]
-  scheduleItems ScheduleItem[]
-}
-
-model StudentProfile {
-  id String @id @default(uuid())
-
-  // --- A. KİMLİK YAPISI ---
-  // userId VARSA -> Gerçek Hesap (Uygulamayı kullanıyor)
-  // userId YOKSA -> Gölge Hesap (Sadece hoca yönetiyor)
-  userId String? @unique
-  user   User?   @relation(fields: [userId], references: [id])
-
-  // Gölge hesaplar için isim (User tablosu olmadığı için)
-  tempFirstName String?
-  tempLastName  String?
-
-  // --- B. BAĞLANTI & DAVET ---
-  // Bu hesabı ilk kim oluşturdu? (Opsiyonel, öğrenci kendi de gelebilir)
-  creatorTeacherId String?
-  creatorTeacher   TeacherProfile? @relation("CreatedStudents", fields: [creatorTeacherId], references: [id])
-
-  inviteToken String? @unique // Davet Linki: deniko.net/join/CODE
-  isClaimed   Boolean @default(false) // Hesap gerçek kullanıcıya bağlandı mı?
-
-  phoneNumber String? // Öğrencinin kendi telefonu (Gölge hesap için)
-  avatarUrl   String? // Profil fotoğrafı URL
-  // --- C. AKADEMİK BİLGİLER ---
-  studentNo   String?
-  gradeLevel  String? // "12. Sınıf", "Mezun"
-
-  // Veli İletişim (Acil Durum)
-  parentName  String?
-  parentPhone String?
-  parentEmail String?
-
-  // --- D. İLİŞKİLER ---
-  teacherRelations StudentTeacherRelation[] // Bağlı olduğu hocalar
-
-  classroomId String?
-  classroom   Classroom? @relation(fields: [classroomId], references: [id])
-
-  // Akademik Veriler
-  attendances       Attendance[]
-  grades            SchoolExam[]
-  trialExams        TrialExam[]
-  submissions       HomeworkSubmission[]
-  homeworkTrackings HomeworkTracking[]
-
-  // Finans
-  payments Payment[]
-
-  // Çoklu Derse Katılım
-  lessons Lesson[]
-
-  @@index([studentNo])
-  @@index([inviteToken])
-}
-
-// HOCA <-> ÖĞRENCİ BAĞLANTISI (Pivot Tablo)
-model StudentTeacherRelation {
-  id String @id @default(uuid())
-
-  teacherId String
-  teacher   TeacherProfile @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-
-  studentId String
-  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-  isCreator Boolean        @default(false) // İlk ekleyen hoca mı?
-  status    RelationStatus @default(ACTIVE)
-
-  // Hocaya özel gizli notlar (Öğrenci göremez)
-  privateNotes String? @db.Text
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([teacherId, studentId])
-}
-
 enum RelationStatus {
   ACTIVE
   ARCHIVED
   PENDING
   BLOCKED
-}
-
-// ========================================================
-// 4. AKADEMİK YAPI (DERSLER & SINIFLAR)
-// ========================================================
-
-model Classroom {
-  id   String @id @default(uuid())
-  name String // "12-A", "LGS Grubu"
-  year Int // 2025
-
-  students StudentProfile[]
-
-  teacherId String?
-  teacher   TeacherProfile? @relation(fields: [teacherId], references: [id])
-
-  schedule ScheduleItem[]
-  lessons  Lesson[]
-}
-
-// Haftalık Ders Programı Şablonu (Tekrarlayan)
-model ScheduleItem {
-  id        String @id @default(uuid())
-  dayOfWeek Int // 1=Pazartesi ... 7=Pazar
-  startTime String // "09:00"
-  endTime   String // "09:40"
-  subject   String // "Geometri"
-
-  classroomId String
-  classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
-
-  teacherId String?
-  teacher   TeacherProfile? @relation(fields: [teacherId], references: [id])
-}
-
-// ========================================================
-// 5. DERS KAYDI & FİNANS (LESSON & FINANCE)
-// ========================================================
-
-model Lesson {
-  id    String @id @default(uuid())
-  title String // "İntegral Soru Çözümü"
-
-  startTime DateTime
-  endTime   DateTime
-
-  type   LessonType   @default(PRIVATE)
-  status LessonStatus @default(SCHEDULED)
-
-  location     LessonLocation @default(ONLINE)
-  locationNote String? // "Zoom Linki"
-
-  // --- FİNANSAL ---
-  price    Decimal? @db.Decimal(10, 2)
-  currency String   @default("TRY")
-  isPaid   Boolean  @default(false)
-
-  // İlişkiler
-  teacherId String
-  teacher   TeacherProfile @relation(fields: [teacherId], references: [id])
-
-  students StudentProfile[]
-
-  classroomId String?
-  classroom   Classroom? @relation(fields: [classroomId], references: [id])
-
-  homeworks   Homework[]
-  materials   Material[]
-  attendances Attendance[]
-
-  // Ödeme Bağlantısı (Paket Dersler İçin)
-  payments Payment[] @relation("LessonPayment")
-
-  createdAt DateTime @default(now())
 }
 
 enum LessonType {
@@ -341,28 +400,6 @@ enum LessonLocation {
   OTHER
 }
 
-// FİNANSAL KAYITLAR (ÖĞRETMEN ÖZEL)
-model Payment {
-  id     String   @id @default(uuid())
-  amount Decimal  @db.Decimal(10, 2)
-  date   DateTime @default(now())
-
-  type PaymentType
-  note String?
-
-  // Öğrenci görsün mü? (Makbuz mantığı)
-  isVisibleToStudent Boolean @default(false)
-
-  studentId String
-  student   StudentProfile @relation(fields: [studentId], references: [id])
-
-  teacherId String
-  teacher   TeacherProfile @relation(fields: [teacherId], references: [id])
-
-  // Hangi dersleri kapsıyor?
-  lessons Lesson[] @relation("LessonPayment")
-}
-
 enum PaymentType {
   CASH
   BANK_TRANSFER
@@ -370,114 +407,13 @@ enum PaymentType {
   OTHER
 }
 
-// ========================================================
-// 6. EĞİTİM ARAÇLARI (ÖDEV, SINAV, YOKLAMA)
-// ========================================================
-
-// ÖDEVLER
-model Homework {
-  id      String  @id @default(uuid())
-  title   String
-  content String?
-
-  assignedDate DateTime @default(now())
-  dueDate      DateTime
-
-  lessonId String
-  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-
-  // Öğrenci bazlı takip listesi
-  trackings HomeworkTracking[]
-}
-
-model HomeworkTracking {
-  id String @id @default(uuid())
-
-  homeworkId String
-  homework   Homework @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
-
-  studentId String
-  student   StudentProfile @relation(fields: [studentId], references: [id])
-
-  status HomeworkStatus @default(PENDING)
-
-  studentNote String?
-  teacherNote String?
-  fileUrl     String?
-
-  checkedAt DateTime?
-}
-
-// ÖDEV TESLİMLERİ (Ekstra Dosya Yükleme Tablosu - Opsiyonel)
-model HomeworkSubmission {
-  id          String   @id @default(uuid())
-  // Basit yapı için HomeworkTracking yeterli olabilir ama 
-  // çoklu dosya teslimi gerekirse bu tablo kullanılır.
-  fileUrl     String?
-  note        String?
-  submittedAt DateTime @default(now())
-
-  studentId String
-  student   StudentProfile @relation(fields: [studentId], references: [id])
-
-  // HomeworkTracking ile bağlanabilir veya direkt Homework ile
-  // Şimdilik StudentProfile içinde tanımlı olduğu için boş bırakıyorum,
-  // mantığına göre burayı genişletebiliriz.
-}
-
 enum HomeworkStatus {
   PENDING
-  SUBMITTED
   COMPLETED
   INCOMPLETE
   MISSING
   LATE
-}
-
-// OKUL SINAVLARI (Yazılılar)
-model SchoolExam {
-  id      String   @id @default(uuid())
-  title   String
-  score   Float
-  date    DateTime
-  subject String
-
-  studentId String
-  student   StudentProfile @relation(fields: [studentId], references: [id])
-}
-
-// DENEME SINAVLARI (TYT/AYT)
-model TrialExam {
-  id    String   @id @default(uuid())
-  title String
-  date  DateTime
-
-  category  ExamCategory
-  publisher String?
-
-  studentId String
-  student   StudentProfile @relation(fields: [studentId], references: [id])
-
-  results TrialExamResult[]
-
-  totalNet   Float?
-  totalScore Float?
-}
-
-model TrialExamResult {
-  id          String    @id @default(uuid())
-  trialExamId String
-  trialExam   TrialExam @relation(fields: [trialExamId], references: [id], onDelete: Cascade)
-
-  lessonName String // "Matematik"
-
-  correctCount   Int
-  incorrectCount Int
-  emptyCount     Int
-  net            Float
-
-  mistakeTopics   String[] // Yanlış konuları
-  mistakeAnalysis String?
+  SUBMITTED
 }
 
 enum ExamCategory {
@@ -489,20 +425,6 @@ enum ExamCategory {
   GENERAL
 }
 
-// YOKLAMA
-model Attendance {
-  id String @id @default(uuid())
-
-  lessonId String
-  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-
-  studentId String
-  student   StudentProfile @relation(fields: [studentId], references: [id])
-
-  status AttendanceStatus
-  note   String?
-}
-
 enum AttendanceStatus {
   PRESENT
   ABSENT
@@ -510,82 +432,11 @@ enum AttendanceStatus {
   LATE
 }
 
-// ========================================================
-// 7. İLETİŞİM & YARDIMCI ARAÇLAR
-// ========================================================
-
-model Todo {
-  id          String  @id @default(uuid())
-  content     String
-  isCompleted Boolean @default(false)
-
-  dueDate      DateTime?
-  reminderTime DateTime?
-  priority     Priority  @default(MEDIUM)
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-}
-
 enum Priority {
   LOW
   MEDIUM
   HIGH
   URGENT
-}
-
-model Event {
-  id          String  @id @default(uuid())
-  title       String
-  description String?
-
-  startDate DateTime
-  endDate   DateTime
-  isAllDay  Boolean  @default(false)
-
-  remindAt DateTime?
-  color    String?
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Message {
-  id      String  @id @default(uuid())
-  content String?
-
-  fileUrl  String?
-  fileType String?
-  fileName String?
-
-  createdAt DateTime @default(now())
-
-  isRead Boolean   @default(false)
-  readAt DateTime?
-
-  senderId String
-  sender   User   @relation("SentMessages", fields: [senderId], references: [id])
-
-  receiverId String
-  receiver   User   @relation("ReceivedMessages", fields: [receiverId], references: [id])
-}
-
-model Notification {
-  id        String           @id @default(uuid())
-  title     String
-  body      String
-  route     String? // Deep Link
-  relatedId String?
-  type      NotificationType
-
-  isRead Boolean @default(false)
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
 }
 
 enum NotificationType {
@@ -598,18 +449,6 @@ enum NotificationType {
   SYSTEM
 }
 
-model Material {
-  id    String   @id @default(uuid())
-  title String
-  url   String // GCS
-  type  FileType
-
-  lessonId String
-  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-}
-
 enum FileType {
   PDF
   VIDEO
@@ -617,7 +456,3 @@ enum FileType {
   IMAGE
   OTHER
 }
-
-// --------------------------------------------------------
-// END OF DENIKO PRISMA SCHEMA
-// --------------------------------------------------------

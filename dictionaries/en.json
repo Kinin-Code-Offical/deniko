@@ -1,4 +1,12 @@
 {
+    "join": {
+        "title": "Accept Invitation",
+        "desc": "{teacher} wants to add you as a student.",
+        "success": "Successfully joined!",
+        "error_used": "This link is invalid or has been used.",
+        "accept_button": "Accept and Join",
+        "welcome_user": "Dear {name},"
+    },
     "auth": {
         "register": {
             "title": "Join Deniko",

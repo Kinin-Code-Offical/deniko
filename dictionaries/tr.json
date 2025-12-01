@@ -1,4 +1,12 @@
 {
+    "join": {
+        "title": "Davetiyeyi Kabul Et",
+        "desc": "{teacher} sizi öğrencisi olarak eklemek istiyor.",
+        "success": "Başarıyla katıldınız!",
+        "error_used": "Bu bağlantı geçersiz veya kullanılmış.",
+        "accept_button": "Kabul Et ve Birleştir",
+        "welcome_user": "Sayın {name},"
+    },
     "auth": {
         "register": {
             "title": "Deniko'ya Katıl",
