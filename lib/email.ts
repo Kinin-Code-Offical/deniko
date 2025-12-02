@@ -2,6 +2,11 @@ import nodemailer from "nodemailer"
 import { getDictionary } from "@/lib/get-dictionary"
 import { Locale } from "@/i18n-config"
 
+// TODO: Implement email queue system for better reliability (e.g., Bull, BullMQ)
+// TODO: Add email delivery tracking and bounce handling
+// TODO: Implement email templates as separate HTML files for easier maintenance
+// TODO: Add support for multiple email providers (SendGrid, AWS SES) as fallback
+
 const transporter = nodemailer.createTransport({
   pool: true,
   host: "smtp.gmail.com",
@@ -153,6 +158,7 @@ function getVerificationEmailTemplate(url: string, lang: Locale, content: any) {
     })
     return { success: true }
   } catch (error) {
+    // TODO: Replace console.error with logger
     console.error("Email sending failed:", error)
     return { success: false, error: "Failed to send email" }
   }

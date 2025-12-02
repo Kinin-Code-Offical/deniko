@@ -8,6 +8,11 @@ import { z } from "zod"
 import { SignJWT } from "jose"
 import { Role } from "@prisma/client"
 
+// TODO: Add Apple and Microsoft OAuth providers
+// TODO: Implement session refresh mechanism
+// TODO: Add login activity logging (IP, device, location)
+// TODO: Implement device trust management
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(db),
     session: { strategy: "jwt" },

@@ -1,5 +1,10 @@
 "use server"
 
+// TODO: Add rate limiting for login attempts to prevent brute force attacks
+// TODO: Implement account lockout after multiple failed login attempts
+// TODO: Add multi-factor authentication (MFA) support
+// TODO: Implement "remember me" functionality with extended session duration
+
 /* The line `import { signIn } from "@/auth"` is importing the `signIn` function from a module located
 at the path `@/auth`. This function is likely used for handling user authentication, such as signing
 in users using different methods like Google sign-in or credentials sign-in. */
@@ -80,6 +85,8 @@ export async function login(formData: z.infer<typeof loginSchemaBase>, lang: str
     }
 }
 
+// TODO: Add rate limiting for resend verification to prevent spam
+// TODO: Consider adding SMS verification as an alternative
 export async function resendVerificationCode(email: string, lang: string = "tr") {
     const dict = await getDictionary(lang as Locale)
     try {
@@ -117,11 +124,15 @@ export async function resendVerificationCode(email: string, lang: string = "tr")
 
         return { success: true, message: dict.auth.verification.success }
     } catch (error) {
+        // TODO: Replace console.error with logger
         console.error("Resend Verification Error:", error)
         return { success: false, message: dict.auth.register.errors.generic }
     }
 }
 
+// TODO: Add CAPTCHA validation to prevent bot registrations
+// TODO: Implement email domain validation (block disposable emails)
+// TODO: Add phone number verification via SMS OTP
 const registerSchemaBase = z.object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),
@@ -239,6 +250,7 @@ export async function registerUser(formData: z.infer<typeof registerSchemaBase>,
 
         return { success: true, message: dict.auth.register.success_desc }
     } catch (error) {
+        // TODO: Replace console.error with logger
         console.error("Registration Error:", error)
         return { success: false, message: dict.auth.register.errors.generic }
     }

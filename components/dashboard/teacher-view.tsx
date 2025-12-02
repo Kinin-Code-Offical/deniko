@@ -1,5 +1,10 @@
 "use client"
 
+// TODO: Add real-time updates for schedule using WebSocket or Server-Sent Events
+// TODO: Implement lesson conflict detection when scheduling
+// TODO: Add calendar integration (Google Calendar, iCal export)
+// TODO: Implement earnings analytics and monthly reports
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Users, Calendar, BookCheck, UserPlus, CreditCard } from "lucide-react"
@@ -7,6 +12,8 @@ import { format } from "date-fns"
 import { tr, enUS } from "date-fns/locale"
 import Link from "next/link"
 
+// TODO: Replace 'any' types with proper TypeScript interfaces
+// TODO: Add loading states for dynamic data
 interface TeacherViewProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     user: any

@@ -1,10 +1,17 @@
 "use client"
 
+// TODO: Implement homework submission functionality
+// TODO: Add progress charts and learning analytics
+// TODO: Implement messaging system between student and teacher
+// TODO: Add notifications for upcoming lessons and due homework
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookOpen, Clock, FileText, Calendar } from "lucide-react"
 import { format } from "date-fns"
 import { tr, enUS } from "date-fns/locale"
 
+// TODO: Replace 'any' types with proper TypeScript interfaces
+// TODO: Add loading skeleton while data is being fetched
 interface StudentViewProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     user: any
@@ -119,6 +126,7 @@ export function StudentView({ user, dictionary, lang, stats, nextLesson, upcomin
                         <div className="space-y-8">
                             {pendingHomeworks.length === 0 ? (
                                 <p className="text-sm text-muted-foreground">
+                                    {/* TODO: Use dictionary instead of hardcoded text */}
                                     No pending homework.
                                 </p>
                             ) : (

@@ -1,5 +1,9 @@
 "use server"
 
+// TODO: Implement i18n for error messages (currently hardcoded in Turkish)
+// TODO: Add phone number format validation with libphonenumber
+// TODO: Implement password history check to prevent reuse
+
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { revalidatePath } from "next/cache"
@@ -10,14 +14,16 @@ export async function completeOnboarding(data: {
     phoneNumber: string,
     password?: string,
     confirmPassword?: string,
-    userId?: string, // Fallback for debugging
+    userId?: string, // TODO: Remove userId fallback - should always use session
     terms?: boolean,
     marketingConsent?: boolean
 }) {
     const session = await auth()
+    // TODO: Replace console.log with logger
     console.log("Session in Action:", session)
 
     // Prioritize session ID, fallback to provided userId (DEBUG ONLY)
+    // TODO: Remove userId fallback in production - security risk
     const userId = session?.user?.id || data.userId
 
     if (!userId) {
@@ -105,6 +111,7 @@ export async function completeOnboarding(data: {
         revalidatePath("/dashboard")
         return { success: true }
     } catch (error) {
+        // TODO: Replace console.error with logger
         console.error("Onboarding Error:", error)
         return { success: false, error: "Bir hata oluştu. Lütfen tekrar deneyin." }
     }

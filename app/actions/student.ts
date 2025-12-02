@@ -1,5 +1,10 @@
 "use server"
 
+// TODO: Add pagination for student list (currently loads all students)
+// TODO: Implement search functionality for students
+// TODO: Add bulk operations (delete multiple, archive multiple)
+// TODO: Implement student activity logging for audit trail
+
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { revalidatePath } from "next/cache"
@@ -7,6 +12,8 @@ import { z } from "zod"
 import { randomBytes } from "crypto"
 import logger from "@/lib/logger"
 
+// TODO: Add i18n support for validation messages (currently hardcoded in Turkish)
+// TODO: Implement email validation for parentEmail field
 const createStudentSchema = z.object({
     name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
     surname: z.string().min(2, "Soyisim en az 2 karakter olmalıdır"),
@@ -43,6 +50,7 @@ export async function createStudent(data: z.infer<typeof createStudentSchema>) {
     const { name, surname, studentNo, grade, phoneNumber } = validatedFields.data
 
     // Generate a unique invite token
+    // TODO: Set expiration date for invite tokens (currently never expires)
     const inviteToken = randomBytes(16).toString("hex")
 
     try {
@@ -81,6 +89,8 @@ export async function createStudent(data: z.infer<typeof createStudentSchema>) {
     }
 }
 
+// TODO: Implement invite token expiration check
+// TODO: Add notification to teacher when student claims profile
 export async function claimStudentProfile(token: string) {
     const session = await auth()
 

@@ -6,6 +6,11 @@ import { StudentView } from "@/components/dashboard/student-view"
 import { getDictionary } from "@/lib/get-dictionary"
 import { Locale } from "@/i18n-config"
 
+// TODO: Add ADMIN role view with analytics dashboard
+// TODO: Implement data prefetching for better performance
+// TODO: Add suspense boundaries with loading skeletons
+// TODO: Consider implementing Redis caching for frequently accessed data
+
 export default async function DashboardPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -219,6 +224,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
     }
 
     // Fallback for other roles or no role
+    // TODO: Implement proper onboarding redirect when user.role is null
+    // TODO: Add logger warning for this edge case
     return (
         <div className="flex flex-col items-center justify-center h-[50vh]">
             <h1 className="text-2xl font-bold">Welcome to Deniko</h1>

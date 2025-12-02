@@ -9,6 +9,11 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// TODO: Add soft delete support (deletedAt field) for all user-related models
+// TODO: Implement full-text search indexes for student and lesson search
+// TODO: Add audit logging model for tracking user actions
+// TODO: Consider adding support for multiple time zones per user
+
 model User {
   id                    String          @id @default(uuid())
   name                  String?
@@ -71,6 +76,8 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// TODO: Add createdAt and updatedAt timestamps
+// TODO: Add token expiration date for security
 model PasswordResetToken {
   id      String   @id @default(uuid())
   email   String
@@ -108,6 +115,9 @@ model TeacherProfile {
   user             User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// TODO: Add inviteTokenExpires field for token expiration
+// TODO: Add profileCompleteness percentage calculation
+// TODO: Consider adding avatarUrl migration from string to File model relation
 model StudentProfile {
   id                String                   @id @default(uuid())
   userId            String?                  @unique
@@ -180,6 +190,9 @@ model ScheduleItem {
   teacher     TeacherProfile? @relation(fields: [teacherId], references: [id])
 }
 
+// TODO: Add recurring lesson support (repeatPattern, repeatUntil)
+// TODO: Add lesson notes/summary field for teacher
+// TODO: Implement lesson cancellation reason tracking
 model Lesson {
   id           String           @id @default(uuid())
   title        String
@@ -204,6 +217,9 @@ model Lesson {
   students     StudentProfile[] @relation("LessonToStudentProfile")
 }
 
+// TODO: Add payment receipt/invoice generation support
+// TODO: Implement partial payment tracking
+// TODO: Add payment method details (last 4 digits, bank name)
 model Payment {
   id                 String         @id @default(uuid())
   amount             Decimal        @db.Decimal(10, 2)
