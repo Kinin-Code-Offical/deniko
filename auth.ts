@@ -6,12 +6,17 @@ import { db } from "@/lib/db"
 import * as bcrypt from "bcryptjs"
 import { z } from "zod"
 import { Role } from "@prisma/client"
+import { env } from "@/lib/env"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(db),
+    secret: env.AUTH_SECRET,
+    trustHost: true,
     session: { strategy: "jwt" },
     providers: [
         Google({
+            clientId: env.AUTH_GOOGLE_ID,
+            clientSecret: env.AUTH_GOOGLE_SECRET,
             allowDangerousEmailAccountLinking: true,
             profile(profile) {
                 return {

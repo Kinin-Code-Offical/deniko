@@ -1,9 +1,10 @@
 import pino from 'pino'
+import { env } from '@/lib/env'
 
 // Edge Runtime check (for Next.js middleware etc.)
-const isEdge = process.env.NEXT_RUNTIME === 'edge'
+const isEdge = env.NEXT_RUNTIME === 'edge'
 // Use pino-pretty only in Development
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = env.NODE_ENV === 'development'
 
 /**
  * Structured logger instance using Pino.
@@ -30,7 +31,7 @@ const logger = pino({
     },
 
     base: {
-        env: process.env.NODE_ENV,
+        env: env.NODE_ENV,
     },
 
     // ISO timestamp in Production

@@ -2,6 +2,7 @@ import nodemailer from "nodemailer"
 import { getDictionary } from "@/lib/get-dictionary"
 import type { Locale } from "@/i18n-config"
 import logger from "@/lib/logger"
+import { env } from "@/lib/env"
 
 const transporter = nodemailer.createTransport({
   pool: true,
@@ -9,8 +10,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: env.EMAIL_USER,
+    pass: env.EMAIL_PASS,
   },
   maxConnections: 5,
   maxMessages: 100,
@@ -26,14 +27,14 @@ const transporter = nodemailer.createTransport({
 export async function sendPasswordResetEmail(email: string, token: string, lang: string = "tr") {
   try {
     const dictionary = await getDictionary(lang as Locale)
-    const resetLink = `${process.env.NEXTAUTH_URL}/${lang}/reset-password?token=${token}`
+    const resetLink = `${env.NEXTAUTH_URL}/${lang}/reset-password?token=${token}`
 
     const content = dictionary.email.password_reset
 
     const html = getVerificationEmailTemplate(resetLink, lang as Locale, content)
 
     await transporter.sendMail({
-      from: `"Deniko" <${process.env.EMAIL_USER}>`,
+      from: `"Deniko" <${env.EMAIL_USER}>`,
       to: email,
       subject: content.subject,
       html,
@@ -136,9 +137,9 @@ function getVerificationEmailTemplate(url: string, lang: Locale, content: any) {
                 ${content.footer_copyright}
               </p>
               <p style="margin: 0; font-size: 12px; line-height: 1.5;">
-                <a href="${process.env.NEXTAUTH_URL}/${lang}/legal/terms" style="color: #2062A3; text-decoration: none;">${content.footer_terms}</a>
+                <a href="${env.NEXTAUTH_URL}/${lang}/legal/terms" style="color: #2062A3; text-decoration: none;">${content.footer_terms}</a>
                 <span style="color: #d1d5db; margin: 0 8px;">|</span>
-                <a href="${process.env.NEXTAUTH_URL}/${lang}/legal/privacy" style="color: #2062A3; text-decoration: none;">${content.footer_privacy}</a>
+                <a href="${env.NEXTAUTH_URL}/${lang}/legal/privacy" style="color: #2062A3; text-decoration: none;">${content.footer_privacy}</a>
               </p>
             </td>
           </tr>
@@ -160,7 +161,7 @@ function getVerificationEmailTemplate(url: string, lang: Locale, content: any) {
  * @returns An object indicating success or failure.
  */
 export async function sendVerificationEmail(email: string, token: string, lang: Locale = "tr") {
-  const confirmLink = `${process.env.NEXTAUTH_URL}/${lang}/verify?token=${token}`
+  const confirmLink = `${env.NEXTAUTH_URL}/${lang}/verify?token=${token}`
 
   const dictionary = await getDictionary(lang)
   const content = dictionary.email.verification
@@ -169,7 +170,7 @@ export async function sendVerificationEmail(email: string, token: string, lang: 
 
   try {
     await transporter.sendMail({
-      from: `"Deniko" <${process.env.EMAIL_USER}>`,
+      from: `"Deniko" <${env.EMAIL_USER}>`,
       to: email,
       subject: content.subject,
       html: html,

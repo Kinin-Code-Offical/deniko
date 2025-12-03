@@ -4,6 +4,56 @@ import { i18n } from './i18n-config'
 import { match as matchLocale } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
 import logger from '@/lib/logger'
+import { env } from '@/lib/env'
+
+const isProd = env.NODE_ENV === 'production'
+const RATE_LIMIT_WINDOW_MS = 60_000
+const RATE_LIMIT_MAX_REQUESTS = 120
+const rateLimitBuckets = new Map<string, { count: number; resetAt: number }>()
+
+const attachSecurityHeaders = (response: NextResponse) => {
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+    response.headers.set('X-Frame-Options', 'DENY')
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+
+    if (isProd) {
+        response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
+    }
+
+    return response
+}
+
+const syncLocaleCookie = (response: NextResponse, locale: string) => {
+    response.cookies.set('NEXT_LOCALE', locale, {
+        path: '/',
+        maxAge: 31536000,
+        sameSite: 'lax',
+        secure: isProd,
+    })
+}
+
+const getClientIp = (request: NextRequest) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ((request as any).ip as string | undefined) ?? request.headers.get('x-forwarded-for') ?? 'unknown'
+
+const isRateLimited = (ip: string) => {
+    const now = Date.now()
+    const bucket = rateLimitBuckets.get(ip)
+
+    if (!bucket || bucket.resetAt < now) {
+        rateLimitBuckets.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
+        return false
+    }
+
+    bucket.count += 1
+
+    if (bucket.count > RATE_LIMIT_MAX_REQUESTS) {
+        return true
+    }
+
+    rateLimitBuckets.set(ip, bucket)
+    return false
+}
 
 function getLocale(request: NextRequest): string | undefined {
     // 1. Check cookie
@@ -30,6 +80,23 @@ function getLocale(request: NextRequest): string | undefined {
 export default function proxy(request: NextRequest) {
     const requestId = crypto.randomUUID()
     const pathname = request.nextUrl.pathname
+    const clientIp = getClientIp(request)
+
+    if (isRateLimited(clientIp)) {
+        const limitedResponse = attachSecurityHeaders(
+            NextResponse.json(
+                {
+                    error: 'too_many_requests',
+                    message: 'Rate limit exceeded. Please slow down.',
+                },
+                { status: 429 }
+            )
+        )
+
+        limitedResponse.headers.set('x-request-id', requestId)
+        limitedResponse.headers.set('Retry-After', String(RATE_LIMIT_WINDOW_MS / 1000))
+        return limitedResponse
+    }
 
     // Log Request
     logger.info({
@@ -37,8 +104,7 @@ export default function proxy(request: NextRequest) {
         requestId,
         method: request.method,
         url: pathname,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ip: (request as any).ip || request.headers.get('x-forwarded-for'),
+        ip: clientIp,
         userAgent: request.headers.get('user-agent')
     })
 
@@ -61,14 +127,12 @@ export default function proxy(request: NextRequest) {
         // Preserve query parameters
         newUrl.search = request.nextUrl.search
 
-        const response = NextResponse.redirect(newUrl)
+        const response = attachSecurityHeaders(NextResponse.redirect(newUrl))
 
-        // Add Request ID
         response.headers.set('x-request-id', requestId)
 
-        // Set cookie if missing or different
-        if (request.cookies.get("NEXT_LOCALE")?.value !== locale) {
-            response.cookies.set("NEXT_LOCALE", locale as string, { path: '/', maxAge: 31536000, sameSite: 'lax' })
+        if (locale && request.cookies.get("NEXT_LOCALE")?.value !== locale) {
+            syncLocaleCookie(response, locale)
         }
 
         return response
@@ -79,17 +143,21 @@ export default function proxy(request: NextRequest) {
         )
 
         if (localeInPath) {
-            const response = NextResponse.next()
+            const response = attachSecurityHeaders(NextResponse.next())
 
-            // Add Request ID
             response.headers.set('x-request-id', requestId)
 
             if (request.cookies.get("NEXT_LOCALE")?.value !== localeInPath) {
-                response.cookies.set("NEXT_LOCALE", localeInPath, { path: '/', maxAge: 31536000, sameSite: 'lax' })
+                syncLocaleCookie(response, localeInPath)
             }
+
             return response
         }
     }
+
+    const fallbackResponse = attachSecurityHeaders(NextResponse.next())
+    fallbackResponse.headers.set('x-request-id', requestId)
+    return fallbackResponse
 }
 
 export const config = {

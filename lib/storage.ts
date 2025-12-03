@@ -1,17 +1,18 @@
 import { Storage } from "@google-cloud/storage"
 import { v4 as uuidv4 } from "uuid"
+import { env } from "@/lib/env"
 
 let storageInstance: Storage | null = null
-const bucketName = process.env.GCS_BUCKET_NAME
+const bucketName = env.GCS_BUCKET_NAME
 const SIGNED_URL_TTL_MS = 60 * 60 * 1000 // 1 saat cache için yeterli
 
 function getStorage() {
     if (!storageInstance) {
         storageInstance = new Storage({
-            projectId: process.env.GCS_PROJECT_ID,
+            projectId: env.GCS_PROJECT_ID,
             credentials: {
-                client_email: process.env.GCS_CLIENT_EMAIL,
-                private_key: process.env.GCS_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+                client_email: env.GCS_CLIENT_EMAIL,
+                private_key: env.GCS_PRIVATE_KEY.replace(/\\n/g, "\n"),
             },
         })
     }

@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { getDictionary } from "@/lib/get-dictionary"
+import { env } from "@/lib/env"
 import { jwtVerify } from "jose"
 import { OnboardingClientPage } from "./client-page"
 
@@ -21,7 +22,7 @@ export default async function OnboardingPage({
 
     if (token) {
         try {
-            const secret = new TextEncoder().encode(process.env.AUTH_SECRET)
+            const secret = new TextEncoder().encode(env.AUTH_SECRET)
             await jwtVerify(token, secret)
         } catch {
             redirect(`/${lang}/login`)

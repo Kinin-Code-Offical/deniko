@@ -7,8 +7,6 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
-    //backup files created by me like an idiot
-    "pre-codes/**",
 
     // Default ignores of eslint-config-next:
     ".next/**",
