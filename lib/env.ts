@@ -5,6 +5,13 @@ const envSchema = z.object({
   NEXT_RUNTIME: z.enum(["edge", "nodejs"]).optional(),
   DATABASE_URL: z.string().url({ message: "DATABASE_URL must be a valid URL" }),
   DIRECT_URL: z.string().url().optional(),
+  DATABASE_SSL_CA: z.string().optional(),
+  DATABASE_SSL_CERT: z.string().optional(),
+  DATABASE_SSL_KEY: z.string().optional(),
+  DATABASE_SSL_SKIP_VERIFY: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((value) => value === "true"),
   NEXTAUTH_URL: z.string().url({ message: "NEXTAUTH_URL must be a valid URL" }),
   EMAIL_USER: z.string().email({ message: "EMAIL_USER must be a valid email" }),
   EMAIL_PASS: z.string().min(1, { message: "EMAIL_PASS is required" }),

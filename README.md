@@ -56,6 +56,20 @@ GCS_CLIENT_EMAIL="your-service-account-email"
 GCS_PRIVATE_KEY="your-private-key"
 ```
 
+#### TLS certificates for managed Postgres
+
+If your Postgres provider (for example Google Cloud SQL) issues a custom TLS certificate, expose it via the following optional variables so the app can establish a secure connection:
+
+```env
+# Optional TLS inputs
+DATABASE_SSL_CA="-----BEGIN CERTIFICATE-----\n..."
+DATABASE_SSL_CERT="-----BEGIN CERTIFICATE-----\n..." # Only needed for mTLS
+DATABASE_SSL_KEY="-----BEGIN PRIVATE KEY-----\n..."   # Only needed for mTLS
+DATABASE_SSL_SKIP_VERIFY="false"                       # Set to "true" to bypass verification in dev
+```
+
+Paste multiline PEM values with `\n` escapes or store them base64-encoded. As an alternative, you can trust the CA globally by exporting `NODE_EXTRA_CA_CERTS="path/to/server-ca.pem"` before running `npm run dev`.
+
 ### 4. Database Setup
 
 Push the Prisma schema to your local database:
