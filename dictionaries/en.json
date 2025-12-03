@@ -8,7 +8,22 @@
             "settings": "Settings",
             "lessons": "Lessons",
             "homework": "Homework",
-            "exams": "Exams"
+            "exams": "Exams",
+            "logout": "Log out"
+        },
+        "join": {
+            "title": "Invitation Details",
+            "desc": "Review the details provided by your teacher.",
+            "teacher_data": "Teacher's Input",
+            "your_data": "Your Info",
+            "keep_teacher_data": "Save teacher's data to my profile",
+            "conflict_grade": "Grade / Student No",
+            "conflict_parent": "Parent Info",
+            "conflict_classroom": "Classrooms",
+            "accept_merge": "Accept & Merge",
+            "reject": "Reject",
+            "success": "Profile merged successfully!",
+            "error": "Failed to merge profile."
         },
         "header": {
             "search_placeholder": "Search...",
@@ -32,11 +47,14 @@
                 "edit": "Edit",
                 "archive": "Archive",
                 "delete": "Delete",
-                "copy_invite": "Copy Invite Link"
+                "copy_invite": "Copy Invite Link",
+                "view_details": "View Details"
             },
             "status": {
                 "shadow": "Pending Invite",
-                "active": "Active"
+                "active": "Active",
+                "verified": "Verified",
+                "pending": "Pending"
             },
             "table": {
                 "name": "Student",
@@ -66,7 +84,8 @@
                 "search_classroom": "Search classroom...",
                 "no_classroom_found": "No classroom found.",
                 "select_grade": "Select Grade",
-                "success": "Student created successfully"
+                "success": "Student created successfully",
+                "copy_invite": "Invite link copied to clipboard"
             }
         },
         "student": {
@@ -156,8 +175,14 @@
         }
     },
     "common": {
+        "loading": "Loading...",
         "back": "Back",
         "back_to_home": "Back to Home"
+    },
+    "teacher": {
+        "invite_link_copied": "Invite link copied",
+        "invite_link_copy_failed": "Failed to copy invite link",
+        "copy_invite_link": "Copy Invite Link"
     },
     "components": {
         "phone_input": {
@@ -250,6 +275,7 @@
             "phone": "Phone Number",
             "password": "Password",
             "password_confirm": "Confirm Password",
+            "confirm_password": "Confirm Password",
             "submit": "Register",
             "submitting": "Registering...",
             "have_account": "Already have an account?",
@@ -312,6 +338,8 @@
             "submit": "Reset Password",
             "submitting": "Resetting...",
             "success": "Your password has been reset successfully. You can now login.",
+            "success_title": "Password Reset Successful",
+            "success_desc": "Your password has been reset successfully. You can now login.",
             "invalid_token": "Invalid or expired token.",
             "expired_token": "This link has expired.",
             "user_not_found": "User not found.",
@@ -351,6 +379,9 @@
                 "success": "Email address successfully verified.",
                 "error": "An error occurred during verification."
             }
+        },
+        "errors": {
+            "generic": "An error occurred."
         }
     },
     "legal": {
@@ -358,6 +389,7 @@
         "privacy_title": "Privacy Policy",
         "accept_terms": "I have read and accept the [Terms of Service] and [Privacy Policy].",
         "validation_terms": "You must accept the terms to continue.",
+        "validation_error": "You must accept the terms to continue.",
         "marketing_consent": "I want to be informed about campaigns and announcements via email."
     },
     "home": {

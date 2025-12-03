@@ -37,7 +37,7 @@ export async function GET(
         return new NextResponse(webStream as any, {
             headers: {
                 "Content-Type": contentType,
-                "Cache-Control": "private, max-age=3600",
+                "Cache-Control": "public, max-age=31536000, immutable",
             },
         })
     } catch (error) {

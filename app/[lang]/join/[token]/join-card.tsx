@@ -15,7 +15,11 @@ export function JoinCard({ token, studentName, teacherName, lang }: { token: str
     const handleJoin = async () => {
         setLoading(true)
         try {
-            const result = await claimStudentProfile(token)
+            const result = await claimStudentProfile(token, {
+                useTeacherGrade: true,
+                useTeacherParentInfo: true,
+                useTeacherClassroom: true
+            })
             if (result.success) {
                 toast.success("Successfully joined the class!")
                 router.push(`/${lang}/dashboard`)

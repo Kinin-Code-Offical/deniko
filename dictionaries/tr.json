@@ -8,7 +8,22 @@
             "settings": "Ayarlar",
             "lessons": "Dersler",
             "homework": "Ödevler",
-            "exams": "Sınavlar"
+            "exams": "Sınavlar",
+            "logout": "Çıkış Yap"
+        },
+        "join": {
+            "title": "Davet Detayları",
+            "desc": "Öğretmeninizin girdiği bilgileri inceleyin.",
+            "teacher_data": "Hocanın Girdiği",
+            "your_data": "Sizdeki Bilgi",
+            "keep_teacher_data": "Hocanın girdiği bilgileri profilime kaydet",
+            "conflict_grade": "Sınıf / Okul No",
+            "conflict_parent": "Veli Bilgileri",
+            "conflict_classroom": "Sınıflar",
+            "accept_merge": "Kabul Et ve Birleştir",
+            "reject": "Reddet",
+            "success": "Profil başarıyla birleştirildi!",
+            "error": "Profil birleştirilemedi."
         },
         "header": {
             "search_placeholder": "Arama yap...",
@@ -32,11 +47,14 @@
                 "edit": "Düzenle",
                 "archive": "Arşivle",
                 "delete": "Sil",
-                "copy_invite": "Davet Linki"
+                "copy_invite": "Davet Linki",
+                "view_details": "Detayları Gör"
             },
             "status": {
                 "shadow": "Davet Bekliyor",
-                "active": "Aktif"
+                "active": "Aktif",
+                "verified": "Onaylı",
+                "pending": "Bekliyor"
             },
             "table": {
                 "name": "Öğrenci",
@@ -66,7 +84,8 @@
                 "search_classroom": "Sınıf ara...",
                 "no_classroom_found": "Sınıf bulunamadı.",
                 "select_grade": "Seviye Seçin",
-                "success": "Öğrenci başarıyla oluşturuldu"
+                "success": "Öğrenci başarıyla oluşturuldu",
+                "copy_invite": "Davet linki kopyalandı"
             }
         },
         "student": {
@@ -84,6 +103,7 @@
             "active_students": "Aktif Öğrenciler",
             "today_lessons_count": "Bugünkü Dersler",
             "pending_homework_count": "Bekleyen Ödevler",
+            "take_attendance": "Yoklama Al",
             "upcoming_lessons": "Bugünkü Program",
             "no_lessons_today": "Bugün için planlanmış ders yok.",
             "quick_actions": {
@@ -155,8 +175,14 @@
         }
     },
     "common": {
+        "loading": "Yükleniyor...",
         "back": "Geri",
         "back_to_home": "Ana Sayfaya Dön"
+    },
+    "teacher": {
+        "invite_link_copied": "Davet linki kopyalandı",
+        "invite_link_copy_failed": "Davet linki kopyalanamadı",
+        "copy_invite_link": "Davet Linkini Kopyala"
     },
     "components": {
         "phone_input": {
@@ -249,6 +275,7 @@
             "phone": "Telefon Numarası",
             "password": "Şifre",
             "password_confirm": "Şifre Tekrarı",
+            "confirm_password": "Şifre Tekrarı",
             "submit": "Kayıt Ol",
             "submitting": "Kayıt Yapılıyor...",
             "have_account": "Zaten hesabınız var mı?",
@@ -311,6 +338,8 @@
             "submit": "Şifreyi Sıfırla",
             "submitting": "Sıfırlanıyor...",
             "success": "Şifreniz başarıyla sıfırlandı. Artık giriş yapabilirsiniz.",
+            "success_title": "Şifre Sıfırlama Başarılı",
+            "success_desc": "Şifreniz başarıyla sıfırlandı. Artık giriş yapabilirsiniz.",
             "invalid_token": "Geçersiz veya süresi dolmuş token.",
             "expired_token": "Bu bağlantının süresi dolmuş.",
             "user_not_found": "Kullanıcı bulunamadı.",
@@ -350,6 +379,9 @@
                 "success": "E-posta adresi başarıyla doğrulandı.",
                 "error": "Doğrulama sırasında bir hata oluştu."
             }
+        },
+        "errors": {
+            "generic": "Bir hata oluştu."
         }
     },
     "legal": {
@@ -357,6 +389,7 @@
         "privacy_title": "Gizlilik Politikası",
         "accept_terms": "[Kullanıcı Sözleşmesi] ve [Gizlilik Politikası]'nı okudum ve kabul ediyorum.",
         "validation_terms": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
+        "validation_error": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
         "marketing_consent": "Kampanya ve duyurulardan e-posta ile haberdar olmak istiyorum."
     },
     "home": {

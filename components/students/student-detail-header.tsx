@@ -2,10 +2,8 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Copy, User } from "lucide-react"
-import { toast } from "sonner"
+import { InviteButton } from "./invite-button"
 
 interface StudentDetailHeaderProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,9 +12,10 @@ interface StudentDetailHeaderProps {
     dictionary: any
     totalLessons: number
     balance: number
+    lang: string
 }
 
-export function StudentDetailHeader({ student, dictionary, totalLessons, balance }: StudentDetailHeaderProps) {
+export function StudentDetailHeader({ student, dictionary, totalLessons, balance, lang }: StudentDetailHeaderProps) {
     const isClaimed = student.isClaimed
     const displayName = student.userId
         ? (student.user?.name || `${student.user?.firstName} ${student.user?.lastName}`)
@@ -28,13 +27,6 @@ export function StudentDetailHeader({ student, dictionary, totalLessons, balance
         .join("")
         .toUpperCase()
         .substring(0, 2)
-
-    const copyInviteLink = () => {
-        if (!student.inviteToken) return
-        const link = `${window.location.origin}/join/${student.inviteToken}`
-        navigator.clipboard.writeText(link)
-        toast.success(dictionary.dashboard.add_dialog.copy_invite)
-    }
 
     return (
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -58,10 +50,11 @@ export function StudentDetailHeader({ student, dictionary, totalLessons, balance
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 {!isClaimed && student.inviteToken && (
-                    <Button variant="outline" onClick={copyInviteLink}>
-                        <Copy className="mr-2 h-4 w-4" />
-                        {dictionary.dashboard.student_detail.header.invite_link}
-                    </Button>
+                    <InviteButton
+                        token={student.inviteToken}
+                        lang={lang}
+                        dictionary={dictionary}
+                    />
                 )}
 
                 <Card className="w-full sm:w-auto">

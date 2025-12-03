@@ -1,44 +1,43 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Copy, Check } from "lucide-react"
-import { useState, useEffect } from "react"
-import { toast } from "sonner"
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Check, Copy } from 'lucide-react';
+import useCopyToClipboard from '@/lib/hooks/useCopyToClipboard';
+import { toast } from 'sonner';
 
-interface InviteButtonProps {
-    inviteToken: string
-    lang: string
-}
+type InviteButtonProps = {
+  token: string;
+  lang: string;
+  dictionary: any;
+};
 
-export function InviteButton({ inviteToken, lang }: InviteButtonProps) {
-    const [copied, setCopied] = useState(false)
-    const [origin, setOrigin] = useState("")
+export function InviteButton({ token, lang, dictionary }: InviteButtonProps) {
+  const [_, copy] = useCopyToClipboard();
+  const [isCopied, setIsCopied] = useState(false);
 
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setOrigin(window.location.origin)
-    }, [])
+  const onCopy = () => {
+    const inviteLink = `${window.location.origin}/${lang}/join/${token}`;
+    copy(inviteLink)
+      .then(() => {
+        setIsCopied(true);
+        toast.success(dictionary.teacher.invite_link_copied);
+        setTimeout(() => setIsCopied(false), 2000);
+      })
+      .catch((error) => {
+        toast.error(dictionary.teacher.invite_link_copy_failed);
+        console.error('Failed to copy invite link: ', error);
+      });
+  };
 
-    const onCopy = () => {
-        if (!origin) return
-        const inviteLink = `${origin}/${lang}/register?invite=${inviteToken}`
-        navigator.clipboard.writeText(inviteLink)
-        setCopied(true)
-        toast.success("Davet linki kopyalandı!")
-
-        setTimeout(() => {
-            setCopied(false)
-        }, 2000)
-    }
-
-    return (
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={onCopy}>
-            {copied ? (
-                <Check className="h-4 w-4 text-green-500" />
-            ) : (
-                <Copy className="h-4 w-4" />
-            )}
-            <span className="sr-only">Copy Invite Link</span>
-        </Button>
-    )
+  return (
+    <Button onClick={onCopy} variant="outline" size="sm">
+      {isCopied ? (
+        <Check className="mr-2 h-4 w-4" />
+      ) : (
+        <Copy className="mr-2 h-4 w-4" />
+      )}
+      {dictionary.teacher.copy_invite_link}
+    </Button>
+  );
 }

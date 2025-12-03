@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Copy, Eye, Search } from "lucide-react"
-import { toast } from "sonner"
+import { InviteButton } from "./invite-button";
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
@@ -46,12 +45,6 @@ interface StudentTableProps {
 
 export function StudentTable({ data, dictionary, lang }: StudentTableProps) {
     const [searchQuery, setSearchQuery] = useState("")
-
-    const copyInviteLink = (token: string) => {
-        const url = `${window.location.origin}/${lang}/join/${token}`
-        navigator.clipboard.writeText(url)
-        toast.success(lang === 'tr' ? "Davet linki kopyalandı" : "Invite link copied")
-    }
 
     // Helper to get display name
     const getDisplayName = (student: StudentData) => {
@@ -163,16 +156,11 @@ export function StudentTable({ data, dictionary, lang }: StudentTableProps) {
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
                                             {!student.isClaimed && student.inviteToken && (
-                                                <Button
-                                                    variant="outline"
-                                                    size="icon"
-                                                    className="h-8 w-8"
-                                                    onClick={() => copyInviteLink(student.inviteToken!)}
-                                                    title={dictionary.dashboard.students.actions.copy_invite}
-                                                >
-                                                    <Copy className="h-4 w-4" />
-                                                    <span className="sr-only">{dictionary.dashboard.students.actions.copy_invite}</span>
-                                                </Button>
+                                                <InviteButton
+                                                    token={student.inviteToken}
+                                                    lang={lang}
+                                                    dictionary={dictionary}
+                                                />
                                             )}
                                             <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                                                 <Link href={`/${lang}/dashboard/students/${student.id}`}>

@@ -80,6 +80,8 @@ export async function createStudent(formData: FormData) {
 
     // Generate a unique invite token
     const inviteToken = randomBytes(16).toString("hex")
+    // Token 48 saat geçerli olsun
+    const inviteTokenExpires = new Date(Date.now() + 48 * 60 * 60 * 1000)
 
     try {
         await db.$transaction(async (tx) => {
@@ -94,6 +96,7 @@ export async function createStudent(formData: FormData) {
                     tempEmail,
                     tempAvatar: avatarUrl,
                     inviteToken,
+                    inviteTokenExpires,
                     creatorTeacherId: user.teacherProfile!.id,
                     isClaimed: false,
                     classrooms: {
@@ -123,14 +126,21 @@ export async function createStudent(formData: FormData) {
     }
 }
 
+type MergePreferences = {
+    useTeacherGrade: boolean;
+    useTeacherParentInfo: boolean;
+    useTeacherClassroom: boolean;
+}
+
 /**
  * Claims a student profile using an invitation token.
  * Merges the shadow profile with the authenticated user's profile if needed.
  * 
  * @param token - The invitation token.
+ * @param preferences - The user's preferences for merging data.
  * @returns An object indicating success or failure.
  */
-export async function claimStudentProfile(token: string) {
+export async function claimStudentProfile(token: string, preferences: MergePreferences) {
     const session = await auth()
 
     if (!session?.user?.id) {
@@ -148,6 +158,11 @@ export async function claimStudentProfile(token: string) {
 
         if (targetProfile.userId) {
             return { success: false, error: "Profile already claimed" }
+        }
+
+        // Süre kontrolü
+        if (targetProfile.inviteTokenExpires && new Date() > targetProfile.inviteTokenExpires) {
+            return { success: false, error: "Davet bağlantısının süresi dolmuş. Lütfen öğretmeninizden yeni bir davet isteyin." }
         }
 
         // Check if user already has a profile
@@ -173,34 +188,63 @@ export async function claimStudentProfile(token: string) {
                 }
             }
 
+            // Prepare data for the final profile (Target Profile)
+            const dataToUpdate: any = {
+                userId: session.user.id,
+                isClaimed: true,
+                inviteToken: null,
+                tempFirstName: null,
+                tempLastName: null,
+            }
+
+            // Logic: We are adopting the Shadow Profile (Target) as the main profile.
+            // If the user chooses NOT to use Teacher's data, we overwrite Target with User's existing data (if any).
+
+            if (existingProfile) {
+                // Grade / Student No
+                if (!preferences.useTeacherGrade) {
+                    dataToUpdate.studentNo = existingProfile.studentNo
+                    dataToUpdate.gradeLevel = existingProfile.gradeLevel
+                }
+                // Parent Info
+                if (!preferences.useTeacherParentInfo) {
+                    dataToUpdate.parentName = existingProfile.parentName
+                    dataToUpdate.parentPhone = existingProfile.parentPhone
+                    dataToUpdate.parentEmail = existingProfile.parentEmail
+                }
+                // Classrooms
+                if (!preferences.useTeacherClassroom) {
+                    dataToUpdate.classrooms = { set: [] }
+                }
+            } else {
+                // No existing profile, so "User's Data" is effectively null/empty.
+                // If they unchecked "Use Teacher's Data", we should clear those fields in Target.
+                if (!preferences.useTeacherGrade) {
+                    dataToUpdate.studentNo = null
+                    dataToUpdate.gradeLevel = null
+                }
+                if (!preferences.useTeacherParentInfo) {
+                    dataToUpdate.parentName = null
+                    dataToUpdate.parentPhone = null
+                    dataToUpdate.parentEmail = null
+                }
+                if (!preferences.useTeacherClassroom) {
+                    dataToUpdate.classrooms = { set: [] }
+                }
+            }
+
             // 2. Handle User's Existing Profile
             if (existingProfile && existingProfile.id !== targetProfile.id) {
-                // MVP Strategy: The Shadow Profile contains the "Teacher's Truth" (Classrooms, Parents, etc.)
-                // We assume the User's existing profile is empty/generic (created at signup) and discard it.
-
-                // TODO: In the future, we might want to migrate data from existingProfile to targetProfile 
-                // if the user had their own independent data. For now, we DELETE it.
-
-                // We need to be careful about FK constraints. 
-                // If existingProfile has relations, this delete might fail if not cascaded.
-                // For this MVP, we assume it's safe to delete.
+                // Delete the old profile as we are moving to the new one
                 await tx.studentProfile.delete({
                     where: { id: existingProfile.id }
                 })
             }
 
-            // 3. Adopt Shadow Profile
+            // 3. Adopt Shadow Profile with merged data
             await tx.studentProfile.update({
                 where: { id: targetProfile.id },
-                data: {
-                    userId: session.user.id,
-                    isClaimed: true,
-                    inviteToken: null,
-                    // Clear temp data as it's now "Real" (or preserved in customName)
-                    tempFirstName: null,
-                    tempLastName: null,
-                    // We KEEP: classrooms, parent info, gradeLevel, etc. from the Shadow Profile
-                }
+                data: dataToUpdate
             })
         })
 
@@ -219,6 +263,60 @@ export async function claimStudentProfile(token: string) {
  * @param token - The invitation token.
  * @returns The student profile or null.
  */
+export async function getInviteDetails(token: string) {
+    try {
+        const studentProfile = await db.studentProfile.findUnique({
+            where: { inviteToken: token },
+            select: {
+                id: true,
+                tempFirstName: true,
+                tempLastName: true,
+                studentNo: true,
+                gradeLevel: true,
+                parentName: true,
+                parentPhone: true,
+                inviteTokenExpires: true,
+                isClaimed: true,
+                teacherRelations: {
+                    where: { isCreator: true },
+                    take: 1,
+                    select: {
+                        teacher: {
+                            select: {
+                                user: {
+                                    select: {
+                                        name: true,
+                                        firstName: true,
+                                        lastName: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        if (!studentProfile) return null
+
+        // Extract teacher name safely
+        const teacherUser = studentProfile.teacherRelations[0]?.teacher?.user
+        const teacherName = teacherUser
+            ? (teacherUser.firstName && teacherUser.lastName
+                ? `${teacherUser.firstName} ${teacherUser.lastName}`
+                : teacherUser.name)
+            : "Bir Öğretmen"
+
+        return {
+            ...studentProfile,
+            teacherName
+        }
+    } catch (error) {
+        logger.error({ context: "getInviteDetails", error }, "Failed to fetch invite details")
+        return null
+    }
+}
+
 export async function getStudentProfileByToken(token: string) {
     try {
         const studentProfile = await db.studentProfile.findUnique({
@@ -548,6 +646,57 @@ export async function deleteShadowStudent(studentId: string) {
     } catch (error) {
         logger.error({ context: "deleteShadowStudent", error }, "Failed to delete student")
         return { success: false, error: "Failed to delete student" }
+    }
+}
+
+export async function regenerateInviteToken(studentId: string) {
+    const session = await auth()
+
+    if (!session?.user?.id) {
+        return { success: false, error: "Unauthorized" }
+    }
+
+    const user = await db.user.findUnique({
+        where: { id: session.user.id },
+        include: { teacherProfile: true },
+    })
+
+    if (!user?.teacherProfile) {
+        return { success: false, error: "Teacher profile not found" }
+    }
+
+    // Verify ownership/relation
+    const relation = await db.studentTeacherRelation.findUnique({
+        where: {
+            teacherId_studentId: {
+                teacherId: user.teacherProfile.id,
+                studentId: studentId,
+            },
+        },
+    })
+
+    if (!relation) {
+        return { success: false, error: "Relation not found" }
+    }
+
+    const newToken = randomBytes(16).toString("hex")
+    const newExpires = new Date(Date.now() + 48 * 60 * 60 * 1000)
+
+    try {
+        await db.studentProfile.update({
+            where: { id: studentId },
+            data: {
+                inviteToken: newToken,
+                inviteTokenExpires: newExpires,
+            },
+        })
+
+        revalidatePath("/dashboard/students")
+        revalidatePath(`/dashboard/students/${studentId}`)
+        return { success: true, message: "Davet bağlantısı yenilendi." }
+    } catch (error) {
+        logger.error({ context: "regenerateInviteToken", error }, "Failed to regenerate token")
+        return { success: false, error: "Failed to regenerate token" }
     }
 }
 

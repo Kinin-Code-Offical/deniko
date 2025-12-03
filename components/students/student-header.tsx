@@ -25,16 +25,18 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { updateStudent } from "@/app/actions/student"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
+import { InviteButton } from "./invite-button"
 
 interface StudentHeaderProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     relation: any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dictionary: any
+    lang: string
 }
 
-export function StudentHeader({ relation, dictionary }: StudentHeaderProps) {
+export function StudentHeader({ relation, dictionary, lang }: StudentHeaderProps) {
     const student = relation.student
     const user = student.user
     const router = useRouter()
@@ -54,13 +56,6 @@ export function StudentHeader({ relation, dictionary }: StudentHeaderProps) {
                     : student.tempAvatar)
                 : `/api/files/${student.tempAvatar}`)
             : undefined
-
-    const copyInviteLink = () => {
-        if (!student.inviteToken) return
-        const url = `${window.location.origin}/join/${student.inviteToken}`
-        navigator.clipboard.writeText(url)
-        toast.success(dictionary.student_detail.header.link_copied)
-    }
 
     const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -188,10 +183,11 @@ export function StudentHeader({ relation, dictionary }: StudentHeaderProps) {
                 </Dialog>
 
                 {!student.isClaimed && (
-                    <Button variant="outline" size="sm" onClick={copyInviteLink}>
-                        <Copy className="mr-2 h-4 w-4" />
-                        {dictionary.student_detail.header.invite_link}
-                    </Button>
+                    <InviteButton
+                        token={student.inviteToken}
+                        lang={lang}
+                        dictionary={dictionary}
+                    />
                 )}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -200,8 +196,12 @@ export function StudentHeader({ relation, dictionary }: StudentHeaderProps) {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={copyInviteLink}>
-                            {dictionary.student_detail.header.copy_link}
+                        <DropdownMenuItem>
+                            <InviteButton
+                                token={student.inviteToken}
+                                lang={lang}
+                                dictionary={dictionary}
+                            />
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
