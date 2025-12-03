@@ -10,7 +10,7 @@ WORKDIR /app
 # Paket dosyalarını kopyala
 COPY package.json package-lock.json* ./
 # Bağımlılıkları kur
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # --------------------------------------------------------
 # 2. AŞAMA: Projeyi Derle (Builder)
