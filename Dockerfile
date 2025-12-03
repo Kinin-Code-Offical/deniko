@@ -22,7 +22,7 @@ COPY . .
 
 # Build sırasında Prisma generate için geçici dummy URL
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
-
+ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 # Prisma istemcisini oluştur
 RUN npx prisma generate
 
