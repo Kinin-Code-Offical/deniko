@@ -1,7 +1,8 @@
 import { Storage } from "@google-cloud/storage"
 import { v4 as uuidv4 } from "uuid"
 
-// Global değişken yerine bu yapıyı kullanın
+// Global değişkeni kaldırıp yerine bu fonksiyonu kullanıyoruz.
+// Bu sayede build sırasında bağlantı hatası alınmaz.
 let storageInstance: Storage | null = null;
 
 function getStorage() {
@@ -10,7 +11,6 @@ function getStorage() {
             projectId: process.env.GCS_PROJECT_ID,
             credentials: {
                 client_email: process.env.GCS_CLIENT_EMAIL,
-                // replace işlemi undefined hatası vermesin diye kontrol ekledik
                 private_key: process.env.GCS_PRIVATE_KEY?.replace(/\\n/g, "\n"),
             },
         })
@@ -27,7 +27,7 @@ export async function uploadFile(file: File, folder: string): Promise<string> {
     const extension = file.name.split(".").pop()
     const fileName = `${folder}/${uuidv4()}.${extension}`
 
-    // getStorage() fonksiyonunu çağırıyoruz
+    // getStorage() kullanıyoruz
     const bucket = getStorage().bucket(bucketName)
     const fileRef = bucket.file(fileName)
 
@@ -39,7 +39,6 @@ export async function uploadFile(file: File, folder: string): Promise<string> {
     return fileName
 }
 
-// İmzalı URL (Hızlı Profil Fotoları İçin)
 export async function getSignedUrl(path: string) {
     if (!path) return null;
     if (!bucketName) throw new Error("GCS_BUCKET_NAME is not defined")
@@ -51,7 +50,7 @@ export async function getSignedUrl(path: string) {
         const [url] = await file.getSignedUrl({
             version: 'v4',
             action: 'read',
-            expires: Date.now() + 60 * 60 * 1000, // 1 Saat
+            expires: Date.now() + 60 * 60 * 1000,
         });
         return url;
     } catch (error) {

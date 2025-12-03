@@ -3,7 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
 
-  // 👇 BU KISIM EKSİK OLDUĞU İÇİN HATA ALIYORSUNUZ
+  // 👇 BU KISIM HAYATİ ÖNEM TAŞIYOR.
+  // Bu ayar olmadan bcryptjs ve storage kütüphaneleri derlenirken patlar.
   serverExternalPackages: [
     "pino",
     "pino-pretty",

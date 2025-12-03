@@ -22,13 +22,13 @@
         "name": "next"
       }
     ],
-    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
       ]
     }
+    // "ignoreDeprecations": "6.0"  <-- BU SATIRI SİLDİK
   },
   "include": [
     "next-env.d.ts",
