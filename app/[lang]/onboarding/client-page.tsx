@@ -72,7 +72,6 @@ export function OnboardingClientPage({ dictionary, lang, userId }: OnboardingCli
                     phoneNumber,
                     password,
                     confirmPassword,
-                    userId,
                     terms: termsAccepted,
                     marketingConsent
                 })
