@@ -22,7 +22,7 @@ function getLocale(request: NextRequest): string | undefined {
 
     try {
         return matchLocale(languages, locales, i18n.defaultLocale)
-    } catch (e) {
+    } catch {
         return i18n.defaultLocale
     }
 }

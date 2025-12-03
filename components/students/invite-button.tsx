@@ -7,16 +7,18 @@ import useCopyToClipboard from '@/lib/hooks/useCopyToClipboard';
 import { toast } from 'sonner';
 
 type InviteButtonProps = {
-  token: string;
+  token: string | null;
   lang: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dictionary: any;
 };
 
 export function InviteButton({ token, lang, dictionary }: InviteButtonProps) {
-  const [_, copy] = useCopyToClipboard();
+  const [, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
 
   const onCopy = () => {
+    if (!token) return;
     const inviteLink = `${window.location.origin}/${lang}/join/${token}`;
     copy(inviteLink)
       .then(() => {
@@ -31,7 +33,7 @@ export function InviteButton({ token, lang, dictionary }: InviteButtonProps) {
   };
 
   return (
-    <Button onClick={onCopy} variant="outline" size="sm">
+    <Button onClick={onCopy} variant="outline" size="sm" disabled={!token}>
       {isCopied ? (
         <Check className="mr-2 h-4 w-4" />
       ) : (

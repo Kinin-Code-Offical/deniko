@@ -26,7 +26,7 @@ export function JoinCard({ token, studentName, teacherName, lang }: { token: str
             } else {
                 toast.error(result.error || "Failed to join")
             }
-        } catch (error) {
+        } catch {
             toast.error("Something went wrong")
         } finally {
             setLoading(false)

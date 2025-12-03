@@ -7,13 +7,6 @@ import * as z from "zod"
 import { login } from "@/app/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import {
     Form,
     FormControl,
     FormField,
@@ -26,8 +19,6 @@ import { GoogleLoginButton } from "@/components/auth/google-login-button"
 import { Loader2, Eye, EyeOff } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
-import { DenikoLogo } from "@/components/ui/deniko-logo"
-import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import { ResendAlert } from "@/components/auth/resend-alert"
 
 interface LoginFormProps {
@@ -66,7 +57,7 @@ export function LoginForm({ dictionary, lang }: LoginFormProps) {
                     }
                     toast.error(result.message)
                 }
-            } catch (error) {
+            } catch {
                 // Verify if it's a redirect error (usually has a DIGEST property or just ignore)
                 // Since we redirect from server, this catch block might catch the redirect.
                 // We can simply ignore it as the browser will navigate away.

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -73,7 +73,7 @@ export function ResetPasswordForm({ dictionary, lang, token }: ResetPasswordForm
                     router.push(`/${lang}/login`)
                 }, 3000)
             }
-        } catch (err) {
+        } catch {
             setError(dictionary.auth.errors.generic)
         } finally {
             setIsLoading(false)

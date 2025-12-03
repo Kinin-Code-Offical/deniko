@@ -1,9 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Cookie, X } from "lucide-react"
+import { Cookie } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import Link from "next/link"
 
 export function CookieConsent() {

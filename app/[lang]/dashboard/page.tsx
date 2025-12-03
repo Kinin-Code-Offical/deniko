@@ -97,7 +97,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
         })
 
         return <TeacherView
-            user={user}
             dictionary={dictionary}
             lang={lang}
             stats={{
@@ -205,7 +204,6 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
         })
 
         return <StudentView
-            user={user}
             dictionary={dictionary}
             lang={lang}
             stats={{

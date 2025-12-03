@@ -7,8 +7,6 @@ import { tr, enUS } from "date-fns/locale"
 
 interface StudentViewProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    user: any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dictionary: any
     lang: string
     stats: {
@@ -23,16 +21,11 @@ interface StudentViewProps {
     pendingHomeworks: any[]
 }
 
-export function StudentView({ user, dictionary, lang, stats, nextLesson, upcomingLessons, pendingHomeworks }: StudentViewProps) {
+export function StudentView({ dictionary, lang, stats, nextLesson, upcomingLessons, pendingHomeworks }: StudentViewProps) {
     const dateLocale = lang === "tr" ? tr : enUS
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h2 className="text-3xl font-bold tracking-tight">
-                    {dictionary.dashboard.student.welcome} {user.name}
-                </h2>
-            </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>

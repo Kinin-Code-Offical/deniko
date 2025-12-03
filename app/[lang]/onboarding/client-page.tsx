@@ -7,7 +7,6 @@ import { completeOnboarding } from "@/app/actions/onboarding"
 import { logout } from "@/app/actions/auth"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Loader2, School, GraduationCap, LogOut, CheckCircle2, Eye, EyeOff } from "lucide-react"
 import { toast } from "sonner"
 import { PhoneInput } from "@/components/ui/phone-input"
@@ -22,10 +21,9 @@ interface OnboardingClientPageProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dictionary: any
     lang: string
-    userId?: string
 }
 
-export function OnboardingClientPage({ dictionary, lang, userId }: OnboardingClientPageProps) {
+export function OnboardingClientPage({ dictionary, lang }: OnboardingClientPageProps) {
     const { update } = useSession()
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
@@ -82,7 +80,7 @@ export function OnboardingClientPage({ dictionary, lang, userId }: OnboardingCli
                 } else {
                     toast.error(result.error || "Something went wrong")
                 }
-            } catch (error) {
+            } catch {
                 toast.error("Something went wrong")
             }
         })

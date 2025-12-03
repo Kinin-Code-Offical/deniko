@@ -2,10 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { googleSignIn } from "@/app/actions/auth"
-import { Chrome } from "lucide-react" // Using Chrome icon as Google proxy or just text if not available. 
-// Lucide doesn't have a Google icon usually. I'll use a generic approach or just text.
-// Actually, I can use a simple SVG for Google or just text.
-// I'll use a simple SVG for Google logo inline.
 
 export function GoogleLoginButton({ text = "Google ile Devam Et" }: { text?: string }) {
     return (

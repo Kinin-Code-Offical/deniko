@@ -10,8 +10,11 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 
 interface JoinClientProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dict: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inviteDetails: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     userProfile: any
     token: string
 }
@@ -36,7 +39,7 @@ export default function JoinClient({ dict, inviteDetails, userProfile, token }: 
             } else {
                 toast.error(res.error || dict.dashboard.join.error)
             }
-        } catch (error) {
+        } catch {
             toast.error(dict.dashboard.join.error)
         } finally {
             setLoading(false)

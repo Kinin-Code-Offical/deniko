@@ -27,7 +27,8 @@ export async function googleSignIn() {
     await signIn("google", { redirectTo: "/onboarding" })
 }
 
-const loginSchemaBase = z.object({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _loginSchemaBase = z.object({
     email: z.string().email(),
     password: z.string().min(1),
 })
@@ -39,7 +40,7 @@ const loginSchemaBase = z.object({
  * @param lang - The current language locale.
  * @returns An object indicating success or failure with a message.
  */
-export async function login(formData: z.infer<typeof loginSchemaBase>, lang: string = "tr") {
+export async function login(formData: z.infer<typeof _loginSchemaBase>, lang: string = "tr") {
     const dict = await getDictionary(lang as Locale)
 
     const loginSchema = z.object({
@@ -141,7 +142,8 @@ export async function resendVerificationCode(email: string, lang: string = "tr")
     }
 }
 
-const registerSchemaBase = z.object({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _registerSchemaBase = z.object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),
     email: z.string().email(),
@@ -167,7 +169,7 @@ const registerSchemaBase = z.object({
  * @param lang - The current language locale.
  * @returns An object indicating success or failure.
  */
-export async function registerUser(formData: z.infer<typeof registerSchemaBase>, lang: string = "tr") {
+export async function registerUser(formData: z.infer<typeof _registerSchemaBase>, lang: string = "tr") {
     const dict = await getDictionary(lang as Locale)
     const d = dict.auth.register.validation
 

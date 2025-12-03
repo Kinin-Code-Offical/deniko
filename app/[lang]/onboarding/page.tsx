@@ -17,21 +17,13 @@ export default async function OnboardingPage({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dictionary = await getDictionary(lang as any)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let user: any = null
     let session = null
 
     if (token) {
         try {
             const secret = new TextEncoder().encode(process.env.AUTH_SECRET)
-            const { payload } = await jwtVerify(token, secret)
-            user = {
-                firstName: (payload.name as string)?.split(" ")[0],
-                lastName: (payload.name as string)?.split(" ").slice(1).join(" "),
-                email: payload.email as string,
-                image: payload.image as string,
-            }
-        } catch (e) {
+            await jwtVerify(token, secret)
+        } catch {
             redirect(`/${lang}/login`)
         }
     } else {
@@ -56,16 +48,9 @@ export default async function OnboardingPage({
         if (dbUser.isOnboardingCompleted) {
             redirect(`/${lang}/dashboard`)
         }
-
-        user = {
-            firstName: dbUser?.firstName || session.user.name?.split(" ")[0],
-            lastName: dbUser?.lastName || session.user.name?.split(" ").slice(1).join(" "),
-            email: dbUser?.email,
-            image: dbUser?.image
-        }
     }
 
     return (
-        <OnboardingClientPage dictionary={dictionary} lang={lang} userId={session?.user?.id} />
+        <OnboardingClientPage dictionary={dictionary} lang={lang} />
     )
 }

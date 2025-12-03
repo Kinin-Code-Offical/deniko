@@ -9,8 +9,6 @@ import Link from "next/link"
 
 interface TeacherViewProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    user: any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dictionary: any
     lang: string
     stats: {
@@ -22,15 +20,10 @@ interface TeacherViewProps {
     schedule: any[]
 }
 
-export function TeacherView({ user, dictionary, lang, stats, schedule }: TeacherViewProps) {
+export function TeacherView({ dictionary, lang, stats, schedule }: TeacherViewProps) {
     const dateLocale = lang === "tr" ? tr : enUS
     return (
         <div className="space-y-6">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <h2 className="text-3xl font-bold tracking-tight">
-                    {dictionary.dashboard.teacher.welcome} {user.name}
-                </h2>
-            </div>
 
             <div className="grid gap-4 md:grid-cols-3">
                 <Card>

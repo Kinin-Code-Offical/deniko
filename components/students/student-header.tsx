@@ -88,7 +88,7 @@ export function StudentHeader({ relation, dictionary, lang }: StudentHeaderProps
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                            <Link href={`?tab=settings`} onClick={(e) => {
+                            <Link href={`?tab=settings`} onClick={() => {
                                 // This is a bit of a hack to switch tabs if we are using query params or just rely on the user clicking the tab.
                                 // Since the tabs are client-side controlled usually, a link might not work unless we control the tab state via URL.
                                 // But the user asked to change the menu items.

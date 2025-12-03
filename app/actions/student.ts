@@ -189,6 +189,7 @@ export async function claimStudentProfile(token: string, preferences: MergePrefe
             }
 
             // Prepare data for the final profile (Target Profile)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const dataToUpdate: any = {
                 userId: session.user.id,
                 isClaimed: true,
@@ -540,7 +541,8 @@ export async function deleteStudent(studentId: string) {
     }
 }
 
-const updateStudentRelationSchema = z.object({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _updateStudentRelationSchema = z.object({
     customName: z.string().optional(),
     privateNotes: z.string().optional(),
     phoneNumber: z.string().optional(),
@@ -553,7 +555,7 @@ const updateStudentRelationSchema = z.object({
  * @param data - The update data (custom name, notes, etc.).
  * @returns An object indicating success or failure.
  */
-export async function updateStudentRelation(studentId: string, data: z.infer<typeof updateStudentRelationSchema>) {
+export async function updateStudentRelation(studentId: string, data: z.infer<typeof _updateStudentRelationSchema>) {
     const session = await auth()
     if (!session?.user?.id) return { success: false, error: "Unauthorized" }
 
@@ -819,6 +821,7 @@ export async function updateStudentSettings(studentId: string, formData: FormDat
             // Update Profile
             // If claimed, we might restrict some fields, but user asked to edit them.
             // We will update what we can on the profile.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const profileUpdateData: any = {
                 studentNo: studentNo,
                 gradeLevel: gradeLevel,

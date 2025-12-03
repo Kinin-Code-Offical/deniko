@@ -85,7 +85,7 @@ export function AddStudentDialog({ dictionary, classrooms = [] }: { dictionary: 
 
     useEffect(() => {
         if (searchParams.get("action") === "new-student") {
-            setOpen(true)
+            setTimeout(() => setOpen(true), 0)
         }
     }, [searchParams])
 

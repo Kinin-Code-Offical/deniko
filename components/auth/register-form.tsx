@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Loader2, User, GraduationCap, CheckCircle2, Eye, EyeOff } from "lucide-react"
 import { toast } from "sonner"
 
@@ -19,12 +18,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { PhoneInput } from "@/components/ui/phone-input"
-import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { registerUser } from "@/app/actions/auth"
-import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import { Checkbox } from "@/components/ui/checkbox"
 
 interface RegisterFormProps {
@@ -39,7 +35,6 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
     const [success, setSuccess] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const router = useRouter()
 
     const registerSchema = z.object({
         firstName: z.string().min(2, d.validation.first_name_min),
@@ -90,12 +85,11 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                 } else {
                     toast.error(result.message)
                 }
-            } catch (error) {
+            } catch {
                 toast.error("An error occurred")
             }
         })
     }
-
     if (success) {
         return (
             <div className="w-full max-w-md mx-auto text-center space-y-6">

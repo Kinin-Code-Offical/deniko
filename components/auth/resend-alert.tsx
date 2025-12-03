@@ -64,7 +64,7 @@ export function ResendAlert({ email, dictionary, lang }: ResendAlertProps) {
             } else {
                 toast.error(result.message)
             }
-        } catch (error) {
+        } catch {
             toast.error(d.error)
         } finally {
             setIsPending(false)

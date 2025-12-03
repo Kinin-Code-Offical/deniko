@@ -8,18 +8,15 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { PhoneInput } from "@/components/ui/phone-input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertTriangle, Loader2, Lock, Trash2, UserMinus, Camera, RefreshCw } from "lucide-react"
+import { Loader2, Trash2, UserMinus, Camera, Check } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { updateStudentSettings, toggleInviteLink, unlinkStudent, deleteShadowStudent } from "@/app/actions/student"
@@ -39,20 +36,35 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 
-const settingsSchema = z.object({
+const DEFAULT_AVATARS = [
+    "defaults/Felix.svg",
+    "defaults/Aneka.svg",
+    "defaults/Zoe.svg",
+    "defaults/Jack.svg",
+    "defaults/Precious.svg",
+    "defaults/Sam.svg",
+]
+
+const createSettingsSchema = (lang: string) => z.object({
     customName: z.string().optional(),
-    privateNotes: z.string().optional(),
 
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     studentNo: z.string().optional(),
     gradeLevel: z.string().optional(),
-    phone: z.string().optional(),
+    phone: z.string().optional().refine((val) => {
+        if (!val) return true
+        return !val.startsWith("0")
+    }, { message: lang === "tr" ? "Telefon numarası 0 ile başlamamalıdır." : "Phone number must not start with 0." }),
     email: z.string().email().optional().or(z.literal("")),
 
     parentName: z.string().optional(),
-    parentPhone: z.string().optional(),
+    parentPhone: z.string().optional().refine((val) => {
+        if (!val) return true
+        return !val.startsWith("0")
+    }, { message: lang === "tr" ? "Telefon numarası 0 ile başlamamalıdır." : "Phone number must not start with 0." }),
     parentEmail: z.string().email().optional().or(z.literal("")),
 })
 
@@ -62,9 +74,10 @@ interface StudentSettingsTabProps {
     studentId: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dictionary: any
+    lang: string
 }
 
-export function StudentSettingsTab({ relation, studentId, dictionary }: StudentSettingsTabProps) {
+export function StudentSettingsTab({ relation, studentId, dictionary, lang }: StudentSettingsTabProps) {
     const [isPending, startTransition] = useTransition()
     const router = useRouter()
     const student = relation.student
@@ -74,12 +87,13 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
     const [tempFile, setTempFile] = useState<File | null>(null)
     const [showCropper, setShowCropper] = useState(false)
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+    const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null)
 
+    const settingsSchema = createSettingsSchema(lang)
     const form = useForm<z.infer<typeof settingsSchema>>({
         resolver: zodResolver(settingsSchema),
         defaultValues: {
             customName: relation.customName || "",
-            privateNotes: relation.privateNotes || "",
             firstName: student.tempFirstName || "",
             lastName: student.tempLastName || "",
             studentNo: student.studentNo || "",
@@ -102,14 +116,16 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
 
             if (selectedFile) {
                 formData.append("avatar", selectedFile)
+            } else if (selectedAvatar) {
+                formData.append("avatarUrl", selectedAvatar)
             }
 
             const result = await updateStudentSettings(studentId, formData)
             if (result.success) {
-                toast.success(dictionary.student_detail.settings.success || "Ayarlar kaydedildi")
+                toast.success(dictionary.student_detail.settings.success || (lang === "tr" ? "Ayarlar kaydedildi" : "Settings saved"))
                 router.refresh()
             } else {
-                toast.error(result.error || "Bir hata oluştu")
+                toast.error(result.error || (lang === "tr" ? "Bir hata oluştu" : "An error occurred"))
             }
         })
     }
@@ -147,7 +163,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
     }
 
     // Avatar logic
-    const currentAvatar = avatarPreview || (
+    const currentAvatar = avatarPreview || (selectedAvatar ? (selectedAvatar.startsWith("http") ? selectedAvatar : `/api/files/${selectedAvatar}`) : (
         student.isClaimed && student.user?.image
             ? student.user.image
             : student.tempAvatar
@@ -157,7 +173,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                         : student.tempAvatar)
                     : `/api/files/${student.tempAvatar}`)
                 : undefined
-    )
+    ))
 
     return (
         <div className="space-y-6">
@@ -173,35 +189,68 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
                             {/* Avatar Section */}
-                            <div className="flex items-center gap-4">
-                                <Avatar className="h-20 w-20">
-                                    <AvatarImage src={currentAvatar} />
-                                    <AvatarFallback>ST</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <Label htmlFor="avatar-upload" className="cursor-pointer">
-                                        <div className="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
-                                            <Camera className="h-4 w-4" />
-                                            {dictionary.student_detail.settings.change_photo || "Fotoğrafı Değiştir"}
-                                        </div>
-                                        <Input
-                                            id="avatar-upload"
-                                            type="file"
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={(e) => {
-                                                const file = e.target.files?.[0]
-                                                if (file) {
-                                                    setTempFile(file)
-                                                    setShowCropper(true)
-                                                    e.target.value = ""
-                                                }
-                                            }}
-                                            disabled={isClaimed}
-                                        />
-                                    </Label>
-                                    {isClaimed && <p className="text-xs text-muted-foreground mt-1">Onaylı hesaplarda fotoğraf değiştirilemez.</p>}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-4">
+                                    <Avatar className="h-20 w-20">
+                                        <AvatarImage src={currentAvatar} />
+                                        <AvatarFallback>ST</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <Label htmlFor="avatar-upload" className="cursor-pointer">
+                                            <div className="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+                                                <Camera className="h-4 w-4" />
+                                                {dictionary.student_detail.settings.change_photo || "Fotoğrafı Değiştir"}
+                                            </div>
+                                            <Input
+                                                id="avatar-upload"
+                                                type="file"
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0]
+                                                    if (file) {
+                                                        setTempFile(file)
+                                                        setShowCropper(true)
+                                                        e.target.value = ""
+                                                    }
+                                                }}
+                                                disabled={isClaimed}
+                                            />
+                                        </Label>
+                                        {isClaimed && <p className="text-xs text-muted-foreground mt-1">Onaylı hesaplarda fotoğraf değiştirilemez.</p>}
+                                    </div>
                                 </div>
+
+                                {!isClaimed && (
+                                    <div className="flex gap-2 overflow-x-auto pb-2">
+                                        {DEFAULT_AVATARS.map((avatar) => (
+                                            <div
+                                                key={avatar}
+                                                className={cn(
+                                                    "relative cursor-pointer rounded-full border-2 p-0.5 transition-all",
+                                                    selectedAvatar === avatar ? "border-primary" : "border-transparent hover:border-muted-foreground/50"
+                                                )}
+                                                onClick={() => {
+                                                    setSelectedAvatar(avatar)
+                                                    setSelectedFile(null)
+                                                    setAvatarPreview(null)
+                                                }}
+                                            >
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img
+                                                    src={avatar.startsWith("http") ? avatar : `/api/files/${avatar}`}
+                                                    alt="Avatar"
+                                                    className="h-10 w-10 rounded-full"
+                                                />
+                                                {selectedAvatar === avatar && (
+                                                    <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground rounded-full p-0.5">
+                                                        <Check className="h-3 w-3" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             <Separator />
@@ -294,7 +343,11 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                                                 {isClaimed ? (
                                                     <Input {...field} disabled value={student.user?.phoneNumber || ""} />
                                                 ) : (
-                                                    <PhoneInput value={field.value || ""} onChange={field.onChange} />
+                                                    <PhoneInput
+                                                        value={field.value || ""}
+                                                        onChange={field.onChange}
+                                                        international={true}
+                                                    />
                                                 )}
                                             </FormControl>
                                             <FormMessage />
@@ -320,27 +373,8 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                                 />
                             </div>
 
-                            <FormField
-                                control={form.control}
-                                name="privateNotes"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>{dictionary.student_detail.settings.notes}</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder={dictionary.student_detail.settings.notes_desc}
-                                                className="min-h-[100px]"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
                             <Separator />
                             <h3 className="text-lg font-medium">Veli Bilgileri</h3>
-
                             <div className="grid gap-4 md:grid-cols-2">
                                 <FormField
                                     control={form.control}
@@ -362,7 +396,11 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                                         <FormItem>
                                             <FormLabel>Veli Telefon</FormLabel>
                                             <FormControl>
-                                                <PhoneInput value={field.value || ""} onChange={field.onChange} />
+                                                <PhoneInput
+                                                    value={field.value || ""}
+                                                    onChange={field.onChange}
+                                                    international={true}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -386,7 +424,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={isPending}>
                                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    {dictionary.student_detail.settings.save}
+                                    {dictionary.student_detail.settings.save_changes || "Kaydet"}
                                 </Button>
                             </div>
                         </form>
@@ -496,7 +534,9 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                 onCrop={(croppedFile) => {
                     setSelectedFile(croppedFile)
                     setAvatarPreview(URL.createObjectURL(croppedFile))
+                    setSelectedAvatar(null)
                 }}
+                saveLabel={dictionary.student_detail.settings.save_changes || "Kaydet"}
             />
         </div>
     )

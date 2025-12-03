@@ -89,7 +89,6 @@
             }
         },
         "student": {
-            "welcome": "Merhaba, ",
             "upcoming_lessons": "Yaklaşan Dersler",
             "completed_lessons": "Tamamlanan Dersler",
             "pending_homework": "Bekleyen Ödevler",
@@ -99,7 +98,6 @@
             "weekly_schedule": "Haftalık Ders Programım"
         },
         "teacher": {
-            "welcome": "Hoş geldiniz, ",
             "active_students": "Aktif Öğrenciler",
             "today_lessons_count": "Bugünkü Dersler",
             "pending_homework_count": "Bekleyen Ödevler",
@@ -144,7 +142,9 @@
             "lessons": "Dersler",
             "homework": "Ödevler",
             "finance": "Finans",
-            "settings": "Ayarlar"
+            "settings": "Ayarlar",
+            "exams": "Sınavlar",
+            "attendance": "Devamsızlık"
         },
         "header": {
             "total_lessons": "Toplam Ders",
@@ -204,6 +204,17 @@
                 "pending": "Bekliyor",
                 "completed": "Tamamlandı"
             }
+        },
+        "exams": {
+            "title": "Sınavlar",
+            "no_exams": "Henüz sınav kaydı bulunmuyor."
+        },
+        "attendance": {
+            "title": "Devamsızlık",
+            "present": "Katılım",
+            "absent": "Devamsızlık",
+            "late": "Geç Kalma",
+            "no_records": "Henüz devamsızlık kaydı bulunmuyor."
         },
         "settings": {
             "title": "Öğrenci Ayarları",

@@ -9,19 +9,20 @@
   - **Logo:** `<DenikoLogo />` (SVG).
 
 ## 2. Tech Stack (Strict Versions)
-- **Framework:** Next.js 15+ (App Router) with **i18n** (`app/[lang]/...`).
+- **Framework:** Next.js 16+ (App Router) with **i18n** (`app/[lang]/...`).
 - **Database:** PostgreSQL via **Prisma ORM v6** (`lib/db.ts` singleton).
 - **Auth:** NextAuth.js v5 Beta (Prisma Adapter).
 - **UI:** Tailwind CSS v4 + **Shadcn/UI**.
-- **Storage:** Google Cloud Storage (Private Bucket) via API Proxy.
+- **Storage:** Google Cloud Storage (Private Bucket).
 - **Logging:** Pino (JSON in Prod, Pretty in Dev).
 
 ## 3. "Innovation & Polish" Guidelines (Active Initiatives)
-*The AI is expected to proactively improve UX/UI:*
-1.  **Micro-Interactions:** Add `hover:scale-[1.02]`, `active:scale-95`, and `transition-all` to clickable cards and buttons.
-2.  **Empty States:** Never show a blank table. Create beautiful "Empty State" components with an icon, a text explanation, and a "Create New" button (e.g., "Henüz dersiniz yok. İlk dersinizi planlayın.").
-3.  **Loading Skeletons:** Use `Skeleton` components that match the layout structure while data is fetching. Avoid layout shifts.
-4.  **Mobile UX:** On mobile, ensure touch targets are large (`h-12`). Use `Drawer/Sheet` for complex forms instead of full-screen modals if possible.
+*The AI is expected to proactively improve UX/UI & Performance:*
+1.  **Performance First:** Avoid N+1 queries in DB and unnecessary `await auth()` calls in loops.
+2.  **Micro-Interactions:** Add `hover:scale-[1.02]`, `active:scale-95`, and `transition-all` to clickable cards and buttons.
+3.  **Empty States:** Never show a blank table. Create beautiful "Empty State" components with an icon, a text explanation, and a "Create New" button.
+4.  **Loading Skeletons:** Use `Skeleton` components that match the layout structure while data is fetching. Avoid layout shifts (CLS).
+5.  **Mobile UX:** On mobile, ensure touch targets are large (`h-12`). Use `Drawer/Sheet` for complex forms instead of full-screen modals.
 
 ## 4. Critical Architecture & Workflows
 
@@ -39,14 +40,13 @@
 - **Claiming (The Merge):** Student clicks `/join/[token]`.
   - *Logic:* `claimStudentProfile` action updates `userId` to real user, sets `isClaimed: true`.
   - *Preservation:* Copies Shadow Name to `StudentTeacherRelation.customName` so the teacher sees the name they know.
-- **Permissions:**
-  - Teacher CAN update: `customName`, `privateNotes`, and Shadow Profile data.
-  - Teacher CANNOT update: Real User's `email`, `password`.
 
-### C. Secure File Storage
+### C. Secure File Storage & Serving (High Performance)
 - **Bucket:** Private (No public access).
-- **Upload:** Server Action streams file to GCS, saves **path** (not URL) to DB.
-- **Serving:** `<Avatar src="/api/files/..." />` calls a Proxy Route that checks `auth()` session before streaming the file from GCS.
+- **Upload:** Server Action streams file to GCS, saves **path** (not URL) to DB (e.g., `avatars/uid-123.jpg`).
+- **Serving (Crucial for Speed):** - **PREFERRED:** Use **Signed URLs** generated on the server (`getSignedUrl` utility) for lists, avatars, and high-frequency images. Pass the signed URL to the client. Do NOT use the Proxy Route for list views.
+  - **FALLBACK (Docs Only):** Use Proxy Route (`/api/files/...`) *only* for sensitive documents requiring strict real-time session checks.
+  - **Optimization:** Ensure `lib/storage.ts` logic avoids `file.exists()` or metadata calls before streaming.
 
 ### D. Dashboard Logic
 - **Teacher View:**
@@ -68,8 +68,8 @@ app/
     (auth)/       -> login, register, verify, onboarding
     dashboard/    -> Protected routes
       page.tsx    -> Role dispatcher
-      students/   -> List & Create (Shadow)
-      files/      -> Secure Proxy Route (API)
+      students/   -> List & Create (Shadow) - Use Signed URLs here!
+      files/      -> Secure Proxy Route (Legacy/Docs)
     join/         -> Invite acceptance page
 components/
   ui/             -> Shadcn primitives
@@ -78,5 +78,5 @@ components/
   students/       -> AddStudentDialog, StudentTable, StudentHeader
 lib/
   db.ts           -> Prisma Singleton
-  storage.ts      -> GCS Utility (Private)
+  storage.ts      -> GCS Utility (getSignedUrl, uploadFile)
   logger.ts       -> Structured Logger

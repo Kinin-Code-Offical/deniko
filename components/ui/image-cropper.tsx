@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
 import { Loader2, Crop, RotateCcw } from "lucide-react"
 
 interface ImageCropperProps {
@@ -11,9 +10,10 @@ interface ImageCropperProps {
     onOpenChange: (open: boolean) => void
     file: File | null
     onCrop: (croppedFile: File) => void
+    saveLabel?: string
 }
 
-export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperProps) {
+export function ImageCropper({ open, onOpenChange, file, onCrop, saveLabel = "Crop & Save" }: ImageCropperProps) {
     const [imageSrc, setImageSrc] = useState<string | null>(null)
     const [zoom, setZoom] = useState(1)
     const [isCropping, setIsCropping] = useState(false)
@@ -21,16 +21,17 @@ export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperP
     const [isDragging, setIsDragging] = useState(false)
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
 
-    const canvasRef = useRef<HTMLCanvasElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const imageRef = useRef<HTMLImageElement>(null)
 
     useEffect(() => {
         if (file) {
             const url = URL.createObjectURL(file)
-            setImageSrc(url)
-            setZoom(1)
-            setOffset({ x: 0, y: 0 })
+            setTimeout(() => {
+                setImageSrc(url)
+                setZoom(1)
+                setOffset({ x: 0, y: 0 })
+            }, 0)
             return () => URL.revokeObjectURL(url)
         }
     }, [file])
@@ -54,7 +55,7 @@ export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperP
     }
 
     const handleCrop = async () => {
-        if (!imageRef.current || !canvasRef.current) return
+        if (!imageRef.current) return
 
         setIsCropping(true)
         try {
@@ -67,15 +68,12 @@ export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperP
             canvas.width = size
             canvas.height = size
 
-            // Draw image
-            // We need to calculate the source rectangle based on zoom and offset
-            // The container is the viewport. The circle is in the center.
-            // Let's assume the viewport is 300x300 (displayed size)
+            // Calculate ratio between canvas and container (300px)
+            const ratio = size / 300
 
             const image = imageRef.current
-            const scale = zoom
 
-            // Draw the image transformed
+            // Draw background
             ctx.fillStyle = 'white'
             ctx.fillRect(0, 0, size, size)
 
@@ -87,13 +85,13 @@ export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperP
             ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2)
             ctx.clip()
 
-            // Calculate draw position
-            // The offset is in screen pixels relative to the center
-            // We need to map that to the canvas size
+            // Move to center and apply offset (scaled)
+            ctx.translate(size / 2 + offset.x * ratio, size / 2 + offset.y * ratio)
 
-            // Simplified approach: Draw image centered then translate/scale
-            ctx.translate(size / 2 + offset.x, size / 2 + offset.y)
-            ctx.scale(scale, scale)
+            // Apply zoom
+            ctx.scale(zoom, zoom)
+
+            // Draw image centered
             ctx.drawImage(image, -image.width / 2, -image.height / 2)
 
             ctx.restore()
@@ -133,6 +131,7 @@ export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperP
                         onMouseLeave={handleMouseUp}
                     >
                         {imageSrc && (
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                                 ref={imageRef}
                                 src={imageSrc}
@@ -144,6 +143,7 @@ export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperP
                                     top: "50%"
                                 }}
                                 draggable={false}
+                                crossOrigin="anonymous"
                             />
                         )}
                     </div>
@@ -155,7 +155,7 @@ export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperP
                         </div>
                         <input
                             type="range"
-                            min={0.5}
+                            min={0.1}
                             max={3}
                             step={0.1}
                             value={zoom}
@@ -176,7 +176,7 @@ export function ImageCropper({ open, onOpenChange, file, onCrop }: ImageCropperP
                     <Button onClick={handleCrop} disabled={isCropping}>
                         {isCropping && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                         <Crop className="w-4 h-4 mr-2" />
-                        Crop & Save
+                        {saveLabel}
                     </Button>
                 </DialogFooter>
             </DialogContent>

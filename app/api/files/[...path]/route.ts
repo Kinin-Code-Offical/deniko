@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import { getFileMetadata, getFileStream } from "@/lib/storage"
+import { getFileStream } from "@/lib/storage"
 import { NextRequest, NextResponse } from "next/server"
 import pathModule from "path" // Node.js path modülünü ekleyin
 
@@ -53,6 +53,7 @@ export async function GET(
             },
         })
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return new NextResponse(webStream as any, {
             headers: {
                 "Content-Type": contentType,

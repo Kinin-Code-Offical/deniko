@@ -1,9 +1,13 @@
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { getDictionary } from "@/lib/get-dictionary"
+import { formatPhoneNumber } from "@/lib/utils"
 import { notFound, redirect } from "next/navigation"
 import { StudentHeader } from "@/components/students/student-header"
 import { StudentSettingsTab } from "@/components/students/settings-tab"
+import { StudentNotes } from "@/components/students/student-notes"
+import { StudentExamsTab } from "@/components/students/student-exams-tab"
+import { StudentAttendanceTab } from "@/components/students/student-attendance-tab"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -78,10 +82,12 @@ export default async function StudentPage({ params }: StudentPageProps) {
             <StudentHeader relation={relation} dictionary={dictionary} lang={lang} />
 
             <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-4 lg:w-[400px]">
+                <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto">
                     <TabsTrigger value="overview">{dictionary.student_detail.tabs.overview}</TabsTrigger>
                     <TabsTrigger value="lessons">{dictionary.student_detail.tabs.lessons}</TabsTrigger>
                     <TabsTrigger value="homework">{dictionary.student_detail.tabs.homework || "Homework"}</TabsTrigger>
+                    <TabsTrigger value="exams">{dictionary.student_detail.tabs.exams || (lang === "tr" ? "Sınavlar" : "Exams")}</TabsTrigger>
+                    <TabsTrigger value="attendance">{dictionary.student_detail.tabs.attendance || (lang === "tr" ? "Devamsızlık" : "Attendance")}</TabsTrigger>
                     <TabsTrigger value="settings">{dictionary.student_detail.tabs.settings}</TabsTrigger>
                 </TabsList>
 
@@ -103,7 +109,7 @@ export default async function StudentPage({ params }: StudentPageProps) {
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.phone || "Telefon"}</p>
-                                    <p>{relation.student.isClaimed ? relation.student.user?.phoneNumber : relation.student.tempPhone || "-"}</p>
+                                    <p>{formatPhoneNumber(relation.student.isClaimed ? relation.student.user?.phoneNumber : relation.student.tempPhone)}</p>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.email || "E-posta"}</p>
@@ -119,7 +125,7 @@ export default async function StudentPage({ params }: StudentPageProps) {
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.parent_phone || "Veli Telefon"}</p>
-                                    <p>{relation.student.parentPhone || "-"}</p>
+                                    <p>{formatPhoneNumber(relation.student.parentPhone)}</p>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.parent_email || "Veli E-posta"}</p>
@@ -127,18 +133,13 @@ export default async function StudentPage({ params }: StudentPageProps) {
                                 </div>
                             </CardContent>
                         </Card>
-
                         {/* Private Notes Card */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>{dictionary.student_detail.overview?.private_notes || "Özel Notlar"}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="whitespace-pre-wrap text-sm text-muted-foreground">
-                                    {relation.privateNotes || dictionary.student_detail.overview?.no_notes || "Henüz not eklenmemiş."}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <StudentNotes
+                            studentId={studentId}
+                            initialNotes={relation.privateNotes}
+                            dictionary={dictionary}
+                            lang={lang}
+                        />
 
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -174,8 +175,16 @@ export default async function StudentPage({ params }: StudentPageProps) {
                     </Card>
                 </TabsContent>
 
+                <TabsContent value="exams" className="mt-6">
+                    <StudentExamsTab dictionary={dictionary} lang={lang} />
+                </TabsContent>
+
+                <TabsContent value="attendance" className="mt-6">
+                    <StudentAttendanceTab dictionary={dictionary} lang={lang} />
+                </TabsContent>
+
                 <TabsContent value="settings" className="mt-6">
-                    <StudentSettingsTab relation={relation} studentId={studentId} dictionary={dictionary} />
+                    <StudentSettingsTab relation={relation} studentId={studentId} dictionary={dictionary} lang={lang} />
                 </TabsContent>
             </Tabs>
         </div>

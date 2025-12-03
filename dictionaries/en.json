@@ -89,7 +89,6 @@
             }
         },
         "student": {
-            "welcome": "Hello, ",
             "upcoming_lessons": "Upcoming Lessons",
             "completed_lessons": "Completed Lessons",
             "pending_homework": "Pending Homework",
@@ -99,7 +98,6 @@
             "weekly_schedule": "Weekly Schedule"
         },
         "teacher": {
-            "welcome": "Welcome, ",
             "active_students": "Active Students",
             "today_lessons_count": "Today's Lessons",
             "pending_homework_count": "Pending Homework",
@@ -144,7 +142,9 @@
             "lessons": "Lessons",
             "homework": "Homework",
             "finance": "Finance",
-            "settings": "Settings"
+            "settings": "Settings",
+            "exams": "Exams",
+            "attendance": "Attendance"
         },
         "header": {
             "total_lessons": "Total Lessons",
@@ -204,6 +204,17 @@
                 "pending": "Pending",
                 "completed": "Completed"
             }
+        },
+        "exams": {
+            "title": "Exams",
+            "no_exams": "No exams recorded yet."
+        },
+        "attendance": {
+            "title": "Attendance",
+            "present": "Present",
+            "absent": "Absent",
+            "late": "Late",
+            "no_records": "No attendance records found."
         },
         "settings": {
             "title": "Student Settings",

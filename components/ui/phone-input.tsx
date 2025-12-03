@@ -2,7 +2,7 @@
 
 import { Check, ChevronsUpDown } from "lucide-react"
 import * as React from "react"
-import * as RPNInput from "react-phone-number-input"
+import RPNInput, { getCountryCallingCode, type Country, type Value } from "react-phone-number-input"
 import flags from "react-phone-number-input/flags"
 
 import { Button } from "@/components/ui/button"
@@ -26,20 +26,18 @@ type PhoneInputProps = Omit<
     React.ComponentProps<"input">,
     "onChange" | "value"
 > &
-    Omit<RPNInput.Props<typeof RPNInput.default>, "onChange"> & {
-        onChange?: (value: RPNInput.Value) => void
+    Omit<React.ComponentProps<typeof RPNInput>, "onChange"> & {
+        onChange?: (value: Value) => void
         searchPlaceholder?: string
         noResultsMessage?: string
     }
 
-const PhoneInput = React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
+const PhoneInput = React.forwardRef<React.ElementRef<typeof RPNInput>, PhoneInputProps>(
     ({ className, onChange, searchPlaceholder = "Search country...", noResultsMessage = "No country found.", ...props }, ref) => {
         return (
-            <RPNInput.default
+            <RPNInput
                 ref={ref}
                 defaultCountry="TR"
-                international={false}
-                smartCaret={false}
                 className={cn("flex items-center", className)}
                 flagComponent={FlagComponent}
                 countrySelectComponent={(props) => <CountrySelect {...props} searchPlaceholder={searchPlaceholder} noResultsMessage={noResultsMessage} />}
@@ -53,8 +51,11 @@ const PhoneInput = React.forwardRef<React.ElementRef<typeof RPNInput.default>, P
                  *
                  * @param value
                  */
-                onChange={(value) => onChange?.(value as RPNInput.Value)}
+                smartCaret={false}
+
+                onChange={(value) => onChange?.(value || ("" as Value))}
                 {...props}
+                international={false}
             />
         )
     }
@@ -62,23 +63,30 @@ const PhoneInput = React.forwardRef<React.ElementRef<typeof RPNInput.default>, P
 PhoneInput.displayName = "PhoneInput"
 
 const InputComponent = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-    ({ className, ...props }, ref) => (
-        <Input
-            className={cn("rounded-e-lg rounded-s-none flex-shrink-1 ", className)}
-            {...props}
-            maxLength={13}
-            ref={ref}
-        />
-    )
+    ({ className, value, ...props }, ref) => {
+        const stringValue = value ? String(value) : ""
+        // Remove leading zero if present (requested behavior for TR numbers)
+        const displayValue = stringValue.startsWith("0") ? stringValue.substring(1) : stringValue
+
+        return (
+            <Input
+                className={cn("rounded-e-lg rounded-s-none flex-shrink-1 ", className)}
+                {...props}
+                value={displayValue}
+                maxLength={13}
+                ref={ref}
+            />
+        )
+    }
 )
 InputComponent.displayName = "InputComponent"
 
-type CountrySelectOption = { label: string; value: RPNInput.Country }
+type CountrySelectOption = { label: string; value: Country }
 
 type CountrySelectProps = {
     disabled?: boolean
-    value: RPNInput.Country
-    onChange: (value: RPNInput.Country) => void
+    value: Country
+    onChange: (value: Country) => void
     options: CountrySelectOption[]
     searchPlaceholder?: string
     noResultsMessage?: string
@@ -93,7 +101,7 @@ const CountrySelect = ({
     noResultsMessage,
 }: CountrySelectProps) => {
     const handleSelect = React.useCallback(
-        (country: RPNInput.Country) => {
+        (country: Country) => {
             onChange(country)
         },
         [onChange]
@@ -110,7 +118,7 @@ const CountrySelect = ({
                 >
                     <FlagComponent country={value} countryName={value} />
                     <span className="text-muted-foreground/80 text-sm font-normal">
-                        {value && `+${RPNInput.getCountryCallingCode(value)}`}
+                        {value && `+${getCountryCallingCode(value)}`}
                     </span>
                     <ChevronsUpDown
                         className={cn(
@@ -141,7 +149,7 @@ const CountrySelect = ({
                                         <span className="flex-1 text-sm">{option.label}</span>
                                         {option.value && (
                                             <span className="text-foreground/50 text-sm">
-                                                {`+${RPNInput.getCountryCallingCode(option.value)}`}
+                                                {`+${getCountryCallingCode(option.value)}`}
                                             </span>
                                         )}
                                         <Check
@@ -160,7 +168,7 @@ const CountrySelect = ({
     )
 }
 
-const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
+const FlagComponent = ({ country, countryName }: { country: Country, countryName: string }) => {
     const Flag = flags[country]
 
     return (

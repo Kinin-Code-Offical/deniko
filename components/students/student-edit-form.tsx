@@ -117,7 +117,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                 <CardHeader>
                     <CardTitle>{dictionary.dashboard.student_detail.profile.title}</CardTitle>
                     <CardDescription>
-                        Update student's personal information and contact details.
+                        Update student&apos;s personal information and contact details.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">

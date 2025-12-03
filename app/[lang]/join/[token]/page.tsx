@@ -1,7 +1,6 @@
 import { auth } from "@/auth"
 import { getInviteDetails } from "@/app/actions/student"
 import { getDictionary } from "@/lib/get-dictionary"
-import { redirect } from "next/navigation"
 import JoinClient from "./join-client"
 import { db } from "@/lib/db"
 import { Button } from "@/components/ui/button"
@@ -46,7 +45,7 @@ export default async function JoinPage({
                         <div className="mx-auto bg-[#2062A3] p-3 rounded-xl w-fit mb-4 shadow-md">
                             <DenikoLogo className="h-10 w-10 text-white" />
                         </div>
-                        <CardTitle className="text-2xl font-bold text-[#2062A3]">Deniko'ya Hoş Geldiniz</CardTitle>
+                        <CardTitle className="text-2xl font-bold text-[#2062A3]">Deniko&apos;ya Hoş Geldiniz</CardTitle>
                         <CardDescription className="text-base">
                             <span className="font-semibold text-foreground">{inviteDetails.teacherName}</span> sizi öğrencisi olarak eklemek istiyor.
                         </CardDescription>
