@@ -19,10 +19,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { PhoneInput } from "@/components/ui/phone-input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertTriangle, Loader2, Lock, Trash2, UserMinus } from "lucide-react"
+import { AlertTriangle, Loader2, Lock, Trash2, UserMinus, Camera, RefreshCw } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { updateStudentRelation, unlinkStudent, deleteShadowStudent } from "@/app/actions/student"
+import { updateStudentSettings, toggleInviteLink, unlinkStudent, deleteShadowStudent } from "@/app/actions/student"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -34,11 +34,26 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { ImageCropper } from "@/components/ui/image-cropper"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 
 const settingsSchema = z.object({
     customName: z.string().optional(),
-    phoneNumber: z.string().optional(),
     privateNotes: z.string().optional(),
+
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    studentNo: z.string().optional(),
+    gradeLevel: z.string().optional(),
+    phone: z.string().optional(),
+    email: z.string().email().optional().or(z.literal("")),
+
+    parentName: z.string().optional(),
+    parentPhone: z.string().optional(),
+    parentEmail: z.string().email().optional().or(z.literal("")),
 })
 
 interface StudentSettingsTabProps {
@@ -55,23 +70,58 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
     const student = relation.student
     const isClaimed = student.isClaimed
 
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [tempFile, setTempFile] = useState<File | null>(null)
+    const [showCropper, setShowCropper] = useState(false)
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+
     const form = useForm<z.infer<typeof settingsSchema>>({
         resolver: zodResolver(settingsSchema),
         defaultValues: {
             customName: relation.customName || "",
-            phoneNumber: (isClaimed ? student.user?.phoneNumber : student.tempPhone) || "",
             privateNotes: relation.privateNotes || "",
+            firstName: student.tempFirstName || "",
+            lastName: student.tempLastName || "",
+            studentNo: student.studentNo || "",
+            gradeLevel: student.gradeLevel || "",
+            phone: student.tempPhone || "",
+            email: student.tempEmail || "",
+            parentName: student.parentName || "",
+            parentPhone: student.parentPhone || "",
+            parentEmail: student.parentEmail || "",
         },
     })
 
     function onSubmit(values: z.infer<typeof settingsSchema>) {
         startTransition(async () => {
-            const result = await updateStudentRelation(studentId, values)
+            const formData = new FormData()
+            // Append all fields
+            Object.entries(values).forEach(([key, value]) => {
+                if (value) formData.append(key, value)
+            })
+
+            if (selectedFile) {
+                formData.append("avatar", selectedFile)
+            }
+
+            const result = await updateStudentSettings(studentId, formData)
             if (result.success) {
-                toast.success(dictionary.student_detail.settings.success)
+                toast.success(dictionary.student_detail.settings.success || "Ayarlar kaydedildi")
                 router.refresh()
             } else {
                 toast.error(result.error || "Bir hata oluştu")
+            }
+        })
+    }
+
+    const handleToggleInvite = async (checked: boolean) => {
+        startTransition(async () => {
+            const result = await toggleInviteLink(studentId, checked)
+            if (result.success) {
+                toast.success(result.message)
+                router.refresh()
+            } else {
+                toast.error(result.error)
             }
         })
     }
@@ -96,6 +146,19 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
         }
     }
 
+    // Avatar logic
+    const currentAvatar = avatarPreview || (
+        student.isClaimed && student.user?.image
+            ? student.user.image
+            : student.tempAvatar
+                ? (student.tempAvatar.startsWith("http")
+                    ? (student.tempAvatar.includes("dicebear.com")
+                        ? `/api/files/defaults/${new URL(student.tempAvatar).searchParams.get("seed")}.svg`
+                        : student.tempAvatar)
+                    : `/api/files/${student.tempAvatar}`)
+                : undefined
+    )
+
     return (
         <div className="space-y-6">
             <Card>
@@ -107,52 +170,155 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="customName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>{dictionary.student_detail.settings.custom_name}</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder={student.tempFirstName || "İsim giriniz"} {...field} />
-                                        </FormControl>
-                                        <FormDescription>
-                                            {dictionary.student_detail.settings.custom_name_desc}
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
-                            <FormField
-                                control={form.control}
-                                name="phoneNumber"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>{dictionary.student_detail.settings.phone}</FormLabel>
-                                        <FormControl>
-                                            {isClaimed ? (
-                                                <div className="relative">
-                                                    <Input {...field} disabled className="pl-10" />
-                                                    <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                                                </div>
-                                            ) : (
-                                                <PhoneInput
-                                                    value={field.value || ""}
-                                                    onChange={field.onChange}
-                                                />
-                                            )}
-                                        </FormControl>
-                                        {isClaimed && (
-                                            <FormDescription>
-                                                {dictionary.student_detail.settings.phone_claimed_desc}
-                                            </FormDescription>
+                            {/* Avatar Section */}
+                            <div className="flex items-center gap-4">
+                                <Avatar className="h-20 w-20">
+                                    <AvatarImage src={currentAvatar} />
+                                    <AvatarFallback>ST</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <Label htmlFor="avatar-upload" className="cursor-pointer">
+                                        <div className="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+                                            <Camera className="h-4 w-4" />
+                                            {dictionary.student_detail.settings.change_photo || "Fotoğrafı Değiştir"}
+                                        </div>
+                                        <Input
+                                            id="avatar-upload"
+                                            type="file"
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0]
+                                                if (file) {
+                                                    setTempFile(file)
+                                                    setShowCropper(true)
+                                                    e.target.value = ""
+                                                }
+                                            }}
+                                            disabled={isClaimed}
+                                        />
+                                    </Label>
+                                    {isClaimed && <p className="text-xs text-muted-foreground mt-1">Onaylı hesaplarda fotoğraf değiştirilemez.</p>}
+                                </div>
+                            </div>
+
+                            <Separator />
+
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <FormField
+                                    control={form.control}
+                                    name="customName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{dictionary.student_detail.settings.custom_name || "Görünen İsim (Takma Ad)"}</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Örn: Ahmet Yılmaz" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="studentNo"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{dictionary.student_detail.settings.student_no || "Öğrenci Numarası"}</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="123" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="gradeLevel"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{dictionary.student_detail.settings.grade || "Sınıf Seviyesi"}</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="12. Sınıf" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            {/* Real Name (Shadow Only) */}
+                            {!isClaimed && (
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="firstName"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Gerçek Ad</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
                                         )}
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="lastName"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Gerçek Soyad</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Contact Info */}
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <FormField
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{dictionary.student_detail.settings.phone}</FormLabel>
+                                            <FormControl>
+                                                {isClaimed ? (
+                                                    <Input {...field} disabled value={student.user?.phoneNumber || ""} />
+                                                ) : (
+                                                    <PhoneInput value={field.value || ""} onChange={field.onChange} />
+                                                )}
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{dictionary.student_detail.settings.email || "E-posta"}</FormLabel>
+                                            <FormControl>
+                                                {isClaimed ? (
+                                                    <Input {...field} disabled value={student.user?.email || ""} />
+                                                ) : (
+                                                    <Input {...field} type="email" />
+                                                )}
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
 
                             <FormField
                                 control={form.control}
@@ -172,10 +338,55 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                                 )}
                             />
 
+                            <Separator />
+                            <h3 className="text-lg font-medium">Veli Bilgileri</h3>
+
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <FormField
+                                    control={form.control}
+                                    name="parentName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Veli Adı Soyadı</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="parentPhone"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Veli Telefon</FormLabel>
+                                            <FormControl>
+                                                <PhoneInput value={field.value || ""} onChange={field.onChange} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="parentEmail"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Veli E-posta</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} type="email" />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={isPending}>
                                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    {isPending ? dictionary.student_detail.settings.saving : dictionary.student_detail.settings.save}
+                                    {dictionary.student_detail.settings.save}
                                 </Button>
                             </div>
                         </form>
@@ -183,6 +394,30 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                 </CardContent>
             </Card>
 
+            {/* Invite Link Toggle */}
+            {!isClaimed && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Davet Bağlantısı</CardTitle>
+                        <CardDescription>Öğrencinin sisteme kaydolması için kullanılan bağlantı.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex items-center justify-between">
+                        <div className="space-y-1">
+                            <Label>Davet Bağlantısı Durumu</Label>
+                            <p className="text-sm text-muted-foreground">
+                                {student.inviteToken ? "Aktif" : "Pasif"}
+                            </p>
+                        </div>
+                        <Switch
+                            checked={!!student.inviteToken}
+                            onCheckedChange={handleToggleInvite}
+                            disabled={isPending}
+                        />
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Danger Zone */}
             <Card className="border-destructive/50">
                 <CardHeader>
                     <CardTitle className="text-destructive">{dictionary.student_detail.settings.danger_zone}</CardTitle>
@@ -253,6 +488,16 @@ export function StudentSettingsTab({ relation, studentId, dictionary }: StudentS
                     )}
                 </CardContent>
             </Card>
+
+            <ImageCropper
+                open={showCropper}
+                onOpenChange={setShowCropper}
+                file={tempFile}
+                onCrop={(croppedFile) => {
+                    setSelectedFile(croppedFile)
+                    setAvatarPreview(URL.createObjectURL(croppedFile))
+                }}
+            />
         </div>
     )
 }

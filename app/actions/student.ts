@@ -709,3 +709,161 @@ export async function regenerateInviteToken(studentId: string) {
     }
 }
 
+export async function toggleInviteLink(studentId: string, enable: boolean) {
+    const session = await auth()
+    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+
+    const user = await db.user.findUnique({
+        where: { id: session.user.id },
+        include: { teacherProfile: true },
+    })
+
+    if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+
+    try {
+        const relation = await db.studentTeacherRelation.findUnique({
+            where: {
+                teacherId_studentId: {
+                    teacherId: user.teacherProfile.id,
+                    studentId: studentId,
+                },
+            },
+        })
+
+        if (!relation) return { success: false, error: "Relation not found" }
+
+        if (enable) {
+            const newToken = randomBytes(16).toString("hex")
+            const newExpires = new Date(Date.now() + 48 * 60 * 60 * 1000)
+            await db.studentProfile.update({
+                where: { id: studentId },
+                data: { inviteToken: newToken, inviteTokenExpires: newExpires },
+            })
+        } else {
+            await db.studentProfile.update({
+                where: { id: studentId },
+                data: { inviteToken: null, inviteTokenExpires: null },
+            })
+        }
+
+        revalidatePath(`/dashboard/students/${studentId}`)
+        return { success: true, message: enable ? "Davet bağlantısı açıldı." : "Davet bağlantısı kapatıldı." }
+    } catch (error) {
+        logger.error({ context: "toggleInviteLink", error }, "Failed to toggle invite link")
+        return { success: false, error: "İşlem başarısız" }
+    }
+}
+
+export async function updateStudentSettings(studentId: string, formData: FormData) {
+    const session = await auth()
+    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+
+    const user = await db.user.findUnique({
+        where: { id: session.user.id },
+        include: { teacherProfile: true },
+    })
+
+    if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+
+    try {
+        const relation = await db.studentTeacherRelation.findUnique({
+            where: {
+                teacherId_studentId: {
+                    teacherId: user.teacherProfile.id,
+                    studentId: studentId,
+                },
+            },
+            include: { student: true },
+        })
+
+        if (!relation) return { success: false, error: "Relation not found" }
+
+        const customName = formData.get("customName") as string
+        const privateNotes = formData.get("privateNotes") as string
+
+        const firstName = formData.get("firstName") as string
+        const lastName = formData.get("lastName") as string
+        const studentNo = formData.get("studentNo") as string
+        const gradeLevel = formData.get("gradeLevel") as string
+        const phone = formData.get("phone") as string
+        const email = formData.get("email") as string
+
+        const parentName = formData.get("parentName") as string
+        const parentPhone = formData.get("parentPhone") as string
+        const parentEmail = formData.get("parentEmail") as string
+
+        const avatarFile = formData.get("avatar") as File | null
+        const avatarUrl = formData.get("avatarUrl") as string | null
+
+        let newAvatarPath = undefined
+        if (avatarFile && avatarFile.size > 0) {
+            newAvatarPath = await uploadFile(avatarFile, "students")
+            // Delete old avatar if it exists and is a file
+            if (relation.student.tempAvatar && !relation.student.tempAvatar.startsWith("http") && !relation.student.tempAvatar.startsWith("defaults/")) {
+                await deleteFile(relation.student.tempAvatar)
+            }
+        } else if (avatarUrl) {
+            newAvatarPath = avatarUrl
+        }
+
+        await db.$transaction(async (tx) => {
+            // Update Relation
+            await tx.studentTeacherRelation.update({
+                where: { id: relation.id },
+                data: {
+                    customName: customName,
+                    privateNotes: privateNotes,
+                },
+            })
+
+            // Update Profile
+            // If claimed, we might restrict some fields, but user asked to edit them.
+            // We will update what we can on the profile.
+            const profileUpdateData: any = {
+                studentNo: studentNo,
+                gradeLevel: gradeLevel,
+                parentName: parentName,
+                parentPhone: parentPhone,
+                parentEmail: parentEmail,
+            }
+
+            if (!relation.student.isClaimed) {
+                profileUpdateData.tempFirstName = firstName
+                profileUpdateData.tempLastName = lastName
+                profileUpdateData.tempPhone = phone
+                profileUpdateData.tempEmail = email
+                if (newAvatarPath !== undefined) {
+                    profileUpdateData.tempAvatar = newAvatarPath
+                }
+            } else {
+                // If claimed, we generally don't update user's personal info (phone, email, name)
+                // But we can update the student profile specific fields (grade, studentNo, parent info)
+                // The user asked to edit "Görünen isim" (customName) - handled above.
+                // "Profil fotosu" - if claimed, it usually comes from User. 
+                // If we want to override it, we'd need a customAvatar field on Relation or Profile.
+                // For now, I'll assume we only update avatar if NOT claimed, or if we have a way to override.
+                // The current schema has `tempAvatar` on StudentProfile.
+                // If `isClaimed` is true, the UI usually shows `user.image`.
+                // If the user wants to change the photo of a CLAIMED student, they probably mean the photo THEY see.
+                // But `StudentProfile` is shared.
+                // Let's stick to: If claimed, we don't update name/avatar/contact of the User.
+                // We only update `customName` and `privateNotes`.
+                // And `studentNo`, `gradeLevel`, `parent*` on the profile.
+            }
+
+            await tx.studentProfile.update({
+                where: { id: studentId },
+                data: profileUpdateData,
+            })
+        })
+
+        revalidatePath("/dashboard/students")
+        revalidatePath(`/dashboard/students/${studentId}`)
+        return { success: true, message: "Bilgiler güncellendi." }
+
+    } catch (error) {
+        logger.error({ context: "updateStudentSettings", error }, "Failed to update student settings")
+        return { success: false, error: "Güncelleme başarısız" }
+    }
+}
+

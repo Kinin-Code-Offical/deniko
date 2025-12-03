@@ -86,7 +86,60 @@ export default async function StudentPage({ params }: StudentPageProps) {
                 </TabsList>
 
                 <TabsContent value="overview" className="mt-6">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {/* Student Info Card */}
+                        <Card className="col-span-2">
+                            <CardHeader>
+                                <CardTitle>{dictionary.student_detail.overview?.general_info || "Genel Bilgiler"}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="grid gap-4 sm:grid-cols-2">
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.student_no || "Öğrenci No"}</p>
+                                    <p>{relation.student.studentNo || "-"}</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.grade || "Sınıf Seviyesi"}</p>
+                                    <p>{relation.student.gradeLevel || "-"}</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.phone || "Telefon"}</p>
+                                    <p>{relation.student.isClaimed ? relation.student.user?.phoneNumber : relation.student.tempPhone || "-"}</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.email || "E-posta"}</p>
+                                    <p>{relation.student.isClaimed ? relation.student.user?.email : relation.student.tempEmail || "-"}</p>
+                                </div>
+
+                                <div className="space-y-1 sm:col-span-2 border-t pt-4 mt-2">
+                                    <h4 className="font-semibold">{dictionary.student_detail.overview?.parent_info || "Veli Bilgileri"}</h4>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.parent_name || "Veli Adı"}</p>
+                                    <p>{relation.student.parentName || "-"}</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.parent_phone || "Veli Telefon"}</p>
+                                    <p>{relation.student.parentPhone || "-"}</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-muted-foreground">{dictionary.student_detail.overview?.parent_email || "Veli E-posta"}</p>
+                                    <p>{relation.student.parentEmail || "-"}</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Private Notes Card */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>{dictionary.student_detail.overview?.private_notes || "Özel Notlar"}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                                    {relation.privateNotes || dictionary.student_detail.overview?.no_notes || "Henüz not eklenmemiş."}
+                                </p>
+                            </CardContent>
+                        </Card>
+
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">{dictionary.student_detail.overview.total_lessons}</CardTitle>

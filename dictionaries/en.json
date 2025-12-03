@@ -114,58 +114,6 @@
                 "receive_payment": "Receive Payment"
             }
         },
-        "student_detail": {
-            "tabs": {
-                "lessons": "Lessons",
-                "homework": "Homework",
-                "finance": "Finance",
-                "profile": "Profile & Settings"
-            },
-            "header": {
-                "total_lessons": "Total Lessons",
-                "balance": "Balance",
-                "invite_link": "Copy Invite Link",
-                "status": {
-                    "active": "Active",
-                    "shadow": "Pending Invite"
-                }
-            },
-            "lessons": {
-                "title": "Lesson History",
-                "add_lesson": "Add Lesson for Student",
-                "no_lessons": "No lesson records found.",
-                "status": {
-                    "scheduled": "Scheduled",
-                    "completed": "Completed",
-                    "cancelled": "Cancelled",
-                    "missed": "Missed"
-                }
-            },
-            "finance": {
-                "title": "Financial Transactions",
-                "receive_payment": "Receive Payment",
-                "lesson_fee": "Lesson Fee",
-                "payment_received": "Payment Received",
-                "balance": "Balance",
-                "no_transactions": "No financial transactions found."
-            },
-            "homework": {
-                "title": "Homework Tracking",
-                "assign_homework": "Assign Homework",
-                "no_homework": "No homework found.",
-                "status": {
-                    "pending": "Pending",
-                    "completed": "Completed"
-                }
-            },
-            "profile": {
-                "title": "Student Information",
-                "contact_parent": "Parent Contact",
-                "archive_student": "Archive Student",
-                "delete_student": "Delete Student",
-                "save": "Save Changes"
-            }
-        },
         "common": {
             "loading": "Loading...",
             "save": "Save",
@@ -198,29 +146,94 @@
             "finance": "Finance",
             "settings": "Settings"
         },
-        "overview": {
-            "total_lessons": "Total Lessons"
-        },
-        "lessons": {
-            "title": "Lesson History",
-            "empty": "Lesson list will be here..."
-        },
-        "finance": {
-            "title": "Payments",
-            "empty": "Payment history will be here..."
-        },
         "header": {
+            "total_lessons": "Total Lessons",
+            "balance": "Balance",
+            "invite_link": "Copy Invite Link",
+            "status": {
+                "active": "Active",
+                "shadow": "Pending Invite"
+            },
             "verified": "Verified",
             "pending": "Pending",
             "no_level": "No Level",
             "no_number": "No Number",
-            "invite_link": "Invite Link",
             "copy_link": "Copy Link",
             "link_copied": "Invite link copied"
         },
+        "overview": {
+            "general_info": "General Information",
+            "student_no": "Student No",
+            "grade": "Grade",
+            "phone": "Phone",
+            "email": "Email",
+            "parent_info": "Parent Information",
+            "parent_name": "Parent Name",
+            "parent_phone": "Parent Phone",
+            "parent_email": "Parent Email",
+            "private_notes": "Private Notes",
+            "no_notes": "No notes added yet.",
+            "total_lessons": "Total Lessons"
+        },
+        "lessons": {
+            "title": "Lesson History",
+            "add_lesson": "Add Lesson for Student",
+            "no_lessons": "No lesson records found.",
+            "empty": "No upcoming lessons scheduled.",
+            "status": {
+                "scheduled": "Scheduled",
+                "completed": "Completed",
+                "cancelled": "Cancelled",
+                "missed": "Missed"
+            }
+        },
+        "finance": {
+            "title": "Financial Transactions",
+            "receive_payment": "Receive Payment",
+            "lesson_fee": "Lesson Fee",
+            "payment_received": "Payment Received",
+            "balance": "Balance",
+            "no_transactions": "No financial transactions found.",
+            "empty": "Payment history will be here..."
+        },
+        "homework": {
+            "title": "Homework Tracking",
+            "assign_homework": "Assign Homework",
+            "no_homework": "No homework found.",
+            "status": {
+                "pending": "Pending",
+                "completed": "Completed"
+            }
+        },
         "settings": {
             "title": "Student Settings",
-            "desc": "Manage student information and preferences.",
+            "description": "Manage student profile and preferences.",
+            "profile_photo": "Profile Photo",
+            "change_photo": "Change Photo",
+            "personal_info": "Personal Information",
+            "full_name": "Full Name",
+            "student_number": "Student Number",
+            "grade_level": "Grade Level",
+            "contact_info": "Contact Information",
+            "parent_information": "Parent Information",
+            "parent_full_name": "Parent Full Name",
+            "parent_phone_number": "Parent Phone Number",
+            "parent_email_address": "Parent Email Address",
+            "invite_link": "Invite Link",
+            "invite_link_desc": "Enable or disable the invite link for this student.",
+            "invite_link_active": "Invite Link Active",
+            "invite_link_inactive": "Invite Link Inactive",
+            "copy_link": "Copy Link",
+            "danger_zone": "Danger Zone",
+            "delete_student": "Delete Student",
+            "delete_student_desc": "This action cannot be undone. This will permanently delete the student and remove their data from our servers.",
+            "delete_button": "Delete Student",
+            "save_changes": "Save Changes",
+            "saving": "Saving...",
+            "success": "Settings updated successfully.",
+            "error_message": "An error occurred while updating settings.",
+            "invite_toggled": "Invite link status updated.",
+            "link_copied": "Link copied to clipboard.",
             "custom_name": "Display Name",
             "custom_name_desc": "Only you will see this name.",
             "phone": "Phone Number",
@@ -228,10 +241,6 @@
             "phone_claimed_desc": "Since this student has verified their account, only they can change their phone number.",
             "notes": "Private Notes",
             "notes_desc": "Notes only visible to you.",
-            "save": "Save Changes",
-            "saving": "Saving...",
-            "success": "Settings updated",
-            "danger_zone": "Danger Zone",
             "archive": {
                 "title": "Archive Student",
                 "desc": "Remove this student from your active list. History is preserved.",

@@ -114,58 +114,6 @@
                 "receive_payment": "Ödeme Al"
             }
         },
-        "student_detail": {
-            "tabs": {
-                "lessons": "Dersler",
-                "homework": "Ödevler",
-                "finance": "Finans",
-                "profile": "Profil & Ayarlar"
-            },
-            "header": {
-                "total_lessons": "Toplam Ders",
-                "balance": "Kalan Bakiye",
-                "invite_link": "Davet Linkini Kopyala",
-                "status": {
-                    "active": "Aktif",
-                    "shadow": "Davet Bekliyor"
-                }
-            },
-            "lessons": {
-                "title": "Ders Geçmişi",
-                "add_lesson": "Bu Öğrenciye Ders Ekle",
-                "no_lessons": "Henüz ders kaydı bulunmuyor.",
-                "status": {
-                    "scheduled": "Planlandı",
-                    "completed": "Tamamlandı",
-                    "cancelled": "İptal",
-                    "missed": "Katılmadı"
-                }
-            },
-            "finance": {
-                "title": "Finansal Hareketler",
-                "receive_payment": "Ödeme Al",
-                "lesson_fee": "Ders Ücreti",
-                "payment_received": "Ödeme Alındı",
-                "balance": "Bakiye",
-                "no_transactions": "Henüz finansal işlem bulunmuyor."
-            },
-            "homework": {
-                "title": "Ödev Takibi",
-                "assign_homework": "Ödev Ata",
-                "no_homework": "Henüz ödev bulunmuyor.",
-                "status": {
-                    "pending": "Bekliyor",
-                    "completed": "Tamamlandı"
-                }
-            },
-            "profile": {
-                "title": "Öğrenci Bilgileri",
-                "contact_parent": "Veli İletişim",
-                "archive_student": "Öğrenciyi Arşivle",
-                "delete_student": "Öğrenciyi Sil",
-                "save": "Değişiklikleri Kaydet"
-            }
-        },
         "common": {
             "loading": "Yükleniyor...",
             "save": "Kaydet",
@@ -192,35 +140,100 @@
     },
     "student_detail": {
         "tabs": {
-            "overview": "Genel",
+            "overview": "Genel Bakış",
             "lessons": "Dersler",
             "homework": "Ödevler",
             "finance": "Finans",
             "settings": "Ayarlar"
         },
-        "overview": {
-            "total_lessons": "Toplam Ders"
-        },
-        "lessons": {
-            "title": "Ders Geçmişi",
-            "empty": "Ders listesi buraya gelecek..."
-        },
-        "finance": {
-            "title": "Ödemeler",
-            "empty": "Ödeme geçmişi buraya gelecek..."
-        },
         "header": {
+            "total_lessons": "Toplam Ders",
+            "balance": "Kalan Bakiye",
+            "invite_link": "Davet Linkini Kopyala",
+            "status": {
+                "active": "Aktif",
+                "shadow": "Davet Bekliyor"
+            },
             "verified": "Onaylı",
             "pending": "Bekliyor",
             "no_level": "Seviye Yok",
             "no_number": "No Yok",
-            "invite_link": "Davet Linki",
             "copy_link": "Linki Kopyala",
             "link_copied": "Davet linki kopyalandı"
         },
+        "overview": {
+            "general_info": "Genel Bilgiler",
+            "student_no": "Öğrenci No",
+            "grade": "Sınıf",
+            "phone": "Telefon",
+            "email": "E-posta",
+            "parent_info": "Veli Bilgileri",
+            "parent_name": "Veli Adı",
+            "parent_phone": "Veli Telefonu",
+            "parent_email": "Veli E-posta",
+            "private_notes": "Özel Notlar",
+            "no_notes": "Henüz not eklenmemiş.",
+            "total_lessons": "Toplam Ders"
+        },
+        "lessons": {
+            "title": "Ders Geçmişi",
+            "add_lesson": "Bu Öğrenciye Ders Ekle",
+            "no_lessons": "Henüz ders kaydı bulunmuyor.",
+            "empty": "Planlanmış yaklaşan ders yok.",
+            "status": {
+                "scheduled": "Planlandı",
+                "completed": "Tamamlandı",
+                "cancelled": "İptal",
+                "missed": "Katılmadı"
+            }
+        },
+        "finance": {
+            "title": "Finansal Hareketler",
+            "receive_payment": "Ödeme Al",
+            "lesson_fee": "Ders Ücreti",
+            "payment_received": "Ödeme Alındı",
+            "balance": "Bakiye",
+            "no_transactions": "Henüz finansal işlem bulunmuyor.",
+            "empty": "Ödeme geçmişi buraya gelecek..."
+        },
+        "homework": {
+            "title": "Ödev Takibi",
+            "assign_homework": "Ödev Ata",
+            "no_homework": "Henüz ödev bulunmuyor.",
+            "status": {
+                "pending": "Bekliyor",
+                "completed": "Tamamlandı"
+            }
+        },
         "settings": {
             "title": "Öğrenci Ayarları",
-            "desc": "Öğrenci bilgilerini ve tercihlerini yönetin.",
+            "description": "Öğrenci profilini ve tercihlerini yönetin.",
+            "profile_photo": "Profil Fotoğrafı",
+            "change_photo": "Fotoğrafı Değiştir",
+            "personal_info": "Kişisel Bilgiler",
+            "full_name": "Ad Soyad",
+            "student_number": "Öğrenci Numarası",
+            "grade_level": "Sınıf Seviyesi",
+            "contact_info": "İletişim Bilgileri",
+            "parent_information": "Veli Bilgileri",
+            "parent_full_name": "Veli Adı Soyadı",
+            "parent_phone_number": "Veli Telefon Numarası",
+            "parent_email_address": "Veli E-posta Adresi",
+            "invite_link": "Davet Bağlantısı",
+            "invite_link_desc": "Bu öğrenci için davet bağlantısını etkinleştirin veya devre dışı bırakın.",
+            "invite_link_active": "Davet Bağlantısı Aktif",
+            "invite_link_inactive": "Davet Bağlantısı Pasif",
+            "copy_link": "Bağlantıyı Kopyala",
+            "danger_zone": "Tehlikeli Bölge",
+            "delete_student": "Öğrenciyi Sil",
+            "delete_student_desc": "Bu işlem geri alınamaz. Öğrenci ve tüm verileri kalıcı olarak silinecektir.",
+            "delete_button": "Öğrenciyi Sil",
+            "save_changes": "Değişiklikleri Kaydet",
+            "saving": "Kaydediliyor...",
+            "success": "Ayarlar başarıyla güncellendi.",
+            "error_message": "Ayarlar güncellenirken bir hata oluştu.",
+            "invite_toggled": "Davet bağlantısı durumu güncellendi.",
+            "link_copied": "Bağlantı panoya kopyalandı.",
             "custom_name": "Görünen İsim",
             "custom_name_desc": "Bu ismi sadece siz göreceksiniz.",
             "phone": "Telefon Numarası",
@@ -228,10 +241,6 @@
             "phone_claimed_desc": "Bu öğrenci hesabını onayladığı için telefon numarasını sadece kendisi değiştirebilir.",
             "notes": "Özel Notlar",
             "notes_desc": "Sadece sizin görebileceğiniz notlar.",
-            "save": "Değişiklikleri Kaydet",
-            "saving": "Kaydediliyor...",
-            "success": "Ayarlar güncellendi",
-            "danger_zone": "Tehlikeli Bölge",
             "archive": {
                 "title": "Öğrenciyi Arşivle",
                 "desc": "Bu öğrenciyi aktif listenizden kaldırın. Geçmiş veriler korunur.",
