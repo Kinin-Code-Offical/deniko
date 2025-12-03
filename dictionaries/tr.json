@@ -1,4 +1,8 @@
 {
+    "common": {
+        "back": "Geri",
+        "back_to_home": "Ana Sayfaya Dön"
+    },
     "components": {
         "phone_input": {
             "search_country": "Ülke ara...",
@@ -198,9 +202,6 @@
         "accept_terms": "[Kullanıcı Sözleşmesi] ve [Gizlilik Politikası]'nı okudum ve kabul ediyorum.",
         "validation_terms": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
         "marketing_consent": "Kampanya ve duyurulardan e-posta ile haberdar olmak istiyorum."
-    },
-    "common": {
-        "back_to_home": "Ana Sayfaya Dön"
     },
     "home": {
         "hero_title": "Eğitim Hayatınızı Dijitalleştirin",

@@ -1,4 +1,8 @@
 {
+    "common": {
+        "back": "Back",
+        "back_to_home": "Back to Home"
+    },
     "components": {
         "phone_input": {
             "search_country": "Search country...",
@@ -198,9 +202,6 @@
         "accept_terms": "I have read and accept the [Terms of Service] and [Privacy Policy].",
         "validation_terms": "You must accept the terms to continue.",
         "marketing_consent": "I want to be informed about campaigns and announcements via email."
-    },
-    "common": {
-        "back_to_home": "Back to Home"
     },
     "home": {
         "hero_title": "Digitize Your Education Life",

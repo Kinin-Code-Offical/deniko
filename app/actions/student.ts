@@ -315,6 +315,8 @@ export async function getStudentProfileByToken(token: string) {
     }
 }
 
+
+
 const updateStudentSchema = z.object({
     studentId: z.string(),
     name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),

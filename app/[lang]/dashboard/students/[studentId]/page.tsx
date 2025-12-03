@@ -7,6 +7,9 @@ import { StudentHeader } from "@/components/students/student-header"
 import { StudentSettingsTab } from "@/components/students/settings-tab"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft } from "lucide-react"
+import Link from "next/link"
 
 interface StudentPageProps {
     params: Promise<{
@@ -65,6 +68,15 @@ export default async function StudentPage({ params }: StudentPageProps) {
     return (
         <DashboardShell user={session.user} dictionary={dictionary} lang={lang}>
             <div className="flex flex-col gap-6">
+                <div>
+                    <Button variant="ghost" size="sm" asChild className="-ml-2 text-muted-foreground">
+                        <Link href={`/${lang}/dashboard/students`}>
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            {dictionary.common?.back || "Geri"}
+                        </Link>
+                    </Button>
+                </div>
+
                 <StudentHeader relation={relation} dictionary={dictionary} />
 
                 <Tabs defaultValue="overview" className="w-full">

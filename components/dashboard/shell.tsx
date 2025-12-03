@@ -78,37 +78,19 @@ export function DashboardShell({ children, user, dictionary, lang }: DashboardSh
                     </nav>
                 </div>
                 <div className="border-t p-4 space-y-4">
-                    <div className="flex justify-center w-full gap-2">
+                    <div className="flex items-center justify-between gap-2">
+                        <UserNav user={user} />
                         <LanguageSwitcher />
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon">
-                                    <Plus className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem asChild>
-                                    <Link href={`/${lang}/dashboard/students?action=new-student`}>
-                                        {dictionary.dashboard.students.add_student}
-                                    </Link>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                     </div>
-                    <UserNav user={user} />
                 </div>
             </aside>
 
             {/* Mobile Header & Content */}
             <div className="flex flex-1 flex-col md:pl-64">
                 <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-white px-4 md:hidden">
-                    <div className="flex items-center gap-2 font-bold text-xl text-[#2062A3]">
-                        <DenikoLogo className="h-6 w-6" />
-                        <span>Deniko</span>
-                    </div>
                     <Sheet open={open} onOpenChange={setOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" suppressHydrationWarning>
+                            <Button variant="ghost" size="icon">
                                 <Menu className="h-6 w-6" />
                             </Button>
                         </SheetTrigger>
@@ -128,27 +110,24 @@ export function DashboardShell({ children, user, dictionary, lang }: DashboardSh
                                 </nav>
                             </div>
                             <div className="border-t p-4 space-y-4">
-                                <div className="flex justify-center w-full gap-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <UserNav user={user} />
                                     <LanguageSwitcher />
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" size="icon">
-                                                <Plus className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem asChild>
-                                                <Link href={`/${lang}/dashboard/students?action=new-student`}>
-                                                    {dictionary.dashboard.students.add_student}
-                                                </Link>
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
                                 </div>
-                                <UserNav user={user} />
                             </div>
                         </SheetContent>
                     </Sheet>
+
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div className="flex items-center gap-2 font-bold text-xl text-[#2062A3]">
+                            <DenikoLogo className="h-6 w-6" />
+                            <span>Deniko</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <UserNav user={user} />
+                    </div>
                 </header>
                 <main className="flex-1 p-4 md:p-8">
                     {children}
