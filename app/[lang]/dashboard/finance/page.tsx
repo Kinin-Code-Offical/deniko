@@ -1,7 +1,7 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { getDictionary } from "@/lib/get-dictionary"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default async function FinancePage({ params }: { params: Promise<{ lang: string }> }) {

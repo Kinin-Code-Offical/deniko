@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, Lock, CheckCircle2, AlertCircle, Eye, EyeOff } from "lucide-react"
 import { resetPassword } from "@/app/actions/auth"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 import Link from "next/link"
 
 // Password strength regex: at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char

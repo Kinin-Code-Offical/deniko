@@ -3,7 +3,7 @@ import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { DashboardShell } from "@/components/dashboard/shell"
 import { getDictionary } from "@/lib/get-dictionary"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 
 export default async function DashboardLayout({
     children,

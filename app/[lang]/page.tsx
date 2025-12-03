@@ -1,5 +1,5 @@
 import { getDictionary } from "@/lib/get-dictionary"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/navbar"

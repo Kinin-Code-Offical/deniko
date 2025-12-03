@@ -11,7 +11,7 @@ import { randomBytes } from "crypto"
 import { sendVerificationEmail, sendPasswordResetEmail } from "@/lib/email"
 import { AuthError } from "next-auth"
 import { getDictionary } from "@/lib/get-dictionary"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 import logger from "@/lib/logger"
 
 /**

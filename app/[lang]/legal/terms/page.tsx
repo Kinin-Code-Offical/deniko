@@ -1,4 +1,4 @@
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 import { termsContent } from "@/lib/legal-content"
 
 export default async function TermsPage({

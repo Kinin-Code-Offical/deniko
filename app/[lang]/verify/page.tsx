@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { Loader2 } from "lucide-react"
 import { VerifyClient } from "@/components/auth/verify-client"
 import { getDictionary } from "@/lib/get-dictionary"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 
 export default async function VerifyPage({
     params,

@@ -1,5 +1,5 @@
 import { getDictionary } from "@/lib/get-dictionary"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 import { LoginForm } from "@/components/auth/login-form"
 import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"

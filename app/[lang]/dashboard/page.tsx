@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 import { TeacherView } from "@/components/dashboard/teacher-view"
 import { StudentView } from "@/components/dashboard/student-view"
 import { getDictionary } from "@/lib/get-dictionary"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 
 export default async function DashboardPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params

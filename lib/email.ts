@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import { getDictionary } from "@/lib/get-dictionary"
-import { Locale } from "@/i18n-config"
+import type { Locale } from "@/i18n-config"
 import logger from "@/lib/logger"
 
 const transporter = nodemailer.createTransport({

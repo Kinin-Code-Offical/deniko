@@ -2,7 +2,7 @@
 # 1. AŞAMA: Bağımlılıkları Yükle (Dependencies)
 # --------------------------------------------------------
 # Alpine 3.20 kullanarak temel güvenliği sağlıyoruz ama update komutunu siliyoruz.
-FROM node:20-alpine3.20 AS deps
+FROM node:25-alpine AS deps
 # Sadece Prisma için gerekli kütüphaneyi kuruyoruz (Çok hızlıdır)
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -15,7 +15,7 @@ RUN npm ci --legacy-peer-deps
 # --------------------------------------------------------
 # 2. AŞAMA: Projeyi Derle (Builder)
 # --------------------------------------------------------
-FROM node:20-alpine3.20 AS builder
+FROM node:25-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -32,7 +32,7 @@ RUN npm run build
 # --------------------------------------------------------
 # 3. AŞAMA: Çalıştır (Runner - Production)
 # --------------------------------------------------------
-FROM node:20-alpine3.20 AS runner
+FROM node:25-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

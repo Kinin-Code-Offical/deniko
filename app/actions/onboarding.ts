@@ -4,7 +4,7 @@ import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { Prisma } from "@prisma/client"
 import { revalidatePath } from "next/cache"
-import bcrypt from "bcryptjs"
+import * as bcrypt from "bcryptjs"
 import logger from "@/lib/logger"
 
 /**
