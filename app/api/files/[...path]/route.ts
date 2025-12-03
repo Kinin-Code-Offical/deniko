@@ -1,6 +1,21 @@
 import { auth } from "@/auth"
 import { getFileMetadata, getFileStream } from "@/lib/storage"
 import { NextRequest, NextResponse } from "next/server"
+import pathModule from "path" // Node.js path modülünü ekleyin
+
+// Basit MIME type belirleyici
+function getMimeType(filename: string) {
+    const ext = pathModule.extname(filename).toLowerCase();
+    const types: Record<string, string> = {
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.svg': 'image/svg+xml',
+        '.pdf': 'application/pdf',
+    };
+    return types[ext] || 'application/octet-stream';
+}
 
 export async function GET(
     req: NextRequest,
@@ -16,21 +31,25 @@ export async function GET(
     const filePath = path.join("/")
 
     try {
-        const stream = await getFileStream(filePath)
+        // 2. Metadata sorgusunu (getFileMetadata) KALDIRDIK.
+        const contentType = getMimeType(filePath);
+
+        // 3. Doğrudan stream istiyoruz.
+        const stream = await getFileStream(filePath);
 
         if (!stream) {
             return new NextResponse("File not found", { status: 404 })
         }
 
-        const metadata = await getFileMetadata(filePath)
-        const contentType = metadata.contentType || "application/octet-stream"
-
-        // Convert the Node.js ReadableStream to a Web ReadableStream
         const webStream = new ReadableStream({
             start(controller) {
                 stream.on("data", (chunk) => controller.enqueue(chunk))
                 stream.on("end", () => controller.close())
-                stream.on("error", (err) => controller.error(err))
+                stream.on("error", (err) => {
+                    // Dosya yoksa stream burada hata fırlatır
+                    console.error("Stream error:", err);
+                    controller.error(err);
+                })
             },
         })
 
@@ -42,6 +61,6 @@ export async function GET(
         })
     } catch (error) {
         console.error("Error serving file:", error)
-        return new NextResponse("Internal Server Error", { status: 500 })
+        return new NextResponse("File not found or Error", { status: 404 })
     }
 }

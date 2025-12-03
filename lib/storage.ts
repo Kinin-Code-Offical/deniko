@@ -39,11 +39,6 @@ export async function getFileStream(path: string) {
 
     const bucket = storage.bucket(bucketName)
     const file = bucket.file(path)
-    const [exists] = await file.exists()
-
-    if (!exists) {
-        return null
-    }
 
     return file.createReadStream()
 }
@@ -58,4 +53,25 @@ export async function getFileMetadata(path: string) {
     const [metadata] = await file.getMetadata()
 
     return metadata
+}
+
+export async function deleteFile(path: string) {
+    if (!bucketName) {
+        throw new Error("GCS_BUCKET_NAME is not defined")
+    }
+
+    const bucket = storage.bucket(bucketName)
+    const file = bucket.file(path)
+
+    try {
+        const [exists] = await file.exists()
+        if (exists) {
+            await file.delete()
+            return true
+        }
+        return false
+    } catch (error) {
+        console.error("Error deleting file:", error)
+        return false
+    }
 }

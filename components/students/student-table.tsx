@@ -82,10 +82,10 @@ export function StudentTable({ data, dictionary, lang }: StudentTableProps) {
                     <TableHeader>
                         <TableRow>
                             <TableHead>{dictionary.dashboard.students.columns.name}</TableHead>
-                            <TableHead>{dictionary.dashboard.students.columns.class}</TableHead>
+                            <TableHead className="hidden md:table-cell">{dictionary.dashboard.students.columns.class}</TableHead>
                             <TableHead>{dictionary.dashboard.students.columns.status}</TableHead>
-                            <TableHead>{dictionary.dashboard.students.columns.no}</TableHead>
-                            <TableHead>{dictionary.dashboard.students.table.grade}</TableHead>
+                            <TableHead className="hidden md:table-cell">{dictionary.dashboard.students.columns.no}</TableHead>
+                            <TableHead className="hidden md:table-cell">{dictionary.dashboard.students.table.grade}</TableHead>
                             <TableHead className="text-right">{dictionary.dashboard.students.columns.actions}</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -128,7 +128,7 @@ export function StudentTable({ data, dictionary, lang }: StudentTableProps) {
                                             </div>
                                         </div>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="hidden md:table-cell">
                                         <div className="flex flex-wrap gap-1">
                                             {student.classrooms && student.classrooms.length > 0 ? (
                                                 student.classrooms.map((c, i) => (
@@ -152,8 +152,8 @@ export function StudentTable({ data, dictionary, lang }: StudentTableProps) {
                                             </Badge>
                                         )}
                                     </TableCell>
-                                    <TableCell>{student.studentNo || "-"}</TableCell>
-                                    <TableCell>{student.gradeLevel || "-"}</TableCell>
+                                    <TableCell className="hidden md:table-cell">{student.studentNo || "-"}</TableCell>
+                                    <TableCell className="hidden md:table-cell">{student.gradeLevel || "-"}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
                                             {!student.isClaimed && student.inviteToken && (

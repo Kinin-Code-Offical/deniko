@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { randomBytes } from "crypto"
 import logger from "@/lib/logger"
-import { uploadFile } from "@/lib/storage"
+import { uploadFile, deleteFile } from "@/lib/storage"
 
 const createStudentSchema = z.object({
     name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
@@ -419,6 +419,15 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
             })
         } else {
             // SHADOW: Update StudentProfile
+
+            // Check if avatar is changing and delete old one
+            if (avatarUrl && studentProfile.tempAvatar && studentProfile.tempAvatar !== avatarUrl) {
+                // Only delete if it's a stored file (not an external URL or default)
+                if (!studentProfile.tempAvatar.startsWith("http") && !studentProfile.tempAvatar.startsWith("defaults/")) {
+                    await deleteFile(studentProfile.tempAvatar)
+                }
+            }
+
             await db.studentProfile.update({
                 where: { id: studentId },
                 data: {

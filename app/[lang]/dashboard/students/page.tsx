@@ -51,6 +51,7 @@ export default async function StudentsPage({ params }: { params: Promise<{ lang:
         user: rel.student.user,
         tempFirstName: rel.student.tempFirstName,
         tempLastName: rel.student.tempLastName,
+        tempAvatar: rel.student.tempAvatar,
         relation: { customName: rel.customName },
         name: rel.customName || (rel.student.isClaimed && rel.student.user?.name
             ? rel.student.user.name

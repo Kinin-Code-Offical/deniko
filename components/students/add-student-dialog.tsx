@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { ImageCropper } from "@/components/ui/image-cropper"
 
 const DEFAULT_AVATARS = [
     "defaults/Felix.svg",
@@ -75,6 +76,8 @@ export function AddStudentDialog({ dictionary, classrooms = [] }: { dictionary: 
     const [open, setOpen] = useState(false)
     const [isPending, startTransition] = useTransition()
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [tempFile, setTempFile] = useState<File | null>(null)
+    const [showCropper, setShowCropper] = useState(false)
     const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null)
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -196,8 +199,10 @@ export function AddStudentDialog({ dictionary, classrooms = [] }: { dictionary: 
                                         onChange={(e) => {
                                             const file = e.target.files?.[0]
                                             if (file) {
-                                                setSelectedFile(file)
-                                                setSelectedAvatar(null)
+                                                setTempFile(file)
+                                                setShowCropper(true)
+                                                // Reset input value so same file can be selected again if needed
+                                                e.target.value = ""
                                             }
                                         }}
                                     />
@@ -397,6 +402,16 @@ export function AddStudentDialog({ dictionary, classrooms = [] }: { dictionary: 
                     </form>
                 </Form>
             </DialogContent>
+
+            <ImageCropper
+                open={showCropper}
+                onOpenChange={setShowCropper}
+                file={tempFile}
+                onCrop={(croppedFile) => {
+                    setSelectedFile(croppedFile)
+                    setSelectedAvatar(null)
+                }}
+            />
         </Dialog>
     )
 }
