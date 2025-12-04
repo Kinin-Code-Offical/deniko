@@ -60,8 +60,12 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
                 <div className="md:hidden flex items-center gap-2">
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" className="h-14 w-14 p-0 hover:bg-transparent">
-                                <Menu className="h-10 w-10 text-slate-700" strokeWidth={2.5} />
+                            <Button variant="ghost" className="p-0 hover:bg-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1d4f87]/40 rounded-full">
+                                <Menu
+                                    className="text-slate-700"
+                                    strokeWidth={2.2}
+                                    style={{ height: "clamp(22px,4.5vw,36px)", width: "clamp(22px,4.5vw,36px)" }}
+                                />
                                 <span className="sr-only">Toggle menu</span>
                             </Button>
                         </SheetTrigger>

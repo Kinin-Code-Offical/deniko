@@ -432,6 +432,10 @@
       "progress_desc": "Review success charts, identify gaps, and focus on goals.",
       "communication_title": "Seamless Communication",
       "communication_desc": "Stay connected with students and parents through integrated messaging and announcements.",
+      "payments_title": "Tuition & Payments",
+      "payments_desc": "Track tuition plans, automate reminders, and keep every receipt synced.",
+      "guardians_title": "Guardian Portal",
+      "guardians_desc": "Share progress snapshots with families and centralize parent communication.",
       "badge": "ALL-IN-ONE PLATFORM",
       "subtitle": "Plan lessons, track students and understand performance in one clean, modern workspace."
     },

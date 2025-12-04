@@ -432,6 +432,10 @@
       "progress_desc": "Başarı grafiklerini inceleyin, eksikleri belirleyin ve hedeflere odaklanın.",
       "communication_title": "Kesintisiz İletişim",
       "communication_desc": "Entegre mesajlaşma ve duyurular ile öğrenci ve velilerle her zaman iletişimde kalın.",
+      "payments_title": "Ödeme Takibi",
+      "payments_desc": "Ders ücretlerini izleyin, hatırlatmaları otomatikleştirin ve tüm makbuzları tek yerde tutun.",
+      "guardians_title": "Veli Portalı",
+      "guardians_desc": "İlerleme özetlerini velilerle paylaşın ve iletişimi merkezileştirin.",
       "badge": "HEPSİ BİR ARADA PLATFORM",
       "subtitle": "Dersleri planlayın, öğrencileri takip edin ve performansı tek, modern bir ekranda görün."
     },

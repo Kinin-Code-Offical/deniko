@@ -3,10 +3,9 @@ import type { Locale } from "@/i18n-config"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/navbar"
-import { StatsCard } from "@/components/ui/stats-card"
 import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/scroll-animation"
-import { ArrowRight, Calendar, Users, LineChart, UserPlus, Settings, BookOpen, GraduationCap, School, LayoutDashboard, Wallet, Bell, Search, MoreHorizontal, MessageSquare } from "lucide-react"
+import { ArrowRight, Calendar, Users, LineChart, UserPlus, Settings, BookOpen, GraduationCap, LayoutDashboard, Wallet, Bell, Search, MoreHorizontal, MessageSquare, CreditCard, ShieldCheck } from "lucide-react"
 
 export default async function Home({
   params,
@@ -15,6 +14,126 @@ export default async function Home({
 }) {
   const { lang } = await params
   const dictionary = (await getDictionary(lang)) 
+
+  const scheduleEntries = [
+    { time: "09:00", subject: dictionary.home.mock_dashboard.math, room: "301" },
+    { time: "11:30", subject: dictionary.home.mock_dashboard.physics, room: "205" },
+    { time: "14:00", subject: dictionary.home.mock_dashboard.chemistry, room: "210" },
+  ]
+
+  const centerStats = [
+    { label: dictionary.home.mock_dashboard.students, value: "48" },
+    { label: dictionary.home.mock_dashboard.classes_today, value: "12" },
+    { label: dictionary.home.mock_dashboard.completed, value: "68" },
+  ]
+
+  const completionMetrics = [
+    { label: dictionary.home.mock_dashboard.completed, value: "68", filled: 85 },
+    { label: dictionary.home.mock_dashboard.pending, value: "12", filled: 35 },
+  ]
+
+  const scheduleCard = (className = "") => (
+    <div
+      tabIndex={0}
+      className={`bg-white/95 backdrop-blur-sm p-4 sm:p-5 rounded-3xl shadow-[0_15px_45px_rgba(15,23,42,0.08)] border border-white/60 transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-100 focus-visible:-translate-y-1 focus-visible:scale-[1.03] sm:hover:-translate-y-2 sm:hover:scale-[1.05] sm:hover:z-30 ${className}`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400 mb-1">{dictionary.home.mock_dashboard.schedule}</p>
+          <div className="text-sm font-semibold text-slate-800">12 {dictionary.home.mock_dashboard.math}</div>
+        </div>
+        <div className="h-10 w-10 rounded-2xl bg-orange-100 flex items-center justify-center">
+          <Calendar className="h-4 w-4 text-orange-600" />
+        </div>
+      </div>
+      <div className="space-y-3">
+        {scheduleEntries.map((lesson, i) => (
+          <div key={`${lesson.subject}-${i}`} className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2">
+            <div className="text-[11px] font-semibold text-slate-500 w-12">{lesson.time}</div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-slate-800">{lesson.subject}</p>
+              <p className="text-[10px] text-slate-400">{dictionary.home.mock_dashboard.room} {lesson.room}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+
+  const profileCard = (className = "") => (
+    <div
+      tabIndex={0}
+      className={`bg-white p-5 sm:p-6 rounded-3xl shadow-[0_30px_70px_rgba(15,23,42,0.12)] border border-slate-100 transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-100 focus-visible:-translate-y-1 focus-visible:scale-[1.03] sm:hover:-translate-y-2 sm:hover:scale-[1.05] sm:hover:z-40 ${className}`}
+    >
+      <div className="flex items-center gap-4 mb-4">
+        <div className="h-12 w-12 rounded-2xl bg-blue-100 flex items-center justify-center">
+          <GraduationCap className="h-6 w-6 text-blue-600" />
+        </div>
+        <div>
+          <div className="text-sm font-semibold text-slate-800">{dictionary.home.mock_dashboard.graphic_profile}</div>
+          <div className="text-xs text-slate-500">{dictionary.home.mock_dashboard.graphic_performance}</div>
+        </div>
+      </div>
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <p className="text-[11px] text-slate-400 uppercase tracking-widest mb-1">{dictionary.home.mock_dashboard.attendance}</p>
+          <p className="text-3xl font-semibold text-slate-900">94%</p>
+        </div>
+        <div className="h-14 w-14 rounded-full bg-blue-50 flex items-center justify-center">
+          <LineChart className="h-6 w-6 text-blue-500" />
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        {centerStats.map((stat) => (
+          <div key={stat.label} className="flex items-center justify-between rounded-2xl px-3 py-2 bg-white border border-slate-100">
+            <p className="text-[11px] text-slate-400 uppercase tracking-[0.2em]">{stat.label}</p>
+            <span className="text-lg font-semibold text-slate-900">{stat.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+
+  const analysisCard = (className = "") => (
+    <div
+      tabIndex={0}
+      className={`bg-white/95 backdrop-blur-sm p-5 rounded-3xl shadow-[0_15px_45px_rgba(15,23,42,0.08)] border border-white/60 transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-100 focus-visible:-translate-y-1 focus-visible:scale-[1.03] sm:hover:-translate-y-2 sm:hover:scale-[1.05] sm:hover:z-30 ${className}`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400 mb-1">{dictionary.home.mock_dashboard.graphic_analysis}</p>
+          <p className="text-sm font-semibold text-slate-800">A+ {dictionary.home.mock_dashboard.class_average}</p>
+        </div>
+        <div className="h-10 w-10 rounded-2xl bg-emerald-100 flex items-center justify-center">
+          <LineChart className="h-4 w-4 text-emerald-600" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="col-span-1">
+          <div className="relative h-24 w-24 mx-auto">
+            <div className="absolute inset-0 rounded-full border-4 border-emerald-100"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent border-r-transparent rotate-45"></div>
+            <div className="absolute inset-4 rounded-full bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center">
+              <span className="text-lg font-bold text-emerald-600">92%</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col justify-center gap-3">
+          {completionMetrics.map((metric) => (
+            <div key={metric.label} className="flex items-center gap-2">
+              <div className="h-2 w-12 rounded-full bg-emerald-100 overflow-hidden">
+                <div className="h-full bg-emerald-500" style={{ width: `${metric.filled}%` }}></div>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-600">{metric.label}</p>
+                <p className="text-sm font-bold text-slate-900">{metric.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-white flex flex-col animate-in fade-in duration-1000">
@@ -115,35 +234,35 @@ export default async function Home({
                         {/* Main Content */}
                         <div className="col-span-12 sm:col-span-9 flex flex-col gap-4">
                           {/* Stats Row */}
-                          <div className="grid grid-cols-3 gap-3">
-                             <div className="bg-slate-900 border border-slate-800 rounded-xl p-3">
+                              <div className="grid grid-cols-3 gap-3">
+                               <div className="bg-slate-900 border border-slate-800 rounded-xl p-3">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">{dictionary.home.mock_dashboard.attendance}</span>
+                                  <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider">{dictionary.home.mock_dashboard.attendance}</span>
                                     <span className="text-[10px] text-emerald-400 font-medium">+4.5%</span>
                                 </div>
-                                <div className="text-lg font-bold text-white mb-1">94%</div>
+                                <div className="text-base sm:text-lg font-bold text-white mb-1">94%</div>
                                 <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
                                     <div className="h-full w-[94%] bg-emerald-500 rounded-full"></div>
                                 </div>
                              </div>
-                             <div className="bg-slate-900 border border-slate-800 rounded-xl p-3">
+                               <div className="bg-slate-900 border border-slate-800 rounded-xl p-3">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">{dictionary.home.mock_dashboard.active_students}</span>
+                                  <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider">{dictionary.home.mock_dashboard.active_students}</span>
                                     <span className="text-[10px] text-blue-400 font-medium">{dictionary.home.mock_dashboard.active}</span>
                                 </div>
-                                <div className="text-lg font-bold text-white mb-1">48</div>
+                                <div className="text-base sm:text-lg font-bold text-white mb-1">48</div>
                                 <div className="flex -space-x-2">
                                     {[1,2,3].map(i => (
                                         <div key={i} className="h-5 w-5 rounded-full bg-slate-700 border border-slate-900"></div>
                                     ))}
                                 </div>
                              </div>
-                             <div className="bg-slate-900 border border-slate-800 rounded-xl p-3">
+                               <div className="bg-slate-900 border border-slate-800 rounded-xl p-3">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">{dictionary.home.mock_dashboard.classes_today}</span>
+                                  <span className="text-[9px] sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider">{dictionary.home.mock_dashboard.classes_today}</span>
                                     <span className="text-[10px] text-orange-400 font-medium">{dictionary.home.mock_dashboard.pending}</span>
                                 </div>
-                                <div className="text-lg font-bold text-white mb-1">12</div>
+                                <div className="text-base sm:text-lg font-bold text-white mb-1">12</div>
                                 <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
                                     <div className="h-full w-[60%] bg-orange-500 rounded-full"></div>
                                 </div>
@@ -220,76 +339,42 @@ export default async function Home({
                 <p className="text-gray-600 max-w-xl leading-relaxed">
                   {dictionary.home.features.subtitle}
                 </p>
-                <div className="mt-8 relative h-[400px] w-full bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl border border-blue-100 overflow-hidden p-8 flex items-center justify-center group">
+                <div className="mt-8 relative h-[400px] sm:h-[440px] lg:h-[460px] w-full bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl border border-blue-100 overflow-hidden p-6 sm:p-8 flex items-center justify-center group">
                   {/* Abstract Background */}
                   <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03]"></div>
                   <div className="absolute top-0 right-0 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
                   <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
                   
                   {/* Floating Elements Composition */}
-                  <div className="relative w-full h-full flex items-center justify-center">
-                      {/* Calendar Card (Left) */}
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50 w-48 transform -rotate-6 group-hover:-rotate-12 transition-transform duration-500 z-10">
-                          <div className="flex items-center gap-3 mb-3">
-                              <div className="h-8 w-8 rounded-lg bg-orange-100 flex items-center justify-center">
-                                  <Calendar className="h-4 w-4 text-orange-600" />
-                              </div>
-                              <div className="text-xs font-bold text-slate-700">{dictionary.home.mock_dashboard.graphic_schedule}</div>
-                          </div>
-                          <div className="space-y-2">
-                              {[1, 2, 3].map(i => (
-                                  <div key={i} className="flex gap-2 items-center">
-                                      <div className="h-1.5 w-1.5 rounded-full bg-orange-400"></div>
-                                      <div className="h-1.5 w-20 bg-slate-100 rounded-full"></div>
-                                  </div>
-                              ))}
-                          </div>
+                    <div className="relative w-full h-full">
+                      {/* Mobile swipeable cards */}
+                      <div className="sm:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-2 px-2">
+                        {scheduleCard("snap-center shrink-0 w-60")}
+                        {profileCard("snap-center shrink-0 w-64")}
+                        {analysisCard("snap-center shrink-0 w-60")}
                       </div>
 
-                      {/* Student Card (Center/Top) */}
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded-2xl shadow-[0_20px_50px_rgb(0,0,0,0.1)] border border-slate-100 w-64 z-20 transform group-hover:scale-105 transition-transform duration-500">
-                          <div className="flex items-center gap-3 mb-4">
-                              <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                                  <GraduationCap className="h-5 w-5 text-blue-600" />
-                              </div>
-                              <div>
-                                  <div className="text-xs font-bold text-slate-700">{dictionary.home.mock_dashboard.graphic_profile}</div>
-                                  <div className="text-[10px] text-slate-500">{dictionary.home.mock_dashboard.graphic_performance}</div>
-                              </div>
-                          </div>
-                          <div className="flex justify-between items-end h-20 gap-1.5">
-                              {[40, 70, 50, 90, 60, 80, 65, 85].map((h, i) => (
-                                  <div key={i} className="w-full bg-blue-50 rounded-t-sm relative overflow-hidden">
-                                      <div className="absolute bottom-0 left-0 right-0 bg-blue-500 transition-all duration-1000" style={{ height: `${h}%` }}></div>
-                                  </div>
-                              ))}
-                          </div>
+                      {/* Desktop floating layout */}
+                      <div className="hidden sm:flex w-full h-full items-center justify-center relative">
+                        {scheduleCard("absolute left-2 top-1/2 -translate-y-1/2 -translate-x-4 -rotate-6 group-hover:-rotate-9 z-10")}
+                        {profileCard("absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20")}
+                        {analysisCard("absolute right-2 top-1/2 -translate-y-1/2 translate-x-4 rotate-6 group-hover:rotate-9 z-10")}
                       </div>
-
-                      {/* Chart Card (Right) */}
-                      <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50 w-48 transform rotate-6 group-hover:rotate-12 transition-transform duration-500 z-10">
-                          <div className="flex items-center gap-3 mb-3">
-                              <div className="h-8 w-8 rounded-lg bg-emerald-100 flex items-center justify-center">
-                                  <LineChart className="h-4 w-4 text-emerald-600" />
-                              </div>
-                              <div className="text-xs font-bold text-slate-700">{dictionary.home.mock_dashboard.graphic_analysis}</div>
-                          </div>
-                          <div className="flex items-center justify-center h-16">
-                              <div className="relative h-14 w-14 rounded-full border-[3px] border-emerald-100 flex items-center justify-center">
-                                  <div className="absolute inset-0 border-[3px] border-emerald-500 rounded-full border-t-transparent rotate-45"></div>
-                                  <span className="text-sm font-bold text-emerald-600">A+</span>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                    </div>
                 </div>
               </FadeIn>
 
-              <div className="flex-1 relative">
-                {/* Connecting Line */}
-                <div className="absolute left-[2.75rem] top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-blue-400 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.6)]"></div>
+                  <div className="flex-1 relative">
+                    {/* Connecting Line */}
+                    <div className="pointer-events-none absolute left-0 top-2 bottom-2 w-14 flex justify-center z-10">
+                        <div className="feature-line relative h-full w-[7px]">
+                            <span className="feature-flash"></span>
+                            <span className="feature-node feature-node--top"></span>
+                            <span className="feature-node feature-node--bottom"></span>
+                        </div>
+                    </div>
 
-                <StaggerContainer className="flex flex-col gap-5 relative z-10">
+                    <StaggerContainer className="flex flex-col gap-5 relative z-20 ml-10 sm:ml-14">
                   {[
                     {
                       icon: Calendar,
@@ -319,11 +404,26 @@ export default async function Home({
                       color: "text-purple-600",
                       bg: "bg-purple-50"
                     },
+                    {
+                      icon: CreditCard,
+                      title: dictionary.home.features.payments_title,
+                      desc: dictionary.home.features.payments_desc,
+                      color: "text-orange-600",
+                      bg: "bg-orange-50"
+                    },
+                    {
+                      icon: ShieldCheck,
+                      title: dictionary.home.features.guardians_title,
+                      desc: dictionary.home.features.guardians_desc,
+                      color: "text-slate-700",
+                      bg: "bg-slate-100"
+                    },
                   ].map((feature, index) => (
                     <StaggerItem
                       key={index}
-                      className="group relative flex items-start gap-5 p-5 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-300"
+                      className="group relative flex items-start gap-5 pl-12 sm:pl-14 pr-5 sm:pr-6 py-5 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-300"
                     >
+                      <span className="feature-dot"></span>
                       <div className={`shrink-0 w-12 h-12 ${feature.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative z-10 ring-4 ring-white`}>
                         <feature.icon className={`h-6 w-6 ${feature.color}`} />
                       </div>
