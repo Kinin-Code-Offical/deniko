@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/navbar"
 import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/scroll-animation"
-import { ArrowRight, Calendar, Users, LineChart, UserPlus, Settings, BookOpen, GraduationCap, LayoutDashboard, Wallet, Bell, Search, MoreHorizontal, MessageSquare, CreditCard, ShieldCheck, Library, Smartphone } from "lucide-react"
+import { ArrowRight, Calendar, Users, LineChart, UserPlus, Settings, BookOpen, GraduationCap, LayoutDashboard, Wallet, Bell, Search, MoreHorizontal, MessageSquare, CreditCard, ShieldCheck, Library, Smartphone, CheckCircle2 } from "lucide-react"
 import type { CSSProperties } from "react"
+import { db } from "@/lib/db"
 
 export default async function Home({
   params,
@@ -15,6 +16,11 @@ export default async function Home({
 }) {
   const { lang } = await params
   const dictionary = (await getDictionary(lang)) 
+
+  // Fetch real stats
+  const teacherCount = await db.teacherProfile.count()
+  const studentCount = await db.studentProfile.count()
+  const lessonCount = await db.lesson.count()
 
   const scheduleEntries = [
     { time: "09:00", subject: dictionary.home.mock_dashboard.math, room: "301" },
@@ -371,15 +377,15 @@ export default async function Home({
 
                     <div className="flex-1 relative pl-8 sm:pl-12" style={featureAxisStyle}>
                     {/* Connecting Line */}
-                      <div className="pointer-events-none absolute inset-y-3 flex justify-center z-0 w-10" style={{ left: "var(--feature-axis)" }}>
+                      <FadeIn className="pointer-events-none absolute inset-y-3 flex justify-center z-0 w-10" style={{ left: "var(--feature-axis)" }}>
                           <div className="feature-line relative h-full w-[6px] -translate-x-1/2">
                         <span className="feature-flash"></span>
                         <span className="feature-node feature-node--top"></span>
                         <span className="feature-node feature-node--bottom"></span>
                       </div>
-                    </div>
+                    </FadeIn>
 
-                      <StaggerContainer className="flex flex-col gap-5 relative z-10">
+                      <StaggerContainer className="flex flex-col gap-5 relative z-10" delay={0.2}>
                   {[
                     {
                       icon: Calendar,
@@ -463,87 +469,185 @@ export default async function Home({
         </section>
 
         {/* How It Works Section */}
-        <section className="py-20 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">{dictionary.home.how_it_works.title}</h2>
+        <section className="py-24 bg-slate-50 relative overflow-hidden">
+          {/* Background Elements */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+          </div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="text-center mb-20">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">{dictionary.home.how_it_works.title}</h2>
+              <p className="text-slate-600 max-w-2xl mx-auto text-lg">
+                {lang === 'tr' ? 'Karmaşık süreçleri basitleştirin. Sadece 3 adımda dijital dönüşümünüzü tamamlayın.' : 'Simplify complex processes. Complete your digital transformation in just 3 steps.'}
+              </p>
             </div>
-            <StaggerContainer className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto relative">
+
+            <StaggerContainer className="grid md:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto relative">
               {/* Connecting Line (Desktop) */}
-              <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gray-200 -z-10"></div>
+              <div className="hidden md:block absolute top-16 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-blue-200 via-indigo-200 to-blue-200 -z-10"></div>
 
               {/* Step 1 */}
-              <StaggerItem className="text-center">
-                <div className="w-24 h-24 bg-white rounded-full shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-6 relative z-10">
-                  <UserPlus className="h-10 w-10 text-[#2062A3]" />
+              <StaggerItem className="relative group">
+                <div className="bg-white rounded-3xl p-8 shadow-lg shadow-slate-200/50 border border-slate-100 hover:border-blue-200 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl h-full relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                  <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300 relative z-10">
+                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md border-2 border-white">1</div>
+                    <UserPlus className="h-9 w-9 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 text-center group-hover:text-blue-700 transition-colors">{dictionary.home.how_it_works.step1_title}</h3>
+                  <p className="text-slate-600 text-center leading-relaxed">{dictionary.home.how_it_works.step1_desc}</p>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{dictionary.home.how_it_works.step1_title}</h3>
-                <p className="text-gray-600">{dictionary.home.how_it_works.step1_desc}</p>
               </StaggerItem>
 
               {/* Step 2 */}
-              <StaggerItem className="text-center">
-                <div className="w-24 h-24 bg-white rounded-full shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-6 relative z-10">
-                  <Settings className="h-10 w-10 text-[#2062A3]" />
+              <StaggerItem className="relative group">
+                <div className="bg-white rounded-3xl p-8 shadow-lg shadow-slate-200/50 border border-slate-100 hover:border-indigo-200 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl h-full relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 to-indigo-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                  <div className="w-20 h-20 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300 relative z-10">
+                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md border-2 border-white">2</div>
+                    <Settings className="h-9 w-9 text-indigo-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 text-center group-hover:text-indigo-700 transition-colors">{dictionary.home.how_it_works.step2_title}</h3>
+                  <p className="text-slate-600 text-center leading-relaxed">{dictionary.home.how_it_works.step2_desc}</p>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{dictionary.home.how_it_works.step2_title}</h3>
-                <p className="text-gray-600">{dictionary.home.how_it_works.step2_desc}</p>
               </StaggerItem>
 
               {/* Step 3 */}
-              <StaggerItem className="text-center">
-                <div className="w-24 h-24 bg-white rounded-full shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-6 relative z-10">
-                  <BookOpen className="h-10 w-10 text-[#2062A3]" />
+              <StaggerItem className="relative group">
+                <div className="bg-white rounded-3xl p-8 shadow-lg shadow-slate-200/50 border border-slate-100 hover:border-emerald-200 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl h-full relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-emerald-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                  <div className="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300 relative z-10">
+                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md border-2 border-white">3</div>
+                    <BookOpen className="h-9 w-9 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 text-center group-hover:text-emerald-700 transition-colors">{dictionary.home.how_it_works.step3_title}</h3>
+                  <p className="text-slate-600 text-center leading-relaxed">{dictionary.home.how_it_works.step3_desc}</p>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{dictionary.home.how_it_works.step3_title}</h3>
-                <p className="text-gray-600">{dictionary.home.how_it_works.step3_desc}</p>
               </StaggerItem>
             </StaggerContainer>
           </div>
         </section>
 
+        {/* Stats Section */}
+        <section className="py-20 bg-white border-y border-slate-100">
+            <div className="container mx-auto px-4">
+                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    {/* Teachers */}
+                    <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:border-blue-100 transition-colors">
+                        <div className="h-16 w-16 rounded-2xl bg-blue-100 flex items-center justify-center shrink-0">
+                            <Users className="h-8 w-8 text-blue-600" />
+                        </div>
+                        <div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-bold text-slate-900">{teacherCount.toLocaleString()}</span>
+                                <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{dictionary.home.stats.teachers_suffix}</span>
+                            </div>
+                            <p className="text-lg font-medium text-slate-700 mb-1">{dictionary.home.stats.teachers_label}</p>
+                            <p className="text-sm text-slate-500">{dictionary.home.stats.teachers_hint}</p>
+                        </div>
+                    </div>
+                    
+                    {/* Students */}
+                    <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:border-indigo-100 transition-colors">
+                        <div className="h-16 w-16 rounded-2xl bg-indigo-100 flex items-center justify-center shrink-0">
+                            <GraduationCap className="h-8 w-8 text-indigo-600" />
+                        </div>
+                        <div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-bold text-slate-900">{studentCount.toLocaleString()}</span>
+                                <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{dictionary.home.stats.students_suffix}</span>
+                            </div>
+                            <p className="text-lg font-medium text-slate-700 mb-1">{dictionary.home.stats.students_label}</p>
+                            <p className="text-sm text-slate-500">{dictionary.home.stats.students_hint}</p>
+                        </div>
+                    </div>
+
+                    {/* Lessons */}
+                    <div className="flex items-center gap-6 p-6 rounded-3xl bg-slate-50 border border-slate-100 hover:border-emerald-100 transition-colors">
+                        <div className="h-16 w-16 rounded-2xl bg-emerald-100 flex items-center justify-center shrink-0">
+                            <BookOpen className="h-8 w-8 text-emerald-600" />
+                        </div>
+                        <div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-bold text-slate-900">{lessonCount.toLocaleString()}</span>
+                                <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{dictionary.home.stats.lessons_suffix}</span>
+                            </div>
+                            <p className="text-lg font-medium text-slate-700 mb-1">{dictionary.home.stats.lessons_label}</p>
+                            <p className="text-sm text-slate-500">{dictionary.home.stats.lessons_hint}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         {/* CTA Section */}
-        <section className="py-20 bg-[#2062A3] text-white">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">{dictionary.home.cta.title}</h2>
-            <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+        <section className="py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[#1d4f87]">
+            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-3xl"></div>
+          </div>
+          
+          <div className="container mx-auto px-4 text-center relative z-10">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white tracking-tight">{dictionary.home.cta.title}</h2>
+            <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto leading-relaxed">
               {dictionary.home.cta.subtitle}
             </p>
-            <Button size="lg" className="bg-white text-[#2062A3] hover:bg-blue-50 h-14 px-10 text-lg" asChild>
-              <Link href={`/${lang}/register`}>
-                {dictionary.home.cta.button}
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button size="lg" className="bg-white text-[#1d4f87] hover:bg-blue-50 h-14 px-10 text-lg shadow-xl shadow-blue-900/20 w-full sm:w-auto" asChild>
+                <Link href={`/${lang}/register`}>
+                    {dictionary.home.cta.button}
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="h-14 px-10 text-lg border-white/20 text-white hover:bg-white/10 w-full sm:w-auto" asChild>
+                    <Link href={`/${lang}/login`}>
+                        {dictionary.home.login}
+                    </Link>
+                </Button>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="bg-gray-50 border-t py-12">
+      <footer className="bg-slate-50 border-t border-slate-200 pt-16 pb-8">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
             {/* Brand */}
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <DenikoLogo className="h-6 w-6 text-[#2062A3]" />
-                <span className="font-bold text-xl text-gray-900">Deniko</span>
+            <div className="md:col-span-5 space-y-6">
+              <div className="flex items-center gap-2">
+                <DenikoLogo className="h-8 w-8 text-slate-400" />
+                <span className="font-bold text-2xl text-slate-400">Deniko</span>
               </div>
-              <p className="text-gray-500 text-sm max-w-xs leading-relaxed">
+              <p className="text-slate-500 text-base leading-relaxed max-w-md">
                 {dictionary.home.hero_subtitle}
               </p>
+              <div className="flex items-center gap-4">
+                {/* Social Media Icons */}
+                <a href="https://github.com/Kinin-Code-Offical" target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-[#2062A3] hover:border-blue-200 transition-colors cursor-pointer">
+                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" /></svg>
+                </a>
+                <a href="https://www.patreon.com/YamacGursel" target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-[#2062A3] hover:border-blue-200 transition-colors cursor-pointer">
+                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 .48c0-.176.144-.32.32-.32h7.214c5.225 0 9.46 4.235 9.46 9.46 0 5.225-4.235 9.46-9.46 9.46H4.741c-.176 0-.32-.144-.32-.32V.48zm-4.741 0c0-.176.144-.32.32-.32h4.101c.176 0 .32.144.32.32v23.04c0 .176-.144.32-.32.32H.32c-.176 0-.32-.144-.32-.32V.48z" transform="translate(4.741)" /><rect width="4.101" height="23.04" x="0" y=".48" rx=".32" ry=".32" /></svg>
+                </a>
+              </div>
             </div>
 
             {/* Platform Links */}
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">{lang === 'tr' ? 'Platform' : 'Platform'}</h4>
-              <ul className="space-y-2 text-sm text-gray-500">
+            <div className="md:col-span-3 md:col-start-7">
+              <h4 className="font-bold text-slate-900 mb-6">{lang === 'tr' ? 'Platform' : 'Platform'}</h4>
+              <ul className="space-y-4 text-sm text-slate-600">
                 <li>
-                  <Link href={`/${lang}/login`} className="hover:text-[#2062A3] transition-colors">
+                  <Link href={`/${lang}/login`} className="hover:text-[#2062A3] transition-colors flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-200"></span>
                     {dictionary.home.login}
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/${lang}/register`} className="hover:text-[#2062A3] transition-colors">
+                  <Link href={`/${lang}/register`} className="hover:text-[#2062A3] transition-colors flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-200"></span>
                     {dictionary.home.get_started}
                   </Link>
                 </li>
@@ -551,26 +655,30 @@ export default async function Home({
             </div>
 
             {/* Legal Links */}
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">{lang === 'tr' ? 'Yasal' : 'Legal'}</h4>
-              <ul className="space-y-2 text-sm text-gray-500">
+            <div className="md:col-span-3">
+              <h4 className="font-bold text-slate-900 mb-6">{lang === 'tr' ? 'Yasal' : 'Legal'}</h4>
+              <ul className="space-y-4 text-sm text-slate-600">
                 <li>
-                  <Link href={`/${lang}/legal/terms`} className="hover:text-[#2062A3] transition-colors">
+                  <Link href={`/${lang}/legal/terms`} className="hover:text-[#2062A3] transition-colors flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-200"></span>
                     {lang === 'tr' ? 'Kullanıcı Sözleşmesi' : 'Terms of Service'}
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/${lang}/legal/privacy`} className="hover:text-[#2062A3] transition-colors">
+                  <Link href={`/${lang}/legal/privacy`} className="hover:text-[#2062A3] transition-colors flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-200"></span>
                     {lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/${lang}/legal/cookies`} className="hover:text-[#2062A3] transition-colors">
+                  <Link href={`/${lang}/legal/cookies`} className="hover:text-[#2062A3] transition-colors flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-200"></span>
                     {lang === 'tr' ? 'Çerez Politikası' : 'Cookie Policy'}
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/${lang}/legal/kvkk`} className="hover:text-[#2062A3] transition-colors">
+                  <Link href={`/${lang}/legal/kvkk`} className="hover:text-[#2062A3] transition-colors flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-200"></span>
                     {lang === 'tr' ? 'KVKK Aydınlatma Metni' : 'KVKK Clarification Text'}
                   </Link>
                 </li>
@@ -578,12 +686,14 @@ export default async function Home({
             </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-500">
+          <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-slate-500">
               {lang === 'tr' ? '© 2025 Deniko. Tüm hakları saklıdır.' : '© 2025 Deniko. All rights reserved.'}
             </p>
-            <div className="flex items-center gap-4">
-              {/* Social Media Icons Placeholder */}
+            <div className="flex items-center gap-6">
+                <span className="text-xs text-slate-400">
+                    {lang === 'tr' ? 'Patent hakları Deniko\'ya aittir.' : 'Patent rights belong to Deniko.'}
+                </span>
             </div>
           </div>
         </div>

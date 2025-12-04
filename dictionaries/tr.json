@@ -444,14 +444,15 @@
       "subtitle": "Dersleri planlayın, öğrencileri takip edin ve performansı tek, modern bir ekranda görün."
     },
     "stats": {
-      "schools_label": "Özel ders ekipleri",
-      "schools_value": "120+",
-      "schools_suffix": "kurum",
-      "schools_hint": "Bireysel öğretmenlerden butik akademilere kadar.",
-      "students_label": "Takip edilen öğrenci",
-      "students_value": "4.5K",
+      "teachers_label": "Öğretmenler",
+      "teachers_suffix": "eğitmen",
+      "teachers_hint": "Deniko kullanan profesyonel eğitmenler.",
+      "students_label": "Öğrenciler",
       "students_suffix": "profil",
-      "students_hint": "Tüm ilerleme, notlar ve ödemeler tek yerde."
+      "students_hint": "Aktif öğrenci profilleri.",
+      "lessons_label": "Dersler",
+      "lessons_suffix": "oturum",
+      "lessons_hint": "Planlanan ve tamamlanan toplam ders."
     },
     "how_it_works": {
       "title": "Deniko Nasıl Çalışır?",

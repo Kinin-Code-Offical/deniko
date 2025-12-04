@@ -139,8 +139,21 @@
     position: relative;
     border-radius: 9999px;
     overflow: hidden;
-    background: linear-gradient(180deg, rgba(191, 219, 254, 0.25) 0%, rgba(59, 130, 246, 0.9) 45%, rgba(191, 219, 254, 0.25) 100%);
-    box-shadow: 0 0 60px rgba(59, 130, 246, 0.45);
+    /* Darker Plasma core: Deep blue edges, bright center */
+    background: linear-gradient(180deg, 
+      rgba(30, 58, 138, 0) 0%, 
+      rgba(37, 99, 235, 0.4) 20%,
+      rgba(59, 130, 246, 0.9) 45%, 
+      rgba(219, 234, 254, 0.95) 50%,
+      rgba(59, 130, 246, 0.9) 55%,
+      rgba(37, 99, 235, 0.4) 80%,
+      rgba(30, 58, 138, 0) 100%
+    );
+    /* Deep blue glow */
+    box-shadow: 
+      0 0 15px rgba(29, 78, 216, 0.7),
+      0 0 30px rgba(30, 64, 175, 0.5),
+      0 0 45px rgba(30, 58, 138, 0.3);
     opacity: 0;
     transform: translateY(12px) scaleY(0.9);
     animation: feature-line-reveal 0.9s ease-out forwards;
@@ -152,18 +165,34 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: -120%;
-    height: 320%;
-    background: linear-gradient(180deg, rgba(59, 130, 246, 0) 0%, rgba(59, 130, 246, 1) 40%, rgba(59, 130, 246, 0) 100%);
-    animation: feature-line-flow 6s ease-in-out infinite;
+    top: -150%;
+    height: 300%;
+    /* Electric pulse gradient - darker edges */
+    background: linear-gradient(180deg, 
+      transparent 0%, 
+      rgba(30, 64, 175, 0.2) 30%,
+      rgba(59, 130, 246, 0.7) 45%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(59, 130, 246, 0.7) 55%,
+      rgba(30, 64, 175, 0.2) 70%,
+      transparent 100%
+    );
+    filter: blur(4px);
+    animation: feature-line-flow 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     animation-delay: 4.4s;
   }
 
   .feature-flash {
     position: absolute;
-    inset: -24px;
+    inset: -32px;
     border-radius: 9999px;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.9) 0%, rgba(59, 130, 246, 0.2) 45%, rgba(59, 130, 246, 0) 75%);
+    background: radial-gradient(circle, 
+      rgba(219, 234, 254, 0.95) 0%, 
+      rgba(59, 130, 246, 0.8) 20%, 
+      rgba(30, 64, 175, 0.5) 50%, 
+      transparent 70%
+    );
+    filter: blur(8px);
     opacity: 0;
     animation: feature-line-flash 1.1s ease-out forwards;
     animation-delay: 3.85s;
@@ -195,12 +224,15 @@
   .feature-dot {
     position: absolute;
     display: block;
-    width: 0.85rem;
-    height: 0.85rem;
+    width: 1rem;
+    height: 1rem;
     border-radius: 9999px;
-    border: 2px solid rgba(59, 130, 246, 0.65);
-    background: transparent;
-    box-shadow: inset 0 0 0 1px rgba(226, 242, 255, 0.2), 0 0 20px rgba(59, 130, 246, 0.3);
+    border: 2px solid rgba(29, 78, 216, 0.9);
+    background: rgba(59, 130, 246, 0.15);
+    box-shadow: 
+      inset 0 0 4px rgba(59, 130, 246, 0.5), 
+      0 0 12px rgba(37, 99, 235, 0.8),
+      0 0 24px rgba(29, 78, 216, 0.5);
     top: clamp(0.85rem, 1.5vw, 1.2rem);
     left: clamp(0.9rem, 1.5vw, 1.4rem);
     transform: none;
@@ -331,5 +363,55 @@
   100% {
     opacity: 0.9;
     transform: scale(1);
+  }
+}
+
+/* Print Styles */
+@media print {
+  @page {
+    margin: 2cm;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .print\:block {
+    display: block !important;
+  }
+
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print\:border-none {
+    border: none !important;
+  }
+
+  .print\:p-0 {
+    padding: 0 !important;
+  }
+
+  .print\:m-0 {
+    margin: 0 !important;
+  }
+
+  .print\:max-w-none {
+    max-width: none !important;
+  }
+
+  .print\:text-black {
+    color: black !important;
+  }
+  
+  /* Ensure links are not underlined or blue in print unless needed */
+  a {
+    text-decoration: none !important;
+    color: black !important;
   }
 }

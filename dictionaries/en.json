@@ -444,14 +444,15 @@
       "subtitle": "Plan lessons, track students and understand performance in one clean, modern workspace."
     },
     "stats": {
-      "schools_label": "Tutoring teams",
-      "schools_value": "120+",
-      "schools_suffix": "schools",
-      "schools_hint": "From solo tutors to boutique academies.",
-      "students_label": "Tracked students",
-      "students_value": "4.5K",
+      "teachers_label": "Teachers",
+      "teachers_suffix": "educators",
+      "teachers_hint": "Professional educators using Deniko.",
+      "students_label": "Students",
       "students_suffix": "profiles",
-      "students_hint": "Live progress, notes and payments in one place."
+      "students_hint": "Active student profiles.",
+      "lessons_label": "Lessons",
+      "lessons_suffix": "sessions",
+      "lessons_hint": "Total lessons scheduled and completed."
     },
     "how_it_works": {
       "title": "How Deniko Works?",

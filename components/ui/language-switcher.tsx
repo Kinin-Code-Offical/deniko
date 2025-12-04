@@ -14,9 +14,10 @@ import { i18n } from "@/i18n-config"
 
 interface LanguageSwitcherProps {
     currentLocale?: string
+    onSelect?: () => void
 }
 
-export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
+export function LanguageSwitcher({ currentLocale, onSelect }: LanguageSwitcherProps) {
     const pathname = usePathname()
     const router = useRouter()
     const [mounted, setMounted] = useState(false)
@@ -35,7 +36,17 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
     const handleLanguageChange = (locale: string) => {
         // eslint-disable-next-line react-hooks/immutability
         document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`
-        router.push(redirectedPathName(locale))
+
+        if (onSelect) {
+            onSelect()
+            // Small delay to allow the sheet to close animation to start/finish
+            // and prevent body lock issues during navigation
+            setTimeout(() => {
+                router.push(redirectedPathName(locale))
+            }, 300)
+        } else {
+            router.push(redirectedPathName(locale))
+        }
     }
 
     const localeLabels: Record<string, string> = {

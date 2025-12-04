@@ -24,6 +24,11 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
         return () => cancelAnimationFrame(frame)
     }, [])
 
+    // Close mobile menu when language changes
+    useEffect(() => {
+        setIsOpen(false)
+    }, [lang])
+
     return (
         <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
             <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
@@ -37,7 +42,7 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center gap-3 ml-auto">
-                    <ThemeToggle />
+                    {isClient && <ThemeToggle />}
                     <LanguageSwitcher currentLocale={lang} />
 
                     <div className="flex items-center gap-2">
@@ -104,7 +109,7 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
                                         <span className="text-sm font-medium text-muted-foreground">
                                             {lang === 'tr' ? 'Tema' : 'Theme'}
                                         </span>
-                                        <ThemeToggle />
+                                        {isClient && <ThemeToggle />}
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm font-medium text-muted-foreground">

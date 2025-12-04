@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 
-export const FadeIn = ({ children, delay = 0, className }: { children: React.ReactNode, delay?: number, className?: string }) => {
+export const FadeIn = ({ children, delay = 0, className, style }: { children: React.ReactNode, delay?: number, className?: string, style?: React.CSSProperties }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -10,13 +10,14 @@ export const FadeIn = ({ children, delay = 0, className }: { children: React.Rea
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>
   )
 }
 
-export const StaggerContainer = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+export const StaggerContainer = ({ children, className, delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) => {
   return (
     <motion.div
       initial="hidden"
@@ -26,7 +27,8 @@ export const StaggerContainer = ({ children, className }: { children: React.Reac
         hidden: {},
         visible: {
           transition: {
-            staggerChildren: 0.1
+            staggerChildren: 0.1,
+            delayChildren: delay
           }
         }
       }}
