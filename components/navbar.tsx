@@ -4,9 +4,10 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { ArrowRight, BookOpen, LogIn, Menu } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 interface NavbarProps {
     lang: string
@@ -16,6 +17,12 @@ interface NavbarProps {
 
 export function Navbar({ lang, dictionary }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false)
+    const [isClient, setIsClient] = useState(false)
+
+    useEffect(() => {
+        const frame = requestAnimationFrame(() => setIsClient(true))
+        return () => cancelAnimationFrame(frame)
+    }, [])
 
     return (
         <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
@@ -30,7 +37,8 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center gap-3 ml-auto">
-                    <LanguageSwitcher />
+                    <ThemeToggle />
+                    <LanguageSwitcher currentLocale={lang} />
 
                     <div className="flex items-center gap-2">
                         <Button
@@ -58,15 +66,18 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
 
                 {/* Mobile Navigation */}
                 <div className="md:hidden flex items-center gap-2">
+                    {isClient ? (
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" className="p-0 hover:bg-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1d4f87]/40 rounded-full">
-                                <Menu
-                                    className="text-slate-700"
-                                    strokeWidth={2.2}
-                                    style={{ height: "clamp(22px,4.5vw,36px)", width: "clamp(22px,4.5vw,36px)" }}
-                                />
-                                <span className="sr-only">Toggle menu</span>
+                            <Button
+                                size="lg"
+                                aria-label={lang === "tr" ? "Menüyü aç" : "Open menu"}
+                                className="h-11 px-5 rounded-full bg-[#1d4f87] text-white shadow-md shadow-blue-900/20 hover:bg-[#163b65] focus-visible:ring-[#99bdfc]/50 data-[state=open]:ring-[#99bdfc]/60 data-[state=open]:scale-95 transition-all gap-2"
+                            >
+                                <Menu className="h-5 w-5" strokeWidth={2.4} />
+                                <span className="text-sm font-semibold tracking-wide">
+                                    {lang === "tr" ? "Menü" : "Menu"}
+                                </span>
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right" className="w-[250px] sm:w-[300px] flex flex-col">
@@ -88,10 +99,18 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
                                     </Button>
                                 </div>
 
-                                <div className="border-t pt-6">
+                                <div className="border-t pt-6 space-y-4">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm font-medium text-muted-foreground">Language</span>
-                                        <LanguageSwitcher />
+                                        <span className="text-sm font-medium text-muted-foreground">
+                                            {lang === 'tr' ? 'Tema' : 'Theme'}
+                                        </span>
+                                        <ThemeToggle />
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm font-medium text-muted-foreground">
+                                            {lang === 'tr' ? 'Dil' : 'Language'}
+                                        </span>
+                                        <LanguageSwitcher currentLocale={lang} />
                                     </div>
                                 </div>
                             </div>
@@ -118,6 +137,19 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
                             </div>
                         </SheetContent>
                     </Sheet>
+                    ) : (
+                        <Button
+                            size="lg"
+                            aria-label={lang === "tr" ? "Menüyü aç" : "Open menu"}
+                            className="h-11 px-5 rounded-full bg-[#1d4f87] text-white opacity-80 cursor-default"
+                            disabled
+                        >
+                            <Menu className="h-5 w-5" strokeWidth={2.4} />
+                            <span className="text-sm font-semibold tracking-wide">
+                                {lang === "tr" ? "Menü" : "Menu"}
+                            </span>
+                        </Button>
+                    )}
                 </div>
             </div>
         </header>

@@ -436,6 +436,10 @@
       "payments_desc": "Track tuition plans, automate reminders, and keep every receipt synced.",
       "guardians_title": "Guardian Portal",
       "guardians_desc": "Share progress snapshots with families and centralize parent communication.",
+      "resources_title": "Resource Library",
+      "resources_desc": "Store and share educational materials, documents, and videos securely.",
+      "mobile_title": "Mobile Access",
+      "mobile_desc": "Access your dashboard from anywhere with our responsive mobile interface.",
       "badge": "ALL-IN-ONE PLATFORM",
       "subtitle": "Plan lessons, track students and understand performance in one clean, modern workspace."
     },

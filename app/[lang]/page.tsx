@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/navbar"
 import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/scroll-animation"
-import { ArrowRight, Calendar, Users, LineChart, UserPlus, Settings, BookOpen, GraduationCap, LayoutDashboard, Wallet, Bell, Search, MoreHorizontal, MessageSquare, CreditCard, ShieldCheck } from "lucide-react"
+import { ArrowRight, Calendar, Users, LineChart, UserPlus, Settings, BookOpen, GraduationCap, LayoutDashboard, Wallet, Bell, Search, MoreHorizontal, MessageSquare, CreditCard, ShieldCheck, Library, Smartphone } from "lucide-react"
+import type { CSSProperties } from "react"
 
 export default async function Home({
   params,
@@ -134,6 +135,10 @@ export default async function Home({
       </div>
     </div>
   )
+
+  const featureAxisStyle: CSSProperties & { "--feature-axis": string } = {
+    "--feature-axis": "clamp(2.6rem, 4vw, 3.3rem)",
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col animate-in fade-in duration-1000">
@@ -364,17 +369,17 @@ export default async function Home({
                 </div>
               </FadeIn>
 
-                  <div className="flex-1 relative">
+                    <div className="flex-1 relative pl-8 sm:pl-12" style={featureAxisStyle}>
                     {/* Connecting Line */}
-                    <div className="pointer-events-none absolute left-0 top-2 bottom-2 w-14 flex justify-center z-10">
-                        <div className="feature-line relative h-full w-[7px]">
-                            <span className="feature-flash"></span>
-                            <span className="feature-node feature-node--top"></span>
-                            <span className="feature-node feature-node--bottom"></span>
-                        </div>
+                      <div className="pointer-events-none absolute inset-y-3 flex justify-center z-0 w-10" style={{ left: "var(--feature-axis)" }}>
+                          <div className="feature-line relative h-full w-[6px] -translate-x-1/2">
+                        <span className="feature-flash"></span>
+                        <span className="feature-node feature-node--top"></span>
+                        <span className="feature-node feature-node--bottom"></span>
+                      </div>
                     </div>
 
-                    <StaggerContainer className="flex flex-col gap-5 relative z-20 ml-10 sm:ml-14">
+                      <StaggerContainer className="flex flex-col gap-5 relative z-10">
                   {[
                     {
                       icon: Calendar,
@@ -418,16 +423,30 @@ export default async function Home({
                       color: "text-slate-700",
                       bg: "bg-slate-100"
                     },
+                    {
+                      icon: Library,
+                      title: dictionary.home.features.resources_title,
+                      desc: dictionary.home.features.resources_desc,
+                      color: "text-pink-600",
+                      bg: "bg-pink-50"
+                    },
+                    {
+                      icon: Smartphone,
+                      title: dictionary.home.features.mobile_title,
+                      desc: dictionary.home.features.mobile_desc,
+                      color: "text-cyan-600",
+                      bg: "bg-cyan-50"
+                    }
                   ].map((feature, index) => (
                     <StaggerItem
                       key={index}
-                      className="group relative flex items-start gap-5 pl-12 sm:pl-14 pr-5 sm:pr-6 py-5 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-300"
+                      className="group relative flex items-center gap-4 sm:gap-5 px-5 sm:px-6 py-6 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-300"
                     >
                       <span className="feature-dot"></span>
                       <div className={`shrink-0 w-12 h-12 ${feature.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative z-10 ring-4 ring-white`}>
                         <feature.icon className={`h-6 w-6 ${feature.color}`} />
                       </div>
-                      <div>
+                      <div className="flex flex-col justify-center">
                         <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">
                           {feature.title}
                         </h3>

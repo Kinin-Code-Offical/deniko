@@ -195,19 +195,31 @@
   .feature-dot {
     position: absolute;
     display: block;
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 0.85rem;
+    height: 0.85rem;
     border-radius: 9999px;
-    border: 2px solid rgba(59, 130, 246, 0.55);
-    background: rgba(226, 242, 255, 0.85);
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.2);
-    left: clamp(0.95rem, 1vw, 1.3rem);
-    top: 50%;
-    transform: translate(-50%, -50%);
+    border: 2px solid rgba(59, 130, 246, 0.65);
+    background: transparent;
+    box-shadow: inset 0 0 0 1px rgba(226, 242, 255, 0.2), 0 0 20px rgba(59, 130, 246, 0.3);
+    top: clamp(0.85rem, 1.5vw, 1.2rem);
+    left: clamp(0.9rem, 1.5vw, 1.4rem);
+    transform: none;
     opacity: 0;
     animation: feature-dot-ignite 1.8s ease-out forwards;
     animation-delay: 1.8s;
     z-index: 1;
+    pointer-events: none;
+  }
+
+  .feature-dot::after {
+    content: "";
+    position: absolute;
+    inset: 28%;
+    border-radius: 9999px;
+    border: 1px solid rgba(191, 219, 254, 0.7);
+    opacity: 0;
+    animation: feature-dot-inner 1.4s ease-out forwards;
+    animation-delay: 2s;
   }
 }
 
@@ -295,14 +307,29 @@
   55% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.2);
-    background: rgba(59, 130, 246, 0.95);
-    box-shadow: 0 0 28px rgba(59, 130, 246, 0.7);
+    background: rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 32px rgba(59, 130, 246, 0.65);
   }
   100% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.05);
-    background: rgba(59, 130, 246, 0.95);
-    border-color: rgba(191, 219, 254, 0.85);
-    box-shadow: 0 0 36px rgba(59, 130, 246, 0.8);
+    transform: translate(-50%, -50%) scale(1);
+    background: transparent;
+    border-color: rgba(191, 219, 254, 0.9);
+    box-shadow: 0 0 28px rgba(59, 130, 246, 0.7);
+  }
+}
+
+@keyframes feature-dot-inner {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
   }
 }
