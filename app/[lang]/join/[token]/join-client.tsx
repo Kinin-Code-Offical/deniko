@@ -47,10 +47,10 @@ export default function JoinClient({ dict, inviteDetails, userProfile, token }: 
     }
 
     return (
-        <Card className="w-full max-w-2xl">
+        <Card className="w-full max-w-2xl dark:bg-slate-900 dark:border-slate-800">
             <CardHeader>
-                <CardTitle>{dict.dashboard.join.title}</CardTitle>
-                <CardDescription>
+                <CardTitle className="dark:text-white">{dict.dashboard.join.title}</CardTitle>
+                <CardDescription className="dark:text-slate-400">
                     {dict.dashboard.join.desc} ({inviteDetails.teacherName})
                 </CardDescription>
             </CardHeader>
@@ -59,14 +59,14 @@ export default function JoinClient({ dict, inviteDetails, userProfile, token }: 
                 {/* Grade / Student No Comparison */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                        <h4 className="font-medium text-muted-foreground">{dict.dashboard.join.teacher_data}</h4>
-                        <div className="rounded-md border p-3 text-sm">
+                        <h4 className="font-medium text-muted-foreground dark:text-slate-400">{dict.dashboard.join.teacher_data}</h4>
+                        <div className="rounded-md border p-3 text-sm dark:border-slate-700 dark:text-slate-300">
                             <p><span className="font-semibold">{dict.dashboard.join.conflict_grade}:</span> {inviteDetails.gradeLevel || "-"} / {inviteDetails.studentNo || "-"}</p>
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <h4 className="font-medium text-muted-foreground">{dict.dashboard.join.your_data}</h4>
-                        <div className="rounded-md border p-3 text-sm">
+                        <h4 className="font-medium text-muted-foreground dark:text-slate-400">{dict.dashboard.join.your_data}</h4>
+                        <div className="rounded-md border p-3 text-sm dark:border-slate-700 dark:text-slate-300">
                             <p><span className="font-semibold">{dict.dashboard.join.conflict_grade}:</span> {userProfile?.gradeLevel || "-"} / {userProfile?.studentNo || "-"}</p>
                         </div>
                     </div>
@@ -76,24 +76,25 @@ export default function JoinClient({ dict, inviteDetails, userProfile, token }: 
                         id="useTeacherGrade"
                         checked={preferences.useTeacherGrade}
                         onCheckedChange={(checked) => setPreferences(prev => ({ ...prev, useTeacherGrade: checked as boolean }))}
+                        className="dark:border-slate-600 dark:data-[state=checked]:bg-blue-600 dark:data-[state=checked]:border-blue-600"
                     />
-                    <Label htmlFor="useTeacherGrade">{dict.dashboard.join.keep_teacher_data}</Label>
+                    <Label htmlFor="useTeacherGrade" className="dark:text-slate-300">{dict.dashboard.join.keep_teacher_data}</Label>
                 </div>
 
-                <div className="border-t my-4" />
+                <div className="border-t my-4 dark:border-slate-800" />
 
                 {/* Parent Info Comparison */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                        <h4 className="font-medium text-muted-foreground">{dict.dashboard.join.teacher_data}</h4>
-                        <div className="rounded-md border p-3 text-sm">
+                        <h4 className="font-medium text-muted-foreground dark:text-slate-400">{dict.dashboard.join.teacher_data}</h4>
+                        <div className="rounded-md border p-3 text-sm dark:border-slate-700 dark:text-slate-300">
                             <p>{inviteDetails.parentName || "-"}</p>
                             <p>{inviteDetails.parentPhone || "-"}</p>
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <h4 className="font-medium text-muted-foreground">{dict.dashboard.join.your_data}</h4>
-                        <div className="rounded-md border p-3 text-sm">
+                        <h4 className="font-medium text-muted-foreground dark:text-slate-400">{dict.dashboard.join.your_data}</h4>
+                        <div className="rounded-md border p-3 text-sm dark:border-slate-700 dark:text-slate-300">
                             <p>{userProfile?.parentName || "-"}</p>
                             <p>{userProfile?.parentPhone || "-"}</p>
                         </div>
@@ -104,16 +105,17 @@ export default function JoinClient({ dict, inviteDetails, userProfile, token }: 
                         id="useTeacherParentInfo"
                         checked={preferences.useTeacherParentInfo}
                         onCheckedChange={(checked) => setPreferences(prev => ({ ...prev, useTeacherParentInfo: checked as boolean }))}
+                        className="dark:border-slate-600 dark:data-[state=checked]:bg-blue-600 dark:data-[state=checked]:border-blue-600"
                     />
-                    <Label htmlFor="useTeacherParentInfo">{dict.dashboard.join.keep_teacher_data}</Label>
+                    <Label htmlFor="useTeacherParentInfo" className="dark:text-slate-300">{dict.dashboard.join.keep_teacher_data}</Label>
                 </div>
 
             </CardContent>
             <CardFooter className="flex justify-between">
-                <Button variant="ghost" onClick={() => router.push("/dashboard")}>
+                <Button variant="ghost" onClick={() => router.push("/dashboard")} className="dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800">
                     {dict.dashboard.join.reject}
                 </Button>
-                <Button onClick={handleClaim} disabled={loading}>
+                <Button onClick={handleClaim} disabled={loading} className="dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white">
                     {loading ? "..." : dict.dashboard.join.accept_merge}
                 </Button>
             </CardFooter>

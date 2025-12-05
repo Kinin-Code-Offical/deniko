@@ -21,23 +21,42 @@ interface StudentHeaderProps {
     lang: string
 }
 
-export function StudentHeader({ relation, dictionary, lang }: StudentHeaderProps) {
-    const student = relation.student
-    const user = student.user
+export function StudentHeader({
+    relation: { student, customName },
+    dictionary,
+    lang,
+}: StudentHeaderProps) {
+    const {
+        user,
+        tempFirstName,
+        tempLastName,
+        isClaimed,
+        gradeLevel,
+        studentNo,
+        inviteToken,
+        tempAvatar,
+    } = student
 
     // Name Logic
-    const displayName = relation.customName || user?.name || `${student.tempFirstName || ''} ${student.tempLastName || ''}`.trim() || "Unknown Student"
+    const displayName =
+        customName ||
+        user?.name ||
+        `${tempFirstName || ""} ${tempLastName || ""}`.trim() ||
+        "Unknown Student"
 
     // Avatar Logic
-    const avatarSrc = student.isClaimed && user?.image
-        ? user.image
-        : student.tempAvatar
-            ? (student.tempAvatar.startsWith("http")
-                ? (student.tempAvatar.includes("dicebear.com")
-                    ? `/api/files/defaults/${new URL(student.tempAvatar).searchParams.get("seed")}.svg`
-                    : student.tempAvatar)
-                : `/api/files/${student.tempAvatar}`)
-            : undefined
+    const avatarSrc =
+        isClaimed && user?.image
+            ? user.image
+            : tempAvatar
+              ? tempAvatar.startsWith("http")
+                  ? tempAvatar.includes("dicebear.com")
+                      ? `/api/files/defaults/${new URL(
+                            tempAvatar
+                        ).searchParams.get("seed")}.svg`
+                      : tempAvatar
+                  : `/api/files/${tempAvatar}`
+              : undefined
 
     return (
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -51,31 +70,45 @@ export function StudentHeader({ relation, dictionary, lang }: StudentHeaderProps
 
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                        <h1 className="text-2xl font-bold tracking-tight">{displayName}</h1>
-                        {student.isClaimed ? (
-                            <Badge variant="default" className="bg-green-600/10 text-green-600 hover:bg-green-600/20 border-green-600/20">
+                        <h1 className="text-2xl font-bold tracking-tight">
+                            {displayName}
+                        </h1>
+                        {isClaimed ? (
+                            <Badge
+                                variant="default"
+                                className="bg-green-600/10 text-green-600 hover:bg-green-600/20 border-green-600/20"
+                            >
                                 <Shield className="mr-1 h-3 w-3" />
                                 {dictionary.student_detail.header.verified}
                             </Badge>
                         ) : (
-                            <Badge variant="secondary" className="bg-yellow-600/10 text-yellow-600 hover:bg-yellow-600/20 border-yellow-600/20">
+                            <Badge
+                                variant="secondary"
+                                className="bg-yellow-600/10 text-yellow-600 hover:bg-yellow-600/20 border-yellow-600/20"
+                            >
                                 <ShieldAlert className="mr-1 h-3 w-3" />
                                 {dictionary.student_detail.header.pending}
                             </Badge>
                         )}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span>{student.gradeLevel || dictionary.student_detail.header.no_level}</span>
+                        <span>
+                            {gradeLevel ||
+                                dictionary.student_detail.header.no_level}
+                        </span>
                         <span>•</span>
-                        <span>{student.studentNo || dictionary.student_detail.header.no_number}</span>
+                        <span>
+                            {studentNo ||
+                                dictionary.student_detail.header.no_number}
+                        </span>
                     </div>
                 </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-                {!student.isClaimed && (
+                {!isClaimed && (
                     <InviteButton
-                        token={student.inviteToken}
+                        token={inviteToken}
                         lang={lang}
                         dictionary={dictionary}
                     />
@@ -88,24 +121,30 @@ export function StudentHeader({ relation, dictionary, lang }: StudentHeaderProps
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                            <Link href={`?tab=settings`} onClick={() => {
-                                // This is a bit of a hack to switch tabs if we are using query params or just rely on the user clicking the tab.
-                                // Since the tabs are client-side controlled usually, a link might not work unless we control the tab state via URL.
-                                // But the user asked to change the menu items.
-                                // Let's just make it trigger the settings tab if possible, or just navigate.
-                                // Actually, the Tabs component in page.tsx uses defaultValue="overview".
-                                // To make it linkable, we'd need to control the value.
-                                // For now, let's just assume the user can click the tab, but I'll add a "Settings" item that might just be a visual cue or scroll.
-                                // Better yet, let's just use a button that finds the settings tab trigger and clicks it? No that's hacky.
-                                // Let's just put a "Settings" link that goes to the settings tab if we implement URL-based tabs, 
-                                // OR just rely on the fact that the user can click the tab.
-                                // But the user specifically asked to change the menu items.
-                                // I will add "Settings" which will just be a link to the settings section.
-                                const tabs = document.querySelector('[value="settings"]') as HTMLElement;
-                                if (tabs) tabs.click();
-                            }}>
+                            <Link
+                                href={`?tab=settings`}
+                                onClick={() => {
+                                    // This is a bit of a hack to switch tabs if we are using query params or just rely on the user clicking the tab.
+                                    // Since the tabs are client-side controlled usually, a link might not work unless we control the tab state via URL.
+                                    // But the user asked to change the menu items.
+                                    // Let's just make it trigger the settings tab if possible, or just navigate.
+                                    // Actually, the Tabs component in page.tsx uses defaultValue="overview".
+                                    // To make it linkable, we'd need to control the value.
+                                    // For now, let's just assume the user can click the tab, but I'll add a "Settings" item that might just be a visual cue or scroll.
+                                    // Better yet, let's just use a button that finds the settings tab trigger and clicks it? No that's hacky.
+                                    // Let's just put a "Settings" link that goes to the settings tab if we implement URL-based tabs,
+                                    // OR just rely on the fact that the user can click the tab.
+                                    // But the user specifically asked to change the menu items.
+                                    // I will add "Settings" which will just be a link to the settings section.
+                                    const tabs = document.querySelector(
+                                        '[value="settings"]'
+                                    ) as HTMLElement
+                                    if (tabs) tabs.click()
+                                }}
+                            >
                                 <Settings className="mr-2 h-4 w-4" />
-                                {dictionary.student_detail.tabs.settings || "Ayarlar"}
+                                {dictionary.student_detail.tabs.settings ||
+                                    "Ayarlar"}
                             </Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

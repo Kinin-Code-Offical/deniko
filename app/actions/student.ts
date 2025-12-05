@@ -321,7 +321,7 @@ export async function getInviteDetails(token: string) {
 
 export async function getStudentProfileByToken(token: string) {
     try {
-        const studentProfile = await db.studentProfile.findUnique({
+        return await db.studentProfile.findUnique({
             where: { inviteToken: token },
             include: {
                 teacherRelations: {
@@ -335,7 +335,6 @@ export async function getStudentProfileByToken(token: string) {
                 }
             }
         })
-        return studentProfile
     } catch (error) {
         logger.error({ context: "getStudentProfileByToken", error }, "Failed to fetch profile by token")
         return null
@@ -423,11 +422,8 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
             // SHADOW: Update StudentProfile
 
             // Check if avatar is changing and delete old one
-            if (avatarUrl && studentProfile.tempAvatar && studentProfile.tempAvatar !== avatarUrl) {
-                // Only delete if it's a stored file (not an external URL or default)
-                if (!studentProfile.tempAvatar.startsWith("http") && !studentProfile.tempAvatar.startsWith("defaults/")) {
-                    await deleteFile(studentProfile.tempAvatar)
-                }
+            if (avatarUrl && studentProfile.tempAvatar && studentProfile.tempAvatar !== avatarUrl && (!studentProfile.tempAvatar.startsWith("http") && !studentProfile.tempAvatar.startsWith("defaults/"))) {
+                await deleteFile(studentProfile.tempAvatar)
             }
 
             await db.studentProfile.update({

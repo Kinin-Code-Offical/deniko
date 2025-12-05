@@ -92,7 +92,10 @@
         "no_classroom_found": "No classroom found.",
         "select_grade": "Select Grade",
         "success": "Student created successfully",
-        "copy_invite": "Invite link copied to clipboard"
+        "copy_invite": "Invite link copied to clipboard",
+        "grades": {
+          "graduated": "Graduated"
+        }
       }
     },
     "student": {
@@ -124,13 +127,15 @@
       "save": "Save",
       "cancel": "Cancel",
       "delete_confirm": "Are you sure?",
-      "delete_desc": "This action cannot be undone."
+      "delete_desc": "This action cannot be undone.",
+      "continue": "Continue"
     }
   },
   "common": {
     "loading": "Loading...",
     "back": "Back",
-    "back_to_home": "Back to Home"
+    "back_to_home": "Back to Home",
+    "all_rights_reserved": "All rights reserved."
   },
   "teacher": {
     "invite_link_copied": "Invite link copied",
@@ -192,6 +197,12 @@
         "completed": "Completed",
         "cancelled": "Cancelled",
         "missed": "Missed"
+      },
+      "table": {
+        "date": "Date",
+        "title": "Title",
+        "status": "Status",
+        "price": "Price"
       }
     },
     "finance": {
@@ -201,7 +212,13 @@
       "payment_received": "Payment Received",
       "balance": "Balance",
       "no_transactions": "No financial transactions found.",
-      "empty": "Payment history will be here..."
+      "empty": "Payment history will be here...",
+      "table": {
+        "date": "Date",
+        "type": "Type",
+        "description": "Description",
+        "amount": "Amount"
+      }
     },
     "homework": {
       "title": "Homework Tracking",
@@ -210,6 +227,12 @@
       "status": {
         "pending": "Pending",
         "completed": "Completed"
+      },
+      "table": {
+        "due_date": "Due Date",
+        "title": "Title",
+        "status": "Status",
+        "lesson": "Lesson"
       }
     },
     "exams": {
@@ -259,6 +282,11 @@
       "phone_claimed_desc": "Since this student has verified their account, only they can change their phone number.",
       "notes": "Private Notes",
       "notes_desc": "Notes only visible to you.",
+      "claimed_profile": "Claimed Profile",
+      "real_first_name": "Real First Name",
+      "real_last_name": "Real Last Name",
+      "photo_claimed_desc": "Photo cannot be changed for claimed accounts.",
+      "invite_link_status": "Invite Link Status",
       "archive": {
         "title": "Archive Student",
         "desc": "Remove this student from your active list. History is preserved.",
@@ -338,6 +366,7 @@
       "google_login": "Continue with Google",
       "or_email": "Or with Email",
       "email": "Email",
+      "placeholder_email": "example@email.com",
       "password": "Password",
       "forgot_password_link": "Forgot Password?",
       "submit": "Login",
@@ -422,7 +451,13 @@
     "accept_terms": "I have read and accept the [Terms of Service] and [Privacy Policy].",
     "validation_terms": "You must accept the terms to continue.",
     "validation_error": "You must accept the terms to continue.",
-    "marketing_consent": "I want to be informed about campaigns and announcements via email."
+    "marketing_consent": "I want to be informed about campaigns and announcements via email.",
+    "title": "Legal",
+    "center": "Legal Center",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "kvkk": "KVKK"
   },
   "home": {
     "hero_title": "Digitize Your Education Life",
@@ -498,7 +533,42 @@
       "graphic_schedule": "Schedule",
       "graphic_profile": "Student Profile",
       "graphic_performance": "Performance",
-      "graphic_analysis": "Analysis"
+      "graphic_analysis": "Analysis",
+      "assignments": "Assignments",
+      "assignments_pending": "Pending",
+      "assignment_math_title": "Derivative Worksheet",
+      "assignment_physics_title": "Lab Report",
+      "assignment_lit_title": "Novel Summary",
+      "literature": "Literature",
+      "due_tomorrow": "Due: Tomorrow, 23:59",
+      "due_3days": "Due: 3 Days Left",
+      "announcements": "Announcements",
+      "school_board": "School Board",
+      "announcement_exam_title": "Exam Dates",
+      "announcement_exam_desc": "2nd Term midterm schedule published. Don't forget to check.",
+      "announcement_match_title": "Basketball Match",
+      "announcement_match_desc": "Match between 12-A and 12-B tomorrow at lunch! 🏀",
+      "see_all": "See All",
+      "lab": "Laboratory",
+      "carousel_back": {
+        "desc": "You can find all details about the {title} module here. Discover tools designed to increase your productivity.",
+        "feature_1": "Detailed analysis and reporting",
+        "feature_2": "Personalized recommendations",
+        "feature_3": "Instant notification system"
+      },
+      "time_ago": {
+        "10_min": "10 min ago",
+        "2_hours": "2 hours ago"
+      },
+      "chart": {
+        "completed": "Completed",
+        "remaining": "Remaining"
+      },
+      "success": "Success",
+      "carousel_instructions": {
+        "swipe": "Swipe to navigate",
+        "hold": "Hold to flip"
+      }
     }
   },
   "email": {

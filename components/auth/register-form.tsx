@@ -129,7 +129,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                                             <FormControl>
                                                 <RadioGroupItem value="STUDENT" className="peer sr-only" />
                                             </FormControl>
-                                            <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-slate-50 hover:text-accent-foreground peer-data-[state=checked]:border-[#2062A3] peer-data-[state=checked]:text-[#2062A3] cursor-pointer transition-all dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 dark:peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:text-blue-400">
+                                            <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-slate-50 hover:text-accent-foreground peer-data-[state=checked]:border-[#2062A3] peer-data-[state=checked]:text-[#2062A3] cursor-pointer transition-all dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-900 dark:peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:text-blue-400">
                                                 <GraduationCap className="mb-3 h-8 w-8" />
                                                 <span className="text-lg font-bold">{d.student}</span>
                                                 <span className="text-sm text-muted-foreground text-center mt-1">{d.student_desc}</span>
@@ -139,7 +139,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                                             <FormControl>
                                                 <RadioGroupItem value="TEACHER" className="peer sr-only" />
                                             </FormControl>
-                                            <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-slate-50 hover:text-accent-foreground peer-data-[state=checked]:border-[#2062A3] peer-data-[state=checked]:text-[#2062A3] cursor-pointer transition-all dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 dark:peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:text-blue-400">
+                                            <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-slate-50 hover:text-accent-foreground peer-data-[state=checked]:border-[#2062A3] peer-data-[state=checked]:text-[#2062A3] cursor-pointer transition-all dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-900 dark:peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:text-blue-400">
                                                 <User className="mb-3 h-8 w-8" />
                                                 <span className="text-lg font-bold">{d.teacher}</span>
                                                 <span className="text-sm text-muted-foreground text-center mt-1">{d.teacher_desc}</span>

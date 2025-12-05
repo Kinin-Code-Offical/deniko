@@ -77,11 +77,15 @@ interface StudentSettingsTabProps {
     lang: string
 }
 
-export function StudentSettingsTab({ relation, studentId, dictionary, lang }: StudentSettingsTabProps) {
+export function StudentSettingsTab({
+    relation: { student, customName },
+    studentId,
+    dictionary,
+    lang,
+}: StudentSettingsTabProps) {
     const [isPending, startTransition] = useTransition()
     const router = useRouter()
-    const student = relation.student
-    const isClaimed = student.isClaimed
+    const { isClaimed } = student
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [tempFile, setTempFile] = useState<File | null>(null)
@@ -93,7 +97,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
     const form = useForm<z.infer<typeof settingsSchema>>({
         resolver: zodResolver(settingsSchema),
         defaultValues: {
-            customName: relation.customName || "",
+            customName: customName || "",
             firstName: student.tempFirstName || "",
             lastName: student.tempLastName || "",
             studentNo: student.studentNo || "",
@@ -217,7 +221,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
                                                 disabled={isClaimed}
                                             />
                                         </Label>
-                                        {isClaimed && <p className="text-xs text-muted-foreground mt-1">Onaylı hesaplarda fotoğraf değiştirilemez.</p>}
+                                        {isClaimed && <p className="text-xs text-muted-foreground mt-1">{dictionary.student_detail.settings.photo_claimed_desc}</p>}
                                     </div>
                                 </div>
 
@@ -307,7 +311,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
                                         name="firstName"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Gerçek Ad</FormLabel>
+                                                <FormLabel>{dictionary.student_detail.settings.real_first_name}</FormLabel>
                                                 <FormControl>
                                                     <Input {...field} />
                                                 </FormControl>
@@ -320,7 +324,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
                                         name="lastName"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Gerçek Soyad</FormLabel>
+                                                <FormLabel>{dictionary.student_detail.settings.real_last_name}</FormLabel>
                                                 <FormControl>
                                                     <Input {...field} />
                                                 </FormControl>
@@ -374,14 +378,14 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
                             </div>
 
                             <Separator />
-                            <h3 className="text-lg font-medium">Veli Bilgileri</h3>
+                            <h3 className="text-lg font-medium">{dictionary.student_detail.overview.parent_info}</h3>
                             <div className="grid gap-4 md:grid-cols-2">
                                 <FormField
                                     control={form.control}
                                     name="parentName"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Veli Adı Soyadı</FormLabel>
+                                            <FormLabel>{dictionary.student_detail.overview.parent_name}</FormLabel>
                                             <FormControl>
                                                 <Input {...field} />
                                             </FormControl>
@@ -394,7 +398,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
                                     name="parentPhone"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Veli Telefon</FormLabel>
+                                            <FormLabel>{dictionary.student_detail.overview.parent_phone}</FormLabel>
                                             <FormControl>
                                                 <PhoneInput
                                                     value={field.value || ""}
@@ -411,7 +415,7 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
                                     name="parentEmail"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Veli E-posta</FormLabel>
+                                            <FormLabel>{dictionary.student_detail.overview.parent_email}</FormLabel>
                                             <FormControl>
                                                 <Input {...field} type="email" />
                                             </FormControl>
@@ -436,14 +440,14 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
             {!isClaimed && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Davet Bağlantısı</CardTitle>
-                        <CardDescription>Öğrencinin sisteme kaydolması için kullanılan bağlantı.</CardDescription>
+                        <CardTitle>{dictionary.student_detail.settings.invite_link}</CardTitle>
+                        <CardDescription>{dictionary.student_detail.settings.invite_link_desc}</CardDescription>
                     </CardHeader>
                     <CardContent className="flex items-center justify-between">
                         <div className="space-y-1">
-                            <Label>Davet Bağlantısı Durumu</Label>
+                            <Label>{dictionary.student_detail.settings.invite_link_status}</Label>
                             <p className="text-sm text-muted-foreground">
-                                {student.inviteToken ? "Aktif" : "Pasif"}
+                                {student.inviteToken ? dictionary.student_detail.settings.invite_link_active : dictionary.student_detail.settings.invite_link_inactive}
                             </p>
                         </div>
                         <Switch
@@ -483,9 +487,9 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogCancel>{dictionary.common.cancel}</AlertDialogCancel>
                                     <AlertDialogAction onClick={handleUnlink} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                        Continue
+                                        {dictionary.common.continue}
                                     </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
@@ -515,9 +519,9 @@ export function StudentSettingsTab({ relation, studentId, dictionary, lang }: St
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogCancel>{dictionary.common.cancel}</AlertDialogCancel>
                                         <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                            Delete
+                                            {dictionary.student_detail.settings.delete.button}
                                         </AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>

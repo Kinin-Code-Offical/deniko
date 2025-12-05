@@ -1,134 +1,152 @@
-import { getDictionary } from "@/lib/get-dictionary"
-import type { Locale } from "@/i18n-config"
-import { LoginForm } from "@/components/auth/login-form"
-import { DenikoLogo } from "@/components/ui/deniko-logo"
-import { LanguageSwitcher } from "@/components/ui/language-switcher"
-import { ThemeToggle } from "@/components/theme-toggle"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
-import { db } from "@/lib/db"
-import { logout } from "@/app/actions/auth"
+import { getDictionary } from "@/lib/get-dictionary";
+import type { Locale } from "@/i18n-config";
+import { LoginForm } from "@/components/auth/login-form";
+import { DenikoLogo } from "@/components/ui/deniko-logo";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
+import { logout } from "@/app/actions/auth";
 
 export default async function LoginPage({
-    params,
+  params,
 }: {
-    params: Promise<{ lang: Locale }>
+  params: Promise<{ lang: Locale }>;
 }) {
-    const { lang } = await params
-    const session = await auth()
+  const { lang } = await params;
+  const session = await auth();
 
-    if (session?.user) {
-        const user = await db.user.findUnique({
-            where: { id: session.user.id }
-        })
+  if (session?.user) {
+    const user = await db.user.findUnique({
+      where: { id: session.user.id },
+    });
 
-        if (user && user.isActive !== false) {
-            if (user.role) {
-                redirect(`/${lang}/dashboard`)
-            } else {
-                redirect(`/${lang}/onboarding`)
-            }
-        } else {
-            await logout()
-        }
+    if (user && user.isActive !== false) {
+      if (user.role) {
+        redirect(`/${lang}/dashboard`);
+      } else {
+        redirect(`/${lang}/onboarding`);
+      }
+    } else {
+      await logout();
     }
+  }
 
-    const dictionary = (await getDictionary(lang)) 
+  const dictionary = await getDictionary(lang);
 
-    return (
-        <div className="min-h-screen flex flex-col md:flex-row">
-            {/* Left Panel - Visual & Brand */}
-            <div className="hidden md:flex w-1/2 bg-[#2062A3] dark:bg-slate-900 p-12 flex-col justify-between relative overflow-hidden transition-colors duration-300">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-10">
-                    <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" />
-                    </svg>
-                </div>
-
-                {/* Logo & Back Button */}
-                <div className="relative z-10 flex flex-col gap-6">
-                    <Link
-                        href="/"
-                        className="inline-flex items-center text-white/80 hover:text-white transition-colors w-fit"
-                    >
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        {dictionary.common?.back_to_home || "Ana Sayfaya Dön"}
-                    </Link>
-                    <div className="flex items-center gap-2 text-white">
-                        <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                            <DenikoLogo className="h-8 w-8 text-white" />
-                        </div>
-                        <span className="text-2xl font-bold tracking-tight">Deniko</span>
-                    </div>
-                </div>
-
-                {/* Hero Text */}
-                <div className="relative z-10 max-w-md">
-                    <h2 className="text-3xl font-bold text-white mb-4">
-                        {dictionary.auth.login.hero_title || "Eğitimde Yeni Bir Dönem"}
-                    </h2>
-                    <p className="text-blue-100 text-lg leading-relaxed">
-                        {dictionary.auth.login.hero_desc || "Öğretmen ve öğrencileri bir araya getiren, modern ve etkili eğitim platformuna hoş geldiniz."}
-                    </p>
-                </div>
-
-                {/* Footer */}
-                <div className="relative z-10 text-blue-200 text-sm">
-                    © 2025 Deniko. All rights reserved.
-                </div>
-            </div>
-
-            {/* Right Panel - Form */}
-            <div className="flex-1 flex flex-col relative bg-gradient-to-b from-white via-blue-50/60 to-white dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950 animate-in slide-in-from-right-4 duration-700 transition-colors">
-                {/* Mobile Header */}
-                <div className="md:hidden sticky top-0 z-50 border-b dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
-                    <div className="px-4 pt-4 flex items-center justify-between">
-                        <Link href="/" className="flex items-center gap-2">
-                            <div className="bg-[#2062A3] dark:bg-blue-600 p-1.5 rounded-xl shadow-sm">
-                                <DenikoLogo className="h-5 w-5 text-white" />
-                            </div>
-                            <span className="font-semibold text-[#2062A3] dark:text-blue-400 tracking-tight">Deniko</span>
-                        </Link>
-                        <div className="flex items-center gap-2">
-                            <ThemeToggle labels={dictionary.theme} />
-                            <LanguageSwitcher />
-                        </div>
-                    </div>
-                    <div className="px-4 pb-4 pt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                        <span>{dictionary.auth.login.mobile_hint}</span>
-                    </div>
-                </div>
-
-                {/* Desktop Language Switcher */}
-                <div className="hidden md:flex absolute top-6 right-6 z-20 items-center gap-2">
-                    <ThemeToggle labels={dictionary.theme} />
-                    <LanguageSwitcher />
-                </div>
-
-                {/* Form Container */}
-                <div className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:p-12 min-h-[calc(100vh-72px)] md:min-h-screen">
-                    <div className="w-full max-w-md space-y-6">
-                        <div className="text-center md:text-left space-y-2">
-                            <p className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-[#2062A3] mb-1 dark:bg-blue-900/30 dark:text-blue-300">
-                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                                {dictionary.auth.login.chip || "Deniko ile devam edin"}
-                            </p>
-                            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight dark:text-white">
-                                {dictionary.auth.login.title || "Hoş Geldiniz"}
-                            </h1>
-                            <p className="text-slate-500 text-sm md:text-base dark:text-slate-400">
-                                {dictionary.auth.login.subtitle || "Hesabınıza giriş yapın"}
-                            </p>
-                        </div>
-                        <div className="bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-4 sm:p-6 shadow-sm dark:bg-slate-900/50 dark:border-slate-800">
-                            <LoginForm dictionary={dictionary} lang={lang} />
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="flex min-h-dvh flex-col md:flex-row">
+      {/* Left Panel - Visual & Brand */}
+      <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-[#2062A3] p-12 transition-colors duration-300 md:flex dark:bg-slate-900">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <svg
+            className="h-full w-full"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" />
+          </svg>
         </div>
-    )
+
+        {/* Logo & Back Button */}
+        <div className="relative z-10 flex flex-col gap-6">
+          <Link
+            href="/"
+            className="inline-flex w-fit items-center text-white/80 transition-colors hover:text-white"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {dictionary.common?.back_to_home || "Ana Sayfaya Dön"}
+          </Link>
+          <div className="flex items-center gap-2 text-white">
+            <div className="rounded-lg bg-white/20 p-2 backdrop-blur-sm">
+              <DenikoLogo className="h-8 w-8 text-white" />
+            </div>
+            <span className="text-2xl font-bold tracking-tight">Deniko</span>
+          </div>
+        </div>
+
+        {/* Hero Text */}
+        <div className="relative z-10 max-w-md">
+          <h2 className="mb-4 text-3xl font-bold text-white">
+            {dictionary.auth.login.hero_title || "Eğitimde Yeni Bir Dönem"}
+          </h2>
+          <p className="text-lg leading-relaxed text-blue-100">
+            {dictionary.auth.login.hero_desc ||
+              "Öğretmen ve öğrencileri bir araya getiren, modern ve etkili eğitim platformuna hoş geldiniz."}
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="relative z-10 text-sm text-blue-200">
+          © 2025 Deniko. All rights reserved.
+        </div>
+      </div>
+
+      {/* Right Panel - Form */}
+      <div className="animate-in slide-in-from-right-4 relative flex flex-1 flex-col bg-gradient-to-b from-white via-blue-50/60 to-white transition-colors duration-700 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
+        {/* Mobile Header */}
+        <div className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-900/90">
+          <div className="flex items-center justify-between px-4 pt-4">
+            <div className="flex items-center gap-3">
+              <Link
+                href="/"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-50"
+                aria-label={
+                  dictionary.common?.back_to_home || "Ana Sayfaya Dön"
+                }
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
+              <Link href="/" className="flex items-center gap-2">
+                <div className="rounded-xl bg-[#2062A3] p-1.5 shadow-sm dark:bg-blue-600">
+                  <DenikoLogo className="h-5 w-5 text-white" />
+                </div>
+                <span className="font-semibold tracking-tight text-[#2062A3] dark:text-blue-400">
+                  Deniko
+                </span>
+              </Link>
+            </div>
+            <div className="flex items-center gap-2">
+              <ThemeToggle labels={dictionary.theme} />
+              <LanguageSwitcher />
+            </div>
+          </div>
+          <div className="flex items-center justify-between px-4 pt-2 pb-4 text-xs text-slate-500 dark:text-slate-400">
+            <span>{dictionary.auth.login.mobile_hint}</span>
+          </div>
+        </div>
+
+        {/* Desktop Language Switcher */}
+        <div className="absolute top-6 right-6 z-20 hidden items-center gap-2 md:flex">
+          <ThemeToggle labels={dictionary.theme} />
+          <LanguageSwitcher />
+        </div>
+
+        {/* Form Container */}
+        <div className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:p-12">
+          <div className="w-full max-w-md space-y-6">
+            <div className="space-y-2 text-center md:text-left">
+              <p className="mb-1 inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-[#2062A3] dark:bg-blue-900/30 dark:text-blue-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                {dictionary.auth.login.chip || "Deniko ile devam edin"}
+              </p>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl dark:text-white">
+                {dictionary.auth.login.title || "Hoş Geldiniz"}
+              </h1>
+              <p className="text-sm text-slate-500 md:text-base dark:text-slate-400">
+                {dictionary.auth.login.subtitle || "Hesabınıza giriş yapın"}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-slate-100 bg-white/80 p-4 shadow-sm backdrop-blur-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900">
+              <LoginForm dictionary={dictionary} lang={lang} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

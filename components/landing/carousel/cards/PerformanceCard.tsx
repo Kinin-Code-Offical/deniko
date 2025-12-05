@@ -1,0 +1,147 @@
+"use client";
+
+import React from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { Activity } from "lucide-react";
+
+interface PerformanceCardProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dictionary: any;
+}
+
+const COLORS = ["#10B981", "#E5E7EB"]; // Green and Gray
+const DARK_COLORS = ["#10B981", "#334155"]; // Green and Slate-700
+
+const PerformanceCard: React.FC<PerformanceCardProps> = ({ dictionary }) => {
+  const t = dictionary.home.mock_dashboard;
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [shouldRenderChart, setShouldRenderChart] = React.useState(false);
+  const [containerSize, setContainerSize] = React.useState({
+    width: 0,
+    height: 0,
+  });
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        const hasSize = width > 0 && height > 0;
+
+        setShouldRenderChart(hasSize);
+
+        if (hasSize) {
+          setContainerSize({
+            width: Math.max(1, width),
+            height: Math.max(1, height),
+          });
+        }
+      }
+    });
+
+    resizeObserver.observe(containerRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  const data = [
+    { name: t.chart.completed, value: 68 },
+    { name: t.chart.remaining, value: 32 },
+  ];
+
+  return (
+    <div className="flex h-full w-full flex-col bg-white p-6 transition-colors dark:bg-slate-900">
+      {/* Header */}
+      <div className="mb-2 flex items-start justify-between">
+        <div>
+          <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+            {t.class_average}
+          </h2>
+          <p className="text-xs text-gray-500 dark:text-slate-400">
+            {t.overview}
+          </p>
+        </div>
+        <div className="rounded-xl bg-green-100 p-2 dark:bg-green-900/20">
+          <Activity className="h-5 w-5 text-green-600 dark:text-green-400" />
+        </div>
+      </div>
+
+      {/* Chart */}
+      <div className="relative flex min-w-0 flex-1 items-center justify-center">
+        <div ref={containerRef} className="h-[180px] w-full">
+          {shouldRenderChart &&
+            containerSize.width > 0 &&
+            containerSize.height > 0 && (
+              <ResponsiveContainer
+                width={containerSize.width}
+                height={containerSize.height}
+                debounce={50}
+              >
+                <PieChart>
+                  <Pie
+                    data={data}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    startAngle={90}
+                    endAngle={-270}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                        className="dark:hidden"
+                      />
+                    ))}
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`cell-dark-${index}`}
+                        fill={DARK_COLORS[index % DARK_COLORS.length]}
+                        className="hidden dark:block"
+                      />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          {/* Centered Percentage */}
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-3xl font-bold text-green-600 dark:text-green-400">
+              68%
+            </span>
+            <span className="text-xs font-medium text-gray-400 dark:text-slate-500">
+              {t.success}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Legend / Stats */}
+      <div className="mt-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-8 rounded-full bg-green-500"></div>
+            <span className="text-sm font-semibold text-gray-600 dark:text-slate-300">
+              {t.completed}
+            </span>
+          </div>
+          <span className="font-bold text-gray-800 dark:text-white">68</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-8 rounded-full bg-gray-200 dark:bg-slate-700"></div>
+            <span className="text-sm font-semibold text-gray-600 dark:text-slate-300">
+              {t.pending}
+            </span>
+          </div>
+          <span className="font-bold text-gray-800 dark:text-white">12</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PerformanceCard;

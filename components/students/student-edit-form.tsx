@@ -20,16 +20,30 @@ interface StudentEditFormProps {
 }
 
 export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
+    const {
+        teacherRelations,
+        isClaimed,
+        tempFirstName,
+        user,
+        tempLastName,
+        studentNo,
+        gradeLevel,
+        phoneNumber,
+        parentName,
+        parentPhone,
+        parentEmail,
+        avatarUrl,
+        id,
+    } = student
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
 
     // Determine initial values
-    const relation = student.teacherRelations?.[0]
-    const isClaimed = student.isClaimed
+    const relation = teacherRelations?.[0]
 
     // Name logic: Custom > Temp > User
-    let initialFirstName = student.tempFirstName || student.user?.firstName || ""
-    let initialLastName = student.tempLastName || student.user?.lastName || ""
+    let initialFirstName = tempFirstName || user?.firstName || ""
+    let initialLastName = tempLastName || user?.lastName || ""
 
     if (relation?.customName) {
         const parts = relation.customName.split(" ")
@@ -45,23 +59,23 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
     const [formData, setFormData] = useState({
         name: initialFirstName,
         surname: initialLastName,
-        studentNo: student.studentNo || "",
-        grade: student.gradeLevel || "",
-        phoneNumber: student.phoneNumber || student.user?.phoneNumber || "",
-        parentName: student.parentName || "",
-        parentPhone: student.parentPhone || "",
-        parentEmail: student.parentEmail || "",
-        avatarUrl: relation?.customAvatar || student.avatarUrl || student.user?.image || ""
+        studentNo: studentNo || "",
+        grade: gradeLevel || "",
+        phoneNumber: phoneNumber || user?.phoneNumber || "",
+        parentName: parentName || "",
+        parentPhone: parentPhone || "",
+        parentEmail: parentEmail || "",
+        avatarUrl: relation?.customAvatar || avatarUrl || user?.image || "",
     })
 
     const handleUpdate = () => {
         startTransition(async () => {
             const result = await updateStudent({
-                studentId: student.id,
+                studentId: id,
                 firstName: formData.name,
                 lastName: formData.surname,
                 phone: formData.phoneNumber,
-                avatarUrl: formData.avatarUrl
+                avatarUrl: formData.avatarUrl,
             })
 
             if (result.success) {
@@ -74,10 +88,15 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
     }
 
     const handleArchive = () => {
-        if (!confirm("Are you sure you want to archive this student? They will be hidden from your active list.")) return
+        if (
+            !confirm(
+                "Are you sure you want to archive this student? They will be hidden from your active list."
+            )
+        )
+            return
 
         startTransition(async () => {
-            const result = await unlinkStudent(student.id)
+            const result = await unlinkStudent(id)
             if (result.success) {
                 toast.success(result.message)
                 router.push("/dashboard/students")
@@ -88,10 +107,15 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
     }
 
     const handleDelete = () => {
-        if (!confirm("Are you sure you want to delete this student? This action cannot be undone.")) return
+        if (
+            !confirm(
+                "Are you sure you want to delete this student? This action cannot be undone."
+            )
+        )
+            return
 
         startTransition(async () => {
-            const result = await deleteStudent(student.id)
+            const result = await deleteStudent(id)
             if (result.success) {
                 toast.success(result.message)
                 router.push("/dashboard/students")
@@ -105,7 +129,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
         <div className="space-y-6">
             {isClaimed && (
                 <Alert>
-                    <AlertTitle>Claimed Profile</AlertTitle>
+                    <AlertTitle>{dictionary.student_detail.settings.claimed_profile}</AlertTitle>
                     <AlertDescription>
                         This student has claimed their profile. You can only edit their display name and avatar for your view.
                         Contact details are managed by the student.
@@ -123,7 +147,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                 <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="firstName">First Name</Label>
+                            <Label htmlFor="firstName">{dictionary.auth.register.first_name}</Label>
                             <Input
                                 id="firstName"
                                 value={formData.name}
@@ -131,7 +155,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="lastName">Last Name</Label>
+                            <Label htmlFor="lastName">{dictionary.auth.register.last_name}</Label>
                             <Input
                                 id="lastName"
                                 value={formData.surname}
@@ -139,7 +163,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="studentNo">Student No</Label>
+                            <Label htmlFor="studentNo">{dictionary.student_detail.overview.student_no}</Label>
                             <Input
                                 id="studentNo"
                                 value={formData.studentNo}
@@ -148,7 +172,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="grade">Grade Level</Label>
+                            <Label htmlFor="grade">{dictionary.student_detail.settings.grade_level}</Label>
                             <Input
                                 id="grade"
                                 value={formData.grade}
@@ -157,7 +181,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="phone">Phone Number</Label>
+                            <Label htmlFor="phone">{dictionary.student_detail.settings.phone}</Label>
                             <Input
                                 id="phone"
                                 value={formData.phoneNumber}
@@ -172,7 +196,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                     <h3 className="text-lg font-medium">{dictionary.dashboard.student_detail.profile.contact_parent}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="parentName">Parent Name</Label>
+                            <Label htmlFor="parentName">{dictionary.student_detail.overview.parent_name}</Label>
                             <Input
                                 id="parentName"
                                 value={formData.parentName}
@@ -181,7 +205,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="parentPhone">Parent Phone</Label>
+                            <Label htmlFor="parentPhone">{dictionary.student_detail.overview.parent_phone}</Label>
                             <Input
                                 id="parentPhone"
                                 value={formData.parentPhone}
@@ -190,7 +214,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="parentEmail">Parent Email</Label>
+                            <Label htmlFor="parentEmail">{dictionary.student_detail.overview.parent_email}</Label>
                             <Input
                                 id="parentEmail"
                                 value={formData.parentEmail}
@@ -210,7 +234,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
 
             <Card className="border-destructive/50">
                 <CardHeader>
-                    <CardTitle className="text-destructive">Danger Zone</CardTitle>
+                    <CardTitle className="text-destructive">{dictionary.student_detail.settings.danger_zone}</CardTitle>
                     <CardDescription>
                         Irreversible actions for this student account.
                     </CardDescription>

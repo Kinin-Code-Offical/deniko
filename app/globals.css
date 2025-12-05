@@ -44,6 +44,7 @@
 }
 
 :root {
+  color-scheme: light;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -79,6 +80,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
@@ -114,10 +116,20 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    /* @apply border-border outline-ring/50; */
+    border-color: var(--border);
+    /* outline-ring/50 is not a standard class, so I cannot replace it.
+       The outline is probably set by a custom utility. */
+  }
+  html,
+  body {
+    height: 100%;
+    overflow-x: hidden;
   }
   body {
-    @apply bg-background text-foreground;
+    /* @apply bg-background text-foreground; */
+    background-color: var(--background);
+    color: var(--foreground);
   }
 }
 
@@ -140,17 +152,18 @@
     border-radius: 9999px;
     overflow: hidden;
     /* Darker Plasma core: Deep blue edges, bright center */
-    background: linear-gradient(180deg, 
-      rgba(30, 58, 138, 0) 0%, 
+    background: linear-gradient(
+      180deg,
+      rgba(30, 58, 138, 0) 0%,
       rgba(37, 99, 235, 0.4) 20%,
-      rgba(59, 130, 246, 0.9) 45%, 
+      rgba(59, 130, 246, 0.9) 45%,
       rgba(219, 234, 254, 0.95) 50%,
       rgba(59, 130, 246, 0.9) 55%,
       rgba(37, 99, 235, 0.4) 80%,
       rgba(30, 58, 138, 0) 100%
     );
     /* Deep blue glow */
-    box-shadow: 
+    box-shadow:
       0 0 15px rgba(29, 78, 216, 0.7),
       0 0 30px rgba(30, 64, 175, 0.5),
       0 0 45px rgba(30, 58, 138, 0.3);
@@ -168,8 +181,9 @@
     top: -150%;
     height: 300%;
     /* Electric pulse gradient - darker edges */
-    background: linear-gradient(180deg, 
-      transparent 0%, 
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
       rgba(30, 64, 175, 0.2) 30%,
       rgba(59, 130, 246, 0.7) 45%,
       rgba(255, 255, 255, 1) 50%,
@@ -186,10 +200,11 @@
     position: absolute;
     inset: -32px;
     border-radius: 9999px;
-    background: radial-gradient(circle, 
-      rgba(219, 234, 254, 0.95) 0%, 
-      rgba(59, 130, 246, 0.8) 20%, 
-      rgba(30, 64, 175, 0.5) 50%, 
+    background: radial-gradient(
+      circle,
+      rgba(219, 234, 254, 0.95) 0%,
+      rgba(59, 130, 246, 0.8) 20%,
+      rgba(30, 64, 175, 0.5) 50%,
       transparent 70%
     );
     filter: blur(8px);
@@ -229,8 +244,8 @@
     border-radius: 9999px;
     border: 2px solid rgba(29, 78, 216, 0.9);
     background: rgba(59, 130, 246, 0.15);
-    box-shadow: 
-      inset 0 0 4px rgba(59, 130, 246, 0.5), 
+    box-shadow:
+      inset 0 0 4px rgba(59, 130, 246, 0.5),
       0 0 12px rgba(37, 99, 235, 0.8),
       0 0 24px rgba(29, 78, 216, 0.5);
     top: clamp(0.85rem, 1.5vw, 1.2rem);
@@ -371,7 +386,7 @@
   @page {
     margin: 2cm;
   }
-  
+
   body {
     background: white !important;
     color: black !important;
@@ -408,10 +423,71 @@
   .print\:text-black {
     color: black !important;
   }
-  
+
   /* Ensure links are not underlined or blue in print unless needed */
   a {
     text-decoration: none !important;
     color: black !important;
   }
+}
+
+@layer utilities {
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes float-medium {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+@keyframes float-fast {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+.animate-float-medium {
+  animation: float-medium 5s ease-in-out infinite;
+}
+.animate-float-fast {
+  animation: float-fast 4s ease-in-out infinite;
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
 }

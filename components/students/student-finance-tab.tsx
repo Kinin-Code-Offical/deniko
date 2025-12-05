@@ -37,10 +37,10 @@ export function StudentFinanceTab({ transactions, dictionary, lang }: StudentFin
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Description</TableHead>
-                                <TableHead className="text-right">Amount</TableHead>
+                                <TableHead>{dictionary.student_detail.finance.table.date}</TableHead>
+                                <TableHead>{dictionary.student_detail.finance.table.type}</TableHead>
+                                <TableHead>{dictionary.student_detail.finance.table.description}</TableHead>
+                                <TableHead className="text-right">{dictionary.student_detail.finance.table.amount}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>

@@ -37,10 +37,10 @@ export function StudentHomeworkTab({ homeworks, dictionary, lang }: StudentHomew
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Due Date</TableHead>
-                                <TableHead>Title</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Lesson</TableHead>
+                                <TableHead>{dictionary.student_detail.homework.table.due_date}</TableHead>
+                                <TableHead>{dictionary.student_detail.homework.table.title}</TableHead>
+                                <TableHead>{dictionary.student_detail.homework.table.status}</TableHead>
+                                <TableHead>{dictionary.student_detail.homework.table.lesson}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>

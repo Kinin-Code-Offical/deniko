@@ -15,11 +15,16 @@ interface StudentDetailHeaderProps {
     lang: string
 }
 
-export function StudentDetailHeader({ student, dictionary, totalLessons, balance, lang }: StudentDetailHeaderProps) {
-    const isClaimed = student.isClaimed
-    const displayName = student.userId
-        ? (student.user?.name || `${student.user?.firstName} ${student.user?.lastName}`)
-        : `${student.tempFirstName} ${student.tempLastName}`
+export function StudentDetailHeader({
+    student: { isClaimed, userId, user, tempFirstName, tempLastName, gradeLevel, inviteToken },
+    dictionary,
+    totalLessons,
+    balance,
+    lang,
+}: StudentDetailHeaderProps) {
+    const displayName = userId
+        ? user?.name || `${user?.firstName} ${user?.lastName}`
+        : `${tempFirstName} ${tempLastName}`
 
     const initials = displayName
         .split(" ")
@@ -32,7 +37,7 @@ export function StudentDetailHeader({ student, dictionary, totalLessons, balance
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16">
-                    <AvatarImage src={student.user?.image || ""} />
+                    <AvatarImage src={user?.image || ""} />
                     <AvatarFallback className="text-lg">{initials}</AvatarFallback>
                 </Avatar>
                 <div>
@@ -43,15 +48,15 @@ export function StudentDetailHeader({ student, dictionary, totalLessons, balance
                                 ? dictionary.dashboard.student_detail.header.status.active
                                 : dictionary.dashboard.student_detail.header.status.shadow}
                         </Badge>
-                        {student.gradeLevel && <span>• {student.gradeLevel}</span>}
+                        {gradeLevel && <span>• {gradeLevel}</span>}
                     </div>
                 </div>
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                {!isClaimed && student.inviteToken && (
+                {!isClaimed && inviteToken && (
                     <InviteButton
-                        token={student.inviteToken}
+                        token={inviteToken}
                         lang={lang}
                         dictionary={dictionary}
                     />

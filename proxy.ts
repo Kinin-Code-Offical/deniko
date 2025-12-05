@@ -78,8 +78,9 @@ function getLocale(request: NextRequest): string | undefined {
 }
 
 export default function proxy(request: NextRequest) {
+    const { nextUrl, method, headers, cookies, url } = request
+    const { pathname, search } = nextUrl
     const requestId = crypto.randomUUID()
-    const pathname = request.nextUrl.pathname
     const clientIp = getClientIp(request)
 
     if (isRateLimited(clientIp)) {
@@ -94,23 +95,27 @@ export default function proxy(request: NextRequest) {
         )
 
         limitedResponse.headers.set('x-request-id', requestId)
-        limitedResponse.headers.set('Retry-After', String(RATE_LIMIT_WINDOW_MS / 1000))
+        limitedResponse.headers.set(
+            'Retry-After',
+            String(RATE_LIMIT_WINDOW_MS / 1000)
+        )
         return limitedResponse
     }
 
     // Log Request
     logger.info({
-        msg: "Incoming Request",
+        msg: 'Incoming Request',
         requestId,
-        method: request.method,
+        method,
         url: pathname,
         ip: clientIp,
-        userAgent: request.headers.get('user-agent')
+        userAgent: headers.get('user-agent'),
     })
 
     // Check if there is any supported locale in the pathname
     const pathnameIsMissingLocale = i18n.locales.every(
-        (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+        (locale) =>
+            !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
     )
 
     // Redirect if there is no locale
@@ -121,17 +126,17 @@ export default function proxy(request: NextRequest) {
         // The new URL is now /en-US/products
         const newUrl = new URL(
             `/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
-            request.url
+            url
         )
 
         // Preserve query parameters
-        newUrl.search = request.nextUrl.search
+        newUrl.search = search
 
         const response = attachSecurityHeaders(NextResponse.redirect(newUrl))
 
         response.headers.set('x-request-id', requestId)
 
-        if (locale && request.cookies.get("NEXT_LOCALE")?.value !== locale) {
+        if (locale && cookies.get('NEXT_LOCALE')?.value !== locale) {
             syncLocaleCookie(response, locale)
         }
 
@@ -139,7 +144,8 @@ export default function proxy(request: NextRequest) {
     } else {
         // If locale is present in path, ensure cookie matches
         const localeInPath = i18n.locales.find(
-            (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+            (locale) =>
+                pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
         )
 
         if (localeInPath) {
@@ -147,7 +153,7 @@ export default function proxy(request: NextRequest) {
 
             response.headers.set('x-request-id', requestId)
 
-            if (request.cookies.get("NEXT_LOCALE")?.value !== localeInPath) {
+            if (cookies.get('NEXT_LOCALE')?.value !== localeInPath) {
                 syncLocaleCookie(response, localeInPath)
             }
 

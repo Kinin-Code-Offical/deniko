@@ -277,7 +277,7 @@ export function AddStudentDialog({ dictionary, classrooms = [] }: { dictionary: 
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="Mezun">Mezun</SelectItem>
+                                                <SelectItem value="Mezun">{dictionary.dashboard.students.add_dialog.grades.graduated}</SelectItem>
                                                 <SelectItem value="12">12. Sınıf</SelectItem>
                                                 <SelectItem value="11">11. Sınıf</SelectItem>
                                                 <SelectItem value="10">10. Sınıf</SelectItem>

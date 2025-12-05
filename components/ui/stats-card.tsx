@@ -77,10 +77,8 @@ export function StatsCard({
         let formatted = Math.floor(latest).toLocaleString()
         
         // Handle K formatting for animation
-        if (displaySuffix.includes("K") || (typeof value === "string" && value.includes("K"))) {
-             if (latest >= 1000) {
-                 formatted = (latest / 1000).toFixed(1)
-             }
+        if ((displaySuffix.includes("K") || (typeof value === "string" && value.includes("K"))) && latest >= 1000) {
+            formatted = (latest / 1000).toFixed(1)
         }
         
         displayValueRef.current.textContent = formatted

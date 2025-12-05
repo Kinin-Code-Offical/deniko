@@ -4,5 +4,11 @@ node_modules
 npm-debug.log
 README.md
 .next
+.gemini
+yarn-debug.log
+yarn-error.log
+.cursorrules
+.gitignore
+.github
 .git
 .env*

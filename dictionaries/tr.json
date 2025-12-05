@@ -91,7 +91,10 @@
         "no_classroom_found": "Sınıf bulunamadı.",
         "select_grade": "Seviye Seçin",
         "success": "Öğrenci başarıyla oluşturuldu",
-        "copy_invite": "Davet linki kopyalandı"
+        "copy_invite": "Davet linki kopyalandı",
+        "grades": {
+          "graduated": "Mezun"
+        }
       }
     },
     "student": {
@@ -123,7 +126,8 @@
       "save": "Kaydet",
       "cancel": "İptal",
       "delete_confirm": "Emin misiniz?",
-      "delete_desc": "Bu işlem geri alınamaz."
+      "delete_desc": "Bu işlem geri alınamaz.",
+      "continue": "Devam Et"
     }
   },
   "common": {
@@ -191,6 +195,12 @@
         "completed": "Tamamlandı",
         "cancelled": "İptal",
         "missed": "Katılmadı"
+      },
+      "table": {
+        "date": "Tarih",
+        "title": "Başlık",
+        "status": "Durum",
+        "price": "Ücret"
       }
     },
     "finance": {
@@ -200,7 +210,13 @@
       "payment_received": "Ödeme Alındı",
       "balance": "Bakiye",
       "no_transactions": "Henüz finansal işlem bulunmuyor.",
-      "empty": "Ödeme geçmişi buraya gelecek..."
+      "empty": "Ödeme geçmişi buraya gelecek...",
+      "table": {
+        "date": "Tarih",
+        "type": "Tür",
+        "description": "Açıklama",
+        "amount": "Tutar"
+      }
     },
     "homework": {
       "title": "Ödev Takibi",
@@ -209,6 +225,12 @@
       "status": {
         "pending": "Bekliyor",
         "completed": "Tamamlandı"
+      },
+      "table": {
+        "due_date": "Teslim Tarihi",
+        "title": "Başlık",
+        "status": "Durum",
+        "lesson": "Ders"
       }
     },
     "exams": {
@@ -258,6 +280,11 @@
       "phone_claimed_desc": "Bu öğrenci hesabını onayladığı için telefon numarasını sadece kendisi değiştirebilir.",
       "notes": "Özel Notlar",
       "notes_desc": "Sadece sizin görebileceğiniz notlar.",
+      "claimed_profile": "Onaylanmış Profil",
+      "real_first_name": "Gerçek Ad",
+      "real_last_name": "Gerçek Soyad",
+      "photo_claimed_desc": "Onaylı hesaplarda fotoğraf değiştirilemez.",
+      "invite_link_status": "Davet Bağlantısı Durumu",
       "archive": {
         "title": "Öğrenciyi Arşivle",
         "desc": "Bu öğrenciyi aktif listenizden kaldırın. Geçmiş veriler korunur.",
@@ -337,6 +364,7 @@
       "google_login": "Google ile Devam Et",
       "or_email": "Veya E-posta ile",
       "email": "E-posta",
+      "placeholder_email": "ornek@email.com",
       "password": "Şifre",
       "forgot_password_link": "Şifremi Unuttum",
       "submit": "Giriş Yap",
@@ -421,7 +449,13 @@
     "accept_terms": "[Kullanıcı Sözleşmesi] ve [Gizlilik Politikası]'nı okudum ve kabul ediyorum.",
     "validation_terms": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
     "validation_error": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
-    "marketing_consent": "Kampanya ve duyurulardan e-posta ile haberdar olmak istiyorum."
+    "marketing_consent": "Kampanya ve duyurulardan e-posta ile haberdar olmak istiyorum.",
+    "title": "Yasal",
+    "center": "Yasal Merkez",
+    "terms": "Kullanım Koşulları",
+    "privacy": "Gizlilik Politikası",
+    "cookies": "Çerez Politikası",
+    "kvkk": "KVKK"
   },
   "home": {
     "hero_title": "Eğitim Hayatınızı Dijitalleştirin",
@@ -497,7 +531,42 @@
       "graphic_schedule": "Ders Programı",
       "graphic_profile": "Öğrenci Profili",
       "graphic_performance": "Performans",
-      "graphic_analysis": "Analiz"
+      "graphic_analysis": "Analiz",
+      "assignments": "Ödevler",
+      "assignments_pending": "Bekleyenler",
+      "assignment_math_title": "Türev Çalışma Kağıdı",
+      "assignment_physics_title": "Laboratuvar Raporu",
+      "assignment_lit_title": "Roman Özeti",
+      "literature": "Edebiyat",
+      "due_tomorrow": "Son Teslim: Yarın, 23:59",
+      "due_3days": "Son Teslim: 3 Gün Kaldı",
+      "announcements": "Duyurular",
+      "school_board": "Okul Panosu",
+      "announcement_exam_title": "Sınav Tarihleri",
+      "announcement_exam_desc": "2. Dönem vize sınav takvimi yayınlandı. Kontrol etmeyi unutmayın.",
+      "announcement_match_title": "Basketbol Maçı",
+      "announcement_match_desc": "Yarın öğle arasında 12-A ve 12-B sınıf maçı var! 🏀",
+      "see_all": "Tümünü Gör",
+      "lab": "Laboratuvar",
+      "carousel_back": {
+        "desc": "{title} modülü ile ilgili tüm detaylara buradan ulaşabilirsiniz. Verimliliğinizi artırmak için tasarlanmış araçları keşfedin.",
+        "feature_1": "Detaylı analiz ve raporlama",
+        "feature_2": "Kişiselleştirilmiş öneriler",
+        "feature_3": "Anlık bildirim sistemi"
+      },
+      "time_ago": {
+        "10_min": "10 dk önce",
+        "2_hours": "2 saat önce"
+      },
+      "chart": {
+        "completed": "Tamamlanan",
+        "remaining": "Kalan"
+      },
+      "success": "Başarı",
+      "carousel_instructions": {
+        "swipe": "Kaydırarak geç",
+        "hold": "Çevirmek için basılı tut"
+      }
     }
   },
   "email": {

@@ -1,80 +1,82 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { FileQuestion, Home, MoveLeft } from "lucide-react"
-import { useRouter, usePathname } from "next/navigation"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { FileQuestion, Home, MoveLeft } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function NotFound() {
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const isEnglish = pathname?.startsWith("/en")
+  const isEnglish = pathname?.startsWith("/en");
 
   const dict = {
     title: isEnglish ? "Page Not Found" : "Sayfa Bulunamadı",
-    heading: isEnglish ? "The page you are looking for seems to be lost" : "Aradığınız sayfa kaybolmuş gibi görünüyor",
+    heading: isEnglish
+      ? "The page you are looking for seems to be lost"
+      : "Aradığınız sayfa kaybolmuş gibi görünüyor",
     description: isEnglish
       ? "The page you are trying to reach may have been deleted, moved, or never existed. Don't worry, we can get you back on track."
       : "Ulaşmaya çalıştığınız sayfa silinmiş, taşınmış veya hiç var olmamış olabilir. Endişelenmeyin, sizi doğru yola geri döndürebiliriz.",
     goBack: isEnglish ? "Go Back" : "Geri Dön",
-    home: isEnglish ? "Home" : "Ana Sayfa"
-  }
+    home: isEnglish ? "Home" : "Ana Sayfa",
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 relative overflow-hidden font-sans">
+    <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-slate-50 font-sans transition-colors dark:bg-slate-950">
       {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-200/30 blur-[120px]" />
-        <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] rounded-full bg-indigo-200/30 blur-[120px]" />
-        <div className="absolute bottom-[10%] left-[20%] w-[30%] h-[30%] rounded-full bg-sky-200/30 blur-[100px]" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-[20%] -left-[10%] h-[50%] w-[50%] rounded-full bg-blue-200/35 blur-[120px] dark:bg-blue-900/25" />
+        <div className="absolute top-[40%] -right-[10%] h-[40%] w-[40%] rounded-full bg-indigo-200/35 blur-[120px] dark:bg-indigo-900/30" />
+        <div className="absolute bottom-[10%] left-[20%] h-[30%] w-[30%] rounded-full bg-sky-200/35 blur-[100px] dark:bg-sky-900/25" />
       </div>
 
-      <div className="relative z-10 text-center px-4 max-w-2xl mx-auto">
+      <div className="relative z-10 mx-auto max-w-2xl px-4 text-center">
         <div className="mb-10 flex justify-center">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-blue-200 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
-            <div className="bg-white p-8 rounded-full shadow-2xl relative border border-slate-100 transform group-hover:scale-105 transition-transform duration-300">
-              <FileQuestion className="h-20 w-20 text-blue-600" />
+          <div className="group relative">
+            <div className="absolute inset-0 rounded-full bg-blue-200 opacity-50 blur-xl transition-opacity duration-500 group-hover:opacity-75 dark:bg-blue-900" />
+            <div className="relative transform rounded-full border border-slate-100 bg-white p-8 shadow-2xl transition-transform duration-300 group-hover:scale-105 dark:border-slate-800 dark:bg-slate-900">
+              <FileQuestion className="h-20 w-20 text-blue-600 dark:text-blue-400" />
             </div>
 
             {/* Floating elements */}
-            <div className="absolute -top-2 -right-2 bg-indigo-100 p-2 rounded-full animate-bounce delay-100">
-              <div className="w-3 h-3 bg-indigo-500 rounded-full" />
+            <div className="absolute -top-2 -right-2 animate-bounce rounded-full bg-indigo-100 p-2 delay-100">
+              <div className="h-3 w-3 rounded-full bg-indigo-500" />
             </div>
-            <div className="absolute -bottom-1 -left-2 bg-sky-100 p-2 rounded-full animate-bounce delay-300">
-              <div className="w-2 h-2 bg-sky-500 rounded-full" />
+            <div className="absolute -bottom-1 -left-2 animate-bounce rounded-full bg-sky-100 p-2 delay-300">
+              <div className="h-2 w-2 rounded-full bg-sky-500" />
             </div>
           </div>
         </div>
 
-        <h1 className="text-8xl md:text-9xl font-black text-slate-900 tracking-tighter mb-2 select-none drop-shadow-sm">
-          4<span className="text-transparent bg-clip-text bg-gradient-to-br from-blue-600 to-indigo-600">0</span>4
+        <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-50">
+          {dict.title}
         </h1>
 
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-6">
+        <p className="mb-8 text-lg font-medium text-slate-600 dark:text-slate-300">
           {dict.heading}
-        </h2>
+        </p>
 
-        <p className="text-slate-600 text-lg mb-10 leading-relaxed">
+        <p className="mx-auto mb-10 max-w-md text-slate-500 dark:text-slate-400">
           {dict.description}
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button
-            onClick={() => router.back()}
             variant="outline"
             size="lg"
-            className="min-w-[160px] border-slate-300 hover:bg-slate-100 hover:text-slate-900 transition-all"
+            onClick={() => router.back()}
+            className="group border-slate-200 bg-white/50 text-slate-700 hover:bg-white hover:text-slate-900 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-slate-50"
           >
-            <MoveLeft className="mr-2 h-4 w-4" />
+            <MoveLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
             {dict.goBack}
           </Button>
 
           <Button
             asChild
             size="lg"
-            className="min-w-[160px] bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all hover:shadow-blue-600/40"
+            className="bg-blue-600 text-white shadow-lg shadow-blue-500/25 hover:bg-blue-700 hover:shadow-blue-600/35 dark:bg-blue-600 dark:hover:bg-blue-500"
           >
             <Link href="/">
               <Home className="mr-2 h-4 w-4" />
@@ -83,10 +85,6 @@ export default function NotFound() {
           </Button>
         </div>
       </div>
-
-      <div className="absolute bottom-8 text-slate-400 text-sm font-medium">
-        &copy; {new Date().getFullYear()} Deniko
-      </div>
     </div>
-  )
+  );
 }

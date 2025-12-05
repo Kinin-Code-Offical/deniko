@@ -52,10 +52,10 @@ export function StudentLessonsTab({ lessons, dictionary, lang }: StudentLessonsT
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Title</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Price</TableHead>
+                                <TableHead>{dictionary.student_detail.lessons.table.date}</TableHead>
+                                <TableHead>{dictionary.student_detail.lessons.table.title}</TableHead>
+                                <TableHead>{dictionary.student_detail.lessons.table.status}</TableHead>
+                                <TableHead className="text-right">{dictionary.student_detail.lessons.table.price}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
