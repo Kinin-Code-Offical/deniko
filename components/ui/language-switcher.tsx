@@ -67,26 +67,26 @@ export function LanguageSwitcher({ currentLocale, onSelect }: LanguageSwitcherPr
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"
-                    className="h-11 rounded-full border-slate-200/80 bg-white/80 px-4 text-sm font-semibold text-slate-700 gap-2 shadow-sm data-[state=open]:ring-2 data-[state=open]:ring-[#1d4f87]/20"
+                    className="h-11 rounded-full border-slate-200/80 bg-white/80 px-4 text-sm font-semibold text-slate-700 gap-2 shadow-sm data-[state=open]:ring-2 data-[state=open]:ring-[#1d4f87]/20 dark:bg-slate-950/50 dark:border-slate-800 dark:text-blue-400 dark:hover:bg-slate-900"
                 >
-                    <Globe className="h-4 w-4 text-[#1d4f87]" />
+                    <Globe className="h-4 w-4 text-[#1d4f87] dark:text-blue-400" />
                     <span>{localeLabels[activeLocale] ?? activeLocale.toUpperCase()}</span>
-                    <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
+                    <ChevronDown className="h-3.5 w-3.5 text-slate-500 dark:text-blue-400/70" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-44 rounded-2xl border-slate-100 shadow-lg shadow-slate-900/5">
+            <DropdownMenuContent align="end" className="w-44 rounded-2xl border-slate-100 shadow-lg shadow-slate-900/5 dark:bg-slate-950 dark:border-slate-800">
                 {i18n.locales.map((locale) => (
                     <DropdownMenuItem
                         key={locale}
                         onClick={() => handleLanguageChange(locale)}
-                        className="flex items-center gap-2 py-3 text-sm"
+                        className="flex items-center gap-2 py-3 text-sm dark:focus:bg-slate-900"
                     >
                         <Check
-                            className={`h-4 w-4 text-[#1d4f87] ${activeLocale === locale ? "opacity-100" : "opacity-0"}`}
+                            className={`h-4 w-4 text-[#1d4f87] dark:text-blue-400 ${activeLocale === locale ? "opacity-100" : "opacity-0"}`}
                         />
                         <div className="flex flex-col leading-tight">
-                            <span className="text-slate-900 font-semibold">{localeLabels[locale]}</span>
-                            <span className="text-[11px] uppercase text-slate-400 tracking-[0.2em]">{locale}</span>
+                            <span className="text-slate-900 font-semibold dark:text-slate-200">{localeLabels[locale]}</span>
+                            <span className="text-[11px] uppercase text-slate-400 tracking-[0.2em] dark:text-slate-500">{locale}</span>
                         </div>
                     </DropdownMenuItem>
                 ))}

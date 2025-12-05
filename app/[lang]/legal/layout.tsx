@@ -1,5 +1,5 @@
-import { getDictionary } from "@/lib/get-dictionary"
 import type { Locale } from "@/i18n-config"
+import { getDictionary } from "@/lib/get-dictionary"
 import { DenikoLogo } from "@/components/ui/deniko-logo"
 import Link from "next/link"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -19,7 +19,7 @@ export default async function LegalLayout({
 
   const navItems = [
     { 
-      href: `/${lang}/legal/terms`, 
+      href: `/${lang}/legal/terms`,  
       label: lang === 'tr' ? 'Kullanıcı Sözleşmesi' : 'Terms of Service',
       icon: FileText
     },
@@ -73,15 +73,15 @@ export default async function LegalLayout({
                 </nav>
             </div>
 
-            <div className="flex items-center gap-3">
-                <div className="hidden sm:flex items-center gap-2 border-r border-slate-200 dark:border-slate-800 pr-3 mr-1">
-                    <ThemeToggle />
+            <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1 sm:gap-2 border-r border-slate-200 dark:border-slate-800 pr-2 sm:pr-3 mr-1">
+                    <ThemeToggle labels={dictionary.theme} />
                     <LanguageSwitcher currentLocale={lang} />
                 </div>
-                <Button variant="ghost" size="sm" asChild className="text-slate-600 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400 dark:hover:text-blue-400 dark:hover:bg-blue-900/20 rounded-full px-4 group transition-all">
+                <Button variant="ghost" size="sm" asChild className="text-slate-600 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400 dark:hover:text-blue-400 dark:hover:bg-blue-900/20 rounded-full px-2 sm:px-4 group transition-all">
                      <Link href={`/${lang}`}>
-                        <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
-                        {lang === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home'}
+                        <ArrowLeft className="h-4 w-4 sm:mr-2 transition-transform group-hover:-translate-x-1" />
+                        <span className="hidden sm:inline">{lang === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home'}</span>
                      </Link>
                 </Button>
             </div>

@@ -76,7 +76,7 @@ export function LegalSection({ title, content }: LegalSectionProps) {
       
       // Keep active state for a bit to show feedback
       setTimeout(() => setIsActive(false), 2000) 
-    } catch (err) {
+    } catch {
       toast.error("Hata / Error", {
         description: "Kopyalama başarısız. / Copy failed."
       })

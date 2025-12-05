@@ -76,10 +76,10 @@ export function LoginForm({ dictionary, lang }: LoginFormProps) {
 
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t border-slate-200" />
+                        <span className="w-full border-t border-slate-200 dark:border-slate-700" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-slate-500">
+                        <span className="bg-white px-2 text-slate-500 dark:bg-slate-950 dark:text-slate-400">
                             {d.or_email}
                         </span>
                     </div>
@@ -109,7 +109,7 @@ export function LoginForm({ dictionary, lang }: LoginFormProps) {
                                         <FormLabel>{d.password}</FormLabel>
                                         <Link
                                             href={`/${lang}/forgot-password`}
-                                            className="text-sm font-medium text-[#2062A3] hover:underline"
+                                            className="text-sm font-medium text-[#2062A3] hover:underline dark:text-blue-400 dark:hover:text-blue-300"
                                         >
                                             {d.forgot_password_link}
                                         </Link>
@@ -141,15 +141,15 @@ export function LoginForm({ dictionary, lang }: LoginFormProps) {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full h-11 bg-[#2062A3] hover:bg-[#1a4f83]" disabled={isPending}>
+                        <Button type="submit" className="w-full h-11 bg-[#2062A3] hover:bg-[#1a4f83] dark:bg-blue-600 dark:hover:bg-blue-700" disabled={isPending}>
                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {d.submit}
                         </Button>
                     </form>
                 </Form>
-                <div className="text-center text-sm">
+                <div className="text-center text-sm text-slate-600 dark:text-slate-400">
                     {d.no_account}{" "}
-                    <Link href={`/${lang}/register`} className="text-[#2062A3] font-semibold hover:underline">
+                    <Link href={`/${lang}/register`} className="text-[#2062A3] font-semibold hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                         {d.register_link}
                     </Link>
                 </div>

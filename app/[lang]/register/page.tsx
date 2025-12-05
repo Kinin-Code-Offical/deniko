@@ -3,6 +3,7 @@ import type { Locale } from "@/i18n-config"
 import { RegisterForm } from "@/components/auth/register-form"
 import { DenikoLogo } from "@/components/ui/deniko-logo"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
+import { ThemeToggle } from "@/components/theme-toggle"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { auth } from "@/auth"
@@ -37,9 +38,9 @@ export default async function RegisterPage({
     const dictionary = (await getDictionary(lang)) 
 
     return (
-        <div className="min-h-screen flex flex-col md:flex-row">
+        <div className="min-h-dvh flex flex-col md:flex-row dark:bg-slate-950">
             {/* Left Panel - Visual & Brand */}
-            <div className="hidden md:flex w-1/2 bg-[#2062A3] p-12 flex-col justify-between relative overflow-hidden">
+            <div className="hidden md:flex w-1/2 bg-[#2062A3] dark:bg-slate-900 p-12 flex-col justify-between relative overflow-hidden transition-colors duration-300">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -81,40 +82,44 @@ export default async function RegisterPage({
             </div>
 
             {/* Right Panel - Form */}
-            <div className="flex-1 flex flex-col relative bg-gradient-to-b from-white via-blue-50/60 to-white animate-in slide-in-from-right-4 duration-700">
+            <div className="flex-1 flex flex-col relative bg-gradient-to-b from-white via-blue-50/60 to-white dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950 animate-in slide-in-from-right-4 duration-700 transition-colors">
                 {/* Mobile Header */}
-                <div className="md:hidden sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md">
+                <div className="md:hidden sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md dark:bg-slate-950/90 dark:border-slate-800">
                     <div className="px-4 pt-4 flex items-center justify-between">
                         <Link href="/" className="flex items-center gap-2">
-                            <div className="bg-[#2062A3] p-1.5 rounded-xl shadow-sm">
+                            <div className="bg-[#2062A3] dark:bg-blue-600 p-1.5 rounded-xl shadow-sm">
                                 <DenikoLogo className="h-5 w-5 text-white" />
                             </div>
-                            <span className="font-semibold text-[#2062A3] tracking-tight">Deniko</span>
+                            <span className="font-semibold text-[#2062A3] tracking-tight dark:text-blue-400">Deniko</span>
                         </Link>
-                        <LanguageSwitcher />
+                        <div className="flex items-center gap-2">
+                            <ThemeToggle labels={dictionary.theme} />
+                            <LanguageSwitcher />
+                        </div>
                     </div>
-                    <div className="px-4 pb-4 pt-2 flex items-center justify-between text-xs text-slate-500">
+                    <div className="px-4 pb-4 pt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                         <span>{dictionary.auth.register.mobile_hint}</span>
                     </div>
                 </div>
 
                 {/* Desktop Language Switcher */}
-                <div className="hidden md:block absolute top-6 right-6 z-20">
+                <div className="hidden md:flex absolute top-6 right-6 z-20 items-center gap-2">
+                    <ThemeToggle labels={dictionary.theme} />
                     <LanguageSwitcher />
                 </div>
 
                 {/* Form Container */}
-                <div className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:p-12 min-h-[calc(100vh-72px)] md:min-h-screen">
+                <div className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:p-12 min-h-[calc(100dvh-72px)] md:min-h-dvh">
                     <div className="w-full max-w-md space-y-6">
                         <div className="text-center md:text-left space-y-2">
-                            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+                            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight dark:text-white">
                                 {dictionary.auth.register.title || "Hesap Oluşturun"}
                             </h1>
-                            <p className="text-slate-500 text-sm md:text-base">
+                            <p className="text-slate-500 text-sm md:text-base dark:text-slate-400">
                                 {dictionary.auth.register.subtitle || "Ücretsiz hesabınızı hemen oluşturun"}
                             </p>
                         </div>
-                        <div className="bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-4 sm:p-6 shadow-sm">
+                        <div className="bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-4 sm:p-6 shadow-sm dark:bg-slate-900/50 dark:border-slate-800">
                             <RegisterForm dictionary={dictionary} lang={lang} />
                         </div>
                     </div>

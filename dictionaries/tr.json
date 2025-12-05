@@ -1,4 +1,10 @@
 {
+  "theme": {
+    "light": "Aydınlık",
+    "dark": "Karanlık",
+    "system": "Sistem",
+    "toggle_theme": "Temayı değiştir"
+  },
   "dashboard": {
     "nav": {
       "dashboard": "Panel",

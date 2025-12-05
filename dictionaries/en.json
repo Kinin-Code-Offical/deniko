@@ -1,4 +1,10 @@
 {
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggle_theme": "Toggle theme"
+  },
   "dashboard": {
     "nav": {
       "dashboard": "Dashboard",
@@ -11,6 +17,7 @@
       "exams": "Exams",
       "logout": "Log out"
     },
+
     "join": {
       "title": "Invitation Details",
       "desc": "Review the details provided by your teacher.",

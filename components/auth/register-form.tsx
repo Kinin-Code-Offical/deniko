@@ -93,14 +93,14 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
     if (success) {
         return (
             <div className="w-full text-center space-y-6">
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
-                    <CheckCircle2 className="h-10 w-10 text-green-600" />
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+                    <CheckCircle2 className="h-10 w-10 text-green-600 dark:text-green-400" />
                 </div>
                 <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-slate-900">{d.success_title}</h2>
-                    <p className="text-slate-600">{d.success_desc}</p>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{d.success_title}</h2>
+                    <p className="text-slate-600 dark:text-slate-400">{d.success_desc}</p>
                 </div>
-                <Button asChild variant="outline" className="w-full h-11">
+                <Button asChild variant="outline" className="w-full h-11 dark:bg-slate-800 dark:text-white dark:border-slate-700 dark:hover:bg-slate-700">
                     <Link href={`/${lang}/login`}>{d.login_link}</Link>
                 </Button>
             </div>
@@ -118,7 +118,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                         name="role"
                         render={({ field }) => (
                             <FormItem className="space-y-3">
-                                <FormLabel className="text-base font-semibold text-slate-900">{d.role_select}</FormLabel>
+                                <FormLabel className="text-base font-semibold text-slate-900 dark:text-white">{d.role_select}</FormLabel>
                                 <FormControl>
                                     <RadioGroup
                                         onValueChange={field.onChange}
@@ -129,7 +129,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                                             <FormControl>
                                                 <RadioGroupItem value="STUDENT" className="peer sr-only" />
                                             </FormControl>
-                                            <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-slate-50 hover:text-accent-foreground peer-data-[state=checked]:border-[#2062A3] peer-data-[state=checked]:text-[#2062A3] cursor-pointer transition-all">
+                                            <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-slate-50 hover:text-accent-foreground peer-data-[state=checked]:border-[#2062A3] peer-data-[state=checked]:text-[#2062A3] cursor-pointer transition-all dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 dark:peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:text-blue-400">
                                                 <GraduationCap className="mb-3 h-8 w-8" />
                                                 <span className="text-lg font-bold">{d.student}</span>
                                                 <span className="text-sm text-muted-foreground text-center mt-1">{d.student_desc}</span>
@@ -139,7 +139,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                                             <FormControl>
                                                 <RadioGroupItem value="TEACHER" className="peer sr-only" />
                                             </FormControl>
-                                            <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-slate-50 hover:text-accent-foreground peer-data-[state=checked]:border-[#2062A3] peer-data-[state=checked]:text-[#2062A3] cursor-pointer transition-all">
+                                            <FormLabel className="flex flex-col items-center justify-between rounded-xl border-2 border-muted bg-white p-4 hover:bg-slate-50 hover:text-accent-foreground peer-data-[state=checked]:border-[#2062A3] peer-data-[state=checked]:text-[#2062A3] cursor-pointer transition-all dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 dark:peer-data-[state=checked]:border-blue-500 dark:peer-data-[state=checked]:text-blue-400">
                                                 <User className="mb-3 h-8 w-8" />
                                                 <span className="text-lg font-bold">{d.teacher}</span>
                                                 <span className="text-sm text-muted-foreground text-center mt-1">{d.teacher_desc}</span>
@@ -289,16 +289,16 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                         control={form.control}
                         name="terms"
                         render={({ field }) => (
-                            <FormItem className="flex flex-row items-center gap-3 space-y-0 rounded-lg border border-slate-200 p-3 transition-all duration-200 hover:bg-slate-50 hover:border-[#2062A3]/50">
+                            <FormItem className="flex flex-row items-center gap-3 space-y-0 rounded-lg border border-slate-200 p-3 transition-all duration-200 hover:bg-slate-50 hover:border-[#2062A3]/50 dark:border-slate-800 dark:hover:bg-slate-900 dark:hover:border-blue-500/50">
                                 <FormControl>
                                     <Checkbox
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
-                                        className="h-5 w-5 border-2 border-slate-300 data-[state=checked]:bg-[#2062A3] data-[state=checked]:border-[#2062A3] transition-all duration-200"
+                                        className="h-5 w-5 border-2 border-slate-300 data-[state=checked]:bg-[#2062A3] data-[state=checked]:border-[#2062A3] transition-all duration-200 dark:border-slate-600 dark:data-[state=checked]:bg-blue-600 dark:data-[state=checked]:border-blue-600"
                                     />
                                 </FormControl>
                                 <div className="leading-none flex-1">
-                                    <FormLabel className="text-sm font-medium text-slate-600 cursor-pointer block">
+                                    <FormLabel className="text-sm font-medium text-slate-600 cursor-pointer block dark:text-slate-400">
                                         {dictionary.legal.accept_terms.split(/(\[.*?\])/g).map((part: string, i: number) => {
                                             if (part.startsWith("[") && part.endsWith("]")) {
                                                 const content = part.slice(1, -1);
@@ -306,7 +306,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                                                     ? `/${lang}/legal/terms`
                                                     : `/${lang}/legal/privacy`;
                                                 return (
-                                                    <Link key={i} href={href} target="_blank" className="font-bold text-[#2062A3] hover:underline hover:text-[#1a4f83] transition-colors">
+                                                    <Link key={i} href={href} target="_blank" className="font-bold text-[#2062A3] hover:underline hover:text-[#1a4f83] transition-colors dark:text-blue-400 dark:hover:text-blue-300">
                                                         {content}
                                                     </Link>
                                                 );
@@ -324,16 +324,16 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                         control={form.control}
                         name="marketingConsent"
                         render={({ field }) => (
-                            <FormItem className="flex flex-row items-center gap-3 space-y-0 rounded-lg border border-slate-200 p-3 transition-all duration-200 hover:bg-slate-50 hover:border-[#2062A3]/50">
+                            <FormItem className="flex flex-row items-center gap-3 space-y-0 rounded-lg border border-slate-200 p-3 transition-all duration-200 hover:bg-slate-50 hover:border-[#2062A3]/50 dark:border-slate-800 dark:hover:bg-slate-900 dark:hover:border-blue-500/50">
                                 <FormControl>
                                     <Checkbox
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
-                                        className="h-5 w-5 border-2 border-slate-300 data-[state=checked]:bg-[#2062A3] data-[state=checked]:border-[#2062A3] transition-all duration-200"
+                                        className="h-5 w-5 border-2 border-slate-300 data-[state=checked]:bg-[#2062A3] data-[state=checked]:border-[#2062A3] transition-all duration-200 dark:border-slate-600 dark:data-[state=checked]:bg-blue-600 dark:data-[state=checked]:border-blue-600"
                                     />
                                 </FormControl>
                                 <div className="leading-none flex-1">
-                                    <FormLabel className="text-sm font-medium text-slate-600 cursor-pointer block">
+                                    <FormLabel className="text-sm font-medium text-slate-600 cursor-pointer block dark:text-slate-400">
                                         {dictionary.legal.marketing_consent || "Kampanya ve duyurulardan e-posta ile haberdar olmak istiyorum."}
                                     </FormLabel>
                                 </div>
@@ -343,7 +343,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
 
                     <Button
                         type="submit"
-                        className="w-full h-12 text-lg bg-[#2062A3] hover:bg-[#1a4f83] transition-colors"
+                        className="w-full h-12 text-lg bg-[#2062A3] hover:bg-[#1a4f83] transition-colors dark:bg-blue-600 dark:hover:bg-blue-700"
                         disabled={isPending}
                     >
                         {isPending ? (
@@ -357,9 +357,9 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                     </Button>
                 </form>
             </Form>
-            <div className="text-center text-sm text-slate-600">
+            <div className="text-center text-sm text-slate-600 dark:text-slate-400">
                 {d.have_account}{" "}
-                <Link href={`/${lang}/login`} className="text-[#2062A3] font-semibold hover:underline">
+                <Link href={`/${lang}/login`} className="text-[#2062A3] font-semibold hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                     {d.login_link}
                 </Link>
             </div>
