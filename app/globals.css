@@ -385,6 +385,20 @@
 @media print {
   @page {
     margin: 2cm;
+    size: auto;
+  }
+
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    position: static !important;
+    width: auto !important;
+  }
+
+  /* Reset potential scroll containers */
+  div {
+    float: none !important;
   }
 
   body {
