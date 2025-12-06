@@ -483,6 +483,7 @@ const Carousel: React.FC<CarouselProps> = ({ items, dictionary }) => {
                                 scale(${1 - offsetIndex * 0.05})
                             `,
                     opacity: 1 - offsetIndex * 0.15,
+                    filter: offsetIndex === 0 ? "none" : "blur(2px)",
                     transformOrigin: "center bottom",
                     perspective: "1000px",
                     // Disable transition during drag for instant response, otherwise use spring-like transition
@@ -500,12 +501,17 @@ const Carousel: React.FC<CarouselProps> = ({ items, dictionary }) => {
                   >
                     {/* Flipper Container */}
                     <div
-                      className={`preserve-3d relative h-full w-full duration-700 will-change-transform ${offsetIndex === 0 && isFlipped ? "rotate-y-180" : ""}`}
+                      className={`preserve-3d relative h-full w-full duration-700 ${offsetIndex === 0 && isFlipped ? "rotate-y-180" : ""}`}
                     >
                       {/* Front Face */}
                       <div
                         className="absolute inset-0 overflow-hidden rounded-3xl bg-white shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] backface-hidden dark:bg-slate-900"
-                        style={{ transform: "translateZ(1px)" }}
+                        style={{
+                          transform: "translateZ(1px)",
+                          // Fix for mobile blur: ensure high-quality rendering
+                          backfaceVisibility: "hidden",
+                          WebkitBackfaceVisibility: "hidden",
+                        }}
                       >
                         {item.component}
                       </div>

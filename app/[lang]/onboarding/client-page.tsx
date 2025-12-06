@@ -182,9 +182,18 @@ export function OnboardingClientPage({
               <div className="grid grid-cols-2 gap-4">
                 {/* Student Card */}
                 <div
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={role === "STUDENT"}
                   onClick={() => setRole("STUDENT")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setRole("STUDENT");
+                    }
+                  }}
                   className={cn(
-                    "relative flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 p-4 text-center transition-all hover:border-[#2062A3] hover:bg-blue-50 dark:hover:border-blue-500 dark:hover:bg-blue-900/20",
+                    "relative flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 p-4 text-center transition-all hover:border-[#2062A3] hover:bg-blue-50 focus-visible:ring-2 focus-visible:ring-[#2062A3] focus-visible:ring-offset-2 focus-visible:outline-none dark:hover:border-blue-500 dark:hover:bg-blue-900/20 dark:focus-visible:ring-blue-500",
                     role === "STUDENT"
                       ? "border-[#2062A3] bg-blue-50 dark:border-blue-500 dark:bg-blue-900/20"
                       : "border-gray-200 dark:border-slate-700 dark:bg-slate-900"
@@ -217,9 +226,18 @@ export function OnboardingClientPage({
 
                 {/* Teacher Card */}
                 <div
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={role === "TEACHER"}
                   onClick={() => setRole("TEACHER")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setRole("TEACHER");
+                    }
+                  }}
                   className={cn(
-                    "relative flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 p-4 text-center transition-all hover:border-[#2062A3] hover:bg-blue-50 dark:hover:border-blue-500 dark:hover:bg-blue-900/20",
+                    "relative flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 p-4 text-center transition-all hover:border-[#2062A3] hover:bg-blue-50 focus-visible:ring-2 focus-visible:ring-[#2062A3] focus-visible:ring-offset-2 focus-visible:outline-none dark:hover:border-blue-500 dark:hover:bg-blue-900/20 dark:focus-visible:ring-blue-500",
                     role === "TEACHER"
                       ? "border-[#2062A3] bg-blue-50 dark:border-blue-500 dark:bg-blue-900/20"
                       : "border-gray-200 dark:border-slate-700 dark:bg-slate-900"
@@ -254,10 +272,11 @@ export function OnboardingClientPage({
 
             {/* Phone Input */}
             <div className="space-y-2">
-              <Label className="dark:text-slate-200">
+              <Label className="dark:text-slate-200" htmlFor="phone">
                 {dictionary.auth.register.phone}
               </Label>
               <PhoneInput
+                id="phone"
                 value={phoneNumber}
                 onChange={setPhoneNumber}
                 searchPlaceholder={
@@ -272,11 +291,12 @@ export function OnboardingClientPage({
             {/* Password Fields */}
             <div className="grid gap-4">
               <div className="space-y-2">
-                <Label className="dark:text-slate-200">
+                <Label className="dark:text-slate-200" htmlFor="password">
                   {dictionary.auth.register.password}
                 </Label>
                 <div className="relative">
                   <Input
+                    id="password"
                     placeholder="******"
                     type={showPassword ? "text" : "password"}
                     value={password}
@@ -287,6 +307,9 @@ export function OnboardingClientPage({
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-300"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -297,11 +320,15 @@ export function OnboardingClientPage({
                 </div>
               </div>
               <div className="space-y-2">
-                <Label className="dark:text-slate-200">
+                <Label
+                  className="dark:text-slate-200"
+                  htmlFor="confirm-password"
+                >
                   {dictionary.auth.register.password_confirm}
                 </Label>
                 <div className="relative">
                   <Input
+                    id="confirm-password"
                     placeholder="******"
                     type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
@@ -312,6 +339,9 @@ export function OnboardingClientPage({
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-300"
+                    aria-label={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-4 w-4" />

@@ -151,6 +151,7 @@ export function ResetPasswordForm({
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
+                      autoComplete="new-password"
                       className="pr-10 pl-10 dark:border-slate-800 dark:bg-slate-950"
                       {...field}
                     />
@@ -186,6 +187,7 @@ export function ResetPasswordForm({
                     <Input
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="••••••••"
+                      autoComplete="new-password"
                       className="pr-10 pl-10 dark:border-slate-800 dark:bg-slate-950"
                       {...field}
                     />

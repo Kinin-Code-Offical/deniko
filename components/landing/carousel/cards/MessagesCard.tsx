@@ -14,9 +14,9 @@ const MessagesCard: React.FC<MessagesCardProps> = ({ dictionary }) => {
       {/* Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h3 className="mb-1 text-xs font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
+          <div className="mb-1 text-xs font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
             {t.announcements}
-          </h3>
+          </div>
           <h2 className="text-xl font-bold text-gray-800 dark:text-white">
             {t.school_board}
           </h2>
@@ -33,9 +33,9 @@ const MessagesCard: React.FC<MessagesCardProps> = ({ dictionary }) => {
             <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="flex-1 rounded-2xl rounded-tl-none border border-gray-100 bg-gray-50 p-3 dark:border-slate-700 dark:bg-slate-800">
-            <h4 className="mb-1 text-sm font-bold text-gray-800 dark:text-white">
+            <h3 className="mb-1 text-sm font-bold text-gray-800 dark:text-white">
               {t.announcement_exam_title}
-            </h4>
+            </h3>
             <p className="text-xs leading-relaxed text-gray-600 dark:text-slate-300">
               {t.announcement_exam_desc}
             </p>

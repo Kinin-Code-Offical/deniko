@@ -181,6 +181,7 @@ export function ImageCropper({
               value={zoom}
               onChange={(e) => setZoom(parseFloat(e.target.value))}
               className="bg-secondary accent-primary h-2 w-full cursor-pointer appearance-none rounded-lg"
+              aria-label="Zoom"
             />
           </div>
         </div>

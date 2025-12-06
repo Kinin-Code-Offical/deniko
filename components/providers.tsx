@@ -3,8 +3,15 @@
 import React from "react";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { MotionProvider } from "@/components/providers/motion-provider";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  nonce,
+}: {
+  children: React.ReactNode;
+  nonce?: string;
+}) {
   return (
     <SessionProvider>
       <NextThemesProvider
@@ -13,8 +20,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         enableSystem
         themes={["light", "dark"]}
         disableTransitionOnChange
+        nonce={nonce}
       >
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </NextThemesProvider>
     </SessionProvider>
   );

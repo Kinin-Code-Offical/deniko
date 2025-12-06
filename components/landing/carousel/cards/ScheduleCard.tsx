@@ -1,66 +1,82 @@
-import React from 'react';
-import { Calendar, MapPin } from 'lucide-react';
+import React from "react";
+import { Calendar, MapPin } from "lucide-react";
 
 interface ScheduleCardProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dictionary: any
+  dictionary: any;
 }
 
 const ScheduleCard: React.FC<ScheduleCardProps> = ({ dictionary }) => {
   const t = dictionary.home.mock_dashboard;
-  
+
   return (
-    <div className="w-full h-full p-6 flex flex-col bg-white dark:bg-slate-900 transition-colors">
+    <div className="flex h-full w-full flex-col bg-white p-6 transition-colors dark:bg-slate-900">
       {/* Header */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="mb-6 flex items-start justify-between">
         <div>
-          <h3 className="text-xs font-bold text-gray-400 dark:text-slate-500 tracking-widest uppercase mb-1">{t.schedule}</h3>
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white">12 {t.math}</h2>
+          <div className="mb-1 text-xs font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
+            {t.schedule}
+          </div>
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+            12 {t.math}
+          </h2>
         </div>
-        <div className="bg-orange-100 dark:bg-orange-900/20 p-2 rounded-xl">
-          <Calendar className="w-5 h-5 text-orange-500 dark:text-orange-400" />
+        <div className="rounded-xl bg-orange-100 p-2 dark:bg-orange-900/20">
+          <Calendar className="h-5 w-5 text-orange-500 dark:text-orange-400" />
         </div>
       </div>
 
       {/* Timeline Items */}
       <div className="flex-1 space-y-4">
         {/* Active Item */}
-        <div className="flex gap-4 p-3 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-          <div className="flex flex-col justify-center items-center min-w-[50px]">
-            <span className="text-sm font-semibold text-gray-600 dark:text-slate-300">09:00</span>
+        <div className="flex gap-4 rounded-2xl border-2 border-slate-100 bg-white p-3 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
+          <div className="flex min-w-[50px] flex-col items-center justify-center">
+            <span className="text-sm font-semibold text-gray-600 dark:text-slate-300">
+              09:00
+            </span>
           </div>
           <div className="flex-1 border-l-2 border-blue-500 pl-4">
-            <h4 className="font-bold text-gray-800 dark:text-white">{t.math}</h4>
-            <div className="flex items-center text-xs text-gray-500 dark:text-slate-400 mt-1">
-              <MapPin className="w-3 h-3 mr-1" />
+            <h3 className="font-bold text-gray-800 dark:text-white">
+              {t.math}
+            </h3>
+            <div className="mt-1 flex items-center text-xs text-gray-500 dark:text-slate-400">
+              <MapPin className="mr-1 h-3 w-3" />
               {t.room} 301
             </div>
           </div>
         </div>
 
         {/* Item 2 */}
-        <div className="flex gap-4 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-2xl border border-transparent">
-          <div className="flex flex-col justify-center items-center min-w-[50px]">
-            <span className="text-sm font-semibold text-gray-500 dark:text-slate-400">11:30</span>
+        <div className="flex gap-4 rounded-2xl border border-transparent bg-gray-50 p-3 dark:bg-slate-800/50">
+          <div className="flex min-w-[50px] flex-col items-center justify-center">
+            <span className="text-sm font-semibold text-gray-500 dark:text-slate-400">
+              11:30
+            </span>
           </div>
-          <div className="flex-1 border-l-2 border-gray-300 dark:border-slate-600 pl-4">
-            <h4 className="font-bold text-gray-700 dark:text-slate-200">{t.physics}</h4>
-            <div className="flex items-center text-xs text-gray-400 dark:text-slate-500 mt-1">
-              <MapPin className="w-3 h-3 mr-1" />
+          <div className="flex-1 border-l-2 border-gray-300 pl-4 dark:border-slate-600">
+            <h4 className="font-bold text-gray-700 dark:text-slate-200">
+              {t.physics}
+            </h4>
+            <div className="mt-1 flex items-center text-xs text-gray-400 dark:text-slate-500">
+              <MapPin className="mr-1 h-3 w-3" />
               {t.room} 205
             </div>
           </div>
         </div>
 
         {/* Item 3 */}
-        <div className="flex gap-4 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-2xl border border-transparent">
-          <div className="flex flex-col justify-center items-center min-w-[50px]">
-            <span className="text-sm font-semibold text-gray-500 dark:text-slate-400">13:00</span>
+        <div className="flex gap-4 rounded-2xl border border-transparent bg-gray-50 p-3 dark:bg-slate-800/50">
+          <div className="flex min-w-[50px] flex-col items-center justify-center">
+            <span className="text-sm font-semibold text-gray-500 dark:text-slate-400">
+              13:00
+            </span>
           </div>
-          <div className="flex-1 border-l-2 border-gray-300 dark:border-slate-600 pl-4">
-            <h4 className="font-bold text-gray-700 dark:text-slate-200">{t.chemistry}</h4>
-            <div className="flex items-center text-xs text-gray-400 dark:text-slate-500 mt-1">
-              <MapPin className="w-3 h-3 mr-1" />
+          <div className="flex-1 border-l-2 border-gray-300 pl-4 dark:border-slate-600">
+            <h4 className="font-bold text-gray-700 dark:text-slate-200">
+              {t.chemistry}
+            </h4>
+            <div className="mt-1 flex items-center text-xs text-gray-400 dark:text-slate-500">
+              <MapPin className="mr-1 h-3 w-3" />
               {t.lab} 2
             </div>
           </div>

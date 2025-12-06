@@ -1,8 +1,18 @@
 "use client";
 
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { Activity } from "lucide-react";
+import dynamic from "next/dynamic";
+
+// Lazy load Recharts to reduce initial bundle size
+const PerformanceChart = dynamic(() => import("./PerformanceChart"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center">
+      <div className="h-32 w-32 animate-pulse rounded-full bg-slate-100 dark:bg-slate-800" />
+    </div>
+  ),
+});
 
 interface PerformanceCardProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -72,40 +82,13 @@ const PerformanceCard: React.FC<PerformanceCardProps> = ({ dictionary }) => {
           {shouldRenderChart &&
             containerSize.width > 0 &&
             containerSize.height > 0 && (
-              <ResponsiveContainer
+              <PerformanceChart
+                data={data}
+                colors={COLORS}
+                darkColors={DARK_COLORS}
                 width={containerSize.width}
                 height={containerSize.height}
-                debounce={50}
-              >
-                <PieChart>
-                  <Pie
-                    data={data}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    startAngle={90}
-                    endAngle={-270}
-                    dataKey="value"
-                    stroke="none"
-                  >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                        className="dark:hidden"
-                      />
-                    ))}
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-dark-${index}`}
-                        fill={DARK_COLORS[index % DARK_COLORS.length]}
-                        className="hidden dark:block"
-                      />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+              />
             )}
           {/* Centered Percentage */}
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">

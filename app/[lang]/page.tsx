@@ -5,11 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import { DenikoLogo } from "@/components/ui/deniko-logo";
-import {
-  FadeIn,
-  StaggerContainer,
-  StaggerItem,
-} from "@/components/ui/scroll-animation";
+import { PerformanceTracker } from "@/components/performance-tracker";
 import {
   ArrowRight,
   Calendar,
@@ -31,13 +27,45 @@ import {
 } from "lucide-react";
 import type { CSSProperties } from "react";
 import { db } from "@/lib/db";
-import Carousel from "@/components/landing/carousel/Carousel";
-import ScheduleCard from "@/components/landing/carousel/cards/ScheduleCard";
-import ProfileCard from "@/components/landing/carousel/cards/ProfileCard";
-import PerformanceCard from "@/components/landing/carousel/cards/PerformanceCard";
-import AssignmentsCard from "@/components/landing/carousel/cards/AssignmentsCard";
-import MessagesCard from "@/components/landing/carousel/cards/MessagesCard";
+import dynamic from "next/dynamic";
 import type { CardItem } from "@/components/landing/carousel/types";
+
+// Dynamic imports for heavy components to reduce initial bundle size
+const ScheduleCard = dynamic(
+  () => import("@/components/landing/carousel/cards/ScheduleCard")
+);
+const ProfileCard = dynamic(
+  () => import("@/components/landing/carousel/cards/ProfileCard")
+);
+const PerformanceCard = dynamic(
+  () => import("@/components/landing/carousel/cards/PerformanceCard")
+);
+const AssignmentsCard = dynamic(
+  () => import("@/components/landing/carousel/cards/AssignmentsCard")
+);
+const MessagesCard = dynamic(
+  () => import("@/components/landing/carousel/cards/MessagesCard")
+);
+
+// Dynamic imports for animation components (Framer Motion)
+const FadeIn = dynamic(() =>
+  import("@/components/ui/scroll-animation").then((mod) => mod.FadeIn)
+);
+const StaggerContainer = dynamic(() =>
+  import("@/components/ui/scroll-animation").then((mod) => mod.StaggerContainer)
+);
+const StaggerItem = dynamic(() =>
+  import("@/components/ui/scroll-animation").then((mod) => mod.StaggerItem)
+);
+
+const Carousel = dynamic(
+  () => import("@/components/landing/carousel/Carousel"),
+  {
+    loading: () => (
+      <div className="h-[600px] w-full animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
+    ),
+  }
+);
 
 export async function generateMetadata({
   params,
@@ -54,6 +82,9 @@ export async function generateMetadata({
     description: isTr
       ? "Öğrenci takibi, ders programı ve ödeme takibini tek bir yerden yönetin. Deniko ile işinizi dijitalleştirin."
       : "Manage student tracking, lesson scheduling, and payments in one place. Digitalize your business with Deniko.",
+    alternates: {
+      canonical: `/${lang}`,
+    },
   };
 }
 
@@ -104,9 +135,10 @@ export default async function Home({
 
   return (
     <div className="animate-in fade-in flex min-h-dvh flex-col bg-white transition-colors duration-1000 dark:bg-slate-950">
+      <PerformanceTracker name="Homepage-Render" />
       <Navbar lang={lang} dictionary={dictionary} />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-b from-[#020617] via-[#020617] to-[#020617] py-16 md:py-24">
           <div className="relative z-10 container mx-auto px-4">
@@ -698,7 +730,7 @@ export default async function Home({
             <div className="space-y-6 md:col-span-5">
               <div className="flex items-center gap-2">
                 <DenikoLogo className="h-8 w-8 text-slate-400 dark:text-slate-500" />
-                <span className="text-2xl font-bold text-slate-400 dark:text-slate-500">
+                <span className="text-2xl font-bold text-slate-600 dark:text-slate-400">
                   Deniko
                 </span>
               </div>
@@ -711,6 +743,7 @@ export default async function Home({
                   href="https://github.com/Kinin-Code-Offical"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="My GitHub Profile"
                   className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 transition-colors hover:border-blue-200 hover:text-[#2062A3] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-blue-800 dark:hover:text-blue-400"
                 >
                   <svg
@@ -730,6 +763,7 @@ export default async function Home({
                   href="https://www.patreon.com/YamacGursel"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="My Patreon Profile"
                   className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 transition-colors hover:border-blue-200 hover:text-[#2062A3] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-blue-800 dark:hover:text-blue-400"
                 >
                   <svg
@@ -757,9 +791,9 @@ export default async function Home({
 
             {/* Platform Links */}
             <div className="md:col-span-3 md:col-start-7">
-              <h4 className="mb-6 font-bold text-slate-900 dark:text-white">
+              <h2 className="mb-6 text-base font-bold text-slate-900 dark:text-white">
                 {lang === "tr" ? "Platform" : "Platform"}
-              </h4>
+              </h2>
               <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
                 <li>
                   <Link
@@ -784,9 +818,9 @@ export default async function Home({
 
             {/* Legal Links */}
             <div className="md:col-span-3">
-              <h4 className="mb-6 font-bold text-slate-900 dark:text-white">
+              <h2 className="mb-6 text-base font-bold text-slate-900 dark:text-white">
                 {lang === "tr" ? "Yasal" : "Legal"}
-              </h4>
+              </h2>
               <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
                 <li>
                   <Link
@@ -839,7 +873,7 @@ export default async function Home({
                 : "© 2025 Deniko. All rights reserved."}
             </p>
             <div className="flex items-center gap-6">
-              <span className="text-xs text-slate-400 dark:text-slate-500">
+              <span className="text-xs text-slate-600 dark:text-slate-400">
                 {lang === "tr"
                   ? "Patent hakları Deniko'ya aittir."
                   : "Patent rights belong to Deniko."}

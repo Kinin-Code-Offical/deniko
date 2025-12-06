@@ -11,6 +11,7 @@ import {
   SheetContent,
   SheetTrigger,
   SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import { ArrowRight, BookOpen, LogIn, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -108,6 +109,9 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
                 className="flex w-[250px] flex-col overflow-y-auto border-l bg-white sm:w-[300px] dark:border-slate-800 dark:bg-slate-950"
               >
                 <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Mobile navigation menu
+                </SheetDescription>
                 <div className="flex flex-col gap-6 py-6">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-[#2062A3] p-1.5 dark:bg-blue-600">
@@ -155,7 +159,10 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
                       <span className="text-muted-foreground text-sm font-medium dark:text-slate-400">
                         {lang === "tr" ? "Dil" : "Language"}
                       </span>
-                      <LanguageSwitcher currentLocale={lang} />
+                      <LanguageSwitcher
+                        currentLocale={lang}
+                        onSelect={() => setOpen(false)}
+                      />
                     </div>
                   </div>
 

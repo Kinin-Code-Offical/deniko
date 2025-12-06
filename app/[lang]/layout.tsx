@@ -14,5 +14,5 @@ export default async function LangLayout({
   if (!i18n.locales.includes(lang as Locale)) {
     notFound();
   }
-  return <>{children}</>;
+  return <main id="main-content">{children}</main>;
 }

@@ -1,11 +1,34 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { TeacherView } from "@/components/dashboard/teacher-view";
-import { StudentView } from "@/components/dashboard/student-view";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+const TeacherView = dynamic(
+  () =>
+    import("@/components/dashboard/teacher-view").then(
+      (mod) => mod.TeacherView
+    ),
+  {
+    loading: () => (
+      <div className="h-96 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
+    ),
+  }
+);
+
+const StudentView = dynamic(
+  () =>
+    import("@/components/dashboard/student-view").then(
+      (mod) => mod.StudentView
+    ),
+  {
+    loading: () => (
+      <div className="h-96 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
+    ),
+  }
+);
 
 export async function generateMetadata({
   params,

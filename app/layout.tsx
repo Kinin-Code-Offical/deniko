@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/components/providers";
 import { CookieConsent } from "@/components/ui/cookie-consent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { headers } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,12 +27,11 @@ export const metadata: Metadata = {
     "Deniko ile özel ders süreçlerinizi profesyonelce yönetin. Öğrenci takibi, ders programlama, finansal yönetim ve veli bilgilendirme sistemleriyle eğitimde dijital dönüşümü yakalayın.",
   metadataBase: new URL("https://deniko.net"),
   alternates: {
-    canonical: "/",
+    canonical: "./",
   },
   openGraph: {
     title: "Deniko | Profesyonel Özel Ders Yönetimi",
     description: "Deniko ile özel ders süreçlerinizi profesyonelce yönetin.",
-    url: "https://deniko.net",
     siteName: "Deniko",
     images: [
       {
@@ -49,6 +49,15 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     capable: true,
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
+    other: {
+      rel: "apple-touch-icon-precomposed",
+      url: "/apple-icon.png",
+    },
+  },
   manifest: "/site.webmanifest",
 };
 
@@ -64,22 +73,39 @@ const jsonLd = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 }>) {
+  const { lang } = (await params) || {};
+  const nonce = (await headers()).get("x-nonce") || undefined;
+
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang={lang || "tr"} suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased`}
       >
-        <GoogleAnalytics />
+        <a
+          href="#main-content"
+          className="focus:bg-background focus:text-foreground sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4"
+        >
+          Ana içeriğe atla
+        </a>
+        <GoogleAnalytics nonce={nonce} />
         <script
+          id="organization-schema"
           type="application/ld+json"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          nonce={nonce}
         />
-        <Providers>{children}</Providers>
+        <Providers nonce={nonce}>{children}</Providers>
         <CookieConsent />
         <Toaster />
       </body>

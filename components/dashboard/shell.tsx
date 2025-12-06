@@ -10,6 +10,7 @@ import {
   SheetContent,
   SheetTrigger,
   SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import { UserNav } from "@/components/dashboard/user-nav";
 import { Menu, type LucideIcon } from "lucide-react";
@@ -111,6 +112,9 @@ export function DashboardShell({
                 className="w-64 p-0 dark:border-slate-800 dark:bg-slate-900"
               >
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Dashboard navigation menu
+                </SheetDescription>
                 <div className="flex h-16 items-center border-b px-6 dark:border-slate-800">
                   <div className="flex items-center gap-2 text-xl font-bold text-[#2062A3] dark:text-blue-400">
                     <DenikoLogo className="h-6 w-6" />
@@ -140,7 +144,9 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="flex-1 p-4 md:p-8">{children}</main>
+        <main id="main-content" className="flex-1 p-4 md:p-8">
+          {children}
+        </main>
       </div>
     </div>
   );

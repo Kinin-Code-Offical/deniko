@@ -15,6 +15,7 @@ const attachSecurityHeaders = (response: NextResponse) => {
     response.headers.set('X-Content-Type-Options', 'nosniff')
     response.headers.set('X-Frame-Options', 'DENY')
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
 
     if (isProd) {
         response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
@@ -83,6 +84,42 @@ export default function proxy(request: NextRequest) {
     const requestId = crypto.randomUUID()
     const clientIp = getClientIp(request)
 
+    // Generate Nonce for CSP
+    const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+    const isDev = env.NODE_ENV === 'development'
+
+    // Construct CSP Header
+    // Note: 'strict-dynamic' allows scripts loaded by trusted scripts (like Next.js) to run.
+    // We keep 'unsafe-inline' for backward compatibility (ignored by browsers supporting nonce).
+    const cspHeader = `
+        default-src 'self';
+        script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""};
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' blob: data: https://*.googleusercontent.com https://storage.googleapis.com https://api.dicebear.com https://www.google-analytics.com;
+        connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com;
+        font-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+        frame-ancestors 'none';
+        upgrade-insecure-requests;
+    `.replace(/\s{2,}/g, ' ').trim()
+
+    // Set nonce in request headers for Next.js to use
+    const requestHeaders = new Headers(headers)
+    requestHeaders.set('x-nonce', nonce)
+    requestHeaders.set('Content-Security-Policy', cspHeader)
+
+    // Force HTTPS in production
+    if (isProd) {
+        const proto = headers.get("x-forwarded-proto")
+        if (proto && proto === "http") {
+            const httpsUrl = new URL(url)
+            httpsUrl.protocol = "https:"
+            return NextResponse.redirect(httpsUrl, 301)
+        }
+    }
+
     if (isRateLimited(clientIp)) {
         const limitedResponse = attachSecurityHeaders(
             NextResponse.json(
@@ -99,6 +136,7 @@ export default function proxy(request: NextRequest) {
             'Retry-After',
             String(RATE_LIMIT_WINDOW_MS / 1000)
         )
+        limitedResponse.headers.set('Content-Security-Policy', cspHeader)
         return limitedResponse
     }
 
@@ -135,6 +173,7 @@ export default function proxy(request: NextRequest) {
         const response = attachSecurityHeaders(NextResponse.redirect(newUrl))
 
         response.headers.set('x-request-id', requestId)
+        response.headers.set('Content-Security-Policy', cspHeader)
 
         if (locale && cookies.get('NEXT_LOCALE')?.value !== locale) {
             syncLocaleCookie(response, locale)
@@ -149,9 +188,15 @@ export default function proxy(request: NextRequest) {
         )
 
         if (localeInPath) {
-            const response = attachSecurityHeaders(NextResponse.next())
+            // Pass request headers (with nonce) to next()
+            const response = attachSecurityHeaders(NextResponse.next({
+                request: {
+                    headers: requestHeaders,
+                },
+            }))
 
             response.headers.set('x-request-id', requestId)
+            response.headers.set('Content-Security-Policy', cspHeader)
 
             if (cookies.get('NEXT_LOCALE')?.value !== localeInPath) {
                 syncLocaleCookie(response, localeInPath)
@@ -161,8 +206,13 @@ export default function proxy(request: NextRequest) {
         }
     }
 
-    const fallbackResponse = attachSecurityHeaders(NextResponse.next())
+    const fallbackResponse = attachSecurityHeaders(NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    }))
     fallbackResponse.headers.set('x-request-id', requestId)
+    fallbackResponse.headers.set('Content-Security-Policy', cspHeader)
     return fallbackResponse
 }
 

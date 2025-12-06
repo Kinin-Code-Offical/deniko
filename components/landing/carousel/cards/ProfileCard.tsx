@@ -34,9 +34,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ dictionary }) => {
           <p className="mb-1 text-xs font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
             {t.attendance}
           </p>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+          <div className="text-4xl font-bold text-gray-900 dark:text-white">
             94%
-          </h1>
+          </div>
         </div>
         <div className="mb-1 rounded-full bg-blue-50 p-3 dark:bg-blue-900/10">
           <TrendingUp className="h-6 w-6 text-blue-500 dark:text-blue-400" />
