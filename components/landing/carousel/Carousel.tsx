@@ -398,11 +398,16 @@ const Carousel: React.FC<CarouselProps> = ({ items, dictionary }) => {
                 {/* Flipper Container */}
                 <div
                   className={`preserve-3d relative h-full w-full duration-700 will-change-transform ${isActive && isFlipped ? "rotate-y-180" : ""}`}
+                  style={{ transformStyle: "preserve-3d" }}
                 >
                   {/* Front Face - Added bg-white to wrapper to prevent z-fighting/visibility issues */}
                   <div
                     className={`absolute inset-0 overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-300 backface-hidden dark:bg-slate-900 ${isActive ? "" : "hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.3)]"}`}
-                    style={{ transform: "translateZ(1px)" }}
+                    style={{
+                      transform: "translateZ(1px)",
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                    }}
                   >
                     {/* Block interaction on front face if not active to allow zoom click */}
                     <div
@@ -415,7 +420,11 @@ const Carousel: React.FC<CarouselProps> = ({ items, dictionary }) => {
                   {/* Back Face */}
                   <div
                     className="absolute inset-0 overflow-hidden rounded-3xl bg-slate-800 shadow-2xl backface-hidden dark:bg-slate-900"
-                    style={{ transform: "rotateY(180deg) translateZ(1px)" }}
+                    style={{
+                      transform: "rotateY(180deg) translateZ(1px)",
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                    }}
                   >
                     {renderCardBack(item)}
                   </div>

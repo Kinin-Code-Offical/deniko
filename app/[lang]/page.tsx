@@ -75,15 +75,26 @@ export async function generateMetadata({
   const { lang } = await params;
   const isTr = lang === "tr";
 
+  const title = isTr
+    ? "Özel Ders Yönetim Platformu"
+    : "Private Tutoring Management Platform";
+
+  const description = isTr
+    ? "Öğrenci takibi, ders programı ve ödeme takibini tek bir yerden yönetin. Deniko ile işinizi dijitalleştirin."
+    : "Manage student tracking, lesson scheduling, and payments in one place. Digitalize your business with Deniko.";
+
   return {
-    title: isTr
-      ? "Deniko | Özel Ders Yönetim Platformu"
-      : "Deniko | Private Tutoring Management Platform",
-    description: isTr
-      ? "Öğrenci takibi, ders programı ve ödeme takibini tek bir yerden yönetin. Deniko ile işinizi dijitalleştirin."
-      : "Manage student tracking, lesson scheduling, and payments in one place. Digitalize your business with Deniko.",
+    title,
+    description,
     alternates: {
       canonical: `/${lang}`,
+    },
+    openGraph: {
+      title: `${title} | Deniko`,
+      description,
+      url: `https://deniko.net/${lang}`,
+      locale: isTr ? "tr_TR" : "en_US",
+      type: "website",
     },
   };
 }
@@ -414,13 +425,13 @@ export default async function Home({
           <div className="container mx-auto px-4">
             <div className="mb-16 flex flex-col items-center gap-12 lg:flex-row">
               <FadeIn className="flex flex-1 flex-col items-center justify-center text-center lg:items-center lg:text-center">
-                <p className="mb-4 text-sm font-semibold tracking-[0.25em] text-[#2062A3]/80 uppercase dark:text-blue-400">
+                <p className="mb-4 text-sm font-semibold tracking-[0.25em] text-[#1d4f87] uppercase dark:text-blue-300">
                   {dictionary.home.features.badge}
                 </p>
                 <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl dark:text-white">
                   {dictionary.home.features.title}
                 </h2>
-                <p className="max-w-xl leading-relaxed text-gray-600 dark:text-slate-400">
+                <p className="max-w-xl leading-relaxed text-slate-700 dark:text-slate-200">
                   {dictionary.home.features.subtitle}
                 </p>
                 <div className="group relative mt-8 flex h-[600px] w-full items-center justify-center lg:mt-12 lg:h-[700px]">

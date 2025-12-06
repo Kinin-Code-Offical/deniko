@@ -13,11 +13,18 @@ export async function generateMetadata({
   const { lang } = await params;
   const isTr = lang === "tr";
 
+  const title = isTr ? "Çerez Politikası" : "Cookie Policy";
+  const description = isTr
+    ? "Deniko Çerez Politikası ve çerez kullanım detayları."
+    : "Deniko Cookie Policy and cookie usage details.";
+
   return {
-    title: isTr ? "Çerez Politikası | Deniko" : "Cookie Policy | Deniko",
-    description: isTr
-      ? "Deniko Çerez Politikası ve çerez kullanım detayları."
-      : "Deniko Cookie Policy and cookie usage details.",
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Deniko`,
+      description,
+    },
   };
 }
 

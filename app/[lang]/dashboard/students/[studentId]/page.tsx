@@ -26,17 +26,59 @@ interface StudentPageProps {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Locale }>;
+  params: Promise<{ lang: Locale; studentId: string }>;
 }): Promise<Metadata> {
-  const { lang } = await params;
+  const { lang, studentId } = await params;
   const isTr = lang === "tr";
 
-  return {
-    title: isTr ? "Öğrenci Detayı | Deniko" : "Student Detail | Deniko",
-    description: isTr
-      ? "Öğrenci detayları ve ilerleme durumu."
-      : "Student details and progress.",
-  };
+  try {
+    const student = await db.studentProfile.findUnique({
+      where: { id: studentId },
+      select: {
+        tempFirstName: true,
+        tempLastName: true,
+        isClaimed: true,
+        user: {
+          select: { name: true },
+        },
+      },
+    });
+
+    let studentName = isTr ? "Öğrenci" : "Student";
+
+    if (student) {
+      if (student.isClaimed && student.user?.name) {
+        studentName = student.user.name;
+      } else {
+        const tempName = `${student.tempFirstName || ""} ${
+          student.tempLastName || ""
+        }`.trim();
+        if (tempName) studentName = tempName;
+      }
+    }
+
+    const title = isTr
+      ? `${studentName} - Öğrenci Detayı`
+      : `${studentName} - Student Detail`;
+
+    const description = isTr
+      ? `${studentName} isimli öğrencinin detayları, ders programı ve ödeme geçmişi.`
+      : `Details, schedule and payment history for ${studentName}.`;
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title: `${title} | Deniko`,
+        description,
+      },
+    };
+  } catch {
+    return {
+      title: isTr ? "Öğrenci Detayı" : "Student Detail",
+      description: isTr ? "Öğrenci detayları." : "Student details.",
+    };
+  }
 }
 
 export default async function StudentPage({ params }: StudentPageProps) {
@@ -58,29 +100,34 @@ export default async function StudentPage({ params }: StudentPageProps) {
   }
 
   // Fetch Student Relation
-  const relation = await db.studentTeacherRelation.findUnique({
-    where: {
-      teacherId_studentId: {
-        teacherId: user.teacherProfile.id,
-        studentId: studentId,
+  let relation;
+  try {
+    relation = await db.studentTeacherRelation.findUnique({
+      where: {
+        teacherId_studentId: {
+          teacherId: user.teacherProfile.id,
+          studentId: studentId,
+        },
       },
-    },
-    include: {
-      student: {
-        include: {
-          user: true,
-          lessons: {
-            orderBy: { startTime: "desc" },
-            take: 5,
-          },
-          payments: {
-            orderBy: { date: "desc" },
-            take: 5,
+      include: {
+        student: {
+          include: {
+            user: true,
+            lessons: {
+              orderBy: { startTime: "desc" },
+              take: 5,
+            },
+            payments: {
+              orderBy: { date: "desc" },
+              take: 5,
+            },
           },
         },
       },
-    },
-  });
+    });
+  } catch {
+    notFound();
+  }
 
   if (!relation || relation.status === "ARCHIVED") {
     notFound();

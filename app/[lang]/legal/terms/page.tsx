@@ -13,11 +13,18 @@ export async function generateMetadata({
   const { lang } = await params;
   const isTr = lang === "tr";
 
+  const title = isTr ? "Kullanıcı Sözleşmesi" : "Terms of Service";
+  const description = isTr
+    ? "Deniko Kullanıcı Sözleşmesi ve hizmet şartları."
+    : "Deniko Terms of Service and conditions of use.";
+
   return {
-    title: isTr ? "Kullanıcı Sözleşmesi | Deniko" : "Terms of Service | Deniko",
-    description: isTr
-      ? "Deniko Kullanıcı Sözleşmesi ve hizmet şartları."
-      : "Deniko Terms of Service and conditions of use.",
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Deniko`,
+      description,
+    },
   };
 }
 

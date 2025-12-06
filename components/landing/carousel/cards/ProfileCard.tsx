@@ -21,7 +21,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ dictionary }) => {
             <h2 className="text-lg font-bold text-gray-800 dark:text-white">
               {t.graphic_profile}
             </h2>
-            <p className="text-xs text-gray-500 dark:text-slate-400">
+            <p className="text-xs text-slate-700 dark:text-slate-200">
               {t.graphic_performance}
             </p>
           </div>
@@ -31,7 +31,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ dictionary }) => {
       {/* Main Stat */}
       <div className="z-10 mb-8 flex items-end justify-between">
         <div>
-          <p className="mb-1 text-xs font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
+          <p className="mb-1 text-xs font-bold tracking-widest text-slate-700 uppercase dark:text-slate-200">
             {t.attendance}
           </p>
           <div className="text-4xl font-bold text-gray-900 dark:text-white">
@@ -46,7 +46,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ dictionary }) => {
       {/* Sub Stats */}
       <div className="z-10 space-y-3">
         <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-3 dark:border-slate-700 dark:bg-slate-800">
-          <span className="text-xs font-semibold tracking-widest text-gray-400 uppercase dark:text-slate-500">
+          <span className="text-xs font-semibold tracking-widest text-slate-700 uppercase dark:text-slate-200">
             {t.students}
           </span>
           <span className="text-lg font-bold text-gray-800 dark:text-white">
@@ -54,7 +54,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ dictionary }) => {
           </span>
         </div>
         <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-3 dark:border-slate-700 dark:bg-slate-800">
-          <span className="text-xs font-semibold tracking-widest text-gray-400 uppercase dark:text-slate-500">
+          <span className="text-xs font-semibold tracking-widest text-slate-700 uppercase dark:text-slate-200">
             {t.classes_today}
           </span>
           <span className="text-lg font-bold text-gray-800 dark:text-white">
@@ -62,7 +62,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ dictionary }) => {
           </span>
         </div>
         <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-3 dark:border-slate-700 dark:bg-slate-800">
-          <span className="text-xs font-semibold tracking-widest text-gray-400 uppercase dark:text-slate-500">
+          <span className="text-xs font-semibold tracking-widest text-slate-700 uppercase dark:text-slate-200">
             {t.completed}
           </span>
           <span className="text-lg font-bold text-gray-800 dark:text-white">

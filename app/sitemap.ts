@@ -3,7 +3,9 @@ import type { MetadataRoute } from "next";
 const baseUrl = "https://deniko.net";
 const locales = ["tr", "en"];
 
-// Public routes that should be indexed
+// Public routes that should be indexed.
+// We explicitly exclude authenticated routes (e.g., /dashboard, /admin, /onboarding)
+// to prevent 401/404 errors in search console.
 const routes = [
     "", // Home
     "/login",
@@ -28,14 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
                 priority: route === "" ? 1.0 : 0.8,
             });
         });
-    });
-
-    // Add root URL (assuming middleware redirects to default locale)
-    sitemapEntries.push({
-        url: baseUrl,
-        lastModified: new Date(),
-        changeFrequency: "daily",
-        priority: 1.0,
     });
 
     return sitemapEntries;

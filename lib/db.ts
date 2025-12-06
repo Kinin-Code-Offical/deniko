@@ -20,7 +20,7 @@ export const db =
       max: 10,
     };
 
-    if (env.INSTANCE_CONNECTION_NAME) {
+    if (env.INSTANCE_CONNECTION_NAME && env.NODE_ENV === "production") {
       dbConfig.host = `/cloudsql/${env.INSTANCE_CONNECTION_NAME}`;
       console.log(`[DB] Connecting via Unix Socket: ${dbConfig.host}`);
     } else {

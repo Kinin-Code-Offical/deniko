@@ -14,7 +14,7 @@ const MessagesCard: React.FC<MessagesCardProps> = ({ dictionary }) => {
       {/* Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <div className="mb-1 text-xs font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
+          <div className="mb-1 text-xs font-bold tracking-widest text-slate-700 uppercase dark:text-slate-200">
             {t.announcements}
           </div>
           <h2 className="text-xl font-bold text-gray-800 dark:text-white">
@@ -36,10 +36,10 @@ const MessagesCard: React.FC<MessagesCardProps> = ({ dictionary }) => {
             <h3 className="mb-1 text-sm font-bold text-gray-800 dark:text-white">
               {t.announcement_exam_title}
             </h3>
-            <p className="text-xs leading-relaxed text-gray-600 dark:text-slate-300">
+            <p className="text-xs leading-relaxed text-slate-800 dark:text-slate-100">
               {t.announcement_exam_desc}
             </p>
-            <span className="mt-2 block text-[10px] text-gray-400 dark:text-slate-500">
+            <span className="mt-2 block text-[10px] text-slate-700 dark:text-slate-200">
               {t.time_ago["10_min"]}
             </span>
           </div>
@@ -53,10 +53,10 @@ const MessagesCard: React.FC<MessagesCardProps> = ({ dictionary }) => {
             <h4 className="mb-1 text-sm font-bold text-gray-800 dark:text-white">
               {t.announcement_match_title}
             </h4>
-            <p className="text-xs leading-relaxed text-gray-600 dark:text-slate-300">
+            <p className="text-xs leading-relaxed text-slate-800 dark:text-slate-100">
               {t.announcement_match_desc}
             </p>
-            <span className="mt-2 block text-[10px] text-gray-400 dark:text-slate-500">
+            <span className="mt-2 block text-[10px] text-slate-700 dark:text-slate-200">
               {t.time_ago["2_hours"]}
             </span>
           </div>

@@ -14,7 +14,7 @@ const AssignmentsCard: React.FC<AssignmentsCardProps> = ({ dictionary }) => {
       {/* Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <div className="mb-1 text-xs font-bold tracking-widest text-gray-400 uppercase dark:text-slate-500">
+          <div className="mb-1 text-xs font-bold tracking-widest text-slate-700 uppercase dark:text-slate-200">
             {t.assignments}
           </div>
           <h2 className="text-xl font-bold text-gray-800 dark:text-white">
@@ -39,7 +39,7 @@ const AssignmentsCard: React.FC<AssignmentsCardProps> = ({ dictionary }) => {
           <h3 className="mb-1 font-bold text-gray-800 dark:text-white">
             {t.assignment_math_title}
           </h3>
-          <p className="text-xs text-gray-500 dark:text-slate-400">
+          <p className="text-xs text-slate-700 dark:text-slate-200">
             {t.due_tomorrow}
           </p>
         </div>
@@ -47,15 +47,15 @@ const AssignmentsCard: React.FC<AssignmentsCardProps> = ({ dictionary }) => {
         {/* Item 2 */}
         <div className="rounded-2xl border-2 border-slate-100 bg-white p-4 transition-colors hover:border-purple-200 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-purple-900/50">
           <div className="mb-2 flex items-start justify-between">
-            <span className="rounded-full bg-gray-100 px-2 py-1 text-[10px] font-bold tracking-wide text-gray-500 uppercase dark:bg-slate-700 dark:text-slate-300">
+            <span className="rounded-full bg-gray-100 px-2 py-1 text-[10px] font-bold tracking-wide text-slate-800 uppercase dark:bg-slate-700 dark:text-slate-100">
               {t.physics}
             </span>
             <CheckCircle2 className="h-4 w-4 text-gray-300 dark:text-slate-600" />
           </div>
-          <h4 className="mb-1 font-bold text-gray-700 dark:text-slate-200">
+          <h4 className="mb-1 font-bold text-gray-900 dark:text-white">
             {t.assignment_physics_title}
           </h4>
-          <p className="text-xs text-gray-400 dark:text-slate-500">
+          <p className="text-xs text-slate-700 dark:text-slate-200">
             {t.due_3days}
           </p>
         </div>
@@ -63,15 +63,15 @@ const AssignmentsCard: React.FC<AssignmentsCardProps> = ({ dictionary }) => {
         {/* Item 3 */}
         <div className="rounded-2xl border-2 border-slate-100 bg-white p-4 transition-colors hover:border-purple-200 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-purple-900/50">
           <div className="mb-2 flex items-start justify-between">
-            <span className="rounded-full bg-gray-100 px-2 py-1 text-[10px] font-bold tracking-wide text-gray-500 uppercase dark:bg-slate-700 dark:text-slate-300">
+            <span className="rounded-full bg-gray-100 px-2 py-1 text-[10px] font-bold tracking-wide text-slate-800 uppercase dark:bg-slate-700 dark:text-slate-100">
               {t.literature}
             </span>
             <CheckCircle2 className="h-4 w-4 text-gray-300 dark:text-slate-600" />
           </div>
-          <h4 className="mb-1 font-bold text-gray-700 dark:text-slate-200">
+          <h4 className="mb-1 font-bold text-gray-900 dark:text-white">
             {t.assignment_lit_title}
           </h4>
-          <p className="text-xs text-gray-400 dark:text-slate-500">
+          <p className="text-xs text-slate-700 dark:text-slate-200">
             {t.completed}
           </p>
         </div>

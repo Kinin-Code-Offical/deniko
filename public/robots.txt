@@ -7,7 +7,6 @@ Disallow: /onboarding/
 Disallow: /verify/
 Disallow: /reset-password/
 Disallow: /api/
-
-Sitemap: https://deniko.net/sitemap.xml
+Disallow: /cdn-cgi/
 
 Sitemap: https://deniko.net/sitemap.xml

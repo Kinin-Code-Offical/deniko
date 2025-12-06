@@ -11,11 +11,15 @@ const RATE_LIMIT_WINDOW_MS = 60_000
 const RATE_LIMIT_MAX_REQUESTS = 120
 const rateLimitBuckets = new Map<string, { count: number; resetAt: number }>()
 
-const attachSecurityHeaders = (response: NextResponse) => {
+const attachSecurityHeaders = (response: NextResponse, pathname: string) => {
     response.headers.set('X-Content-Type-Options', 'nosniff')
     response.headers.set('X-Frame-Options', 'DENY')
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
     response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
+
+    // Canonical Header
+    const canonicalUrl = `https://deniko.net${pathname}`
+    response.headers.set('Link', `<${canonicalUrl}>; rel="canonical"`)
 
     if (isProd) {
         response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
@@ -83,7 +87,16 @@ export default function proxy(request: NextRequest) {
     const { pathname, search } = nextUrl
     const requestId = crypto.randomUUID()
     const clientIp = getClientIp(request)
-    const protoHeader = headers.get("x-forwarded-proto")
+
+    // 1. Force HTTPS & WWW -> non-WWW Redirect
+    const host = headers.get("host") || nextUrl.hostname
+    const proto = headers.get("x-forwarded-proto") || nextUrl.protocol.replace(":", "")
+
+    if (host.startsWith("www.") || (isProd && proto === "http")) {
+        const newHost = host.replace("www.", "")
+        const newUrl = `https://${newHost}${pathname}${search}`
+        return NextResponse.redirect(new URL(newUrl), 301)
+    }
 
     // Generate Nonce for CSP
     const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
@@ -119,7 +132,8 @@ export default function proxy(request: NextRequest) {
                     message: 'Rate limit exceeded. Please slow down.',
                 },
                 { status: 429 }
-            )
+            ),
+            pathname
         )
 
         limitedResponse.headers.set('x-request-id', requestId)
@@ -158,14 +172,13 @@ export default function proxy(request: NextRequest) {
             url
         )
 
-        if (isProd && protoHeader === "http") {
+        if (isProd && proto === "http") {
             newUrl.protocol = "https:"
         }
-
         // Preserve query parameters
         newUrl.search = search
 
-        const response = attachSecurityHeaders(NextResponse.redirect(newUrl))
+        const response = attachSecurityHeaders(NextResponse.redirect(newUrl), pathname)
 
         response.headers.set('x-request-id', requestId)
         response.headers.set('Content-Security-Policy', cspHeader)
@@ -183,22 +196,24 @@ export default function proxy(request: NextRequest) {
         )
 
         if (localeInPath) {
-            if (isProd && protoHeader === "http") {
+            if (isProd && proto === "http") {
                 const httpsUrl = new URL(url)
                 httpsUrl.protocol = "https:"
                 const secureResponse = attachSecurityHeaders(
-                    NextResponse.redirect(httpsUrl, 301)
+                    NextResponse.redirect(httpsUrl, 301),
+                    pathname
                 )
                 secureResponse.headers.set('x-request-id', requestId)
                 secureResponse.headers.set('Content-Security-Policy', cspHeader)
                 return secureResponse
             }
+
             // Pass request headers (with nonce) to next()
             const response = attachSecurityHeaders(NextResponse.next({
                 request: {
                     headers: requestHeaders,
                 },
-            }))
+            }), pathname)
 
             response.headers.set('x-request-id', requestId)
             response.headers.set('Content-Security-Policy', cspHeader)
@@ -209,25 +224,25 @@ export default function proxy(request: NextRequest) {
 
             return response
         }
-    }
+        if (isProd && proto === "http") {
+            const httpsUrl = new URL(url)
+            httpsUrl.protocol = "https:"
+            const secureFallback = attachSecurityHeaders(NextResponse.redirect(httpsUrl, 301), pathname)
+            secureFallback.headers.set('x-request-id', requestId)
+            secureFallback.headers.set('Content-Security-Policy', cspHeader)
+            return secureFallback
+        }
 
-    if (isProd && protoHeader === "http") {
-        const httpsUrl = new URL(url)
-        httpsUrl.protocol = "https:"
-        const secureFallback = attachSecurityHeaders(NextResponse.redirect(httpsUrl, 301))
-        secureFallback.headers.set('x-request-id', requestId)
-        secureFallback.headers.set('Content-Security-Policy', cspHeader)
-        return secureFallback
-    }
+        const fallbackResponse = attachSecurityHeaders(NextResponse.next({
+            request: {
+                headers: requestHeaders,
+            },
+        }), pathname)
 
-    const fallbackResponse = attachSecurityHeaders(NextResponse.next({
-        request: {
-            headers: requestHeaders,
-        },
-    }))
-    fallbackResponse.headers.set('x-request-id', requestId)
-    fallbackResponse.headers.set('Content-Security-Policy', cspHeader)
-    return fallbackResponse
+        fallbackResponse.headers.set('x-request-id', requestId)
+        fallbackResponse.headers.set('Content-Security-Policy', cspHeader)
+        return fallbackResponse
+    }
 }
 
 export const config = {

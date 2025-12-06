@@ -13,13 +13,18 @@ export async function generateMetadata({
   const { lang } = await params;
   const isTr = lang === "tr";
 
+  const title = isTr ? "KVKK Aydınlatma Metni" : "KVKK Clarification Text";
+  const description = isTr
+    ? "Kişisel Verilerin Korunması Kanunu kapsamında aydınlatma metni."
+    : "Clarification text within the scope of the Law on Protection of Personal Data.";
+
   return {
-    title: isTr
-      ? "KVKK Aydınlatma Metni | Deniko"
-      : "KVKK Clarification Text | Deniko",
-    description: isTr
-      ? "Kişisel Verilerin Korunması Kanunu kapsamında aydınlatma metni."
-      : "Clarification text within the scope of the Law on Protection of Personal Data.",
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Deniko`,
+      description,
+    },
   };
 }
 

@@ -7,7 +7,16 @@ const bundleAnalyzer = withBundleAnalyzer({
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  productionBrowserSourceMaps: true,
+  compress: true,
+  productionBrowserSourceMaps: false,
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "date-fns",
+      "recharts",
+      "framer-motion",
+    ],
+  },
   // 👇 BU KISIM HAYATİ ÖNEM TAŞIYOR.
   // Bu ayar olmadan bcryptjs ve storage kütüphaneleri derlenirken patlar.
   serverExternalPackages: [

@@ -64,10 +64,10 @@ const PerformanceCard: React.FC<PerformanceCardProps> = ({ dictionary }) => {
       {/* Header */}
       <div className="mb-2 flex items-start justify-between">
         <div>
-          <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">
             {t.class_average}
           </h2>
-          <p className="text-xs text-gray-500 dark:text-slate-400">
+          <p className="text-xs text-slate-700 dark:text-slate-200">
             {t.overview}
           </p>
         </div>
@@ -95,7 +95,7 @@ const PerformanceCard: React.FC<PerformanceCardProps> = ({ dictionary }) => {
             <span className="text-3xl font-bold text-green-600 dark:text-green-400">
               68%
             </span>
-            <span className="text-xs font-medium text-gray-400 dark:text-slate-500">
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
               {t.success}
             </span>
           </div>
@@ -107,20 +107,20 @@ const PerformanceCard: React.FC<PerformanceCardProps> = ({ dictionary }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-2 w-8 rounded-full bg-green-500"></div>
-            <span className="text-sm font-semibold text-gray-600 dark:text-slate-300">
+            <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
               {t.completed}
             </span>
           </div>
-          <span className="font-bold text-gray-800 dark:text-white">68</span>
+          <span className="font-bold text-gray-900 dark:text-white">68</span>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-2 w-8 rounded-full bg-gray-200 dark:bg-slate-700"></div>
-            <span className="text-sm font-semibold text-gray-600 dark:text-slate-300">
+            <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
               {t.pending}
             </span>
           </div>
-          <span className="font-bold text-gray-800 dark:text-white">12</span>
+          <span className="font-bold text-gray-900 dark:text-white">12</span>
         </div>
       </div>
     </div>

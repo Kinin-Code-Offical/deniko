@@ -36,13 +36,30 @@ export async function generateMetadata({
   params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
+  const session = await auth();
   const isTr = lang === "tr";
+  const role = session?.user?.role;
+
+  const title =
+    role === "STUDENT"
+      ? isTr
+        ? `Öğrenci Paneli - ${session?.user?.name || "Öğrenci"}`
+        : `Student Dashboard - ${session?.user?.name || "Student"}`
+      : isTr
+        ? `Öğretmen Paneli - ${session?.user?.name || "Öğretmen"}`
+        : `Teacher Dashboard - ${session?.user?.name || "Teacher"}`;
+
+  const description = isTr
+    ? "Deniko yönetim paneli ile tüm süreçlerinizi kontrol edin."
+    : "Control all your processes with Deniko management dashboard.";
 
   return {
-    title: isTr ? "Panel | Deniko" : "Dashboard | Deniko",
-    description: isTr
-      ? "Deniko yönetim paneli ile tüm süreçlerinizi kontrol edin."
-      : "Control all your processes with Deniko management dashboard.",
+    title, // Template in layout.tsx will add "| Deniko"
+    description,
+    openGraph: {
+      title: `${title} | Deniko`,
+      description,
+    },
   };
 }
 

@@ -13,11 +13,18 @@ export async function generateMetadata({
   const { lang } = await params;
   const isTr = lang === "tr";
 
+  const title = isTr ? "Gizlilik Politikası" : "Privacy Policy";
+  const description = isTr
+    ? "Deniko Gizlilik Politikası ve veri işleme süreçleri hakkında bilgi alın."
+    : "Learn about Deniko Privacy Policy and data processing procedures.";
+
   return {
-    title: isTr ? "Gizlilik Politikası | Deniko" : "Privacy Policy | Deniko",
-    description: isTr
-      ? "Deniko Gizlilik Politikası ve veri işleme süreçleri hakkında bilgi alın."
-      : "Learn about Deniko Privacy Policy and data processing procedures.",
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Deniko`,
+      description,
+    },
   };
 }
 
