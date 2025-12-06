@@ -237,7 +237,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                     <Input
                       placeholder="ornek@email.com"
                       type="email"
-                      autoComplete="email"
+                      autoComplete="username"
                       {...field}
                       className="h-11"
                     />
