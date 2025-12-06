@@ -100,7 +100,7 @@ export default function proxy(request: NextRequest) {
 
     // Generate Nonce for CSP
     const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
-    const isDev = env.NODE_ENV === 'development'
+    const isDev = process.env.NODE_ENV === 'development'
 
     // Construct CSP Header
     // Note: 'strict-dynamic' allows scripts loaded by trusted scripts (like Next.js) to run.
