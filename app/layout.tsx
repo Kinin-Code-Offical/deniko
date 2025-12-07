@@ -20,18 +20,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Deniko | Profesyonel Özel Ders Yönetimi",
+    default: "Deniko | Özel Ders Yönetim Platformu",
     template: "%s | Deniko",
   },
   description:
-    "Deniko ile özel ders süreçlerinizi profesyonelce yönetin. Öğrenci takibi, ders programlama, finansal yönetim ve veli bilgilendirme sistemleriyle eğitimde dijital dönüşümü yakalayın.",
-  metadataBase: new URL("https://deniko.net"),
+    "Deniko ile özel derslerinizi kolayca yönetin. Öğrenci takibi, ders programı ve veli bilgilendirme özellikleriyle eğitiminizi dijitalleştirin.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://deniko.net"
+  ),
   alternates: {
     canonical: "./",
   },
   openGraph: {
-    title: "Deniko | Profesyonel Özel Ders Yönetimi",
-    description: "Deniko ile özel ders süreçlerinizi profesyonelce yönetin.",
+    title: "Deniko | Özel Ders Yönetim Platformu",
+    description:
+      "Deniko ile özel derslerinizi kolayca yönetin. Öğrenci takibi, ders programı ve veli bilgilendirme özellikleriyle eğitiminizi dijitalleştirin.",
     siteName: "Deniko",
     images: [
       {
@@ -50,7 +53,10 @@ export const metadata: Metadata = {
     capable: true,
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
     shortcut: "/favicon.ico",
     apple: "/apple-icon.png",
     other: {

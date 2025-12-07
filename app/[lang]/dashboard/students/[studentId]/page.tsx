@@ -65,12 +65,31 @@ export async function generateMetadata({
       ? `${studentName} isimli öğrencinin detayları, ders programı ve ödeme geçmişi.`
       : `Details, schedule and payment history for ${studentName}.`;
 
+    const baseUrl = "https://deniko.net";
+    const pathname = `/dashboard/students/${studentId}`;
+
     return {
       title,
       description,
+      metadataBase: new URL(baseUrl),
+      alternates: {
+        canonical: `/${lang}${pathname}`,
+        languages: {
+          "tr-TR": `/tr${pathname}`,
+          "en-US": `/en${pathname}`,
+        },
+      },
       openGraph: {
         title: `${title} | Deniko`,
         description,
+      },
+      icons: {
+        icon: [
+          { url: "/favicon.ico", sizes: "any" },
+          { url: "/favicon.svg", type: "image/svg+xml" },
+        ],
+        shortcut: "/favicon.ico",
+        apple: "/apple-touch-icon.png",
       },
     };
   } catch {

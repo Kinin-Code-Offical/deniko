@@ -53,12 +53,31 @@ export async function generateMetadata({
     ? "Deniko yönetim paneli ile tüm süreçlerinizi kontrol edin."
     : "Control all your processes with Deniko management dashboard.";
 
+  const baseUrl = "https://deniko.net";
+  const pathname = "/dashboard";
+
   return {
     title, // Template in layout.tsx will add "| Deniko"
     description,
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
+    },
     openGraph: {
       title: `${title} | Deniko`,
       description,
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
     },
   };
 }

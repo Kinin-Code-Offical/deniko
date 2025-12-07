@@ -8,7 +8,7 @@ function getMimeType(filename: string) {
     const ext = pathModule.extname(filename).toLowerCase();
     const types: Record<string, string> = {
         '.png': 'image/png',
-        '.jpg': 'image/jpeg',
+        '.jpg': 'imamge/jpeg',
         '.jpeg': 'image/jpeg',
         '.gif': 'image/gif',
         '.svg': 'image/svg+xml',

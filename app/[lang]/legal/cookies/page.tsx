@@ -18,12 +18,31 @@ export async function generateMetadata({
     ? "Deniko Çerez Politikası ve çerez kullanım detayları."
     : "Deniko Cookie Policy and cookie usage details.";
 
+  const baseUrl = "https://deniko.net";
+  const pathname = "/legal/cookies";
+
   return {
     title,
     description,
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
+    },
     openGraph: {
       title: `${title} | Deniko`,
       description,
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
     },
   };
 }

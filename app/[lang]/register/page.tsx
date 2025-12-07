@@ -19,12 +19,30 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const isTr = lang === "tr";
+  const baseUrl = "https://deniko.net";
+  const pathname = "/register";
 
   return {
-    title: isTr ? "Kayıt Ol | Deniko" : "Register | Deniko",
+    title: isTr ? "Kayıt Ol - Deniko" : "Register - Deniko",
     description: isTr
-      ? "Deniko'ya katılın ve özel ders süreçlerinizi profesyonelleştirin."
-      : "Join Deniko and professionalize your tutoring processes.",
+      ? "Deniko'ya ücretsiz kayıt olun. Öğretmenler ve öğrenciler için kolay ders yönetimi ve takibi."
+      : "Sign up for Deniko for free. Easy lesson management and tracking for teachers and students.",
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
+    },
   };
 }
 

@@ -12,12 +12,30 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const isTr = lang === "tr";
+  const baseUrl = "https://deniko.net";
+  const pathname = "/dashboard/finance";
 
   return {
     title: isTr ? "Finans | Deniko" : "Finance | Deniko",
     description: isTr
       ? "Finansal durum ve ödeme takibi."
       : "Financial status and payment tracking.",
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
+    },
   };
 }
 

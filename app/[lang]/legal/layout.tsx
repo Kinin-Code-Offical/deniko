@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import type { Locale } from "@/i18n-config";
 import { getDictionary } from "@/lib/get-dictionary";
 import { DenikoLogo } from "@/components/ui/deniko-logo";
@@ -6,6 +7,12 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileText, Shield, Cookie, Scale } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Kullanıcı Sözleşmesi",
+  description:
+    "Deniko platform kullanım şartları, üyelik koşulları ve yasal sorumluluklar hakkında detaylı bilgiler.",
+};
 
 export default async function LegalLayout({
   children,

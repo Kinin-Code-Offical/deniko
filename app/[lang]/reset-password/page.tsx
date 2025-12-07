@@ -17,12 +17,30 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const isTr = lang === "tr";
+  const baseUrl = "https://deniko.net";
+  const pathname = "/reset-password";
 
   return {
     title: isTr ? "Şifre Sıfırlama | Deniko" : "Reset Password | Deniko",
     description: isTr
       ? "Yeni şifrenizi belirleyerek hesabınıza güvenle erişin."
       : "Set your new password and access your account securely.",
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
+    },
   };
 }
 

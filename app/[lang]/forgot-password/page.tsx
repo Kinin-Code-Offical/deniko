@@ -15,12 +15,30 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const isTr = lang === "tr";
+  const baseUrl = "https://deniko.net";
+  const pathname = "/forgot-password";
 
   return {
     title: isTr ? "Şifremi Unuttum | Deniko" : "Forgot Password | Deniko",
     description: isTr
       ? "Şifrenizi mi unuttunuz? E-posta adresinizle şifrenizi sıfırlayın."
       : "Forgot your password? Reset it with your email address.",
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
+    },
   };
 }
 

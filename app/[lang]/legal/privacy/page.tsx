@@ -18,12 +18,31 @@ export async function generateMetadata({
     ? "Deniko Gizlilik Politikası ve veri işleme süreçleri hakkında bilgi alın."
     : "Learn about Deniko Privacy Policy and data processing procedures.";
 
+  const baseUrl = "https://deniko.net";
+  const pathname = "/legal/privacy";
+
   return {
     title,
     description,
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
+    },
     openGraph: {
       title: `${title} | Deniko`,
       description,
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
     },
   };
 }

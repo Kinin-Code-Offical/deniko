@@ -18,12 +18,31 @@ export async function generateMetadata({
     ? "Deniko Kullanıcı Sözleşmesi ve hizmet şartları."
     : "Deniko Terms of Service and conditions of use.";
 
+  const baseUrl = "https://deniko.net";
+  const pathname = "/legal/terms";
+
   return {
     title,
     description,
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
+    },
     openGraph: {
       title: `${title} | Deniko`,
       description,
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
     },
   };
 }

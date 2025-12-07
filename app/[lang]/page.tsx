@@ -83,11 +83,19 @@ export async function generateMetadata({
     ? "Öğrenci takibi, ders programı ve ödeme takibini tek bir yerden yönetin. Deniko ile işinizi dijitalleştirin."
     : "Manage student tracking, lesson scheduling, and payments in one place. Digitalize your business with Deniko.";
 
+  const baseUrl = "https://deniko.net";
+  const pathname = "";
+
   return {
     title,
     description,
+    metadataBase: new URL(baseUrl),
     alternates: {
-      canonical: `/${lang}`,
+      canonical: `/${lang}${pathname}`,
+      languages: {
+        "tr-TR": `/tr${pathname}`,
+        "en-US": `/en${pathname}`,
+      },
     },
     openGraph: {
       title: `${title} | Deniko`,
@@ -95,6 +103,14 @@ export async function generateMetadata({
       url: `https://deniko.net/${lang}`,
       locale: isTr ? "tr_TR" : "en_US",
       type: "website",
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
     },
   };
 }
