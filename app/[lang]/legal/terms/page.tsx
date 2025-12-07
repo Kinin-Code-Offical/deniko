@@ -54,8 +54,20 @@ export default async function TermsPage({
   const content =
     termsContent[lang as keyof typeof termsContent] || termsContent.en;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: content.title,
+    description: "Terms of Service for Deniko",
+    url: `https://deniko.net/${lang}/legal/terms`,
+  };
+
   return (
     <div className="overflow-hidden rounded-[2.5rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/40">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Document Header */}
       <div className="border-b border-slate-100 bg-slate-50/80 p-8 backdrop-blur-sm md:p-12 dark:border-slate-800 dark:bg-slate-800/50">
         <div className="mb-8 flex items-start justify-between gap-4">

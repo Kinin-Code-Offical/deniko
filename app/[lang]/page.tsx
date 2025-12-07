@@ -160,8 +160,21 @@ export default async function Home({
     "--feature-axis": "clamp(2.6rem, 4vw, 3.3rem)",
   };
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Deniko",
+    url: "https://deniko.net",
+    logo: "https://deniko.net/logo.png",
+    description: dictionary.home.hero_subtitle,
+  };
+
   return (
     <div className="animate-in fade-in flex min-h-dvh flex-col bg-white transition-colors duration-1000 dark:bg-slate-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PerformanceTracker name="Homepage-Render" />
       <Navbar lang={lang} dictionary={dictionary} />
 

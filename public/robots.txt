@@ -1,6 +1,15 @@
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /onboarding/
+Disallow: /verify/
+Disallow: /reset-password/
+Disallow: /api/
+Disallow: /cdn-cgi/
+
 User-agent: *
 Allow: /
-
 Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /onboarding/

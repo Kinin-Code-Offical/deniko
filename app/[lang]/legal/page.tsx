@@ -99,8 +99,47 @@ export default async function LegalPage({
     },
   ];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: dictionary.legal.title,
+    description: dictionary.legal.description,
+    url: `https://deniko.net/${lang}/legal`,
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `https://deniko.net/${lang}`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: dictionary.legal.title,
+          item: `https://deniko.net/${lang}/legal`,
+        },
+      ],
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: legalDocs.map((doc, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `https://deniko.net${doc.href}`,
+        name: doc.title,
+        description: doc.description,
+      })),
+    },
+  };
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 space-y-16 py-8 duration-700">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-blue-50 via-white to-blue-50 px-6 py-16 text-center sm:px-12 sm:py-24 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
         <div className="absolute top-0 left-0 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl"></div>
