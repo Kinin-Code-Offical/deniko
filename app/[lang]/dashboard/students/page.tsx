@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
@@ -85,26 +86,32 @@ export default async function StudentsPage({
     select: { id: true, name: true },
   });
 
-  const students = relations.map((rel) => ({
-    id: rel.student.id,
-    user: rel.student.user,
-    tempFirstName: rel.student.tempFirstName,
-    tempLastName: rel.student.tempLastName,
-    tempAvatar: rel.student.tempAvatar,
-    relation: { customName: rel.customName },
-    name:
-      rel.customName ||
-      (rel.student.isClaimed && rel.student.user?.name
-        ? rel.student.user.name
-        : `${rel.student.tempFirstName || ""} ${rel.student.tempLastName || ""}`.trim()),
-    email: rel.student.isClaimed ? rel.student.user?.email : null,
-    status: rel.student.isClaimed ? "CLAIMED" : "SHADOW",
-    studentNo: rel.student.studentNo,
-    inviteToken: rel.student.inviteToken,
-    isClaimed: rel.student.isClaimed,
-    gradeLevel: rel.student.gradeLevel,
-    classrooms: rel.student.classrooms,
-  }));
+  const students = relations.map(
+    (
+      rel: Prisma.StudentTeacherRelationGetPayload<{
+        include: { student: { include: { user: true; classrooms: true } } };
+      }>
+    ) => ({
+      id: rel.student.id,
+      user: rel.student.user,
+      tempFirstName: rel.student.tempFirstName,
+      tempLastName: rel.student.tempLastName,
+      tempAvatar: rel.student.tempAvatar,
+      relation: { customName: rel.customName },
+      name:
+        rel.customName ||
+        (rel.student.isClaimed && rel.student.user?.name
+          ? rel.student.user.name
+          : `${rel.student.tempFirstName || ""} ${rel.student.tempLastName || ""}`.trim()),
+      email: rel.student.isClaimed ? rel.student.user?.email : null,
+      status: rel.student.isClaimed ? "CLAIMED" : "SHADOW",
+      studentNo: rel.student.studentNo,
+      inviteToken: rel.student.inviteToken,
+      isClaimed: rel.student.isClaimed,
+      gradeLevel: rel.student.gradeLevel,
+      classrooms: rel.student.classrooms,
+    })
+  );
 
   return (
     <div className="space-y-6">
