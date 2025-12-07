@@ -87,25 +87,24 @@ export default async function StudentsPage({
 
   const students = relations.map((rel: any) => ({
     id: rel.student.id,
-      user: rel.student.user,
-      tempFirstName: rel.student.tempFirstName,
-      tempLastName: rel.student.tempLastName,
-      tempAvatar: rel.student.tempAvatar,
-      relation: { customName: rel.customName },
-      name:
-        rel.customName ||
-        (rel.student.isClaimed && rel.student.user?.name
-          ? rel.student.user.name
-          : `${rel.student.tempFirstName || ""} ${rel.student.tempLastName || ""}`.trim()),
-      email: rel.student.isClaimed ? rel.student.user?.email : null,
-      status: rel.student.isClaimed ? "CLAIMED" : "SHADOW",
-      studentNo: rel.student.studentNo,
-      inviteToken: rel.student.inviteToken,
-      isClaimed: rel.student.isClaimed,
-      gradeLevel: rel.student.gradeLevel,
-      classrooms: rel.student.classrooms,
-    })
-  );
+    user: rel.student.user,
+    tempFirstName: rel.student.tempFirstName,
+    tempLastName: rel.student.tempLastName,
+    tempAvatar: rel.student.tempAvatar,
+    relation: { customName: rel.customName },
+    name:
+      rel.customName ||
+      (rel.student.isClaimed && rel.student.user?.name
+        ? rel.student.user.name
+        : `${rel.student.tempFirstName || ""} ${rel.student.tempLastName || ""}`.trim()),
+    email: rel.student.isClaimed ? rel.student.user?.email : null,
+    status: rel.student.isClaimed ? "CLAIMED" : "SHADOW",
+    studentNo: rel.student.studentNo,
+    inviteToken: rel.student.inviteToken,
+    isClaimed: rel.student.isClaimed,
+    gradeLevel: rel.student.gradeLevel,
+    classrooms: rel.student.classrooms,
+  }));
 
   return (
     <div className="space-y-6">
