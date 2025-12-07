@@ -1,4 +1,48 @@
 {
+  "legal": {
+    "title": "Legal Center",
+    "description": "Find detailed information about Deniko's terms of use, privacy policies, and legal obligations here.",
+    "read_more": "Read More",
+    "nav": {
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy",
+      "kvkk": "KVKK",
+      "back_to_home": "Back to Home"
+    },
+    "footer": {
+      "rights_reserved": "All rights reserved."
+    },
+    "docs": {
+      "terms": {
+        "title": "Terms of Service",
+        "description": "Terms and conditions for using the platform."
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "description": "How your data is collected and used."
+      },
+      "cookies": {
+        "title": "Cookie Policy",
+        "description": "Cookie usage and preference management."
+      },
+      "kvkk": {
+        "title": "KVKK Clarification Text",
+        "description": "Information about the law on the protection of personal data."
+      }
+    },
+    "terms_title": "Terms of Service",
+    "privacy_title": "Privacy Policy",
+    "accept_terms": "I have read and accept the [Terms of Service] and [Privacy Policy].",
+    "validation_terms": "You must accept the terms to continue.",
+    "validation_error": "You must accept the terms to continue.",
+    "marketing_consent": "I want to be informed about campaigns and announcements via email.",
+    "center": "Legal Center",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "kvkk": "KVKK"
+  },
   "theme": {
     "light": "Light",
     "dark": "Dark",
@@ -445,20 +489,7 @@
       "generic": "An error occurred."
     }
   },
-  "legal": {
-    "terms_title": "Terms of Service",
-    "privacy_title": "Privacy Policy",
-    "accept_terms": "I have read and accept the [Terms of Service] and [Privacy Policy].",
-    "validation_terms": "You must accept the terms to continue.",
-    "validation_error": "You must accept the terms to continue.",
-    "marketing_consent": "I want to be informed about campaigns and announcements via email.",
-    "title": "Legal",
-    "center": "Legal Center",
-    "terms": "Terms of Service",
-    "privacy": "Privacy Policy",
-    "cookies": "Cookie Policy",
-    "kvkk": "KVKK"
-  },
+
   "home": {
     "hero_title": "Digitize Your Education Life",
     "hero_subtitle": "Smart assistant designed for teachers and students. Lesson schedule, student tracking, and performance analytics in one platform.",

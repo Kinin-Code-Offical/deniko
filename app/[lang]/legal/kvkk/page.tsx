@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n-config";
 import type { Metadata } from "next";
+import { getDictionary } from "@/lib/get-dictionary";
 import { kvkkContent } from "@/lib/legal-content";
 import { PrintButton } from "@/components/ui/print-button";
 import { LegalSection } from "@/components/ui/legal-section";
@@ -11,12 +12,9 @@ export async function generateMetadata({
   params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const isTr = lang === "tr";
+  const dictionary = await getDictionary(lang);
 
-  const title = isTr ? "KVKK Aydınlatma Metni" : "KVKK Clarification Text";
-  const description = isTr
-    ? "Kişisel Verilerin Korunması Kanunu kapsamında aydınlatma metni."
-    : "Clarification text within the scope of the Law on Protection of Personal Data.";
+  const { title, description } = dictionary.legal.docs.kvkk;
 
   const baseUrl = "https://deniko.net";
   const pathname = "/legal/kvkk";

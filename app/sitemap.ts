@@ -11,6 +11,7 @@ const routes = [
     "/login",
     "/register",
     "/join",
+    "/legal",
     "/legal/privacy",
     "/legal/terms",
     "/legal/cookies",

@@ -167,7 +167,7 @@ export default async function Home({
 
       <main id="main-content" className="flex-1">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#020617] via-[#020617] to-[#020617] py-16 md:py-24">
+        <section className="relative overflow-hidden bg-linear-to-b from-[#020617] via-[#020617] to-[#020617] py-16 md:py-24">
           <div className="relative z-10 container mx-auto px-4">
             <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-20">
               {/* Text Content */}
@@ -203,7 +203,7 @@ export default async function Home({
               {/* Hero Visual */}
               <div className="w-full max-w-xl flex-1 lg:max-w-none">
                 <div className="perspective-1200 relative">
-                  <div className="tilt-soft aspect-[4/3] overflow-hidden rounded-3xl border border-blue-500/30 bg-white/90 p-3 shadow-[0_40px_120px_rgba(15,23,42,0.9)] transition-transform duration-500 dark:bg-slate-900/90">
+                  <div className="tilt-soft aspect-4/3 overflow-hidden rounded-3xl border border-blue-500/30 bg-white/90 p-3 shadow-[0_40px_120px_rgba(15,23,42,0.9)] transition-transform duration-500 dark:bg-slate-900/90">
                     <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-slate-50 dark:bg-slate-950">
                       {/* Mock UI Header */}
                       <div className="flex h-12 items-center justify-between gap-4 border-b border-slate-200 bg-white/50 px-4 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/50">
@@ -262,7 +262,7 @@ export default async function Home({
                           </div>
 
                           <div className="mt-auto">
-                            <div className="flex h-24 w-full flex-col justify-between rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50 to-slate-50 p-3 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950">
+                            <div className="flex h-24 w-full flex-col justify-between rounded-xl border border-blue-100 bg-linear-to-br from-blue-50 to-slate-50 p-3 dark:border-slate-800 dark:from-slate-900 dark:to-slate-950">
                               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
                                 <GraduationCap className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                               </div>
@@ -462,8 +462,8 @@ export default async function Home({
                 style={featureAxisStyle}
               >
                 {/* Connecting Line */}
-                <FadeIn className="pointer-events-none absolute inset-y-3 left-1/2 z-0 flex w-10 -translate-x-1/2 justify-center lg:left-[var(--feature-axis)] lg:translate-x-0">
-                  <div className="feature-line relative h-full w-[6px] -translate-x-1/2">
+                <FadeIn className="pointer-events-none absolute inset-y-3 left-1/2 z-0 flex w-10 -translate-x-1/2 justify-center lg:left-(--feature-axis) lg:translate-x-0">
+                  <div className="feature-line relative h-full w-1.5 -translate-x-1/2">
                     <span className="feature-flash"></span>
                     <span className="feature-node feature-node--top"></span>
                     <span className="feature-node feature-node--bottom"></span>
@@ -573,12 +573,12 @@ export default async function Home({
 
             <StaggerContainer className="relative mx-auto grid max-w-6xl gap-8 md:grid-cols-3 lg:gap-12">
               {/* Connecting Line (Desktop) */}
-              <div className="absolute top-16 right-[16%] left-[16%] -z-10 hidden h-0.5 bg-gradient-to-r from-blue-200 via-indigo-200 to-blue-200 md:block dark:from-blue-800 dark:via-indigo-800 dark:to-blue-800"></div>
+              <div className="absolute top-16 right-[16%] left-[16%] -z-10 hidden h-0.5 bg-linear-to-r from-blue-200 via-indigo-200 to-blue-200 md:block dark:from-blue-800 dark:via-indigo-800 dark:to-blue-800"></div>
 
               {/* Step 1 */}
               <StaggerItem className="group relative">
                 <div className="relative h-full overflow-hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg shadow-slate-200/50 transition-all duration-300 hover:-translate-y-2 hover:border-blue-200 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800 dark:shadow-slate-900/50 dark:hover:border-blue-700">
-                  <div className="absolute top-0 left-0 h-1 w-full origin-left scale-x-0 transform bg-gradient-to-r from-blue-400 to-blue-600 transition-transform duration-500 group-hover:scale-x-100"></div>
+                  <div className="absolute top-0 left-0 h-1 w-full origin-left scale-x-0 transform bg-linear-to-r from-blue-400 to-blue-600 transition-transform duration-500 group-hover:scale-x-100"></div>
                   <div className="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-50 transition-transform duration-300 group-hover:scale-110 dark:bg-blue-900/30">
                     <div className="absolute -top-3 -right-3 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-blue-600 text-sm font-bold text-white shadow-md dark:border-slate-800">
                       1
@@ -597,7 +597,7 @@ export default async function Home({
               {/* Step 2 */}
               <StaggerItem className="group relative">
                 <div className="relative h-full overflow-hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg shadow-slate-200/50 transition-all duration-300 hover:-translate-y-2 hover:border-indigo-200 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800 dark:shadow-slate-900/50 dark:hover:border-indigo-700">
-                  <div className="absolute top-0 left-0 h-1 w-full origin-left scale-x-0 transform bg-gradient-to-r from-indigo-400 to-indigo-600 transition-transform duration-500 group-hover:scale-x-100"></div>
+                  <div className="absolute top-0 left-0 h-1 w-full origin-left scale-x-0 transform bg-linear-to-r from-indigo-400 to-indigo-600 transition-transform duration-500 group-hover:scale-x-100"></div>
                   <div className="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-indigo-50 transition-transform duration-300 group-hover:scale-110 dark:bg-indigo-900/30">
                     <div className="absolute -top-3 -right-3 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-indigo-600 text-sm font-bold text-white shadow-md dark:border-slate-800">
                       2
@@ -616,7 +616,7 @@ export default async function Home({
               {/* Step 3 */}
               <StaggerItem className="group relative">
                 <div className="relative h-full overflow-hidden rounded-3xl border border-slate-100 bg-white p-8 shadow-lg shadow-slate-200/50 transition-all duration-300 hover:-translate-y-2 hover:border-emerald-200 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800 dark:shadow-slate-900/50 dark:hover:border-emerald-700">
-                  <div className="absolute top-0 left-0 h-1 w-full origin-left scale-x-0 transform bg-gradient-to-r from-emerald-400 to-emerald-600 transition-transform duration-500 group-hover:scale-x-100"></div>
+                  <div className="absolute top-0 left-0 h-1 w-full origin-left scale-x-0 transform bg-linear-to-r from-emerald-400 to-emerald-600 transition-transform duration-500 group-hover:scale-x-100"></div>
                   <div className="relative z-10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-emerald-50 transition-transform duration-300 group-hover:scale-110 dark:bg-emerald-900/30">
                     <div className="absolute -top-3 -right-3 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-emerald-600 text-sm font-bold text-white shadow-md dark:border-slate-800">
                       3
@@ -838,6 +838,15 @@ export default async function Home({
                   >
                     <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                     {dictionary.home.get_started}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={`/${lang}/legal`}
+                    className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
+                    {dictionary.legal.center}
                   </Link>
                 </li>
               </ul>

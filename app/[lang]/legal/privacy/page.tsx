@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n-config";
 import type { Metadata } from "next";
+import { getDictionary } from "@/lib/get-dictionary";
 import { privacyContent } from "@/lib/legal-content";
 import { PrintButton } from "@/components/ui/print-button";
 import { LegalSection } from "@/components/ui/legal-section";
@@ -11,12 +12,9 @@ export async function generateMetadata({
   params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const isTr = lang === "tr";
+  const dictionary = await getDictionary(lang);
 
-  const title = isTr ? "Gizlilik Politikası" : "Privacy Policy";
-  const description = isTr
-    ? "Deniko Gizlilik Politikası ve veri işleme süreçleri hakkında bilgi alın."
-    : "Learn about Deniko Privacy Policy and data processing procedures.";
+  const { title, description } = dictionary.legal.docs.privacy;
 
   const baseUrl = "https://deniko.net";
   const pathname = "/legal/privacy";

@@ -122,7 +122,7 @@ export default async function LoginPage({
       </div>
 
       {/* Right Panel - Form */}
-      <div className="animate-in slide-in-from-right-4 relative flex flex-1 flex-col bg-gradient-to-b from-white via-blue-50/60 to-white transition-colors duration-700 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
+      <div className="animate-in slide-in-from-right-4 relative flex flex-1 flex-col bg-linear-to-b from-white via-blue-50/60 to-white transition-colors duration-700 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
         {/* Mobile Header */}
         <div className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-900/90">
           <div className="flex items-center justify-between px-4 pt-4">

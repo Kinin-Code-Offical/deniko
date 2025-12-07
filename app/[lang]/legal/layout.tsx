@@ -8,11 +8,22 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileText, Shield, Cookie, Scale } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Kullanıcı Sözleşmesi",
-  description:
-    "Deniko platform kullanım şartları, üyelik koşulları ve yasal sorumluluklar hakkında detaylı bilgiler.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: Locale }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const dictionary = await getDictionary(lang);
+
+  return {
+    title: {
+      template: `%s | ${dictionary.legal.title}`,
+      default: dictionary.legal.title,
+    },
+    description: dictionary.legal.description,
+  };
+}
 
 export default async function LegalLayout({
   children,
@@ -27,22 +38,22 @@ export default async function LegalLayout({
   const navItems = [
     {
       href: `/${lang}/legal/terms`,
-      label: lang === "tr" ? "Kullanıcı Sözleşmesi" : "Terms of Service",
+      label: dictionary.legal.nav.terms,
       icon: FileText,
     },
     {
       href: `/${lang}/legal/privacy`,
-      label: lang === "tr" ? "Gizlilik Politikası" : "Privacy Policy",
+      label: dictionary.legal.nav.privacy,
       icon: Shield,
     },
     {
       href: `/${lang}/legal/cookies`,
-      label: lang === "tr" ? "Çerez Politikası" : "Cookie Policy",
+      label: dictionary.legal.nav.cookies,
       icon: Cookie,
     },
     {
       href: `/${lang}/legal/kvkk`,
-      label: lang === "tr" ? "KVKK" : "KVKK",
+      label: dictionary.legal.nav.kvkk,
       icon: Scale,
     },
   ];
@@ -58,7 +69,7 @@ export default async function LegalLayout({
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 dark:bg-slate-900/80 print:hidden">
+      <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md supports-backdrop-filter:bg-white/60 dark:bg-slate-900/80 print:hidden">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-8">
             <Link
@@ -101,7 +112,7 @@ export default async function LegalLayout({
               <Link href={`/${lang}`}>
                 <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1 sm:mr-2" />
                 <span className="hidden sm:inline">
-                  {lang === "tr" ? "Ana Sayfaya Dön" : "Back to Home"}
+                  {dictionary.legal.nav.back_to_home}
                 </span>
               </Link>
             </Button>
@@ -140,7 +151,7 @@ export default async function LegalLayout({
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400">
               &copy; {new Date().getFullYear()} Deniko.{" "}
-              {lang === "tr" ? "Tüm hakları saklıdır." : "All rights reserved."}
+              {dictionary.legal.footer.rights_reserved}
             </p>
           </div>
         </div>

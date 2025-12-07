@@ -1,4 +1,48 @@
 {
+  "legal": {
+    "title": "Yasal Merkez",
+    "description": "Deniko'nun kullanım şartları, gizlilik politikaları ve yasal yükümlülükleri hakkında detaylı bilgilere buradan ulaşabilirsiniz.",
+    "read_more": "İncele",
+    "nav": {
+      "terms": "Kullanıcı Sözleşmesi",
+      "privacy": "Gizlilik Politikası",
+      "cookies": "Çerez Politikası",
+      "kvkk": "KVKK",
+      "back_to_home": "Ana Sayfaya Dön"
+    },
+    "footer": {
+      "rights_reserved": "Tüm hakları saklıdır."
+    },
+    "docs": {
+      "terms": {
+        "title": "Kullanıcı Sözleşmesi",
+        "description": "Platform kullanım şartları ve kuralları."
+      },
+      "privacy": {
+        "title": "Gizlilik Politikası",
+        "description": "Verilerinizin nasıl toplandığı ve kullanıldığı."
+      },
+      "cookies": {
+        "title": "Çerez Politikası",
+        "description": "Çerez kullanımı ve tercihlerin yönetimi."
+      },
+      "kvkk": {
+        "title": "KVKK Aydınlatma Metni",
+        "description": "Kişisel verilerin korunması kanunu hakkında bilgilendirme."
+      }
+    },
+    "terms_title": "Kullanıcı Sözleşmesi",
+    "privacy_title": "Gizlilik Politikası",
+    "accept_terms": "[Kullanıcı Sözleşmesi] ve [Gizlilik Politikası]'nı okudum ve kabul ediyorum.",
+    "validation_terms": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
+    "validation_error": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
+    "marketing_consent": "Kampanya ve duyurulardan e-posta ile haberdar olmak istiyorum.",
+    "center": "Yasal Merkez",
+    "terms": "Kullanım Koşulları",
+    "privacy": "Gizlilik Politikası",
+    "cookies": "Çerez Politikası",
+    "kvkk": "KVKK"
+  },
   "theme": {
     "light": "Aydınlık",
     "dark": "Karanlık",
@@ -443,20 +487,7 @@
       "generic": "Bir hata oluştu."
     }
   },
-  "legal": {
-    "terms_title": "Kullanıcı Sözleşmesi",
-    "privacy_title": "Gizlilik Politikası",
-    "accept_terms": "[Kullanıcı Sözleşmesi] ve [Gizlilik Politikası]'nı okudum ve kabul ediyorum.",
-    "validation_terms": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
-    "validation_error": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
-    "marketing_consent": "Kampanya ve duyurulardan e-posta ile haberdar olmak istiyorum.",
-    "title": "Yasal",
-    "center": "Yasal Merkez",
-    "terms": "Kullanım Koşulları",
-    "privacy": "Gizlilik Politikası",
-    "cookies": "Çerez Politikası",
-    "kvkk": "KVKK"
-  },
+
   "home": {
     "hero_title": "Eğitim Hayatınızı Dijitalleştirin",
     "hero_subtitle": "Öğretmenler ve öğrenciler için tasarlanmış akıllı asistan. Ders programı, öğrenci takibi ve performans analizleri tek bir platformda.",
