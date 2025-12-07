@@ -16,9 +16,11 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "test": "vitest",
-    "test:hardcoded": "vitest run --dir tests/hardcoded",
-    "type-check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run __tests__",
+    "test:integration": "vitest run tests/hardcoded",
+    "test:cli": "tsx scripts/check-any.ts && tsx scripts/check-hardcoded.ts",
+    "test:all": "npm run lint && npm run typecheck && npm run test:unit && npm run test:integration && npm run test:cli",
     "postinstall": "patch-package"
   },
   "overrides": {

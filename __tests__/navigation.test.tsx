@@ -16,6 +16,9 @@ vi.mock("next/navigation", () => ({
 
 // Mock dictionary
 const mockDictionary = {
+  common: {
+    app_name: "Deniko",
+  },
   home: {
     login: "Login",
     get_started: "Get Started",
@@ -25,6 +28,11 @@ const mockDictionary = {
     light: "Light",
     dark: "Dark",
     system: "System",
+  },
+  dashboard: {
+    nav: {
+      dashboard: "Dashboard",
+    },
   },
   legal: {
     nav: {
