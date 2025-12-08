@@ -1,10 +1,13 @@
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: "pnpm exec next start -H 127.0.0.1",
+      startServerCommand: "pnpm run start:ci",
       startServerReadyTimeout: 60000,
       url: ["http://127.0.0.1:3000/tr", "http://127.0.0.1:3000/en"],
       numberOfRuns: 3,
+      settings: {
+        chromeFlags: "--no-sandbox --disable-gpu --disable-dev-shm-usage",
+      },
     },
     upload: {
       target: "temporary-public-storage",
