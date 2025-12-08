@@ -6,6 +6,7 @@ import { Check, Copy } from "lucide-react";
 import useCopyToClipboard from "@/lib/hooks/useCopyToClipboard";
 import { toast } from "sonner";
 import type { Dictionary } from "@/types/i18n";
+import { useTimeout } from "@/lib/hooks/use-timeout";
 
 type InviteButtonProps = {
   token: string | null;
@@ -17,6 +18,8 @@ export function InviteButton({ token, lang, dictionary }: InviteButtonProps) {
   const [, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
 
+  useTimeout(() => setIsCopied(false), isCopied ? 2000 : null);
+
   const onCopy = () => {
     if (!token) return;
     const inviteLink = `${window.location.origin}/${lang}/join/${token}`;
@@ -24,7 +27,6 @@ export function InviteButton({ token, lang, dictionary }: InviteButtonProps) {
       .then(() => {
         setIsCopied(true);
         toast.success(dictionary.teacher.invite_link_copied);
-        setTimeout(() => setIsCopied(false), 2000);
       })
       .catch((error) => {
         toast.error(dictionary.teacher.invite_link_copy_failed);

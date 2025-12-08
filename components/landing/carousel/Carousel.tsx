@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import type { CardItem } from "./types";
 import { Hand, RotateCw, Info } from "lucide-react";
 import type { Dictionary } from "@/types/i18n";
+import { useTimeout } from "@/lib/hooks/use-timeout";
 
 interface CarouselProps {
   items: CardItem[];
@@ -16,10 +17,7 @@ const Carousel: React.FC<CarouselProps> = ({ items, dictionary }) => {
   const [isClient, setIsClient] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsClient(true), 0);
-    return () => clearTimeout(timer);
-  }, []);
+  useTimeout(() => setIsClient(true), 0);
 
   // --- REACTIVE STATE ---
   const [desktopTransforms, setDesktopTransforms] = useState([

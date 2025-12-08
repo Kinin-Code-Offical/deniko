@@ -36,7 +36,6 @@ export function VerifyClient({ lang, dictionary }: VerifyClientProps) {
     if (success || error || firedRef.current) return;
 
     if (!token) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setError(d.missing_token);
       return;
     }

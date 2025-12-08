@@ -19,10 +19,9 @@ function getAllFiles(dir: string, fileList: string[] = []): string[] {
 
         if (stat.isDirectory()) {
             getAllFiles(filePath, fileList);
-        } else {
-            if (EXTENSIONS.includes(path.extname(file))) {
-                fileList.push(filePath);
-            }
+        }
+        else if (EXTENSIONS.includes(path.extname(file))) {
+            fileList.push(filePath);
         }
     });
 
@@ -77,7 +76,7 @@ function checkRouteExists(route: string): boolean {
     // This is a simple heuristic: if we can't find the exact path, we look for directories starting with '['
     // This is complex to do perfectly without a full router, but we can try a simple walk.
     // For now, we'll assume if it fails the above, it might be broken, UNLESS it matches a known pattern.
-    
+
     return false;
 }
 

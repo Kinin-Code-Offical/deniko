@@ -295,7 +295,6 @@ export function StudentSettingsTab({
                           setAvatarPreview(null);
                         }}
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={
                             avatar.startsWith("http")

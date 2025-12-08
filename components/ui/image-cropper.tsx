@@ -162,8 +162,7 @@ export function ImageCropper({
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           >
-            {safeImageSrc && (
-              // eslint-disable-next-line @next/next/no-img-element
+            {safeImageSrc ? (
               <img
                 ref={imageRef}
                 src={safeImageSrc}
@@ -177,7 +176,7 @@ export function ImageCropper({
                 draggable={false}
                 crossOrigin="anonymous"
               />
-            )}
+            ) : null}
           </div>
 
           <div className="w-full space-y-2 px-4">

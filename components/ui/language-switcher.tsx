@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,10 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Check, ChevronDown, Globe } from "lucide-react";
 import { i18n } from "@/i18n-config";
+import { useTimeout } from "@/lib/hooks/use-timeout";
 
 interface LanguageSwitcherProps {
   currentLocale?: string;
   onSelect?: () => void;
+}
+
+function setLanguageCookie(locale: string) {
+  document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
 }
 
 export function LanguageSwitcher({
@@ -26,9 +31,8 @@ export function LanguageSwitcher({
   const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Use custom hook to handle timeout safely and avoid synchronous state update warning
+  useTimeout(() => setMounted(true), 0);
 
   const redirectedPathName = (locale: string) => {
     if (!pathname) return "/";
@@ -38,8 +42,7 @@ export function LanguageSwitcher({
   };
 
   const handleLanguageChange = (locale: string) => {
-    // eslint-disable-next-line react-hooks/immutability
-    document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+    setLanguageCookie(locale);
 
     if (onSelect) {
       onSelect();

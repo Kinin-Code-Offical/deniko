@@ -202,7 +202,6 @@ export function AddStudentDialog({
                       setSelectedFile(null);
                     }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={
                         avatar.startsWith("http")

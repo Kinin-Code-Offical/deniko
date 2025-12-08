@@ -27,6 +27,7 @@ import {
 import { resetPassword } from "@/app/actions/auth";
 import type { Locale } from "@/i18n-config";
 import Link from "next/link";
+import { useTimeout } from "@/lib/hooks/use-timeout";
 
 // Password strength regex: at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -50,6 +51,13 @@ export function ResetPasswordForm({
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  useTimeout(
+    () => {
+      router.push(`/${lang}/login`);
+    },
+    success ? 3000 : null
+  );
 
   const formSchema = z
     .object({
@@ -82,10 +90,6 @@ export function ResetPasswordForm({
         setError(result.message);
       } else {
         setSuccess(true);
-        // Redirect to login after 3 seconds
-        setTimeout(() => {
-          router.push(`/${lang}/login`);
-        }, 3000);
       }
     } catch {
       setError(dictionary.auth.errors.generic);
