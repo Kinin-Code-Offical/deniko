@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Pool, type PoolConfig } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { env } from "./env";
+import logger from "@/lib/logger";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -22,11 +23,11 @@ export const db =
 
     if (env.INSTANCE_CONNECTION_NAME && env.NODE_ENV === "production") {
       dbConfig.host = `/cloudsql/${env.INSTANCE_CONNECTION_NAME}`;
-      console.log(`[DB] Connecting via Unix Socket: ${dbConfig.host}`);
+      logger.info(`[DB] Connecting via Unix Socket: ${dbConfig.host}`);
     } else {
       dbConfig.host = "127.0.0.1";
       dbConfig.port = 5432;
-      console.log("[DB] Connecting via Localhost (Auth Proxy)");
+      logger.info("[DB] Connecting via Localhost (Auth Proxy)");
     }
 
     const pool = new Pool(dbConfig);

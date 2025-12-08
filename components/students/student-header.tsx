@@ -51,7 +51,7 @@ export function StudentHeader({
     customName ||
     user?.name ||
     `${tempFirstName || ""} ${tempLastName || ""}`.trim() ||
-    "Unknown Student";
+    dictionary.student_detail.header.unknown_student;
 
   // Avatar Logic
   const avatarSrc =
@@ -102,7 +102,7 @@ export function StudentHeader({
             <span>
               {gradeLevel || dictionary.student_detail.header.no_level}
             </span>
-            <span>•</span>
+            <span>{dictionary.common.separator}</span>
             <span>
               {studentNo || dictionary.student_detail.header.no_number}
             </span>

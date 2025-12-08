@@ -28,7 +28,7 @@ interface InviteDetails {
   parentPhone: string | null;
   inviteTokenExpires: Date | null;
   isClaimed: boolean;
-  teacherName: string;
+  teacherName: string | null;
 }
 
 type UserWithProfile = User & {

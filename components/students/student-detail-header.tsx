@@ -60,7 +60,11 @@ export function StudentDetailHeader({
                 ? dictionary.student_detail.header.status.active
                 : dictionary.student_detail.header.status.shadow}
             </Badge>
-            {gradeLevel && <span>• {gradeLevel}</span>}
+            {gradeLevel && (
+              <span>
+                {dictionary.common.separator} {gradeLevel}
+              </span>
+            )}
           </div>
         </div>
       </div>

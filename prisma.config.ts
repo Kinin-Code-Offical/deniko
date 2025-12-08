@@ -102,7 +102,7 @@ const ensurePrismaSslFiles = () => {
 
   const lastPatchedUrl = patchedDirectUrl ?? patchedDatabaseUrl;
   if (lastPatchedUrl) {
-    console.log(`[prisma.config] Final connection URL: ${lastPatchedUrl}`);
+    console.log(`[prisma.config] Final connection URL: ${lastPatchedUrl}`); // ignore-console-check
   }
 };
 

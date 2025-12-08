@@ -21,9 +21,10 @@
       "description": "Set your new password and access your account securely."
     },
     "dashboard": {
+      "title": "Dashboard",
       "student_title": "Student Dashboard - {name}",
       "teacher_title": "Teacher Dashboard - {name}",
-      "description": "Control all your processes with Deniko management dashboard.",
+      "description": "Manage your lessons and students with Deniko dashboard.",
       "welcome_title": "Welcome to Deniko",
       "contact_support": "Please contact support if you see this screen."
     },
@@ -36,7 +37,36 @@
       "title": "Schedule | Deniko",
       "description": "Schedule and calendar management.",
       "coming_soon": "Schedule content coming soon..."
+    },
+    "join": {
+      "title": "Invitation | Deniko",
+      "description": "Join Deniko."
+    },
+    "onboarding": {
+      "title": "Onboarding | Deniko",
+      "description": "Complete your account setup and start using Deniko."
+    },
+    "verify": {
+      "title": "Verify Account | Deniko",
+      "description": "Verify your Deniko account."
+    },
+    "student_detail": {
+      "title": "{name} - Student Detail",
+      "description": "Details, schedule and payment history for {name}.",
+      "fallback_title": "Student Detail",
+      "fallback_description": "Student details."
+    },
+    "students": {
+      "title": "Students | Deniko",
+      "description": "Student list and management."
     }
+  },
+  "not_found": {
+    "title": "Page Not Found",
+    "heading": "The page you are looking for seems to be lost",
+    "description": "The page you are trying to reach may have been deleted, moved, or never existed. Don't worry, we can get you back on track.",
+    "go_back": "Go Back",
+    "home": "Home"
   },
   "navbar": {
     "menu_open": "Open menu",
@@ -114,7 +144,8 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System",
-    "toggle_theme": "Toggle theme"
+    "toggle_theme": "Toggle theme",
+    "loading": "Loading..."
   },
   "dashboard": {
     "nav": {
@@ -132,6 +163,7 @@
     },
 
     "join": {
+      "unknown_teacher": "A Teacher",
       "title": "Invitation Details",
       "desc": "Review the details provided by your teacher.",
       "teacher_data": "Teacher's Input",
@@ -257,12 +289,15 @@
     "contact_support": "Please contact support if you see this screen."
   },
   "common": {
+    "save": "Save",
+    "saved": "Saved",
     "back_to_home": "Back to Home",
     "all_rights_reserved": "All rights reserved.",
     "copyright": "© 2025 Deniko.",
     "copyright_long": "© 2025 Deniko Education Technologies",
     "error_occurred": "An error occurred",
     "back": "Back",
+    "print": "Print",
     "password_placeholder": "******",
     "toggle_password_visibility": "Toggle password visibility",
     "github_profile": "My GitHub Profile",
@@ -271,10 +306,23 @@
     "zoom": "Zoom",
     "crop_preview": "Crop Preview",
     "crop_save": "Crop & Save",
+    "edit_photo": "Edit Photo",
+    "crop_description": "Drag to reposition and use the slider to zoom.",
     "more_options": "More options",
+    "copied": "Copied",
+    "copied_desc": "Section copied to clipboard.",
+    "copy_failed": "Copy failed",
+    "phone_input": {
+      "search_placeholder": "Search country...",
+      "no_results": "No country found.",
+      "country_selector": "Country selector"
+    },
     "skip_to_content": "Skip to main content",
     "close": "Close",
     "reset": "Reset",
+    "separator": "•",
+    "date_format_long": "PPP p",
+    "empty_placeholder": "-",
     "google": "Google",
     "student_initials": "ST",
     "app_name": "Deniko",
@@ -319,7 +367,11 @@
       "contact_parent": "Contact Parent",
       "save": "Save Changes",
       "archive_student": "Archive Student",
-      "delete_student": "Delete Student"
+      "delete_student": "Delete Student",
+      "update_success": "Student updated successfully",
+      "update_error": "Failed to update",
+      "archive_confirm": "Are you sure you want to archive this student? They will be hidden from your active list.",
+      "delete_confirm": "Are you sure you want to delete this student? This action cannot be undone."
     },
     "header": {
       "total_lessons": "Total Lessons",
@@ -334,7 +386,8 @@
       "no_level": "No Level",
       "no_number": "No Number",
       "copy_link": "Copy Link",
-      "link_copied": "Invite link copied"
+      "link_copied": "Invite link copied",
+      "unknown_student": "Unknown Student"
     },
     "overview": {
       "general_info": "General Information",
@@ -408,6 +461,7 @@
       "present": "Present",
       "absent": "Absent",
       "late": "Late",
+      "history": "Attendance History",
       "no_records": "No attendance records found."
     },
     "settings": {
@@ -789,5 +843,61 @@
       "footer_terms": "Terms of Service",
       "footer_privacy": "Privacy Policy"
     }
+  },
+  "errors": {
+    "unauthorized": "Unauthorized",
+    "teacher_profile_not_found": "Teacher profile not found",
+    "student_not_found": "Student not found",
+    "invalid_fields": "Invalid fields",
+    "failed_to_create_student": "Failed to create student",
+    "failed_to_update_student": "Failed to update student",
+    "failed_to_delete_student": "Failed to delete student",
+    "failed_to_upload_avatar": "Failed to upload avatar",
+    "generic_error": "An error occurred",
+    "name_min_length": "Name must be at least 2 characters",
+    "surname_min_length": "Surname must be at least 2 characters",
+    "invalid_email": "Invalid email address",
+    "login_validation_failed": "Login validation failed",
+    "login_failed": "Login failed",
+    "email_not_verified": "Email not verified",
+    "resend_cooldown": "Please wait before resending",
+    "resend_error": "Resend Verification Error",
+    "registration_error": "Registration Error",
+    "verification_error": "Verification Error",
+    "forgot_password_error": "Forgot Password Error",
+    "reset_password_error": "Reset Password Error",
+    "onboarding_error": "Onboarding Error",
+    "session_not_found": "Session not found. Please login again.",
+    "accept_terms": "You must accept the terms of service.",
+    "phone_required": "Phone number is required.",
+    "password_required": "Password fields are required.",
+    "passwords_mismatch": "Passwords do not match.",
+    "password_min_length": "Password must be at least 8 characters.",
+    "password_complexity": "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character.",
+    "invalid_token": "Invalid or expired token",
+    "profile_already_claimed": "Profile already claimed",
+    "invite_expired": "Invitation link has expired. Please ask your teacher for a new one.",
+    "failed_to_claim_profile": "Failed to claim profile",
+    "failed_to_fetch_invite": "Failed to fetch invite details",
+    "failed_to_fetch_profile": "Failed to fetch profile by token",
+    "no_relation_found": "No relation found with this student",
+    "student_archived": "Student archived",
+    "failed_to_archive_student": "Failed to archive student",
+    "student_unlinked": "Student removed from your list (Unlinked).",
+    "shadow_student_deleted": "Shadow student and data completely deleted.",
+    "relation_not_found": "Relation not found",
+    "cannot_delete_claimed": "Cannot delete claimed student",
+    "invite_regenerated": "Invitation link regenerated.",
+    "failed_to_regenerate_token": "Failed to regenerate token",
+    "invite_opened": "Invitation link opened.",
+    "invite_closed": "Invitation link closed.",
+    "failed_to_toggle_invite": "Failed to toggle invite link",
+    "info_updated": "Information updated.",
+    "failed_to_update_settings": "Failed to update student settings",
+    "update_failed": "Update failed",
+    "file_not_found": "File not found",
+    "file_not_found_or_error": "File not found or Error",
+    "unknown_error": "Unknown error",
+    "phone_start_zero": "Phone number must not start with 0."
   }
 }

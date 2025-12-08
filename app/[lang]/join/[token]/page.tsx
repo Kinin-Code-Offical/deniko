@@ -24,13 +24,13 @@ export async function generateMetadata({
   params: Promise<{ lang: Locale; token: string }>;
 }): Promise<Metadata> {
   const { lang, token } = await params;
-  const isTr = lang === "tr";
+  const dict = await getDictionary(lang);
   const baseUrl = "https://deniko.net";
   const pathname = `/join/${token}`;
 
   return {
-    title: isTr ? "Davet | Deniko" : "Invitation | Deniko",
-    description: isTr ? "Deniko'ya katılın." : "Join Deniko.",
+    title: dict.metadata.join.title,
+    description: dict.metadata.join.description,
     metadataBase: new URL(baseUrl),
     alternates: {
       canonical: `/${lang}${pathname}`,
@@ -93,7 +93,8 @@ export default async function JoinPage({
             </CardTitle>
             <CardDescription className="text-base dark:text-slate-400">
               <span className="text-foreground font-semibold dark:text-white">
-                {inviteDetails.teacherName}
+                {inviteDetails.teacherName ||
+                  dict.dashboard.join.unknown_teacher}
               </span>{" "}
               {dict.dashboard.join.invite_desc.replace("{name}", "")}
             </CardDescription>

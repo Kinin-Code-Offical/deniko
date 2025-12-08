@@ -51,6 +51,7 @@ export default async function PrivacyPage({
   params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
+  const dictionary = await getDictionary(lang);
   const content =
     privacyContent[lang as keyof typeof privacyContent] || privacyContent.en;
 
@@ -58,7 +59,7 @@ export default async function PrivacyPage({
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: content.title,
-    description: "Privacy Policy for Deniko",
+    description: dictionary.legal.docs.privacy.description,
     url: `https://deniko.net/${lang}/legal/privacy`,
   };
 
@@ -74,7 +75,7 @@ export default async function PrivacyPage({
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20 print:hidden">
             <Shield className="h-7 w-7" />
           </div>
-          <PrintButton label={lang === "tr" ? "Yazdır" : "Print"} />
+          <PrintButton label={dictionary.common.print} />
         </div>
 
         <h1 className="mb-6 text-3xl leading-tight font-bold tracking-tight text-slate-900 md:text-5xl dark:text-white">
@@ -102,6 +103,12 @@ export default async function PrivacyPage({
                 key={index}
                 title={section.title}
                 content={section.content}
+                labels={{
+                  copied: dictionary.common.copied,
+                  copied_desc: dictionary.common.copied_desc,
+                  error: dictionary.common.error_occurred,
+                  copy_failed: dictionary.common.copy_failed,
+                }}
               />
             ))}
           </div>

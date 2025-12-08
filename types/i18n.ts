@@ -21,6 +21,7 @@ export interface Dictionary {
       description: string;
     };
     dashboard: {
+      title: string;
       student_title: string;
       teacher_title: string;
       description: string;
@@ -37,6 +38,35 @@ export interface Dictionary {
       description: string;
       coming_soon: string;
     };
+    join: {
+      title: string;
+      description: string;
+    };
+    onboarding: {
+      title: string;
+      description: string;
+    };
+    verify: {
+      title: string;
+      description: string;
+    };
+    students: {
+      title: string;
+      description: string;
+    };
+    student_detail: {
+      title: string;
+      description: string;
+      fallback_title: string;
+      fallback_description: string;
+    };
+  };
+  not_found: {
+    title: string;
+    heading: string;
+    description: string;
+    go_back: string;
+    home: string;
   };
   navbar: {
     menu_open: string;
@@ -115,6 +145,7 @@ export interface Dictionary {
     dark: string;
     system: string;
     toggle_theme: string;
+    loading: string;
   };
   dashboard: {
     nav: {
@@ -131,6 +162,7 @@ export interface Dictionary {
       menu_desc: string;
     };
     join: {
+      unknown_teacher: string;
       title: string;
       desc: string;
       teacher_data: string;
@@ -256,6 +288,8 @@ export interface Dictionary {
     contact_support: string;
   };
   common: {
+    save: string;
+    saved: string;
     all_rights_reserved: string;
     copyright: string;
     copyright_long: string;
@@ -265,27 +299,41 @@ export interface Dictionary {
     toggle_password_visibility: string;
     cancel?: string;
     continue?: string;
-    save?: string;
-    saved?: string;
     password_placeholder: string;
+    patreon_profile: string;
+    brand_name: string;
+    print: string;
     zoom: string;
     crop_preview: string;
     crop_save: string;
+    edit_photo: string;
+    crop_description: string;
     more_options: string;
+    copied: string;
+    copied_desc: string;
+    copy_failed: string;
     skip_to_content: string;
     close: string;
     reset: string;
+    separator: string;
+    date_format_long: string;
+    empty_placeholder: string;
     google: string;
-    student_initials: string;
-    app_name: string;
-    loading: string;
-    avatar: string;
     theme: {
       light: string;
       dark: string;
       system: string;
       toggle_theme: string;
       loading: string;
+    };
+    student_initials: string;
+    app_name: string;
+    loading: string;
+    avatar: string;
+    phone_input: {
+      search_placeholder: string;
+      no_results: string;
+      country_selector: string;
     };
   };
   repro?: {
@@ -320,6 +368,10 @@ export interface Dictionary {
       save: string;
       archive_student: string;
       delete_student: string;
+      update_success: string;
+      update_error: string;
+      archive_confirm: string;
+      delete_confirm: string;
     };
     header: {
       total_lessons: string;
@@ -335,6 +387,7 @@ export interface Dictionary {
       no_number: string;
       copy_link: string;
       link_copied: string;
+      unknown_student: string;
     };
     overview: {
       general_info: string;
@@ -408,6 +461,7 @@ export interface Dictionary {
       present: string;
       absent: string;
       late: string;
+      history: string;
       no_records: string;
     };
     settings: {
@@ -788,5 +842,61 @@ export interface Dictionary {
       footer_terms: string;
       footer_privacy: string;
     };
+  };
+  errors: {
+    unauthorized: string;
+    teacher_profile_not_found: string;
+    student_not_found: string;
+    invalid_fields: string;
+    failed_to_create_student: string;
+    failed_to_update_student: string;
+    failed_to_delete_student: string;
+    failed_to_upload_avatar: string;
+    generic_error: string;
+    name_min_length: string;
+    surname_min_length: string;
+    invalid_email: string;
+    login_validation_failed: string;
+    login_failed: string;
+    email_not_verified: string;
+    resend_cooldown: string;
+    resend_error: string;
+    registration_error: string;
+    verification_error: string;
+    forgot_password_error: string;
+    reset_password_error: string;
+    onboarding_error: string;
+    session_not_found: string;
+    accept_terms: string;
+    phone_required: string;
+    password_required: string;
+    passwords_mismatch: string;
+    password_min_length: string;
+    password_complexity: string;
+    invalid_token: string;
+    profile_already_claimed: string;
+    invite_expired: string;
+    failed_to_claim_profile: string;
+    failed_to_fetch_invite: string;
+    failed_to_fetch_profile: string;
+    no_relation_found: string;
+    student_archived: string;
+    failed_to_archive_student: string;
+    student_unlinked: string;
+    shadow_student_deleted: string;
+    relation_not_found: string;
+    cannot_delete_claimed: string;
+    invite_regenerated: string;
+    failed_to_regenerate_token: string;
+    invite_opened: string;
+    invite_closed: string;
+    failed_to_toggle_invite: string;
+    info_updated: string;
+    failed_to_update_settings: string;
+    update_failed: string;
+    file_not_found: string;
+    file_not_found_or_error: string;
+    unknown_error: string;
+    phone_start_zero: string;
   };
 }

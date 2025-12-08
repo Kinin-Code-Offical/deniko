@@ -40,6 +40,18 @@ const mockDictionary = {
       privacy: "Privacy Policy",
     },
   },
+  navbar: {
+    menu_open: "Open menu",
+    menu: "Menu",
+    theme: "Theme",
+    language: "Language",
+    legal: "Legal",
+    terms: "Terms",
+    privacy: "Privacy",
+    mobile_menu_title: "Mobile Menu",
+    mobile_menu_desc: "Mobile Menu Desc",
+    toggle_theme: "Toggle Theme",
+  },
 } as unknown as Dictionary;
 
 describe("Navigation Components", () => {

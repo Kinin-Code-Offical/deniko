@@ -6,15 +6,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import type { Dictionary } from "@/types/i18n";
 
-export function CookieConsent({ dictionary }: { dictionary?: Dictionary }) {
+export function CookieConsent({ dictionary }: { dictionary: Dictionary }) {
   const [isVisible, setIsVisible] = React.useState(false);
-  const t = dictionary?.legal.cookie_consent || {
-    title: "Cookie Policy",
-    description:
-      'We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking "Accept", you consent to our use of cookies.',
-    accept: "Accept",
-    decline: "Decline",
-  };
+  const t = dictionary.legal.cookie_consent;
 
   React.useEffect(() => {
     // Check if cookie_consent cookie exists

@@ -1,6 +1,7 @@
 import { Storage } from "@google-cloud/storage"
 import { v4 as uuidv4 } from "uuid"
 import { env } from "@/lib/env"
+import logger from "@/lib/logger"
 
 let storageInstance: Storage | null = null
 const bucketName = env.GCS_BUCKET_NAME
@@ -52,7 +53,7 @@ export async function getSignedUrl(path: string): Promise<string | null> {
         })
         return url
     } catch (error) {
-        console.error("Signed URL Error:", error)
+        logger.error({ error }, "Signed URL Error")
         return null
     }
 }
@@ -69,7 +70,7 @@ export async function deleteFile(path: string): Promise<boolean> {
         await getBucket().file(path).delete()
         return true
     } catch (error) {
-        console.error("GCS Delete Error:", error)
+        logger.error({ error }, "GCS Delete Error")
         return false
     }
 }

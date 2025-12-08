@@ -21,7 +21,6 @@ export function StudentNotes({
   studentId,
   initialNotes,
   dictionary,
-  lang,
 }: StudentNotesProps) {
   const [notes, setNotes] = useState(initialNotes || "");
   const [isPending, startTransition] = useTransition();
@@ -34,14 +33,10 @@ export function StudentNotes({
       });
 
       if (result.success) {
-        toast.success(
-          dictionary.common?.saved || (lang === "tr" ? "Kaydedildi" : "Saved")
-        );
+        toast.success(dictionary.common.saved);
         router.refresh();
       } else {
-        toast.error(
-          result.error || (lang === "tr" ? "Hata oluştu" : "An error occurred")
-        );
+        toast.error(result.error || dictionary.common.error_occurred);
       }
     });
   };
@@ -50,8 +45,7 @@ export function StudentNotes({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>
-          {dictionary.student_detail.overview?.private_notes ||
-            (lang === "tr" ? "Özel Notlar" : "Private Notes")}
+          {dictionary.student_detail.overview.private_notes}
         </CardTitle>
         <Button
           variant="ghost"
@@ -62,7 +56,7 @@ export function StudentNotes({
           {isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            dictionary.common?.save || (lang === "tr" ? "Kaydet" : "Save")
+            dictionary.common.save
           )}
         </Button>
       </CardHeader>
@@ -71,10 +65,7 @@ export function StudentNotes({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder={
-            dictionary.student_detail.overview?.private_notes_placeholder ||
-            (lang === "tr"
-              ? "Öğrenci hakkında özel notlar..."
-              : "Private notes about the student...")
+            dictionary.student_detail.overview.private_notes_placeholder
           }
           className="min-h-[150px] resize-none"
         />

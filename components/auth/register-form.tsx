@@ -259,15 +259,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                       onChange={field.onChange}
                       autoComplete="tel"
                       className="h-11"
-                      searchPlaceholder={
-                        dictionary.components.phone_input.search_country
-                      }
-                      noResultsMessage={
-                        dictionary.components.phone_input.no_country_found
-                      }
-                      countrySelectorLabel={
-                        dictionary.components.phone_input.country_selector_label
-                      }
+                      labels={dictionary.common.phone_input}
                     />
                   </FormControl>
                   <FormMessage />
@@ -375,9 +367,7 @@ export function RegisterForm({ dictionary, lang }: RegisterFormProps) {
                         if (part.startsWith("[") && part.endsWith("]")) {
                           const content = part.slice(1, -1);
                           const href =
-                            content === dictionary.legal.terms_title ||
-                            content === "Terms of Service" ||
-                            content === "Kullanıcı Sözleşmesi"
+                            content === dictionary.legal.terms_title
                               ? `/${lang}/legal/terms`
                               : `/${lang}/legal/privacy`;
                           return (

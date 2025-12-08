@@ -32,58 +32,44 @@ type PhoneInputProps = Omit<
 > &
   Omit<React.ComponentProps<typeof RPNInput>, "onChange"> & {
     onChange?: (value: Value) => void;
-    searchPlaceholder?: string;
-    noResultsMessage?: string;
-    countrySelectorLabel?: string;
+    labels: {
+      searchPlaceholder: string;
+      noResultsMessage: string;
+      countrySelectorLabel: string;
+    };
   };
 
 const PhoneInput = React.forwardRef<
   React.ElementRef<typeof RPNInput>,
   PhoneInputProps
->(
-  (
-    {
-      className,
-      onChange,
-      searchPlaceholder = "Search country...",
-      noResultsMessage = "No country found.",
-      countrySelectorLabel = "Country selector",
-      ...props
-    },
-    ref
-  ) => {
-    return (
-      <RPNInput
-        ref={ref}
-        defaultCountry="TR"
-        className={cn("flex items-center", className)}
-        flagComponent={FlagComponent}
-        countrySelectComponent={(props) => (
-          <CountrySelect
-            {...props}
-            searchPlaceholder={searchPlaceholder}
-            noResultsMessage={noResultsMessage}
-            countrySelectorLabel={countrySelectorLabel}
-          />
-        )}
-        inputComponent={InputComponent}
-        limitMaxLength={true}
-        /**
-         * Handles the onChange event.
-         *
-         * react-phone-number-input might trigger the onChange event as undefined
-         * when a valid phone number is not generated.
-         *
-         * @param value
-         */
-        smartCaret={false}
-        onChange={(value) => onChange?.(value || ("" as Value))}
-        {...props}
-        international={false}
-      />
-    );
-  }
-);
+>(({ className, onChange, labels, ...props }, ref) => {
+  return (
+    <RPNInput
+      ref={ref}
+      defaultCountry="TR"
+      className={cn("flex items-center", className)}
+      flagComponent={FlagComponent}
+      countrySelectComponent={(props) => (
+        <CountrySelect {...props} labels={labels} />
+      )}
+      inputComponent={InputComponent}
+      limitMaxLength={true}
+      /**
+       * Handles the onChange event.
+       *
+       * react-phone-number-input might trigger the onChange event as undefined
+       * when a valid phone number is not generated.
+       *
+       * @param value
+       */
+      smartCaret={false}
+      onChange={(value) => onChange?.(value || ("" as Value))}
+      labels={labels}
+      {...props}
+      international={false}
+    />
+  );
+});
 PhoneInput.displayName = "PhoneInput";
 
 const InputComponent = React.forwardRef<
@@ -98,7 +84,7 @@ const InputComponent = React.forwardRef<
 
   return (
     <Input
-      className={cn("flex-shrink-1 rounded-s-none rounded-e-lg", className)}
+      className={cn("shrink rounded-s-none rounded-e-lg", className)}
       {...props}
       value={displayValue}
       maxLength={13}
@@ -115,9 +101,11 @@ type CountrySelectProps = {
   value: Country;
   onChange: (value: Country) => void;
   options: CountrySelectOption[];
-  searchPlaceholder?: string;
-  noResultsMessage?: string;
-  countrySelectorLabel?: string;
+  labels: {
+    searchPlaceholder: string;
+    noResultsMessage: string;
+    countrySelectorLabel: string;
+  };
 };
 
 const CountrySelect = ({
@@ -125,9 +113,7 @@ const CountrySelect = ({
   value,
   onChange,
   options,
-  searchPlaceholder,
-  noResultsMessage,
-  countrySelectorLabel,
+  labels,
 }: CountrySelectProps) => {
   const selectedOption = React.useMemo(
     () => options.find((option) => option.value === value),
@@ -169,12 +155,12 @@ const CountrySelect = ({
       </PopoverTrigger>
       <PopoverContent
         className="w-[300px] p-0"
-        aria-label={countrySelectorLabel}
+        aria-label={labels.countrySelectorLabel}
       >
         <Command>
           <CommandList>
-            <CommandInput placeholder={searchPlaceholder} />
-            <CommandEmpty>{noResultsMessage}</CommandEmpty>
+            <CommandInput placeholder={labels.searchPlaceholder} />
+            <CommandEmpty>{labels.noResultsMessage}</CommandEmpty>
             <CommandGroup>
               {options
                 .filter((x) => x.value)
@@ -220,7 +206,7 @@ const FlagComponent = ({
   const Flag = flags[country];
 
   return (
-    <span className="h-5 w-5 overflow-hidden rounded-sm [&_svg]:block [&_svg]:!h-full [&_svg]:!w-full">
+    <span className="h-5 w-5 overflow-hidden rounded-sm [&_svg]:block [&_svg]:h-full! [&_svg]:w-full!">
       {Flag && <Flag title={countryName} />}
     </span>
   );

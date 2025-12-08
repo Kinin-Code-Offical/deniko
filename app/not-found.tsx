@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FileQuestion, Home, MoveLeft } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
+import en from "@/dictionaries/en.json";
+import tr from "@/dictionaries/tr.json";
 
 export default function NotFound() {
   const router = useRouter();
@@ -11,17 +13,7 @@ export default function NotFound() {
 
   const isEnglish = pathname?.startsWith("/en");
 
-  const dict = {
-    title: isEnglish ? "Page Not Found" : "Sayfa Bulunamadı",
-    heading: isEnglish
-      ? "The page you are looking for seems to be lost"
-      : "Aradığınız sayfa kaybolmuş gibi görünüyor",
-    description: isEnglish
-      ? "The page you are trying to reach may have been deleted, moved, or never existed. Don't worry, we can get you back on track."
-      : "Ulaşmaya çalıştığınız sayfa silinmiş, taşınmış veya hiç var olmamış olabilir. Endişelenmeyin, sizi doğru yola geri döndürebiliriz.",
-    goBack: isEnglish ? "Go Back" : "Geri Dön",
-    home: isEnglish ? "Home" : "Ana Sayfa",
-  };
+  const dict = isEnglish ? en.not_found : tr.not_found;
 
   return (
     <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-slate-50 font-sans transition-colors dark:bg-slate-950">
@@ -70,7 +62,7 @@ export default function NotFound() {
             className="group border-slate-200 bg-white/50 text-slate-700 hover:bg-white hover:text-slate-900 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-slate-50"
           >
             <MoveLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            {dict.goBack}
+            {dict.go_back}
           </Button>
 
           <Button

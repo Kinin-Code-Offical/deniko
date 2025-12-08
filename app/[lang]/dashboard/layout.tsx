@@ -12,16 +12,14 @@ export async function generateMetadata({
   params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const isTr = lang === "tr";
+  const dict = await getDictionary(lang);
 
   return {
     title: {
-      default: isTr ? "Panel" : "Dashboard",
-      template: `%s | Deniko`,
+      default: dict.metadata.dashboard.title,
+      template: `%s | ${dict.common.brand_name}`,
     },
-    description: isTr
-      ? "Deniko yönetim paneli ile derslerinizi ve öğrencilerinizi yönetin."
-      : "Manage your lessons and students with Deniko dashboard.",
+    description: dict.metadata.dashboard.description,
     icons: {
       icon: [
         { url: "/favicon.ico", sizes: "any" },

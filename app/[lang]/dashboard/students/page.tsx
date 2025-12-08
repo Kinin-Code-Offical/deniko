@@ -14,15 +14,13 @@ export async function generateMetadata({
   params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const isTr = lang === "tr";
+  const dict = await getDictionary(lang);
   const baseUrl = "https://deniko.net";
   const pathname = "/dashboard/students";
 
   return {
-    title: isTr ? "Öğrenciler | Deniko" : "Students | Deniko",
-    description: isTr
-      ? "Öğrenci listesi ve yönetimi."
-      : "Student list and management.",
+    title: dict.metadata.students.title,
+    description: dict.metadata.students.description,
     metadataBase: new URL(baseUrl),
     alternates: {
       canonical: `/${lang}${pathname}`,
@@ -85,8 +83,7 @@ export default async function StudentsPage({
     select: { id: true, name: true },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const students = relations.map((rel: any) => ({
+  const students = relations.map((rel) => ({
     id: rel.student.id,
     user: rel.student.user,
     tempFirstName: rel.student.tempFirstName,

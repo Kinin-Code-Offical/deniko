@@ -40,7 +40,7 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-[100] border-b bg-white/80 backdrop-blur-md transition-colors dark:border-slate-800 dark:bg-slate-950/80">
+    <header className="sticky top-0 z-100 border-b bg-white/80 backdrop-blur-md transition-colors dark:border-slate-800 dark:bg-slate-950/80">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:h-20">
         {/* Logo */}
         <Link
@@ -74,7 +74,7 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
             </Button>
             <Button
               asChild
-              className="relative h-11 overflow-hidden rounded-full bg-gradient-to-r from-[#1d4f87] via-[#1a4b7d] to-[#113055] px-6 text-[15px] font-semibold text-white shadow-lg shadow-blue-900/20 hover:opacity-95"
+              className="relative h-11 overflow-hidden rounded-full bg-linear-to-r from-[#1d4f87] via-[#1a4b7d] to-[#113055] px-6 text-[15px] font-semibold text-white shadow-lg shadow-blue-900/20 hover:opacity-95"
             >
               <Link
                 href={`/${lang}/register`}
@@ -219,13 +219,13 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
           ) : (
             <Button
               size="lg"
-              aria-label={lang === "tr" ? "Menüyü aç" : "Open menu"}
+              aria-label={dictionary.navbar.menu_open}
               className="h-11 cursor-default rounded-full bg-[#1d4f87] px-5 text-white opacity-80"
               disabled
             >
               <Menu className="h-5 w-5" strokeWidth={2.4} />
               <span className="text-sm font-semibold tracking-wide">
-                {lang === "tr" ? "Menü" : "Menu"}
+                {dictionary.navbar.menu}
               </span>
             </Button>
           )}

@@ -9,7 +9,7 @@ interface StudentExamsTabProps {
   lang: string;
 }
 
-export function StudentExamsTab({ dictionary, lang }: StudentExamsTabProps) {
+export function StudentExamsTab({ dictionary }: StudentExamsTabProps) {
   // Mock data - normally this would come from the relation or a separate fetch
   const exams = [
     /*
@@ -28,10 +28,7 @@ export function StudentExamsTab({ dictionary, lang }: StudentExamsTabProps) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>
-            {dictionary.student_detail.tabs.exams ||
-              (lang === "tr" ? "Sınavlar" : "Exams")}
-          </CardTitle>
+          <CardTitle>{dictionary.student_detail.tabs.exams}</CardTitle>
         </CardHeader>
         <CardContent>
           {exams.length > 0 ? (
@@ -39,12 +36,7 @@ export function StudentExamsTab({ dictionary, lang }: StudentExamsTabProps) {
           ) : (
             <div className="text-muted-foreground flex flex-col items-center justify-center py-8 text-center">
               <FileText className="mb-4 h-12 w-12 opacity-20" />
-              <p>
-                {dictionary.student_detail.exams?.no_exams ||
-                  (lang === "tr"
-                    ? "Henüz sınav kaydı bulunmuyor."
-                    : "No exams recorded yet.")}
-              </p>
+              <p>{dictionary.student_detail.exams.no_exams}</p>
             </div>
           )}
         </CardContent>

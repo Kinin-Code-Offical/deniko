@@ -24,6 +24,8 @@ const envSchema = z.object({
   AUTH_SECRET: z.string().min(1, { message: "AUTH_SECRET is required" }),
   AUTH_GOOGLE_ID: z.string().min(1, { message: "AUTH_GOOGLE_ID is required" }),
   AUTH_GOOGLE_SECRET: z.string().min(1, { message: "AUTH_GOOGLE_SECRET is required" }),
+  NEXT_PUBLIC_SITE_URL: z.string().url().optional().default("https://deniko.net"),
+  NEXT_PUBLIC_GA_ID: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);

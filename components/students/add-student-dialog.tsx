@@ -61,17 +61,22 @@ const DEFAULT_AVATARS = [
   "defaults/Sam.svg",
 ];
 
-const formSchema = z.object({
-  name: z.string().min(2),
-  surname: z.string().min(2),
-  studentNo: z.string().optional(),
-  grade: z.string().optional(),
-  tempPhone: z.string().optional(),
-  tempEmail: z.string().email().optional().or(z.literal("")),
-  classroomIds: z.array(z.string()).optional(),
-});
-
 import type { Dictionary } from "@/types/i18n";
+
+const createFormSchema = (dictionary: Dictionary) =>
+  z.object({
+    name: z.string().min(2, dictionary.errors.name_min_length),
+    surname: z.string().min(2, dictionary.errors.surname_min_length),
+    studentNo: z.string().optional(),
+    grade: z.string().optional(),
+    tempPhone: z.string().optional(),
+    tempEmail: z
+      .string()
+      .email(dictionary.errors.invalid_email)
+      .optional()
+      .or(z.literal("")),
+    classroomIds: z.array(z.string()).optional(),
+  });
 
 export function AddStudentDialog({
   dictionary,
@@ -105,6 +110,7 @@ export function AddStudentDialog({
     }
   };
 
+  const formSchema = createFormSchema(dictionary);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -148,7 +154,11 @@ export function AddStudentDialog({
         setSelectedFile(null);
         setSelectedAvatar(null);
       } else {
-        toast.error(result?.error || "Error");
+        const errorMessage = result?.error
+          ? dictionary.errors[result.error as keyof typeof dictionary.errors] ||
+            result.error
+          : "Error";
+        toast.error(errorMessage);
       }
     });
   }
@@ -373,12 +383,7 @@ export function AddStudentDialog({
                     <PhoneInput
                       value={field.value || ""}
                       onChange={field.onChange}
-                      searchPlaceholder={
-                        dictionary.components.phone_input.search_country
-                      }
-                      noResultsMessage={
-                        dictionary.components.phone_input.no_country_found
-                      }
+                      labels={dictionary.common.phone_input}
                     />
                   </FormControl>
                   <FormMessage />
@@ -527,9 +532,14 @@ export function AddStudentDialog({
           setSelectedFile(croppedFile);
           setSelectedAvatar(null);
         }}
-        saveLabel={dictionary.common.crop_save}
-        zoomLabel={dictionary.common.zoom}
-        cropPreviewAlt={dictionary.common.crop_preview}
+        labels={{
+          save: dictionary.common.crop_save,
+          zoom: dictionary.common.zoom,
+          reset: dictionary.common.reset,
+          title: dictionary.common.edit_photo,
+          description: dictionary.common.crop_description,
+          crop_preview: dictionary.common.crop_preview,
+        }}
       />
     </Dialog>
   );

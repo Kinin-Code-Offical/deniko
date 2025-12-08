@@ -8,7 +8,9 @@ import type { Locale } from "@/i18n-config";
 import { Providers } from "@/components/providers";
 import { CookieConsent } from "@/components/ui/cookie-consent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { env } from "@/lib/env";
 import { headers } from "next/headers";
+import en from "@/dictionaries/en.json";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,31 +24,27 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Deniko | Özel Ders Yönetim Platformu",
-    template: "%s | Deniko",
+    default: en.metadata.home.title,
+    template: `%s | ${en.common.brand_name}`,
   },
-  description:
-    "Deniko ile özel derslerinizi kolayca yönetin. Öğrenci takibi, ders programı ve veli bilgilendirme özellikleriyle eğitiminizi dijitalleştirin.",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://deniko.net"
-  ),
+  description: en.metadata.home.description,
+  metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL || "https://deniko.net"),
   alternates: {
     canonical: "./",
   },
   openGraph: {
-    title: "Deniko | Özel Ders Yönetim Platformu",
-    description:
-      "Deniko ile özel derslerinizi kolayca yönetin. Öğrenci takibi, ders programı ve veli bilgilendirme özellikleriyle eğitiminizi dijitalleştirin.",
-    siteName: "Deniko",
+    title: en.metadata.home.title,
+    description: en.metadata.home.description,
+    siteName: en.common.brand_name,
     images: [
       {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Deniko",
+        alt: en.common.brand_name,
       },
     ],
-    locale: "tr_TR",
+    locale: "en_US",
     type: "website",
   },
   robots: {

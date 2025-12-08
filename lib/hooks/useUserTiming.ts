@@ -27,7 +27,7 @@ export const useUserTiming = (componentName: string) => {
                 const entry = entries[entries.length - 1];
 
                 if (entry) {
-                    console.log(
+                    console.log( // ignore-console-check
                         `%c⚡ [Performance] ${componentName} mounted in ${entry.duration.toFixed(2)}ms`,
                         'color: #bada55; font-weight: bold;'
                     );
@@ -45,7 +45,7 @@ export const useUserTiming = (componentName: string) => {
                     // ---------------------------------------------------------
                 }
             } catch (error) {
-                console.warn(`[User Timing] Failed to measure ${componentName}:`, error);
+                console.warn(`[User Timing] Failed to measure ${componentName}:`, error); // ignore-console-check
             }
         }
     }, [componentName]);

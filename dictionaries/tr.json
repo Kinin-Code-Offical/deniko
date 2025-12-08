@@ -21,10 +21,11 @@
       "description": "Yeni şifrenizi belirleyerek hesabınıza güvenle erişin."
     },
     "dashboard": {
+      "title": "Panel",
       "student_title": "Öğrenci Paneli - {name}",
       "teacher_title": "Öğretmen Paneli - {name}",
-      "description": "Deniko yönetim paneli ile tüm süreçlerinizi kontrol edin.",
-      "welcome_title": "Deniko'ya Hoş Geldiniz",
+      "description": "Deniko yönetim paneli ile derslerinizi ve öğrencilerinizi yönetin.",
+      "welcome_title": "Deniko'ya Hoşgeldiniz",
       "contact_support": "Bu ekranı görüyorsanız lütfen destek ile iletişime geçin."
     },
     "finance": {
@@ -36,7 +37,36 @@
       "title": "Ders Programı | Deniko",
       "description": "Ders programı ve takvim yönetimi.",
       "coming_soon": "Ders programı içeriği yakında..."
+    },
+    "join": {
+      "title": "Davet | Deniko",
+      "description": "Deniko'ya katılın."
+    },
+    "onboarding": {
+      "title": "Kurulum | Deniko",
+      "description": "Hesap kurulumunuzu tamamlayın ve Deniko'yu kullanmaya başlayın."
+    },
+    "verify": {
+      "title": "Hesap Doğrulama | Deniko",
+      "description": "Deniko hesabınızı doğrulayın."
+    },
+    "student_detail": {
+      "title": "{name} - Öğrenci Detayı",
+      "description": "{name} isimli öğrencinin detayları, ders programı ve ödeme geçmişi.",
+      "fallback_title": "Öğrenci Detayı",
+      "fallback_description": "Öğrenci detayları."
+    },
+    "students": {
+      "title": "Öğrenciler | Deniko",
+      "description": "Öğrenci listesi ve yönetimi."
     }
+  },
+  "not_found": {
+    "title": "Sayfa Bulunamadı",
+    "heading": "Aradığınız sayfa kaybolmuş gibi görünüyor",
+    "description": "Ulaşmaya çalıştığınız sayfa silinmiş, taşınmış veya hiç var olmamış olabilir. Endişelenmeyin, sizi doğru yola geri döndürebiliriz.",
+    "go_back": "Geri Dön",
+    "home": "Ana Sayfa"
   },
   "navbar": {
     "menu_open": "Menüyü aç",
@@ -114,7 +144,8 @@
     "light": "Aydınlık",
     "dark": "Karanlık",
     "system": "Sistem",
-    "toggle_theme": "Temayı değiştir"
+    "toggle_theme": "Temayı değiştir",
+    "loading": "Yükleniyor..."
   },
   "dashboard": {
     "nav": {
@@ -131,6 +162,7 @@
       "menu_desc": "Panel navigasyon menüsü"
     },
     "join": {
+      "unknown_teacher": "Bir Öğretmen",
       "title": "Davet Detayları",
       "desc": "Öğretmeninizin girdiği bilgileri inceleyin.",
       "teacher_data": "Hocanın Girdiği",
@@ -256,12 +288,15 @@
     "contact_support": "Bu ekranı görüyorsanız lütfen destek ile iletişime geçin."
   },
   "common": {
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
     "back_to_home": "Ana Sayfaya Dön",
     "all_rights_reserved": "Tüm hakları saklıdır.",
     "copyright": "© 2025 Deniko.",
     "copyright_long": "© 2025 Deniko Eğitim Teknolojileri",
     "error_occurred": "Bir hata oluştu",
     "back": "Geri",
+    "print": "Yazdır",
     "password_placeholder": "******",
     "toggle_password_visibility": "Şifre görünürlüğünü değiştir",
     "github_profile": "GitHub Profilim",
@@ -270,10 +305,23 @@
     "zoom": "Yakınlaştır",
     "crop_preview": "Kırpma Önizlemesi",
     "crop_save": "Kırp ve Kaydet",
+    "edit_photo": "Fotoğrafı Düzenle",
+    "crop_description": "Konumlandırmak için sürükleyin ve yakınlaştırmak için kaydırıcıyı kullanın.",
     "more_options": "Diğer seçenekler",
+    "copied": "Kopyalandı",
+    "copied_desc": "Bölüm panoya kopyalandı.",
+    "copy_failed": "Kopyalama başarısız",
+    "phone_input": {
+      "search_placeholder": "Ülke ara...",
+      "no_results": "Ülke bulunamadı.",
+      "country_selector": "Ülke seçici"
+    },
     "skip_to_content": "Ana içeriğe atla",
     "close": "Kapat",
     "reset": "Sıfırla",
+    "separator": "•",
+    "date_format_long": "PPP p",
+    "empty_placeholder": "-",
     "google": "Google",
     "student_initials": "ÖĞ",
     "app_name": "Deniko",
@@ -318,7 +366,11 @@
       "contact_parent": "Veli ile İletişime Geç",
       "save": "Değişiklikleri Kaydet",
       "archive_student": "Öğrenciyi Arşivle",
-      "delete_student": "Öğrenciyi Sil"
+      "delete_student": "Öğrenciyi Sil",
+      "update_success": "Öğrenci başarıyla güncellendi",
+      "update_error": "Güncelleme başarısız",
+      "archive_confirm": "Bu öğrenciyi arşivlemek istediğinize emin misiniz? Aktif listenizden gizlenecektir.",
+      "delete_confirm": "Bu öğrenciyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
     },
     "header": {
       "total_lessons": "Toplam Ders",
@@ -333,7 +385,8 @@
       "no_level": "Seviye Yok",
       "no_number": "No Yok",
       "copy_link": "Linki Kopyala",
-      "link_copied": "Davet linki kopyalandı"
+      "link_copied": "Davet linki kopyalandı",
+      "unknown_student": "Bilinmeyen Öğrenci"
     },
     "overview": {
       "general_info": "Genel Bilgiler",
@@ -346,6 +399,7 @@
       "parent_phone": "Veli Telefonu",
       "parent_email": "Veli E-posta",
       "private_notes": "Özel Notlar",
+      "private_notes_placeholder": "Bu öğrenci hakkında özel notlar ekleyin...",
       "no_notes": "Henüz not eklenmemiş.",
       "total_lessons": "Toplam Ders"
     },
@@ -406,6 +460,7 @@
       "present": "Katılım",
       "absent": "Devamsızlık",
       "late": "Geç Kalma",
+      "history": "Devamsızlık Geçmişi",
       "no_records": "Henüz devamsızlık kaydı bulunmuyor."
     },
     "settings": {
@@ -415,6 +470,7 @@
       "change_photo": "Fotoğrafı Değiştir",
       "personal_info": "Kişisel Bilgiler",
       "full_name": "Ad Soyad",
+      "email": "E-posta",
       "student_number": "Öğrenci Numarası",
       "grade_level": "Sınıf Seviyesi",
       "contact_info": "İletişim Bilgileri",
@@ -775,13 +831,72 @@
       "title": "Şifrenizi Sıfırlayın",
       "greeting": "Merhaba,",
       "body": "Hesabınız için bir şifre sıfırlama talebi aldık. Şifrenizi yenilemek için aşağıdaki butona tıklayın. Bu link 1 saat süreyle geçerlidir.",
-      "button": "Şifremi Sıfırla",
+      "button": "Şifreyi Sıfırla",
       "ignore": "Bu talebi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.",
-      "footer_disclaimer": "Bu e-posta Deniko hesabınızla ilgili önemli bir bildirimdir.",
+      "footer": "Deniko - Öğretmen ve Öğrenci Yönetim Platformu.",
+      "website": "Web Sitesi",
+      "support": "Destek",
+      "footer_disclaimer": "Bu e-posta Deniko hesabınızla ilgili önemli bilgiler içermektedir.",
       "footer_address": "Güzeltepe Mah., 747. Cd., No:14 Çankaya/Ankara",
       "footer_copyright": "© 2025 Deniko. Tüm hakları saklıdır.",
       "footer_terms": "Kullanım Koşulları",
       "footer_privacy": "Gizlilik Politikası"
     }
+  },
+  "errors": {
+    "unauthorized": "Yetkisiz erişim",
+    "teacher_profile_not_found": "Öğretmen profili bulunamadı",
+    "student_not_found": "Öğrenci bulunamadı",
+    "invalid_fields": "Geçersiz alanlar",
+    "failed_to_create_student": "Öğrenci oluşturulamadı",
+    "failed_to_update_student": "Öğrenci güncellenemedi",
+    "failed_to_delete_student": "Öğrenci silinemedi",
+    "failed_to_upload_avatar": "Avatar yüklenemedi",
+    "generic_error": "Bir hata oluştu",
+    "name_min_length": "İsim en az 2 karakter olmalıdır",
+    "surname_min_length": "Soyisim en az 2 karakter olmalıdır",
+    "invalid_email": "Geçersiz e-posta adresi",
+    "login_validation_failed": "Giriş doğrulama hatası",
+    "login_failed": "Giriş başarısız",
+    "email_not_verified": "E-posta doğrulanmamış",
+    "resend_cooldown": "Yeniden göndermeden önce lütfen bekleyin",
+    "resend_error": "Doğrulama Kodu Gönderme Hatası",
+    "registration_error": "Kayıt Hatası",
+    "verification_error": "Doğrulama Hatası",
+    "forgot_password_error": "Şifremi Unuttum Hatası",
+    "reset_password_error": "Şifre Sıfırlama Hatası",
+    "onboarding_error": "Kurulum Hatası",
+    "session_not_found": "Oturum bulunamadı. Lütfen tekrar giriş yapın.",
+    "accept_terms": "Hizmet şartlarını kabul etmelisiniz.",
+    "phone_required": "Telefon numarası gereklidir.",
+    "password_required": "Şifre alanları gereklidir.",
+    "passwords_mismatch": "Şifreler eşleşmiyor.",
+    "password_min_length": "Şifre en az 8 karakter olmalıdır.",
+    "password_complexity": "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.",
+    "invalid_token": "Geçersiz veya süresi dolmuş token",
+    "profile_already_claimed": "Profil zaten sahiplenilmiş",
+    "invite_expired": "Davet bağlantısının süresi dolmuş. Lütfen öğretmeninizden yeni bir tane isteyin.",
+    "failed_to_claim_profile": "Profil sahiplenilemedi",
+    "failed_to_fetch_invite": "Davet detayları alınamadı",
+    "failed_to_fetch_profile": "Token ile profil alınamadı",
+    "no_relation_found": "Bu öğrenci ile ilişki bulunamadı",
+    "student_archived": "Öğrenci arşivlendi",
+    "failed_to_archive_student": "Öğrenci arşivlenemedi",
+    "student_unlinked": "Öğrenci listenizden kaldırıldı (Bağlantı kesildi).",
+    "shadow_student_deleted": "Gölge öğrenci ve veriler tamamen silindi.",
+    "relation_not_found": "İlişki bulunamadı",
+    "cannot_delete_claimed": "Sahiplenilmiş öğrenci silinemez",
+    "invite_regenerated": "Davet bağlantısı yenilendi.",
+    "failed_to_regenerate_token": "Token yenilenemedi",
+    "invite_opened": "Davet bağlantısı açıldı.",
+    "invite_closed": "Davet bağlantısı kapatıldı.",
+    "failed_to_toggle_invite": "Davet bağlantısı değiştirilemedi",
+    "info_updated": "Bilgiler güncellendi.",
+    "failed_to_update_settings": "Öğrenci ayarları güncellenemedi",
+    "update_failed": "Güncelleme başarısız",
+    "file_not_found": "Dosya bulunamadı",
+    "file_not_found_or_error": "Dosya bulunamadı veya Hata",
+    "unknown_error": "Bilinmeyen hata",
+    "phone_start_zero": "Telefon numarası 0 ile başlamamalıdır."
   }
 }

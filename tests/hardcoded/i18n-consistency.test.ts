@@ -24,7 +24,7 @@ describe('i18n Consistency', () => {
   const trPath = path.join(dictionariesDir, 'tr.json');
 
   if (!fs.existsSync(enPath) || !fs.existsSync(trPath)) {
-    console.warn('Dictionary files not found, skipping consistency test.');
+    console.warn('Dictionary files not found, skipping consistency test.'); // ignore-console-check
     return;
   }
 
@@ -37,7 +37,7 @@ describe('i18n Consistency', () => {
   it('should have all keys from EN in TR', () => {
     const missingInTr = enKeys.filter(key => !trKeys.includes(key));
     if (missingInTr.length > 0) {
-      console.error('Missing keys in TR:', missingInTr);
+      console.error('Missing keys in TR:', missingInTr); // ignore-console-check
     }
     expect(missingInTr, `Found ${missingInTr.length} keys missing in TR dictionary`).toEqual([]);
   });
@@ -45,7 +45,7 @@ describe('i18n Consistency', () => {
   it('should have all keys from TR in EN', () => {
     const missingInEn = trKeys.filter(key => !enKeys.includes(key));
     if (missingInEn.length > 0) {
-      console.error('Missing keys in EN:', missingInEn);
+      console.error('Missing keys in EN:', missingInEn); // ignore-console-check
     }
     expect(missingInEn, `Found ${missingInEn.length} keys missing in EN dictionary`).toEqual([]);
   });

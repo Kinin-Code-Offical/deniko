@@ -89,7 +89,12 @@ export function OnboardingClientPage({
           router.push(`/${lang}/dashboard`);
           router.refresh();
         } else {
-          toast.error(result.error || dictionary.common.error_occurred);
+          const errorMessage = result.error
+            ? dictionary.errors[
+                result.error as keyof typeof dictionary.errors
+              ] || result.error
+            : dictionary.common.error_occurred;
+          toast.error(errorMessage);
         }
       } catch {
         toast.error(dictionary.common.error_occurred);
@@ -267,12 +272,7 @@ export function OnboardingClientPage({
                 id="phone"
                 value={phoneNumber}
                 onChange={setPhoneNumber}
-                searchPlaceholder={
-                  dictionary.components.phone_input.search_country
-                }
-                noResultsMessage={
-                  dictionary.components.phone_input.no_country_found
-                }
+                labels={dictionary.common.phone_input}
               />
             </div>
 
@@ -358,9 +358,7 @@ export function OnboardingClientPage({
                       if (part.startsWith("[") && part.endsWith("]")) {
                         const content = part.slice(1, -1);
                         const href =
-                          content === dictionary.legal.terms_title ||
-                          content === "Terms of Service" ||
-                          content === "Kullanıcı Sözleşmesi"
+                          content === dictionary.legal.terms_title
                             ? `/${lang}/legal/terms`
                             : `/${lang}/legal/privacy`;
                         return (

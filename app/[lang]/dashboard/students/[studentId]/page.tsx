@@ -29,7 +29,7 @@ export async function generateMetadata({
   params: Promise<{ lang: Locale; studentId: string }>;
 }): Promise<Metadata> {
   const { lang, studentId } = await params;
-  const isTr = lang === "tr";
+  const dictionary = await getDictionary(lang);
 
   try {
     const student = await db.studentProfile.findUnique({
@@ -44,8 +44,7 @@ export async function generateMetadata({
       },
     });
 
-    let studentName = isTr ? "Öğrenci" : "Student";
-
+    let studentName = dictionary.auth.register.student;
     if (student) {
       if (student.isClaimed && student.user?.name) {
         studentName = student.user.name;
@@ -57,13 +56,14 @@ export async function generateMetadata({
       }
     }
 
-    const title = isTr
-      ? `${studentName} - Öğrenci Detayı`
-      : `${studentName} - Student Detail`;
-
-    const description = isTr
-      ? `${studentName} isimli öğrencinin detayları, ders programı ve ödeme geçmişi.`
-      : `Details, schedule and payment history for ${studentName}.`;
+    const title = dictionary.metadata.student_detail.title.replace(
+      "{name}",
+      studentName
+    );
+    const description = dictionary.metadata.student_detail.description.replace(
+      "{name}",
+      studentName
+    );
 
     const baseUrl = "https://deniko.net";
     const pathname = `/dashboard/students/${studentId}`;
@@ -94,8 +94,8 @@ export async function generateMetadata({
     };
   } catch {
     return {
-      title: isTr ? "Öğrenci Detayı" : "Student Detail",
-      description: isTr ? "Öğrenci detayları." : "Student details.",
+      title: dictionary.metadata.student_detail.fallback_title,
+      description: dictionary.metadata.student_detail.fallback_description,
     };
   }
 }
@@ -179,15 +179,13 @@ export default async function StudentPage({ params }: StudentPageProps) {
             {dictionary.student_detail.tabs.lessons}
           </TabsTrigger>
           <TabsTrigger value="homework">
-            {dictionary.student_detail.tabs.homework || "Homework"}
+            {dictionary.student_detail.tabs.homework}
           </TabsTrigger>
           <TabsTrigger value="exams">
-            {dictionary.student_detail.tabs.exams ||
-              (lang === "tr" ? "Sınavlar" : "Exams")}
+            {dictionary.student_detail.tabs.exams}
           </TabsTrigger>
           <TabsTrigger value="attendance">
-            {dictionary.student_detail.tabs.attendance ||
-              (lang === "tr" ? "Devamsızlık" : "Attendance")}
+            {dictionary.student_detail.tabs.attendance}
           </TabsTrigger>
           <TabsTrigger value="settings">
             {dictionary.student_detail.tabs.settings}
@@ -200,28 +198,25 @@ export default async function StudentPage({ params }: StudentPageProps) {
             <Card className="col-span-2">
               <CardHeader>
                 <CardTitle>
-                  {dictionary.student_detail.overview?.general_info ||
-                    "Genel Bilgiler"}
+                  {dictionary.student_detail.overview.general_info}
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
                   <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview?.student_no ||
-                      "Öğrenci No"}
+                    {dictionary.student_detail.overview.student_no}
                   </p>
                   <p>{relation.student.studentNo || "-"}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview?.grade ||
-                      "Sınıf Seviyesi"}
+                    {dictionary.student_detail.overview.grade}
                   </p>
                   <p>{relation.student.gradeLevel || "-"}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview?.phone || "Telefon"}
+                    {dictionary.student_detail.overview.phone}
                   </p>
                   <p>
                     {formatPhoneNumber(
@@ -233,7 +228,7 @@ export default async function StudentPage({ params }: StudentPageProps) {
                 </div>
                 <div className="space-y-1">
                   <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview?.email || "E-posta"}
+                    {dictionary.student_detail.overview.email}
                   </p>
                   <p>
                     {relation.student.isClaimed
@@ -244,28 +239,24 @@ export default async function StudentPage({ params }: StudentPageProps) {
 
                 <div className="mt-2 space-y-1 border-t pt-4 sm:col-span-2">
                   <h4 className="font-semibold">
-                    {dictionary.student_detail.overview?.parent_info ||
-                      "Veli Bilgileri"}
+                    {dictionary.student_detail.overview.parent_info}
                   </h4>
                 </div>
                 <div className="space-y-1">
                   <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview?.parent_name ||
-                      "Veli Adı"}
+                    {dictionary.student_detail.overview.parent_name}
                   </p>
                   <p>{relation.student.parentName || "-"}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview?.parent_phone ||
-                      "Veli Telefon"}
+                    {dictionary.student_detail.overview.parent_phone}
                   </p>
                   <p>{formatPhoneNumber(relation.student.parentPhone)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview?.parent_email ||
-                      "Veli E-posta"}
+                    {dictionary.student_detail.overview.parent_email}
                   </p>
                   <p>{relation.student.parentEmail || "-"}</p>
                 </div>

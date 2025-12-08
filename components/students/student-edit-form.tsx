@@ -100,21 +100,18 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
       });
 
       if (result.success) {
-        toast.success("Student updated successfully");
+        toast.success(dictionary.student_detail.profile.update_success);
         router.refresh();
       } else {
-        toast.error(result.error || "Failed to update");
+        toast.error(
+          result.error || dictionary.student_detail.profile.update_error
+        );
       }
     });
   };
 
   const handleArchive = () => {
-    if (
-      !confirm(
-        "Are you sure you want to archive this student? They will be hidden from your active list."
-      )
-    )
-      return;
+    if (!confirm(dictionary.student_detail.profile.archive_confirm)) return;
 
     startTransition(async () => {
       const result = await unlinkStudent(id);
@@ -128,12 +125,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
   };
 
   const handleDelete = () => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this student? This action cannot be undone."
-      )
-    )
-      return;
+    if (!confirm(dictionary.student_detail.profile.delete_confirm)) return;
 
     startTransition(async () => {
       const result = await deleteStudent(id);

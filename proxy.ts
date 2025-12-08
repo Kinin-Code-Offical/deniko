@@ -38,7 +38,7 @@ const syncLocaleCookie = (response: NextResponse, locale: string) => {
 }
 
 const getClientIp = (request: NextRequest) =>
-    
+
     (request as unknown as { ip?: string }).ip ?? request.headers.get('x-forwarded-for') ?? 'unknown'
 
 const isRateLimited = (ip: string) => {
@@ -63,7 +63,7 @@ const isRateLimited = (ip: string) => {
 function getLocale(request: NextRequest): string | undefined {
     // 1. Check cookie
     const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value
-    
+
     if (cookieLocale && i18n.locales.includes(cookieLocale as Locale)) {
         return cookieLocale
     }
@@ -100,6 +100,7 @@ export default function proxy(request: NextRequest) {
 
     // Generate Nonce for CSP
     const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+    // ignore-env-check
     const isDev = process.env.NODE_ENV === 'development'
 
     // Construct CSP Header

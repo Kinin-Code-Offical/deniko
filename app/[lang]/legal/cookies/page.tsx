@@ -51,6 +51,7 @@ export default async function CookiesPage({
   params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
+  const dictionary = await getDictionary(lang);
   const content =
     cookiesContent[lang as keyof typeof cookiesContent] || cookiesContent.en;
 
@@ -58,7 +59,7 @@ export default async function CookiesPage({
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: content.title,
-    description: "Cookie Policy for Deniko",
+    description: dictionary.legal.docs.cookies.description,
     url: `https://deniko.net/${lang}/legal/cookies`,
   };
 
@@ -74,7 +75,7 @@ export default async function CookiesPage({
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20 print:hidden">
             <Cookie className="h-7 w-7" />
           </div>
-          <PrintButton label={lang === "tr" ? "Yazdır" : "Print"} />
+          <PrintButton label={dictionary.common.print} />
         </div>
 
         <h1 className="mb-4 text-3xl leading-tight font-bold tracking-tight text-slate-900 md:text-5xl dark:text-white">
@@ -92,13 +93,21 @@ export default async function CookiesPage({
           </div>
 
           <div className="space-y-2">
-            {content.sections.map((section, index) => (
-              <LegalSection
-                key={index}
-                title={section.title}
-                content={section.content}
-              />
-            ))}
+            {content.sections.map(
+              (section: { title: string; content: string }, index: number) => (
+                <LegalSection
+                  key={index}
+                  title={section.title}
+                  content={section.content}
+                  labels={{
+                    copied: dictionary.common.copied,
+                    copied_desc: dictionary.common.copied_desc,
+                    error: dictionary.common.error_occurred,
+                    copy_failed: dictionary.common.copy_failed,
+                  }}
+                />
+              )
+            )}
           </div>
         </div>
       </div>

@@ -26,11 +26,9 @@ interface UserNavProps {
 }
 
 export function UserNav({ user, dictionary }: UserNavProps) {
-  const t = dictionary?.dashboard?.header || {
-    profile: "Profile",
-    settings: "Settings",
-    logout: "Log out",
-  };
+  const t = dictionary?.dashboard?.header;
+
+  if (!t) return null;
 
   return (
     <DropdownMenu>

@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { getFileStream } from "@/lib/storage"
 import { NextRequest, NextResponse } from "next/server"
 import pathModule from "path" // Node.js path modülünü ekleyin
+import logger from "@/lib/logger"
 
 // Basit MIME type belirleyici
 function getMimeType(filename: string) {
@@ -47,7 +48,7 @@ export async function GET(
                 stream.on("end", () => controller.close())
                 stream.on("error", (err) => {
                     // Dosya yoksa stream burada hata fırlatır
-                    console.error("Stream error:", err);
+                    logger.error({ err }, "Stream error");
                     controller.error(err);
                 })
             },
@@ -61,7 +62,7 @@ export async function GET(
             },
         })
     } catch (error) {
-        console.error("Error serving file:", error)
+        logger.error({ error }, "Error serving file")
         return new NextResponse("File not found or Error", { status: 404 })
     }
 }

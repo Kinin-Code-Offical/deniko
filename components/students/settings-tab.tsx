@@ -59,7 +59,7 @@ const DEFAULT_AVATARS = [
   "defaults/Sam.svg",
 ];
 
-const createSettingsSchema = (lang: string) =>
+const createSettingsSchema = (dictionary: Dictionary) =>
   z.object({
     customName: z.string().optional(),
 
@@ -76,10 +76,7 @@ const createSettingsSchema = (lang: string) =>
           return !val.startsWith("0");
         },
         {
-          message:
-            lang === "tr"
-              ? "Telefon numarası 0 ile başlamamalıdır."
-              : "Phone number must not start with 0.",
+          message: dictionary.errors.phone_start_zero,
         }
       ),
     email: z.string().email().optional().or(z.literal("")),
@@ -94,10 +91,7 @@ const createSettingsSchema = (lang: string) =>
           return !val.startsWith("0");
         },
         {
-          message:
-            lang === "tr"
-              ? "Telefon numarası 0 ile başlamamalıdır."
-              : "Phone number must not start with 0.",
+          message: dictionary.errors.phone_start_zero,
         }
       ),
     parentEmail: z.string().email().optional().or(z.literal("")),
@@ -123,7 +117,6 @@ export function StudentSettingsTab({
   relation: { student, customName },
   studentId,
   dictionary,
-  lang,
 }: StudentSettingsTabProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -135,7 +128,7 @@ export function StudentSettingsTab({
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
 
-  const settingsSchema = createSettingsSchema(lang);
+  const settingsSchema = createSettingsSchema(dictionary);
   const form = useForm<z.infer<typeof settingsSchema>>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
@@ -168,15 +161,11 @@ export function StudentSettingsTab({
 
       const result = await updateStudentSettings(studentId, formData);
       if (result.success) {
-        toast.success(
-          dictionary.student_detail.settings.success ||
-            (lang === "tr" ? "Ayarlar kaydedildi" : "Settings saved")
-        );
+        toast.success(dictionary.student_detail.settings.success);
         router.refresh();
       } else {
         toast.error(
-          result.error ||
-            (lang === "tr" ? "Bir hata oluştu" : "An error occurred")
+          result.error || dictionary.student_detail.settings.error_message
         );
       }
     });
@@ -200,7 +189,9 @@ export function StudentSettingsTab({
       toast.success(dictionary.student_detail.settings.archive.success);
       router.push("/dashboard/students");
     } else {
-      toast.error(result.error || "Hata oluştu");
+      toast.error(
+        result.error || dictionary.student_detail.settings.error_message
+      );
     }
   };
 
@@ -210,7 +201,9 @@ export function StudentSettingsTab({
       toast.success(dictionary.student_detail.settings.delete.success);
       router.push("/dashboard/students");
     } else {
-      toast.error(result.error || "Hata oluştu");
+      toast.error(
+        result.error || dictionary.student_detail.settings.error_message
+      );
     }
   };
 
@@ -259,8 +252,7 @@ export function StudentSettingsTab({
                     <Label htmlFor="avatar-upload" className="cursor-pointer">
                       <div className="text-primary flex items-center gap-2 text-sm font-medium hover:underline">
                         <Camera className="h-4 w-4" />
-                        {dictionary.student_detail.settings.change_photo ||
-                          "Fotoğrafı Değiştir"}
+                        {dictionary.student_detail.settings.change_photo}
                       </div>
                       <Input
                         id="avatar-upload"
@@ -333,8 +325,7 @@ export function StudentSettingsTab({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {dictionary.student_detail.settings.custom_name ||
-                          "Görünen İsim (Takma Ad)"}
+                        {dictionary.student_detail.settings.custom_name}
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -356,8 +347,7 @@ export function StudentSettingsTab({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {dictionary.student_detail.settings.student_number ||
-                          "Öğrenci Numarası"}
+                        {dictionary.student_detail.settings.student_number}
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -379,8 +369,7 @@ export function StudentSettingsTab({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {dictionary.student_detail.settings.grade_level ||
-                          "Sınıf Seviyesi"}
+                        {dictionary.student_detail.settings.grade_level}
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -455,6 +444,7 @@ export function StudentSettingsTab({
                             value={field.value || ""}
                             onChange={field.onChange}
                             international={true}
+                            labels={dictionary.common.phone_input}
                           />
                         )}
                       </FormControl>
@@ -468,7 +458,7 @@ export function StudentSettingsTab({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {dictionary.student_detail.settings.email || "E-posta"}
+                        {dictionary.student_detail.settings.email}
                       </FormLabel>
                       <FormControl>
                         {isClaimed ? (
@@ -520,6 +510,7 @@ export function StudentSettingsTab({
                           value={field.value || ""}
                           onChange={field.onChange}
                           international={true}
+                          labels={dictionary.common.phone_input}
                         />
                       </FormControl>
                       <FormMessage />
@@ -692,9 +683,14 @@ export function StudentSettingsTab({
           setAvatarPreview(URL.createObjectURL(croppedFile));
           setSelectedAvatar(null);
         }}
-        saveLabel={dictionary.student_detail.settings.save_changes || "Kaydet"}
-        zoomLabel={dictionary.common.zoom}
-        cropPreviewAlt={dictionary.common.crop_preview}
+        labels={{
+          save: dictionary.common.crop_save,
+          zoom: dictionary.common.zoom,
+          reset: dictionary.common.reset,
+          title: dictionary.common.edit_photo,
+          description: dictionary.common.crop_description,
+          crop_preview: dictionary.common.crop_preview,
+        }}
       />
     </div>
   );

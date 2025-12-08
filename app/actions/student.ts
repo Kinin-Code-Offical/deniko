@@ -10,12 +10,12 @@ import logger from "@/lib/logger"
 import { uploadFile, deleteFile } from "@/lib/storage"
 
 const createStudentSchema = z.object({
-    name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
-    surname: z.string().min(2, "Soyisim en az 2 karakter olmalıdır"),
+    name: z.string().min(2, "name_min_length"),
+    surname: z.string().min(2, "surname_min_length"),
     studentNo: z.string().optional(),
     grade: z.string().optional(),
     tempPhone: z.string().optional(),
-    tempEmail: z.string().email("Geçerli bir e-posta adresi giriniz").optional().or(z.literal("")),
+    tempEmail: z.string().email("invalid_email").optional().or(z.literal("")),
     classroomIds: z.array(z.string()).optional().default([]),
 })
 
@@ -31,7 +31,7 @@ export async function createStudent(formData: FormData) {
 
     if (!session?.user?.id) {
         logger.warn({ context: "createStudent" }, "Unauthorized attempt")
-        return { success: false, error: "Unauthorized" }
+        return { success: false, error: "unauthorized" }
     }
 
     const user = await db.user.findUnique({
@@ -41,7 +41,7 @@ export async function createStudent(formData: FormData) {
 
     if (!user?.teacherProfile) {
         logger.warn({ context: "createStudent", userId: session.user.id }, "Teacher profile not found")
-        return { success: false, error: "Teacher profile not found" }
+        return { success: false, error: "teacher_profile_not_found" }
     }
 
     const rawData = {
@@ -58,7 +58,7 @@ export async function createStudent(formData: FormData) {
 
     if (!validatedFields.success) {
         logger.warn({ context: "createStudent", errors: validatedFields.error }, "Invalid fields")
-        return { success: false, error: "Invalid fields" }
+        return { success: false, error: "invalid_fields" }
     }
 
     const { name, surname, studentNo, grade, tempPhone, tempEmail, classroomIds } = validatedFields.data
@@ -73,7 +73,7 @@ export async function createStudent(formData: FormData) {
             avatarUrl = await uploadFile(file, "students")
         } catch (error) {
             logger.error({ context: "createStudent", error }, "Failed to upload avatar")
-            return { success: false, error: "Avatar yüklenirken bir hata oluştu" }
+            return { success: false, error: "failed_to_upload_avatar" }
         }
     } else if (selectedAvatar) {
         avatarUrl = selectedAvatar
@@ -120,10 +120,10 @@ export async function createStudent(formData: FormData) {
 
         logger.info({ context: "createStudent", teacherId: user.teacherProfile.id }, "Student created successfully")
         revalidatePath("/dashboard/students")
-        return { success: true, message: "Öğrenci başarıyla oluşturuldu" }
+        return { success: true, message: "student_created" }
     } catch (error) {
         logger.error({ context: "createStudent", error }, "Failed to create student")
-        return { success: false, error: "Öğrenci oluşturulurken bir hata oluştu" }
+        return { success: false, error: "failed_to_create_student" }
     }
 }
 
@@ -145,7 +145,7 @@ export async function claimStudentProfile(token: string, preferences: MergePrefe
     const session = await auth()
 
     if (!session?.user?.id) {
-        return { success: false, error: "Unauthorized" }
+        return { success: false, error: "unauthorized" }
     }
 
     try {
@@ -154,16 +154,16 @@ export async function claimStudentProfile(token: string, preferences: MergePrefe
         })
 
         if (!targetProfile) {
-            return { success: false, error: "Invalid or expired token" }
+            return { success: false, error: "invalid_token" }
         }
 
         if (targetProfile.userId) {
-            return { success: false, error: "Profile already claimed" }
+            return { success: false, error: "profile_already_claimed" }
         }
 
         // Süre kontrolü
         if (targetProfile.inviteTokenExpires && new Date() > targetProfile.inviteTokenExpires) {
-            return { success: false, error: "Davet bağlantısının süresi dolmuş. Lütfen öğretmeninizden yeni bir davet isteyin." }
+            return { success: false, error: "invite_expired" }
         }
 
         // Check if user already has a profile
@@ -255,7 +255,7 @@ export async function claimStudentProfile(token: string, preferences: MergePrefe
 
     } catch (error) {
         logger.error({ context: "claimStudentProfile", error }, "Failed to claim profile")
-        return { success: false, error: "Failed to claim profile" }
+        return { success: false, error: "failed_to_claim_profile" }
     }
 }
 
@@ -306,8 +306,8 @@ export async function getInviteDetails(token: string) {
         const teacherName = teacherUser
             ? (teacherUser.firstName && teacherUser.lastName
                 ? `${teacherUser.firstName} ${teacherUser.lastName}`
-                : (teacherUser.name || "Bir Öğretmen"))
-            : "Bir Öğretmen"
+                : (teacherUser.name || null))
+            : null
 
         return {
             ...studentProfile,
@@ -345,8 +345,8 @@ export async function getStudentProfileByToken(token: string) {
 
 const updateStudentSchema = z.object({
     studentId: z.string(),
-    firstName: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
-    lastName: z.string().min(2, "Soyisim en az 2 karakter olmalıdır"),
+    firstName: z.string().min(2, "name_min_length"),
+    lastName: z.string().min(2, "surname_min_length"),
     phone: z.string().optional(),
     avatarUrl: z.string().optional(),
 })
@@ -362,13 +362,13 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
     const session = await auth()
 
     if (!session?.user?.id) {
-        return { success: false, error: "Unauthorized" }
+        return { success: false, error: "unauthorized" }
     }
 
     const validatedFields = updateStudentSchema.safeParse(data)
 
     if (!validatedFields.success) {
-        return { success: false, error: "Invalid fields" }
+        return { success: false, error: "invalid_fields" }
     }
 
     const { studentId, firstName, lastName, phone, avatarUrl } = validatedFields.data
@@ -380,7 +380,7 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
         })
 
         if (!user?.teacherProfile) {
-            return { success: false, error: "Teacher profile not found" }
+            return { success: false, error: "teacher_profile_not_found" }
         }
 
         const studentProfile = await db.studentProfile.findUnique({
@@ -388,7 +388,7 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
         })
 
         if (!studentProfile) {
-            return { success: false, error: "Student not found" }
+            return { success: false, error: "student_not_found" }
         }
 
         // Check if relation exists
@@ -402,7 +402,7 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
         })
 
         if (!relation) {
-            return { success: false, error: "No relation found with this student" }
+            return { success: false, error: "no_relation_found" }
         }
 
         if (studentProfile.isClaimed) {
@@ -443,7 +443,7 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
 
     } catch (error) {
         logger.error({ context: "updateStudent", error }, "Failed to update student")
-        return { success: false, error: "Failed to update student" }
+        return { success: false, error: "failed_to_update_student" }
     }
 }
 
@@ -456,7 +456,7 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema>) {
  */
 export async function unlinkStudent(studentId: string) {
     const session = await auth()
-    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+    if (!session?.user?.id) return { success: false, error: "unauthorized" }
 
     try {
         const user = await db.user.findUnique({
@@ -464,7 +464,7 @@ export async function unlinkStudent(studentId: string) {
             include: { teacherProfile: true },
         })
 
-        if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+        if (!user?.teacherProfile) return { success: false, error: "teacher_profile_not_found" }
 
         await db.studentTeacherRelation.update({
             where: {
@@ -477,10 +477,10 @@ export async function unlinkStudent(studentId: string) {
         })
 
         revalidatePath("/dashboard/students")
-        return { success: true, message: "Öğrenci arşivlendi" }
+        return { success: true, message: "student_archived" }
     } catch (error) {
         logger.error({ context: "unlinkStudent", error }, "Failed to archive student")
-        return { success: false, error: "İşlem başarısız" }
+        return { success: false, error: "failed_to_archive_student" }
     }
 }
 
@@ -494,7 +494,7 @@ export async function unlinkStudent(studentId: string) {
  */
 export async function deleteStudent(studentId: string) {
     const session = await auth()
-    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+    if (!session?.user?.id) return { success: false, error: "unauthorized" }
 
     try {
         const user = await db.user.findUnique({
@@ -502,14 +502,14 @@ export async function deleteStudent(studentId: string) {
             include: { teacherProfile: true },
         })
 
-        if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+        if (!user?.teacherProfile) return { success: false, error: "teacher_profile_not_found" }
 
         const student = await db.studentProfile.findUnique({
             where: { id: studentId },
             select: { isClaimed: true }
         })
 
-        if (!student) return { success: false, error: "Student not found" }
+        if (!student) return { success: false, error: "student_not_found" }
 
         if (student.isClaimed) {
             // Scenario B: Unlink (Delete Relation Only)
@@ -522,19 +522,19 @@ export async function deleteStudent(studentId: string) {
                 }
             })
             revalidatePath("/dashboard/students")
-            return { success: true, message: "Öğrenci listenizden çıkarıldı (Bağlantı koparıldı)." }
+            return { success: true, message: "student_unlinked" }
         } else {
             // Scenario A: Hard Delete (Delete Profile)
             await db.studentProfile.delete({
                 where: { id: studentId }
             })
             revalidatePath("/dashboard/students")
-            return { success: true, message: "Gölge öğrenci ve verileri tamamen silindi." }
+            return { success: true, message: "shadow_student_deleted" }
         }
 
     } catch (error) {
         logger.error({ context: "deleteStudent", error }, "Failed to delete student")
-        return { success: false, error: "Silme işlemi başarısız" }
+        return { success: false, error: "failed_to_delete_student" }
     }
 }
 
@@ -553,14 +553,14 @@ interface UpdateStudentRelationData {
  */
 export async function updateStudentRelation(studentId: string, data: UpdateStudentRelationData) {
     const session = await auth()
-    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+    if (!session?.user?.id) return { success: false, error: "unauthorized" }
 
     const user = await db.user.findUnique({
         where: { id: session.user.id },
         include: { teacherProfile: true },
     })
 
-    if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+    if (!user?.teacherProfile) return { success: false, error: "teacher_profile_not_found" }
 
     try {
         // 1. Check if relation exists
@@ -574,7 +574,7 @@ export async function updateStudentRelation(studentId: string, data: UpdateStude
             include: { student: true },
         })
 
-        if (!relation) return { success: false, error: "Relation not found" }
+        if (!relation) return { success: false, error: "relation_not_found" }
 
         await db.$transaction(async (tx: Prisma.TransactionClient) => {
             // 2. Update Relation
@@ -613,22 +613,22 @@ export async function updateStudentRelation(studentId: string, data: UpdateStude
  */
 export async function deleteShadowStudent(studentId: string) {
     const session = await auth()
-    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+    if (!session?.user?.id) return { success: false, error: "unauthorized" }
 
     const user = await db.user.findUnique({
         where: { id: session.user.id },
         include: { teacherProfile: true },
     })
 
-    if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+    if (!user?.teacherProfile) return { success: false, error: "teacher_profile_not_found" }
 
     try {
         const student = await db.studentProfile.findUnique({
             where: { id: studentId },
         })
 
-        if (!student) return { success: false, error: "Student not found" }
-        if (student.isClaimed) return { success: false, error: "Cannot delete claimed student" }
+        if (!student) return { success: false, error: "student_not_found" }
+        if (student.isClaimed) return { success: false, error: "cannot_delete_claimed" }
 
         // Verify ownership/creator if needed, or just allow if relation exists
         // For now, we check if the teacher has a relation
@@ -641,7 +641,7 @@ export async function deleteShadowStudent(studentId: string) {
             },
         })
 
-        if (!relation) return { success: false, error: "Relation not found" }
+        if (!relation) return { success: false, error: "relation_not_found" }
 
         // Delete Profile (Cascades to Relation)
         await db.studentProfile.delete({
@@ -652,7 +652,7 @@ export async function deleteShadowStudent(studentId: string) {
         return { success: true }
     } catch (error) {
         logger.error({ context: "deleteShadowStudent", error }, "Failed to delete student")
-        return { success: false, error: "Failed to delete student" }
+        return { success: false, error: "failed_to_delete_student" }
     }
 }
 
@@ -660,7 +660,7 @@ export async function regenerateInviteToken(studentId: string) {
     const session = await auth()
 
     if (!session?.user?.id) {
-        return { success: false, error: "Unauthorized" }
+        return { success: false, error: "unauthorized" }
     }
 
     const user = await db.user.findUnique({
@@ -669,7 +669,7 @@ export async function regenerateInviteToken(studentId: string) {
     })
 
     if (!user?.teacherProfile) {
-        return { success: false, error: "Teacher profile not found" }
+        return { success: false, error: "teacher_profile_not_found" }
     }
 
     // Verify ownership/relation
@@ -683,7 +683,7 @@ export async function regenerateInviteToken(studentId: string) {
     })
 
     if (!relation) {
-        return { success: false, error: "Relation not found" }
+        return { success: false, error: "relation_not_found" }
     }
 
     const newToken = randomBytes(16).toString("hex")
@@ -700,23 +700,23 @@ export async function regenerateInviteToken(studentId: string) {
 
         revalidatePath("/dashboard/students")
         revalidatePath(`/dashboard/students/${studentId}`)
-        return { success: true, message: "Davet bağlantısı yenilendi." }
+        return { success: true, message: "invite_regenerated" }
     } catch (error) {
         logger.error({ context: "regenerateInviteToken", error }, "Failed to regenerate token")
-        return { success: false, error: "Failed to regenerate token" }
+        return { success: false, error: "failed_to_regenerate_token" }
     }
 }
 
 export async function toggleInviteLink(studentId: string, enable: boolean) {
     const session = await auth()
-    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+    if (!session?.user?.id) return { success: false, error: "unauthorized" }
 
     const user = await db.user.findUnique({
         where: { id: session.user.id },
         include: { teacherProfile: true },
     })
 
-    if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+    if (!user?.teacherProfile) return { success: false, error: "teacher_profile_not_found" }
 
     try {
         const relation = await db.studentTeacherRelation.findUnique({
@@ -728,7 +728,7 @@ export async function toggleInviteLink(studentId: string, enable: boolean) {
             },
         })
 
-        if (!relation) return { success: false, error: "Relation not found" }
+        if (!relation) return { success: false, error: "relation_not_found" }
 
         if (enable) {
             const newToken = randomBytes(16).toString("hex")
@@ -745,23 +745,23 @@ export async function toggleInviteLink(studentId: string, enable: boolean) {
         }
 
         revalidatePath(`/dashboard/students/${studentId}`)
-        return { success: true, message: enable ? "Davet bağlantısı açıldı." : "Davet bağlantısı kapatıldı." }
+        return { success: true, message: enable ? "invite_opened" : "invite_closed" }
     } catch (error) {
         logger.error({ context: "toggleInviteLink", error }, "Failed to toggle invite link")
-        return { success: false, error: "İşlem başarısız" }
+        return { success: false, error: "failed_to_toggle_invite" }
     }
 }
 
 export async function updateStudentSettings(studentId: string, formData: FormData) {
     const session = await auth()
-    if (!session?.user?.id) return { success: false, error: "Unauthorized" }
+    if (!session?.user?.id) return { success: false, error: "unauthorized" }
 
     const user = await db.user.findUnique({
         where: { id: session.user.id },
         include: { teacherProfile: true },
     })
 
-    if (!user?.teacherProfile) return { success: false, error: "Teacher profile not found" }
+    if (!user?.teacherProfile) return { success: false, error: "teacher_profile_not_found" }
 
     try {
         const relation = await db.studentTeacherRelation.findUnique({
@@ -774,7 +774,7 @@ export async function updateStudentSettings(studentId: string, formData: FormDat
             include: { student: true },
         })
 
-        if (!relation) return { success: false, error: "Relation not found" }
+        if (!relation) return { success: false, error: "relation_not_found" }
 
         const customName = formData.get("customName") as string
         const privateNotes = formData.get("privateNotes") as string
@@ -858,11 +858,11 @@ export async function updateStudentSettings(studentId: string, formData: FormDat
 
         revalidatePath("/dashboard/students")
         revalidatePath(`/dashboard/students/${studentId}`)
-        return { success: true, message: "Bilgiler güncellendi." }
+        return { success: true, message: "info_updated" }
 
     } catch (error) {
         logger.error({ context: "updateStudentSettings", error }, "Failed to update student settings")
-        return { success: false, error: "Güncelleme başarısız" }
+        return { success: false, error: "failed_to_update_settings" }
     }
 }
 

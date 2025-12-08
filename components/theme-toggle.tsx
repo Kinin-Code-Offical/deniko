@@ -13,25 +13,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface ThemeToggleProps {
-  labels?: {
+  labels: {
     light: string;
     dark: string;
     system: string;
-    toggle_theme?: string;
-    loading?: string;
+    toggle_theme: string;
+    loading: string;
   };
 }
 
 export function ThemeToggle({ labels }: ThemeToggleProps) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
-  const t = labels || {
-    light: "Light",
-    dark: "Dark",
-    system: "System",
-    toggle_theme: "Toggle theme",
-    loading: "Loading...",
-  };
+  const t = labels;
 
   React.useEffect(() => {
     setMounted(true);
@@ -59,7 +53,7 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
         >
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 dark:text-blue-400" />
-          <span className="sr-only">{t.toggle_theme || "Toggle theme"}</span>
+          <span className="sr-only">{t.toggle_theme}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

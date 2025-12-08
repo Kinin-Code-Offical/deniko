@@ -11,15 +11,13 @@ export async function generateMetadata({
   params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const isTr = lang === "tr";
+  const dict = await getDictionary(lang);
   const baseUrl = "https://deniko.net";
   const pathname = "/verify";
 
   return {
-    title: isTr ? "Hesap Doğrulama | Deniko" : "Verify Account | Deniko",
-    description: isTr
-      ? "Deniko hesabınızı doğrulayın."
-      : "Verify your Deniko account.",
+    title: dict.metadata.verify.title,
+    description: dict.metadata.verify.description,
     metadataBase: new URL(baseUrl),
     alternates: {
       canonical: `/${lang}${pathname}`,

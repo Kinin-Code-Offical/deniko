@@ -77,9 +77,7 @@ export function StudentLessonsTab({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>
-          {dictionary.student_detail.lessons.title}
-        </CardTitle>
+        <CardTitle>{dictionary.student_detail.lessons.title}</CardTitle>
         <Button size="sm">
           <Plus className="mr-2 h-4 w-4" />
           {dictionary.student_detail.lessons.add_lesson}
@@ -115,9 +113,13 @@ export function StudentLessonsTab({
               {lessons.map((lesson) => (
                 <TableRow key={lesson.id}>
                   <TableCell className="font-medium">
-                    {format(new Date(lesson.startTime), "PPP p", {
-                      locale: dateLocale,
-                    })}
+                    {format(
+                      new Date(lesson.startTime),
+                      dictionary.common.date_format_long,
+                      {
+                        locale: dateLocale,
+                      }
+                    )}
                   </TableCell>
                   <TableCell>{lesson.title}</TableCell>
                   <TableCell>{getStatusBadge(lesson.status)}</TableCell>
@@ -127,7 +129,7 @@ export function StudentLessonsTab({
                           style: "currency",
                           currency: lesson.currency,
                         }).format(Number(lesson.price))
-                      : "-"}
+                      : dictionary.common.empty_placeholder}
                   </TableCell>
                 </TableRow>
               ))}

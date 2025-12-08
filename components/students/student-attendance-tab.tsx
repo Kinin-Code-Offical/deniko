@@ -11,7 +11,6 @@ interface StudentAttendanceTabProps {
 
 export function StudentAttendanceTab({
   dictionary,
-  lang,
 }: StudentAttendanceTabProps) {
   // Mock data
   const attendanceStats = {
@@ -27,8 +26,7 @@ export function StudentAttendanceTab({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              {dictionary.student_detail.attendance?.present ||
-                (lang === "tr" ? "Katılım" : "Present")}
+              {dictionary.student_detail.attendance.present}
             </CardTitle>
             <CheckCircle2 className="h-4 w-4 text-green-500" />
           </CardHeader>
@@ -39,8 +37,7 @@ export function StudentAttendanceTab({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              {dictionary.student_detail.attendance?.absent ||
-                (lang === "tr" ? "Devamsızlık" : "Absent")}
+              {dictionary.student_detail.attendance.absent}
             </CardTitle>
             <XCircle className="h-4 w-4 text-red-500" />
           </CardHeader>
@@ -51,8 +48,7 @@ export function StudentAttendanceTab({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              {dictionary.student_detail.attendance?.late ||
-                (lang === "tr" ? "Geç Kalma" : "Late")}
+              {dictionary.student_detail.attendance.late}
             </CardTitle>
             <Clock className="h-4 w-4 text-yellow-500" />
           </CardHeader>
@@ -64,20 +60,12 @@ export function StudentAttendanceTab({
 
       <Card>
         <CardHeader>
-          <CardTitle>
-            {dictionary.student_detail.tabs.attendance ||
-              (lang === "tr" ? "Devamsızlık Geçmişi" : "Attendance History")}
-          </CardTitle>
+          <CardTitle>{dictionary.student_detail.attendance.history}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-muted-foreground flex flex-col items-center justify-center py-8 text-center">
             <Clock className="mb-4 h-12 w-12 opacity-20" />
-            <p>
-              {dictionary.student_detail.attendance?.no_records ||
-                (lang === "tr"
-                  ? "Henüz devamsızlık kaydı bulunmuyor."
-                  : "No attendance records found.")}
-            </p>
+            <p>{dictionary.student_detail.attendance.no_records}</p>
           </div>
         </CardContent>
       </Card>

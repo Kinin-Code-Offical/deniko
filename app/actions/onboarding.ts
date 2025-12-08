@@ -25,7 +25,7 @@ export async function completeOnboarding(data: {
     const session = await auth()
 
     if (!session?.user?.id) {
-        return { success: false, error: "Oturum bulunamadı. Lütfen tekrar giriş yapın." }
+        return { success: false, error: "session_not_found" }
     }
 
     const userId = session.user.id
@@ -33,29 +33,29 @@ export async function completeOnboarding(data: {
 
     // Validation
     if (!terms) {
-        return { success: false, error: "Kullanım koşullarını kabul etmelisiniz." }
+        return { success: false, error: "accept_terms" }
     }
 
     if (!phoneNumber) {
-        return { success: false, error: "Telefon numarası gereklidir." }
+        return { success: false, error: "phone_required" }
     }
 
     if (!password || !confirmPassword) {
-        return { success: false, error: "Şifre alanları gereklidir." }
+        return { success: false, error: "password_required" }
     }
 
     if (password !== confirmPassword) {
-        return { success: false, error: "Şifreler eşleşmiyor." }
+        return { success: false, error: "passwords_mismatch" }
     }
 
     if (password.length < 8) {
-        return { success: false, error: "Şifre en az 8 karakter olmalıdır." }
+        return { success: false, error: "password_min_length" }
     }
 
     // Regex for password complexity: Uppercase, lowercase, number, symbol
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
-        return { success: false, error: "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir." }
+        return { success: false, error: "password_complexity" }
     }
 
     try {
@@ -111,7 +111,7 @@ export async function completeOnboarding(data: {
         return { success: true }
     } catch (error) {
         logger.error({ context: "completeOnboarding", error }, "Onboarding Error")
-        return { success: false, error: "Bir hata oluştu. Lütfen tekrar deneyin." }
+        return { success: false, error: "onboarding_error" }
     }
 }
 

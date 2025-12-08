@@ -108,7 +108,9 @@ const StudentRow = memo(function StudentRow({
               </Badge>
             ))
           ) : (
-            <span className="text-muted-foreground text-xs">-</span>
+            <span className="text-muted-foreground text-xs">
+              {dictionary.common.empty_placeholder}
+            </span>
           )}
         </div>
       </TableCell>

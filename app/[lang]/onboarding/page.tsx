@@ -7,21 +7,21 @@ import { jwtVerify } from "jose";
 import { OnboardingClientPage } from "./client-page";
 import type { Metadata } from "next";
 
+import type { Locale } from "@/i18n-config";
+
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{ lang: Locale }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const isTr = lang === "tr";
+  const dict = await getDictionary(lang);
   const baseUrl = "https://deniko.net";
   const pathname = "/onboarding";
 
   return {
-    title: isTr ? "Kurulum | Deniko" : "Onboarding | Deniko",
-    description: isTr
-      ? "Hesap kurulumunuzu tamamlayın ve Deniko'yu kullanmaya başlayın."
-      : "Complete your account setup and start using Deniko.",
+    title: dict.metadata.onboarding.title,
+    description: dict.metadata.onboarding.description,
     metadataBase: new URL(baseUrl),
     alternates: {
       canonical: `/${lang}${pathname}`,
@@ -40,8 +40,6 @@ export async function generateMetadata({
     },
   };
 }
-
-import type { Locale } from "@/i18n-config";
 
 export default async function OnboardingPage({
   params,

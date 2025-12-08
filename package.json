@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest run __tests__",
     "test:integration": "vitest run tests/hardcoded",
-    "test:cli": "tsx scripts/check-any.ts && tsx scripts/check-hardcoded.ts",
+    "test:cli": "tsx scripts/check-any.ts && tsx scripts/check-hardcoded.ts && tsx scripts/check-console.ts && tsx scripts/check-env.ts",
     "test:all": "npm run lint && npm run typecheck && npm run test:unit && npm run test:integration && npm run test:cli",
     "postinstall": "patch-package"
   },
@@ -73,6 +73,7 @@
     "react-phone-number-input": "^3.4.14",
     "recharts": "^3.5.1",
     "schema-dts": "^1.1.5",
+    "server-only": "^0.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "uuid": "^13.0.0",

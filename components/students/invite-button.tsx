@@ -28,7 +28,7 @@ export function InviteButton({ token, lang, dictionary }: InviteButtonProps) {
       })
       .catch((error) => {
         toast.error(dictionary.teacher.invite_link_copy_failed);
-        console.error("Failed to copy invite link: ", error);
+        console.error("Failed to copy invite link: ", error); // ignore-console-check
       });
   };
 

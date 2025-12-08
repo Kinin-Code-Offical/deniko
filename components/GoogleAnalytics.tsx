@@ -4,7 +4,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 
 export default function GoogleAnalytics({ nonce }: { nonce?: string }) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const gaId = process.env.NEXT_PUBLIC_GA_ID; // ignore-env-check
   const [isConsented, setIsConsented] = useState(false);
 
   useEffect(() => {
