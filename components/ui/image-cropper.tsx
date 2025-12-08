@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -163,10 +164,13 @@ export function ImageCropper({
             onMouseLeave={handleMouseUp}
           >
             {safeImageSrc ? (
-              <img
+              <Image
                 ref={imageRef}
                 src={safeImageSrc}
                 alt={labels.crop_preview}
+                fill
+                sizes="300px"
+                unoptimized
                 className="pointer-events-none absolute max-w-none origin-center select-none"
                 style={{
                   transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,

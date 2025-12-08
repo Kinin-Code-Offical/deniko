@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { verifyEmail, resendVerificationEmailAction } from "@/app/actions/auth";
 import {
@@ -15,6 +15,7 @@ import Link from "next/link";
 import { CheckCircle2, XCircle, Loader2, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import type { Dictionary } from "@/types/i18n";
+import { useTimeout } from "@/lib/hooks/use-timeout";
 
 interface VerifyClientProps {
   lang: string;
@@ -32,7 +33,7 @@ export function VerifyClient({ lang, dictionary }: VerifyClientProps) {
   const [isResending, startResend] = useTransition();
   const firedRef = useRef(false);
 
-  useEffect(() => {
+  useTimeout(() => {
     if (success || error || firedRef.current) return;
 
     if (!token) {
@@ -51,7 +52,7 @@ export function VerifyClient({ lang, dictionary }: VerifyClientProps) {
         if (result.email) setEmailToResend(result.email);
       }
     });
-  }, [token, success, error, lang, d]);
+  }, 0);
 
   const handleResend = () => {
     if (!emailToResend) return;

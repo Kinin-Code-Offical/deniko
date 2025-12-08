@@ -43,10 +43,11 @@ const nextConfig: NextConfig = {
             key: "X-DNS-Prefetch-Control",
             value: "on",
           },
-          {
+          // Only add HSTS in non-CI environments to prevent Lighthouse CI issues
+          ...(process.env.CI ? [] : [{
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
-          },
+          }]),
           {
             key: "X-Frame-Options",
             value: "SAMEORIGIN",

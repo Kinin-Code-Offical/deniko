@@ -49,6 +49,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const DEFAULT_AVATARS = [
   "defaults/Felix.svg",
@@ -295,14 +296,16 @@ export function StudentSettingsTab({
                           setAvatarPreview(null);
                         }}
                       >
-                        <img
+                        <Image
                           src={
                             avatar.startsWith("http")
                               ? avatar
                               : `/api/files/${avatar}`
                           }
                           alt={dictionary.common.avatar || "Avatar"}
-                          className="h-10 w-10 rounded-full"
+                          width={40}
+                          height={40}
+                          className="h-10 w-10 rounded-full object-cover"
                         />
                         {selectedAvatar === avatar && (
                           <div className="bg-primary text-primary-foreground absolute -right-1 -bottom-1 rounded-full p-0.5">

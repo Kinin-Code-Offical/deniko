@@ -51,6 +51,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ImageCropper } from "@/components/ui/image-cropper";
+import Image from "next/image";
 
 const DEFAULT_AVATARS = [
   "defaults/Felix.svg",
@@ -202,14 +203,16 @@ export function AddStudentDialog({
                       setSelectedFile(null);
                     }}
                   >
-                    <img
+                    <Image
                       src={
                         avatar.startsWith("http")
                           ? avatar
                           : `/api/files/${avatar}`
                       }
                       alt={dictionary.dashboard.students.add_dialog.avatar}
-                      className="h-10 w-10 rounded-full"
+                      width={40}
+                      height={40}
+                      className="h-10 w-10 rounded-full object-cover"
                     />
                     {selectedAvatar === avatar && (
                       <div className="bg-primary text-primary-foreground absolute -right-1 -bottom-1 rounded-full p-0.5">
