@@ -16,8 +16,19 @@ COPY package.json pnpm-lock.yaml* ./
 COPY prisma ./prisma
 COPY patches ./patches
 
-# Build sırasında Prisma generate için geçici dummy URL (postinstall için gerekli)
+# Build sırasında geçici dummy çevresel değişkenler
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV NEXTAUTH_URL="http://localhost:3000"
+ENV AUTH_SECRET="dummy_secret_for_build"
+ENV AUTH_GOOGLE_ID="dummy_google_id"
+ENV AUTH_GOOGLE_SECRET="dummy_google_secret"
+ENV EMAIL_USER="dummy@example.com"
+ENV EMAIL_PASS="dummy_password"
+ENV GCS_BUCKET_NAME="dummy-bucket"
+ENV GCS_PROJECT_ID="dummy-project"
+ENV GCS_CLIENT_EMAIL="dummy@example.com"
+ENV GCS_PRIVATE_KEY="dummy_private_key"
 
 # Bağımlılıkları kur
 RUN pnpm install --frozen-lockfile
@@ -33,20 +44,6 @@ RUN npm install -g pnpm
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build sırasında Prisma generate için geçici dummy URL
-ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
-ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
-ENV NEXTAUTH_URL="http://localhost:3000"
-ENV AUTH_SECRET="dummy_secret_for_build"
-ENV AUTH_GOOGLE_ID="dummy_google_id"
-ENV AUTH_GOOGLE_SECRET="dummy_google_secret"
-ENV EMAIL_USER="dummy@example.com"
-ENV EMAIL_PASS="dummy_password"
-ENV GCS_BUCKET_NAME="dummy-bucket"
-ENV GCS_PROJECT_ID="dummy-project"
-ENV GCS_CLIENT_EMAIL="dummy@example.com"
-ENV GCS_PRIVATE_KEY="dummy_private_key"
 # Prisma istemcisini oluştur
 RUN pnpm exec prisma generate
 
