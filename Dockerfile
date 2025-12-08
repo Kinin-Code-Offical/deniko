@@ -61,6 +61,7 @@ ENV GCS_PRIVATE_KEY="dummy_private_key"
 
 # Prisma istemcisini oluştur
 RUN pnpm exec prisma generate
+
 # Next.js projesini build et
 RUN pnpm run build
 

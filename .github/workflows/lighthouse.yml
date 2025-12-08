@@ -48,6 +48,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         env:
+          # Skip downloading Cypress binary if present
+          CYPRESS_INSTALL_BINARY: 0
           DATABASE_URL: "postgresql://user:password@localhost:5432/testdb"
           DIRECT_URL: "postgresql://user:password@localhost:5432/testdb"
           NEXTAUTH_URL: "http://localhost:3000"
