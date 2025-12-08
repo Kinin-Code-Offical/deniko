@@ -32,9 +32,13 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+        env:
+          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
 
       - name: Generate Prisma Client
         run: pnpm exec prisma generate
+        env:
+          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
 
       - name: Run all tests
         run: pnpm test:all

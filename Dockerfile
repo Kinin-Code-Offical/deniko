@@ -12,6 +12,13 @@ RUN npm install -g pnpm
 
 # Paket dosyalarını kopyala
 COPY package.json pnpm-lock.yaml* ./
+# Prisma şemasını ve patch'leri kopyala (postinstall için gerekli)
+COPY prisma ./prisma
+COPY patches ./patches
+
+# Build sırasında Prisma generate için geçici dummy URL (postinstall için gerekli)
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
 # Bağımlılıkları kur
 RUN pnpm install --frozen-lockfile
 
