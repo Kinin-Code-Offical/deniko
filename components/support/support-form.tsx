@@ -87,15 +87,21 @@ export function SupportForm({ dictionary }: SupportFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{d.name}</FormLabel>
+                <FormLabel className="text-slate-700 dark:text-slate-300">
+                  {d.name}
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder={d.name_placeholder} {...field} />
+                  <Input
+                    placeholder={d.name_placeholder}
+                    {...field}
+                    className="h-11 rounded-xl border-slate-200 bg-slate-50 transition-all focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900/50 dark:text-white dark:focus:border-blue-500 dark:focus:bg-slate-900"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,9 +112,15 @@ export function SupportForm({ dictionary }: SupportFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{d.email}</FormLabel>
+                <FormLabel className="text-slate-700 dark:text-slate-300">
+                  {d.email}
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder={d.email_placeholder} {...field} />
+                  <Input
+                    placeholder={d.email_placeholder}
+                    {...field}
+                    className="h-11 rounded-xl border-slate-200 bg-slate-50 transition-all focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900/50 dark:text-white dark:focus:border-blue-500 dark:focus:bg-slate-900"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -121,14 +133,16 @@ export function SupportForm({ dictionary }: SupportFormProps) {
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{d.type_label}</FormLabel>
+              <FormLabel className="text-slate-700 dark:text-slate-300">
+                {d.type_label}
+              </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-11 rounded-xl border-slate-200 bg-slate-50 transition-all focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900/50 dark:text-white dark:focus:border-blue-500 dark:focus:bg-slate-900">
                     <SelectValue placeholder={d.type_placeholder} />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
                   <SelectItem value="general">{d.types.general}</SelectItem>
                   <SelectItem value="bug">{d.types.bug}</SelectItem>
                   <SelectItem value="billing">{d.types.billing}</SelectItem>
@@ -145,9 +159,15 @@ export function SupportForm({ dictionary }: SupportFormProps) {
           name="subject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{d.subject}</FormLabel>
+              <FormLabel className="text-slate-700 dark:text-slate-300">
+                {d.subject}
+              </FormLabel>
               <FormControl>
-                <Input placeholder={d.subject_placeholder} {...field} />
+                <Input
+                  placeholder={d.subject_placeholder}
+                  {...field}
+                  className="h-11 rounded-xl border-slate-200 bg-slate-50 transition-all focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900/50 dark:text-white dark:focus:border-blue-500 dark:focus:bg-slate-900"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -159,11 +179,13 @@ export function SupportForm({ dictionary }: SupportFormProps) {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{d.message}</FormLabel>
+              <FormLabel className="text-slate-700 dark:text-slate-300">
+                {d.message}
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder={d.message_placeholder}
-                  className="min-h-[120px]"
+                  className="min-h-[150px] resize-none rounded-xl border-slate-200 bg-slate-50 transition-all focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900/50 dark:text-white dark:focus:border-blue-500 dark:focus:bg-slate-900"
                   {...field}
                 />
               </FormControl>
@@ -172,15 +194,19 @@ export function SupportForm({ dictionary }: SupportFormProps) {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button
+          type="submit"
+          className="h-12 w-full rounded-xl bg-blue-600 text-base font-medium text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-700 hover:shadow-blue-500/40 dark:bg-blue-600 dark:hover:bg-blue-500"
+          disabled={isPending}
+        >
           {isPending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
               {d.submitting}
             </>
           ) : (
             <>
-              <Send className="mr-2 h-4 w-4" />
+              <Send className="mr-2 h-5 w-5" />
               {d.submit}
             </>
           )}

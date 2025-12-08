@@ -76,108 +76,97 @@ export default async function SupportPage({
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar lang={lang} dictionary={dictionary} />
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-slate-50 py-16 dark:bg-slate-900/50">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] bg-center" />
-          <div className="relative z-10 container">
-            <div className="mx-auto max-w-3xl text-center">
-              <h1 className="bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-4xl font-bold tracking-tighter text-transparent sm:text-5xl dark:from-white dark:to-slate-400">
-                {contact.title}
-              </h1>
-              <p className="text-muted-foreground mt-4 text-xl">
-                {contact.subtitle}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <div className="container max-w-6xl py-12">
-          <div className="grid gap-8 lg:grid-cols-12">
-            {/* Contact Info Side */}
-            <div className="space-y-6 lg:col-span-5">
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                <Card className="group overflow-hidden transition-all hover:border-[#2062A3]/30 hover:shadow-md dark:hover:border-blue-400/30">
-                  <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-                    <div className="rounded-xl bg-blue-50 p-3 text-[#2062A3] transition-colors group-hover:bg-[#2062A3] group-hover:text-white dark:bg-blue-900/20 dark:text-blue-400 dark:group-hover:bg-blue-600 dark:group-hover:text-white">
-                      <Mail className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base font-semibold">
-                        {contact.info.email_label}
-                      </CardTitle>
-                      <CardDescription className="text-sm font-medium">
-                        {contact.info.email}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                </Card>
-
-                <Card className="group overflow-hidden transition-all hover:border-[#2062A3]/30 hover:shadow-md dark:hover:border-blue-400/30">
-                  <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-                    <div className="rounded-xl bg-blue-50 p-3 text-[#2062A3] transition-colors group-hover:bg-[#2062A3] group-hover:text-white dark:bg-blue-900/20 dark:text-blue-400 dark:group-hover:bg-blue-600 dark:group-hover:text-white">
-                      <MessageSquare className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base font-semibold">
-                        {contact.info.chat_label}
-                      </CardTitle>
-                      <CardDescription className="text-sm font-medium">
-                        {contact.info.chat_desc}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                </Card>
-
-                <Card className="group overflow-hidden transition-all hover:border-[#2062A3]/30 hover:shadow-md dark:hover:border-blue-400/30">
-                  <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-                    <div className="rounded-xl bg-blue-50 p-3 text-[#2062A3] transition-colors group-hover:bg-[#2062A3] group-hover:text-white dark:bg-blue-900/20 dark:text-blue-400 dark:group-hover:bg-blue-600 dark:group-hover:text-white">
-                      <Phone className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base font-semibold">
-                        {contact.info.phone_label}
-                      </CardTitle>
-                      <CardDescription className="text-sm font-medium">
-                        {contact.info.phone_desc}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                </Card>
-              </div>
-
-              {/* Additional Info or Illustration could go here */}
-              <div className="bg-muted/30 rounded-2xl border border-dashed p-6">
-                <p className="text-muted-foreground text-center text-sm">
-                  {dictionary.support.cta.subtitle}
-                </p>
-              </div>
-            </div>
-
-            {/* Contact Form Side */}
-            <div className="lg:col-span-7">
-              <div className="bg-card rounded-2xl border p-6 shadow-lg shadow-slate-200/50 sm:p-8 dark:shadow-none">
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold tracking-tight">
-                    {dictionary.support.contact.form.submit}
-                  </h2>
-                  <p className="text-muted-foreground">
-                    {dictionary.support.contact.subtitle}
-                  </p>
-                </div>
-                <SupportForm dictionary={dictionary} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-      <Footer lang={lang} dictionary={dictionary} />
+    <main className="flex min-h-screen flex-col bg-white dark:bg-slate-950">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }}
       />
-    </div>
+      <Navbar lang={lang} dictionary={dictionary} />
+
+      <section className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-16 lg:py-20">
+        <div className="mb-12 text-center">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl dark:text-white">
+            {contact.title}
+          </h1>
+          <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400">
+            {contact.subtitle}
+          </p>
+        </div>
+
+        <div className="grid items-start gap-8 lg:grid-cols-[350px_1fr]">
+          {/* Left Column: Contact Info */}
+          <div className="space-y-4">
+            <Card className="border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-200">
+              <CardHeader className="flex flex-row items-center gap-4">
+                <div className="rounded-lg bg-blue-50 p-3 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                  <Mail className="h-6 w-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-semibold text-slate-900 dark:text-white">
+                    {contact.info.email_label}
+                  </CardTitle>
+                  <CardDescription className="text-slate-500 dark:text-slate-400">
+                    {contact.info.email}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-200">
+              <CardHeader className="flex flex-row items-center gap-4">
+                <div className="rounded-lg bg-blue-50 p-3 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                  <MessageSquare className="h-6 w-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-semibold text-slate-900 dark:text-white">
+                    {contact.info.chat_label}
+                  </CardTitle>
+                  <CardDescription className="text-slate-500 dark:text-slate-400">
+                    {contact.info.chat_desc}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-200">
+              <CardHeader className="flex flex-row items-center gap-4">
+                <div className="rounded-lg bg-blue-50 p-3 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                  <Phone className="h-6 w-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-semibold text-slate-900 dark:text-white">
+                    {contact.info.phone_label}
+                  </CardTitle>
+                  <CardDescription className="text-slate-500 dark:text-slate-400">
+                    {contact.info.phone_desc}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+            </Card>
+
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center dark:border-slate-800 dark:bg-slate-900/30">
+              <p className="text-sm text-slate-500">
+                {dictionary.support.cta.subtitle}
+              </p>
+            </div>
+          </div>
+
+          {/* Right Column: Contact Form */}
+          <Card className="border-slate-200 bg-white p-6 md:p-8 dark:border-slate-800 dark:bg-slate-900/50">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+                {dictionary.support.contact.form.submit}
+              </h2>
+              <p className="text-slate-500 dark:text-slate-400">
+                {dictionary.support.contact.subtitle}
+              </p>
+            </div>
+            <SupportForm dictionary={dictionary} />
+          </Card>
+        </div>
+      </section>
+
+      <Footer lang={lang} dictionary={dictionary} />
+    </main>
   );
 }

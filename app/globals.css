@@ -77,9 +77,9 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
-  --scrollbar-track: #020617;        /* slate-950 */
-  --scrollbar-thumb: #1e293b;        /* slate-800 */
-  --scrollbar-thumb-hover: #334155;  /* slate-700 */
+  --scrollbar-track: #020617; /* slate-950 */
+  --scrollbar-thumb: #1e293b; /* slate-800 */
+  --scrollbar-thumb-hover: #334155; /* slate-700 */
 }
 
 .dark {
@@ -136,9 +136,6 @@
 }
 
 /* Prevent layout shift when scrollbar appears */
-html {
-  scrollbar-gutter: stable both-edges;
-}
 
 /* Firefox global rules (ignored by Chrome, safe to keep) */
 .dnk-scrollbar,
@@ -146,6 +143,7 @@ html,
 body {
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) transparent;
+  scrollbar-gutter: auto;
 }
 
 /* WebKit-based (Chrome, Edge, Safari) */
@@ -706,4 +704,3 @@ body::-webkit-scrollbar-thumb:hover {
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
 }
-

@@ -804,6 +804,7 @@
       "github": "GitHub",
       "patreon": "Patreon",
       "brand": "Deniko",
+      "support": "Destek",
       "platform": "Platform",
       "legal": "Yasal",
       "patent": "Patent hakları Deniko'ya aittir."
@@ -921,29 +922,73 @@
         "general": [
           {
             "question": "Deniko nedir?",
-            "answer": "Deniko, özel ders yönetimi için kapsamlı bir platformdur."
+            "answer": "Deniko, özel ders yönetimi için kapsamlı bir platformdur. Öğretmenlerin ders programlarını düzenlemelerine, öğrencileri takip etmelerine ve ödemeleri verimli bir şekilde yönetmelerine yardımcı olur."
           },
           {
             "question": "Ücretsiz mi?",
-            "answer": "Evet, temel kullanım için ücretsiz bir plan sunuyoruz."
+            "answer": "Evet, bireysel eğitmenler için temel özellikleri içeren ücretsiz bir plan sunuyoruz. İleri düzey ihtiyaçlar için premium planlarımız da mevcuttur."
+          },
+          {
+            "question": "Verilerim ne kadar güvende?",
+            "answer": "Verilerinizi korumak için endüstri standardı şifreleme kullanıyoruz. Tüm bağlantılar SSL/TLS ile güvence altına alınmıştır ve düzenli yedeklemeler yapıyoruz."
+          },
+          {
+            "question": "Deniko'yu mobilde kullanabilir miyim?",
+            "answer": "Evet, Deniko tamamen mobil uyumludur ve ayrı bir uygulamaya ihtiyaç duymadan tüm mobil cihazlarda, tabletlerde ve masaüstü bilgisayarlarda harika çalışır."
           }
         ],
         "billing": [
           {
             "question": "Planımı nasıl yükseltirim?",
-            "answer": "Fatura ayarlarından planınızı yükseltebilirsiniz."
+            "answer": "Panelinizdeki fatura ayarlarından planınızı istediğiniz zaman yükseltebilirsiniz."
+          },
+          {
+            "question": "Hangi ödeme yöntemlerini kabul ediyorsunuz?",
+            "answer": "Tüm büyük kredi kartlarını (Visa, Mastercard, Amex) ve güvenli online ödeme yöntemlerini kabul ediyoruz."
+          },
+          {
+            "question": "İstediğim zaman iptal edebilir miyim?",
+            "answer": "Evet, aboneliğinizi hesap ayarlarınızdan istediğiniz zaman iptal edebilirsiniz. Soru sorulmaz."
+          },
+          {
+            "question": "İade yapıyor musunuz?",
+            "answer": "Hizmetimizden memnun kalmazsanız, tüm yeni abonelikler için 14 günlük para iade garantisi sunuyoruz."
           }
         ],
         "teachers": [
           {
             "question": "Öğrenci nasıl eklerim?",
-            "answer": "Öğrenciler sekmesine gidin ve 'Öğrenci Ekle' butonuna tıklayın."
+            "answer": "Panelinizdeki Öğrenciler sekmesine gidin ve 'Öğrenci Ekle' butonuna tıklayın. Bilgilerini girebilir veya onlara bir davet bağlantısı gönderebilirsiniz."
+          },
+          {
+            "question": "Öğrenci devamsızlığını takip edebilir miyim?",
+            "answer": "Evet, takviminizden veya ders detay sayfasından her ders için yoklamayı doğrudan alabilirsiniz."
+          },
+          {
+            "question": "Öğrencilerle dosya paylaşabilir miyim?",
+            "answer": "Her ders içinde veya doğrudan bir öğrenci profilinde belge, ödev ve kaynak yükleyip paylaşabilirsiniz."
+          },
+          {
+            "question": "Öğrenci sayısında bir sınır var mı?",
+            "answer": "Ücretsiz planda aktif öğrenci sayısı sınırı vardır, ancak premium planlarımız sınırsız öğrenci yönetimi sunar."
           }
         ],
         "students": [
           {
             "question": "Bir sınıfa nasıl katılırım?",
-            "answer": "Öğretmeniniz tarafından sağlanan davet bağlantısını kullanın."
+            "answer": "Bir hesap oluşturmak ve otomatik olarak sınıfa katılmak için öğretmeniniz tarafından sağlanan davet bağlantısını kullanın."
+          },
+          {
+            "question": "Gelecek derslerimi nasıl görebilirim?",
+            "answer": "Paneliniz, tüm yaklaşan derslerinizi, ödevlerinizi ve teslim tarihlerinizi içeren kişiselleştirilmiş bir takvim gösterir."
+          },
+          {
+            "question": "Öğretmenime mesaj atabilir miyim?",
+            "answer": "Evet, dersler veya ödevler hakkında öğretmeninizle güvenli bir şekilde iletişim kurmak için dahili mesajlaşma sistemini kullanabilirsiniz."
+          },
+          {
+            "question": "Ödevimi nasıl gönderirim?",
+            "answer": "Panelinizdeki ilgili derse veya ödeve gidin ve çalışmanızı göndermek için yükleme butonunu kullanın."
           }
         ]
       }

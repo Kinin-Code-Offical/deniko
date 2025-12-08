@@ -805,6 +805,7 @@
       "github": "GitHub",
       "patreon": "Patreon",
       "brand": "Deniko",
+      "support": "Support",
       "platform": "Platform",
       "legal": "Legal",
       "patent": "Patent rights belong to Deniko."
@@ -922,29 +923,73 @@
         "general": [
           {
             "question": "What is Deniko?",
-            "answer": "Deniko is a comprehensive platform for private tutoring management."
+            "answer": "Deniko is a comprehensive platform for private tutoring management. It helps teachers organize their schedule, track students, and manage payments efficiently."
           },
           {
             "question": "Is it free?",
-            "answer": "Yes, we offer a free tier for basic usage."
+            "answer": "Yes, we offer a free tier for basic usage which includes essential features for individual tutors. We also have premium plans for advanced needs."
+          },
+          {
+            "question": "How secure is my data?",
+            "answer": "We use industry-standard encryption to protect your data. All connections are secured with SSL/TLS, and we perform regular backups."
+          },
+          {
+            "question": "Can I use Deniko on mobile?",
+            "answer": "Yes, Deniko is fully responsive and works great on all mobile devices, tablets, and desktops without needing a separate app."
           }
         ],
         "billing": [
           {
             "question": "How do I upgrade?",
-            "answer": "You can upgrade your plan from the billing settings."
+            "answer": "You can upgrade your plan from the billing settings in your dashboard at any time."
+          },
+          {
+            "question": "What payment methods do you accept?",
+            "answer": "We accept all major credit cards (Visa, Mastercard, Amex) and secure online payment methods."
+          },
+          {
+            "question": "Can I cancel anytime?",
+            "answer": "Yes, you can cancel your subscription at any time from your account settings. No questions asked."
+          },
+          {
+            "question": "Do you offer refunds?",
+            "answer": "We offer a 14-day money-back guarantee for all new subscriptions if you are not satisfied with our service."
           }
         ],
         "teachers": [
           {
             "question": "How do I add students?",
-            "answer": "Go to the Students tab and click 'Add Student'."
+            "answer": "Go to the Students tab in your dashboard and click the 'Add Student' button. You can then enter their details or send them an invite link."
+          },
+          {
+            "question": "Can I track student attendance?",
+            "answer": "Yes, you can mark attendance for each lesson directly from your calendar or lesson details page."
+          },
+          {
+            "question": "How do I share files with students?",
+            "answer": "You can upload and share documents, homework, and resources within each lesson or directly on a student's profile."
+          },
+          {
+            "question": "Is there a limit on the number of students?",
+            "answer": "The free plan has a limit on active students, but our premium plans offer unlimited student management."
           }
         ],
         "students": [
           {
             "question": "How do I join a class?",
-            "answer": "Use the invite link provided by your teacher."
+            "answer": "Use the invite link provided by your teacher to create an account and automatically join their class."
+          },
+          {
+            "question": "How do I see my upcoming lessons?",
+            "answer": "Your dashboard shows a personalized calendar with all your upcoming lessons, assignments, and deadlines."
+          },
+          {
+            "question": "Can I message my teacher?",
+            "answer": "Yes, you can use the built-in messaging system to communicate with your teacher securely regarding lessons or assignments."
+          },
+          {
+            "question": "How do I submit homework?",
+            "answer": "Navigate to the specific lesson or assignment in your dashboard and use the upload button to submit your work."
           }
         ]
       }

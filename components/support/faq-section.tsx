@@ -1,6 +1,7 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, useMemo } from "react";
+import { m, AnimatePresence } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
@@ -8,8 +9,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import type { Dictionary } from "@/types/i18n";
-import { Search } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 interface FAQSectionProps {
   dictionary: Dictionary;
@@ -17,73 +27,129 @@ interface FAQSectionProps {
 
 export function FAQSection({ dictionary }: FAQSectionProps) {
   const { faq } = dictionary.support;
+  const [activeCategory, setActiveCategory] = useState<string>("general");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const categories = [
+    { id: "general", label: faq.categories.general },
+    { id: "billing", label: faq.categories.billing },
+    { id: "teachers", label: faq.categories.teachers },
+    { id: "students", label: faq.categories.students },
+  ];
+
+  const filteredItems = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return faq.items[activeCategory as keyof typeof faq.items] || [];
+    }
+
+    const query = searchQuery.toLowerCase();
+    const allItems = Object.values(faq.items).flat();
+
+    return allItems.filter(
+      (item) =>
+        item.question.toLowerCase().includes(query) ||
+        item.answer.toLowerCase().includes(query)
+    );
+  }, [searchQuery, activeCategory, faq.items]);
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-12">
-      {/* Search Bar */}
-      <div className="relative mx-auto max-w-lg">
+    <div className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
+      {/* Left Column: Categories & Search */}
+      <div className="space-y-6">
         <div className="relative">
-          <Search className="text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-400" />
           <Input
             placeholder={dictionary.support.hero.search_placeholder}
-            className="h-12 rounded-full border-slate-200 bg-white pl-12 text-base shadow-lg shadow-slate-200/50 transition-all focus-visible:ring-2 focus-visible:ring-[#2062A3] focus-visible:ring-offset-2 dark:border-slate-800 dark:bg-slate-950 dark:shadow-none"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-11 rounded-xl border-slate-200 bg-white pl-10 text-base shadow-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-800 dark:bg-slate-900/60 dark:text-white dark:focus:border-blue-500"
           />
         </div>
+
+        <Card className="overflow-hidden rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+          <CardHeader className="bg-slate-50/50 pb-4 dark:bg-slate-900/50">
+            <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">
+              {dictionary.support.faq.title}
+            </CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              {dictionary.support.hero.subtitle}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-2">
+            <nav className="flex flex-col space-y-1">
+              {categories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant="ghost"
+                  onClick={() => {
+                    setActiveCategory(category.id);
+                    setSearchQuery(""); // Clear search when changing category
+                  }}
+                  className={cn(
+                    "justify-start rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200",
+                    activeCategory === category.id && !searchQuery
+                      ? "bg-blue-50 text-blue-600 shadow-sm ring-1 ring-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:ring-blue-500/20"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                  )}
+                >
+                  {category.label}
+                </Button>
+              ))}
+            </nav>
+          </CardContent>
+        </Card>
       </div>
 
-      <Tabs defaultValue="general" className="w-full space-y-8">
-        <div className="flex justify-center">
-          <TabsList className="bg-muted/50 inline-flex h-auto flex-wrap justify-center gap-2 rounded-full p-1.5">
-            <TabsTrigger
-              value="general"
-              className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-white data-[state=active]:text-[#2062A3] data-[state=active]:shadow-sm dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-blue-400"
-            >
-              {faq.categories.general}
-            </TabsTrigger>
-            <TabsTrigger
-              value="billing"
-              className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-white data-[state=active]:text-[#2062A3] data-[state=active]:shadow-sm dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-blue-400"
-            >
-              {faq.categories.billing}
-            </TabsTrigger>
-            <TabsTrigger
-              value="teachers"
-              className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-white data-[state=active]:text-[#2062A3] data-[state=active]:shadow-sm dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-blue-400"
-            >
-              {faq.categories.teachers}
-            </TabsTrigger>
-            <TabsTrigger
-              value="students"
-              className="rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-white data-[state=active]:text-[#2062A3] data-[state=active]:shadow-sm dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-blue-400"
-            >
-              {faq.categories.students}
-            </TabsTrigger>
-          </TabsList>
-        </div>
-
-        {Object.entries(faq.items).map(([category, items]) => (
-          <TabsContent key={category} value={category} className="mt-0">
-            <div className="grid gap-4">
-              <Accordion type="single" collapsible className="w-full space-y-4">
-                {items.map((item, index) => (
-                  <AccordionItem
-                    key={index}
-                    value={`item-${index}`}
-                    className="border-border/50 overflow-hidden rounded-xl border bg-white px-2 shadow-sm transition-all hover:border-[#2062A3]/30 hover:shadow-md dark:bg-slate-950 dark:hover:border-blue-400/30"
+      {/* Right Column: FAQ Content */}
+      <div className="space-y-6">
+        <div className="dnk-scrollbar min-h-[400px] pr-2">
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            <AnimatePresence mode="popLayout">
+              {filteredItems.length > 0 ? (
+                filteredItems.map((item, index) => (
+                  <m.div
+                    key={`${activeCategory}-${index}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <AccordionTrigger className="px-4 py-4 text-left text-base font-medium transition-colors hover:text-[#2062A3] hover:no-underline dark:hover:text-blue-400">
-                      {item.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground px-4 pb-4 text-base leading-relaxed">
-                      {item.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          </TabsContent>
-        ))}
-      </Tabs>
+                    <AccordionItem
+                      value={`item-${index}`}
+                      className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-blue-800 dark:hover:bg-slate-900"
+                    >
+                      <AccordionTrigger className="px-6 py-5 text-left text-base font-medium text-slate-900 transition-colors hover:text-blue-600 hover:no-underline dark:text-slate-200 dark:hover:text-blue-400">
+                        {item.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 pb-6 text-base leading-relaxed text-slate-600 dark:text-slate-400">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  </m.div>
+                ))
+              ) : (
+                <m.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 text-center dark:border-slate-800 dark:bg-slate-900/30"
+                >
+                  <div className="mb-4 rounded-full bg-slate-100 p-4 dark:bg-slate-800">
+                    <Search className="h-8 w-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-slate-900 dark:text-white">
+                    No results found
+                  </h3>
+                  <p className="text-slate-500 dark:text-slate-400">
+                    Try adjusting your search terms
+                  </p>
+                </m.div>
+              )}
+            </AnimatePresence>
+          </Accordion>
+        </div>
+      </div>
     </div>
   );
 }

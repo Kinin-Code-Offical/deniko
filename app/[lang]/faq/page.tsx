@@ -63,34 +63,27 @@ export default async function FAQPage({
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar lang={lang} dictionary={dictionary} />
-      <main className="flex-1">
-        {/* Hero Section with Gradient */}
-        <section className="relative overflow-hidden bg-slate-50 py-20 dark:bg-slate-900/50">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] bg-center" />
-          <div className="relative z-10 container text-center">
-            <div className="mx-auto max-w-3xl space-y-4">
-              <h1 className="bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-4xl font-bold tracking-tighter text-transparent sm:text-5xl md:text-6xl dark:from-white dark:to-slate-400">
-                {dictionary.support.faq.title}
-              </h1>
-              <p className="text-muted-foreground mx-auto max-w-2xl text-xl leading-relaxed">
-                {dictionary.support.hero.subtitle}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <div className="container -mt-8 space-y-16 pb-20">
-          {/* FAQ Section */}
-          <FAQSection dictionary={dictionary} />
-        </div>
-      </main>
-      <Footer lang={lang} dictionary={dictionary} />
+    <main className="flex min-h-screen flex-col bg-white dark:bg-slate-950">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-    </div>
+      <Navbar lang={lang} dictionary={dictionary} />
+
+      <section className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-16 lg:py-20">
+        <div className="mb-12 text-center">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl dark:text-white">
+            {dictionary.support.faq.title}
+          </h1>
+          <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400">
+            {dictionary.support.hero.subtitle}
+          </p>
+        </div>
+
+        <FAQSection dictionary={dictionary} />
+      </section>
+
+      <Footer lang={lang} dictionary={dictionary} />
+    </main>
   );
 }
