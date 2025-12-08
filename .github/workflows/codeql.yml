@@ -1,0 +1,57 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "30 1 * * 0"
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript-typescript"]
+
+    env:
+      DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+      DIRECT_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+      NEXTAUTH_URL: "http://localhost:3000"
+      AUTH_SECRET: "dummy_secret_for_build"
+      AUTH_GOOGLE_ID: "dummy_google_id"
+      AUTH_GOOGLE_SECRET: "dummy_google_secret"
+      EMAIL_USER: "dummy@example.com"
+      EMAIL_PASS: "dummy_password"
+      GCS_BUCKET_NAME: "dummy-bucket"
+      GCS_PROJECT_ID: "dummy-project"
+      GCS_CLIENT_EMAIL: "dummy@example.com"
+      GCS_PRIVATE_KEY: "dummy_private_key"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # If you wish to specify custom queries, you can do so here or in a config file.
+          # By default, queries listed here will override any specified in a config file.
+          # Prefix the list here with "+" to use these queries and those in the config file.
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"

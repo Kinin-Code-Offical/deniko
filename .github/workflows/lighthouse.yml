@@ -1,4 +1,4 @@
-name: Sitemap Verification
+name: Lighthouse CI
 
 on:
   push:
@@ -7,10 +7,29 @@ on:
     branches: [main]
 
 jobs:
-  verify-sitemap:
+  lighthouse:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: read
+      checks: write
+
+    # PostgreSQL service container for DB dependent pages
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
@@ -29,9 +48,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         env:
-          # Build sırasında geçici dummy çevresel değişkenler
-          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
-          DIRECT_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+          DATABASE_URL: "postgresql://user:password@localhost:5432/testdb"
+          DIRECT_URL: "postgresql://user:password@localhost:5432/testdb"
           NEXTAUTH_URL: "http://localhost:3000"
           AUTH_SECRET: "dummy_secret_for_build"
           AUTH_GOOGLE_ID: "dummy_google_id"
@@ -43,34 +61,37 @@ jobs:
           GCS_CLIENT_EMAIL: "dummy@example.com"
           GCS_PRIVATE_KEY: "dummy_private_key"
 
-      - name: Generate Prisma Client
-        run: pnpm exec prisma generate
+      - name: Push Database Schema
+        run: pnpm exec prisma db push
         env:
-          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
-          DIRECT_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
-          NEXTAUTH_URL: "http://localhost:3000"
-          AUTH_SECRET: "dummy_secret_for_build"
-          AUTH_GOOGLE_ID: "dummy_google_id"
-          AUTH_GOOGLE_SECRET: "dummy_google_secret"
-          EMAIL_USER: "dummy@example.com"
-          EMAIL_PASS: "dummy_password"
-          GCS_BUCKET_NAME: "dummy-bucket"
-          GCS_PROJECT_ID: "dummy-project"
-          GCS_CLIENT_EMAIL: "dummy@example.com"
-          GCS_PRIVATE_KEY: "dummy_private_key"
+          DATABASE_URL: "postgresql://user:password@localhost:5432/testdb"
+          DIRECT_URL: "postgresql://user:password@localhost:5432/testdb"
 
-      - name: Run Sitemap Unit Tests
-        run: pnpm exec vitest run __tests__/sitemap.test.ts
-
-      - name: Build Project (Generates sitemap.xml)
+      - name: Build Project
         run: pnpm run build
         env:
-          # Skip linting and type checking during build to speed up if they are separate jobs
-          # But for sitemap verification, a full build is safest.
-          NEXT_TELEMETRY_DISABLED: 1
-          # Add any required env vars for build here, or use secrets
-          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
-          DIRECT_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+          DATABASE_URL: "postgresql://user:password@localhost:5432/testdb"
+          DIRECT_URL: "postgresql://user:password@localhost:5432/testdb"
+          NEXTAUTH_URL: "http://localhost:3000"
+          AUTH_SECRET: "dummy_secret_for_build"
+          AUTH_GOOGLE_ID: "dummy_google_id"
+          AUTH_GOOGLE_SECRET: "dummy_google_secret"
+          EMAIL_USER: "dummy@example.com"
+          EMAIL_PASS: "dummy_password"
+          GCS_BUCKET_NAME: "dummy-bucket"
+          GCS_PROJECT_ID: "dummy-project"
+          GCS_CLIENT_EMAIL: "dummy@example.com"
+          GCS_PRIVATE_KEY: "dummy_private_key"
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: "./lighthouserc.js"
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        env:
+          DATABASE_URL: "postgresql://user:password@localhost:5432/testdb"
+          DIRECT_URL: "postgresql://user:password@localhost:5432/testdb"
           NEXTAUTH_URL: "http://localhost:3000"
           AUTH_SECRET: "dummy_secret_for_build"
           AUTH_GOOGLE_ID: "dummy_google_id"

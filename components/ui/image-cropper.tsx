@@ -46,10 +46,10 @@ export function ImageCropper({
 
   // Validate image source to prevent XSS (CodeQL fix)
   const safeImageSrc = useMemo(() => {
-    if (imageSrc && imageSrc.startsWith("blob:")) {
+    if (typeof imageSrc === "string" && imageSrc.startsWith("blob:")) {
       return imageSrc;
     }
-    return null;
+    return undefined;
   }, [imageSrc]);
 
   useEffect(() => {

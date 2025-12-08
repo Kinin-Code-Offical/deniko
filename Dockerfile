@@ -44,8 +44,6 @@ RUN npm install -g pnpm
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Prisma istemcisini oluştur
-RUN pnpm exec prisma generate
 
 # Build sırasında geçici dummy çevresel değişkenler
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
@@ -61,6 +59,8 @@ ENV GCS_PROJECT_ID="dummy-project"
 ENV GCS_CLIENT_EMAIL="dummy@example.com"
 ENV GCS_PRIVATE_KEY="dummy_private_key"
 
+# Prisma istemcisini oluştur
+RUN pnpm exec prisma generate
 # Next.js projesini build et
 RUN pnpm run build
 
