@@ -36,7 +36,7 @@
     "@formatjs/intl-localematcher": "^0.6.2",
     "@google-cloud/storage": "^7.18.0",
     "@hookform/resolvers": "^5.2.2",
-    "@next/bundle-analyzer": "^16.0.7",
+    "@next/bundle-analyzer": "^16.0.8",
     "@prisma/adapter-pg": "^7.1.0",
     "@prisma/client": "^7.1.0",
     "@radix-ui/react-accordion": "^1.2.12",
