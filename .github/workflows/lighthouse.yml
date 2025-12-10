@@ -104,7 +104,8 @@ jobs:
       - name: Start Server
         run: |
           pnpm run start:ci &
-          npx wait-on tcp:127.0.0.1:3000 -t 60000
+          npx wait-on http-get://127.0.0.1:3000/tr -t 60000
+          sleep 5
         env:
           DATABASE_URL: "postgresql://user:password@localhost:5432/testdb"
           DIRECT_URL: "postgresql://user:password@localhost:5432/testdb"

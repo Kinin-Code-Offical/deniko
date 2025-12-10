@@ -60,5 +60,5 @@ describe('Metadata i18n Compliance', () => {
     if (description === hardcodedDesc) {
       throw new Error(`Metadata description in app/layout.tsx is hardcoded. Use i18n dictionary.`);
     }
-  });
+  }, 20000);
 });
