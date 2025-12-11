@@ -22,8 +22,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { Dictionary } from "@/types/i18n";
 
+const SOURCE_TYPES = {
+  STUDENT: "student",
+  SHADOW: "shadow",
+} as const;
+
+const COLORS = {
+  BLUE: "blue",
+  AMBER: "amber",
+} as const;
+
 export type ConflictField = string;
-export type SelectionSource = "student" | "shadow";
+export type SelectionSource =
+  | typeof SOURCE_TYPES.STUDENT
+  | typeof SOURCE_TYPES.SHADOW;
 
 export interface ConflictData {
   student: Record<ConflictField, string | null>;
@@ -53,7 +65,7 @@ export default function ConflictResolutionModal({
   >(() => {
     const initial: Record<ConflictField, SelectionSource> = {};
     Object.keys(data.student).forEach((key) => {
-      initial[key] = "student";
+      initial[key] = SOURCE_TYPES.STUDENT;
     });
     return initial;
   });
@@ -69,10 +81,10 @@ export default function ConflictResolutionModal({
   };
 
   const studentCount = Object.values(selections).filter(
-    (s) => s === "student"
+    (s) => s === SOURCE_TYPES.STUDENT
   ).length;
   const shadowCount = Object.values(selections).filter(
-    (s) => s === "shadow"
+    (s) => s === SOURCE_TYPES.SHADOW
   ).length;
 
   if (!isOpen) return null;
@@ -191,24 +203,24 @@ function ConflictRow({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         {/* Student Card (Left) */}
         <SelectionCard
-          source="student"
+          source={SOURCE_TYPES.STUDENT}
           title={t.your_profile}
           value={studentValue}
-          isSelected={selected === "student"}
-          onClick={() => onSelect("student")}
+          isSelected={selected === SOURCE_TYPES.STUDENT}
+          onClick={() => onSelect(SOURCE_TYPES.STUDENT)}
           icon={<User className="h-4 w-4" />}
-          colorClass="blue"
+          colorClass={COLORS.BLUE}
         />
 
         {/* Teacher Card (Right) */}
         <SelectionCard
-          source="shadow"
+          source={SOURCE_TYPES.SHADOW}
           title={t.teacher_record}
           value={shadowValue}
-          isSelected={selected === "shadow"}
-          onClick={() => onSelect("shadow")}
+          isSelected={selected === SOURCE_TYPES.SHADOW}
+          onClick={() => onSelect(SOURCE_TYPES.SHADOW)}
           icon={<School className="h-4 w-4" />}
-          colorClass="amber"
+          colorClass={COLORS.AMBER}
         />
       </div>
     </div>
@@ -222,7 +234,7 @@ interface SelectionCardProps {
   isSelected: boolean;
   onClick: () => void;
   icon: React.ReactNode;
-  colorClass: "blue" | "amber";
+  colorClass: typeof COLORS.BLUE | typeof COLORS.AMBER;
 }
 
 function SelectionCard({
@@ -233,7 +245,7 @@ function SelectionCard({
   icon,
   colorClass,
 }: SelectionCardProps) {
-  const isBlue = colorClass === "blue";
+  const isBlue = colorClass === COLORS.BLUE;
 
   return (
     <div

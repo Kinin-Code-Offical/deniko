@@ -34,6 +34,23 @@ import ConflictResolutionModal, {
 import type { Dictionary } from "@/types/i18n";
 import type { StudentProfile, User } from "@prisma/client";
 
+const CONFLICT_KEYS = {
+  STUDENT_NO: "student_no",
+  PARENT: "parent",
+  GRADE: "grade",
+  NAME: "name",
+  PHONE: "phone",
+} as const;
+
+const SOURCE_TYPES = {
+  SHADOW: "shadow",
+  STUDENT: "student",
+} as const;
+
+const PLACEHOLDERS = {
+  TEACHER: "{teacher}",
+} as const;
+
 interface InviteDetails {
   id: string;
   tempFirstName: string | null;
@@ -115,8 +132,8 @@ export default function JoinClient({
         shadow.tempLastName || ""
       }`.trim();
       if (userProfile.name !== shadowName && shadowName) {
-        conflicts.student["name"] = userProfile.name;
-        conflicts.shadow["name"] = shadowName;
+        conflicts.student[CONFLICT_KEYS.NAME] = userProfile.name;
+        conflicts.shadow[CONFLICT_KEYS.NAME] = shadowName;
         hasConflict = true;
       }
 
@@ -125,19 +142,19 @@ export default function JoinClient({
       // But studentProfile usually doesn't have own phone in this schema except tempPhone.
       // Let's use userProfile.phoneNumber
       if (userProfile.phoneNumber !== shadow.tempPhone && shadow.tempPhone) {
-        conflicts.student["phone"] = userProfile.phoneNumber;
-        conflicts.shadow["phone"] = shadow.tempPhone;
+        conflicts.student[CONFLICT_KEYS.PHONE] = userProfile.phoneNumber;
+        conflicts.shadow[CONFLICT_KEYS.PHONE] = shadow.tempPhone;
         hasConflict = true;
       }
 
       // Student No
-      check("student_no", current.studentNo, shadow.studentNo);
+      check(CONFLICT_KEYS.STUDENT_NO, current.studentNo, shadow.studentNo);
 
       // Grade
-      check("grade", current.gradeLevel, shadow.gradeLevel);
+      check(CONFLICT_KEYS.GRADE, current.gradeLevel, shadow.gradeLevel);
 
       // Parent Info (Grouped or separate? Let's do separate for UI, group for logic)
-      check("parent", current.parentName, shadow.parentName);
+      check(CONFLICT_KEYS.PARENT, current.parentName, shadow.parentName);
 
       if (hasConflict) {
         setConflictData(conflicts);
@@ -184,11 +201,12 @@ export default function JoinClient({
     // If 'shadow' is selected, we use teacher's data.
     const preferences = {
       useTeacherGrade:
-        selections["student_no"] === "shadow" ||
-        selections["grade"] === "shadow",
-      useTeacherParentInfo: selections["parent"] === "shadow",
+        selections[CONFLICT_KEYS.STUDENT_NO] === SOURCE_TYPES.SHADOW ||
+        selections[CONFLICT_KEYS.GRADE] === SOURCE_TYPES.SHADOW,
+      useTeacherParentInfo:
+        selections[CONFLICT_KEYS.PARENT] === SOURCE_TYPES.SHADOW,
       useTeacherClassroom: true, // Default to true for now
-      useTeacherName: selections["name"] === "shadow",
+      useTeacherName: selections[CONFLICT_KEYS.NAME] === SOURCE_TYPES.SHADOW,
     };
 
     executeClaim(preferences);
@@ -258,7 +276,7 @@ export default function JoinClient({
             </CardTitle>
             <CardDescription className="text-base">
               {dict.dashboard.join.desc.replace(
-                /{teacher}/,
+                PLACEHOLDERS.TEACHER,
                 inviteDetails.teacherName || ""
               )}
             </CardDescription>
@@ -272,7 +290,7 @@ export default function JoinClient({
           <div className="bg-muted/50 text-muted-foreground rounded-lg p-4 text-sm">
             <p className="text-center">
               {dict.dashboard.join.invite_desc.replace(
-                "{teacher}",
+                PLACEHOLDERS.TEACHER,
                 inviteDetails.teacherName || dict.dashboard.join.unknown_teacher
               )}
             </p>

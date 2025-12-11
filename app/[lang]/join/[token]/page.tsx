@@ -19,6 +19,10 @@ import { AlertCircle, LogIn, UserPlus } from "lucide-react";
 import type { Metadata } from "next";
 import type { Locale } from "@/i18n-config";
 
+const PLACEHOLDERS = {
+  TEACHER: "{teacher}",
+} as const;
+
 export async function generateMetadata({
   params,
 }: {
@@ -138,7 +142,7 @@ export default async function JoinPage({
             </CardTitle>
             <CardDescription className="text-base dark:text-slate-400">
               {dict.dashboard.join.invite_desc.replace(
-                "{teacher}",
+                PLACEHOLDERS.TEACHER,
                 inviteDetails.teacherName || dict.dashboard.join.unknown_teacher
               )}
             </CardDescription>
