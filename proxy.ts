@@ -5,6 +5,10 @@ import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import logger from "@/lib/logger";
 import { env } from "@/lib/env";
+import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
+
+const { auth } = NextAuth(authConfig);
 
 const isProd = env.NODE_ENV === "production";
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -86,11 +90,13 @@ function getLocale(request: NextRequest): string | undefined {
   }
 }
 
-export default function proxy(request: NextRequest) {
+export default auth(function proxy(request: NextRequest) {
   const { nextUrl, method, headers, cookies, url } = request;
   const { pathname, search } = nextUrl;
   const requestId = crypto.randomUUID();
   const clientIp = getClientIp(request);
+  // @ts-expect-error auth property is added by NextAuth wrapper
+  const session = request.auth;
 
   // 1. Force HTTPS & WWW -> non-WWW Redirect
   const host = headers.get("host") || nextUrl.hostname;
@@ -113,14 +119,14 @@ export default function proxy(request: NextRequest) {
         default-src 'self';
         script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline' 'unsafe-eval';
         style-src 'self' 'unsafe-inline';
-        img-src 'self' blob: data: https://*.googleusercontent.com https://storage.googleapis.com https://api.dicebear.com https://www.google-analytics.com https://www.googletagmanager.com;
-        connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com;
+        img-src 'self' blob: data: https://*.googleusercontent.com https://storage.googleapis.com https://api.dicebear.com https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com;
+        connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com;
         font-src 'self';
         object-src 'none';
         base-uri 'self';
         form-action 'self';
         frame-ancestors 'none';
-        upgrade-insecure-requests;
+        ${isProd ? "upgrade-insecure-requests;" : ""}
     `
     .replace(/\s{2,}/g, " ")
     .trim();
@@ -159,6 +165,7 @@ export default function proxy(request: NextRequest) {
     url: pathname,
     ip: clientIp,
     userAgent: headers.get("user-agent"),
+    userId: session?.user?.id,
   });
 
   // Check if there is any supported locale in the pathname
@@ -260,7 +267,7 @@ export default function proxy(request: NextRequest) {
     fallbackResponse.headers.set("Content-Security-Policy", cspHeader);
     return fallbackResponse;
   }
-}
+});
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],

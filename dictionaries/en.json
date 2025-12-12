@@ -1055,7 +1055,6 @@
       "subtitle": "Professional tutoring management platform",
       "hero_title": "Join Us",
       "hero_desc": "Take your place in this big family with thousands of students and teachers.",
-      "mobile_hint": "Create your account in under a minute",
       "role_select": "Select Account Type",
       "student": "Student",
       "student_desc": "I want to learn and grow",
@@ -1098,7 +1097,6 @@
       "hero_desc": "Welcome to the modern and effective education platform that brings teachers and students together.",
       "card_title": "Login",
       "card_desc": "Login with Google or your email address",
-      "mobile_hint": "Secure login for teachers and students",
       "chip": "Designed for modern tutoring",
       "google_login": "Continue with Google",
       "or_email": "Or with Email",
@@ -1120,7 +1118,6 @@
     "forgot_password": {
       "title": "Forgot Password?",
       "desc": "Enter your email address and we'll send you a link to reset your password.",
-      "mobile_hint": "We send a secure reset link to your email",
       "chip": "No worries, it happens",
       "email_label": "Email Address",
       "submit": "Send Reset Link",

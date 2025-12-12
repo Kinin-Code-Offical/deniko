@@ -387,6 +387,15 @@ vi.mock("@/lib/db", () => ({
   },
 }));
 
+// Mock storage
+vi.mock("@/lib/storage", () => ({
+  getSignedUrl: vi.fn().mockResolvedValue("https://example.com/signed-url.jpg"),
+  uploadFile: vi
+    .fn()
+    .mockResolvedValue("https://example.com/uploaded-file.jpg"),
+  deleteFile: vi.fn().mockResolvedValue(true),
+}));
+
 describe("Dashboard Pages", () => {
   const params = Promise.resolve({ lang: "en" });
 

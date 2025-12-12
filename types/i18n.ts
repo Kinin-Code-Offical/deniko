@@ -1120,7 +1120,6 @@ export interface Dictionary {
       subtitle: string;
       hero_title: string;
       hero_desc: string;
-      mobile_hint: string;
       role_select: string;
       student: string;
       student_desc: string;
@@ -1163,7 +1162,6 @@ export interface Dictionary {
       hero_desc: string;
       card_title: string;
       card_desc: string;
-      mobile_hint: string;
       chip: string;
       google_login: string;
       or_email: string;
@@ -1185,7 +1183,6 @@ export interface Dictionary {
     forgot_password: {
       title: string;
       desc: string;
-      mobile_hint: string;
       chip: string;
       email_label: string;
       submit: string;

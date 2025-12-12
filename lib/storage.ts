@@ -25,10 +25,36 @@ function getBucket() {
   return getStorage().bucket(bucketName);
 }
 
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "application/pdf",
+];
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+
 export async function uploadFile(file: File, folder: string): Promise<string> {
   if (!bucketName) throw new Error("GCS_BUCKET_NAME is not defined");
+
+  // Security: Validate folder name to prevent path traversal
+  if (folder.includes("..") || folder.startsWith("/") || folder.includes("\\")) {
+    throw new Error("Invalid folder name");
+  }
+
+  // Security: Validate file type
+  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    throw new Error(`Invalid file type: ${file.type}`);
+  }
+
+  // Security: Validate file size
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    throw new Error(`File size exceeds limit: ${MAX_FILE_SIZE_BYTES} bytes`);
+  }
+
   const buffer = Buffer.from(await file.arrayBuffer());
   const extension = file.name.split(".").pop();
+  // Security: Use UUID for filename to prevent overwrites and path traversal
   const fileName = `${folder}/${uuidv4()}.${extension}`;
 
   const fileRef = getBucket().file(fileName);

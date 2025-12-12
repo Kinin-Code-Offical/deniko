@@ -1055,7 +1055,6 @@
       "subtitle": "Profesyonel özel ders yönetim platformu",
       "hero_title": "Aramıza Katılın",
       "hero_desc": "Binlerce öğrenci ve öğretmenin yer aldığı bu büyük ailede yerinizi alın.",
-      "mobile_hint": "Bir dakikadan kısa sürede hesabınızı oluşturun",
       "role_select": "Hesap Türü Seçin",
       "student": "Öğrenci",
       "student_desc": "Ders almak ve gelişmek istiyorum",
@@ -1098,7 +1097,6 @@
       "hero_desc": "Öğretmen ve öğrencileri bir araya getiren, modern ve etkili eğitim platformuna hoş geldiniz.",
       "card_title": "Giriş Yap",
       "card_desc": "Google ile veya e-posta adresinle giriş yap",
-      "mobile_hint": "Öğretmen ve öğrenciler için güvenli giriş",
       "chip": "Modern özel dersler için tasarlandı",
       "google_login": "Google ile Devam Et",
       "or_email": "Veya E-posta ile",
@@ -1120,7 +1118,6 @@
     "forgot_password": {
       "title": "Şifrenizi mi Unuttunuz?",
       "desc": "E-posta adresinizi girin, size şifrenizi sıfırlamanız için bir bağlantı gönderelim.",
-      "mobile_hint": "Güvenli sıfırlama bağlantısını e-posta ile gönderiyoruz",
       "chip": "Sorun değil, herkesin başına gelir",
       "email_label": "E-posta Adresi",
       "submit": "Sıfırlama Linki Gönder",

@@ -72,11 +72,11 @@ export default async function LegalLayout({
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md supports-backdrop-filter:bg-white/60 dark:bg-slate-900/80 print:hidden">
+      <header className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md supports-backdrop-filter:bg-white/60 dark:bg-slate-900/80 print:hidden">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-8">
             <Link
-              href={`/${lang}`}
+              href={`/${lang}/legal`}
               className="group flex items-center gap-2 transition-opacity hover:opacity-80"
             >
               <div className="rounded-lg bg-blue-50 p-1.5 transition-colors group-hover:bg-blue-100 dark:bg-blue-900/20 dark:group-hover:bg-blue-900/30">
@@ -127,7 +127,7 @@ export default async function LegalLayout({
       </header>
 
       {/* Mobile Nav (Horizontal Scroll) */}
-      <div className="overflow-x-auto border-b bg-white lg:hidden dark:bg-slate-900 print:hidden">
+      <div className="mt-16 overflow-x-auto border-b bg-white lg:hidden dark:bg-slate-900 print:hidden">
         <div className="container mx-auto flex min-w-max items-center gap-2 px-4 py-3">
           {navItems.map((item) => (
             <Link
@@ -142,7 +142,7 @@ export default async function LegalLayout({
         </div>
       </div>
 
-      <main className="container mx-auto flex-1 px-4 py-12 md:px-6 lg:px-8 print:max-w-none print:p-0">
+      <main className="container mx-auto flex-1 px-4 py-12 md:px-6 lg:mt-16 lg:px-8 print:max-w-none print:p-0">
         <div className="mx-auto max-w-4xl print:max-w-none">{children}</div>
       </main>
 

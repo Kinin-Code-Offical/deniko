@@ -152,13 +152,13 @@ export function OnboardingClientPage({
         </div>
 
         {/* Mobile Header */}
-        <div className="sticky top-0 z-50 flex items-center justify-between border-b bg-white/80 p-4 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-950/80">
+        <div className="fixed top-0 z-50 flex w-full items-center justify-between border-b bg-white/80 p-4 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-950/80">
           <DenikoLogo className="h-8 w-auto text-[#2062A3] dark:text-blue-400" />
           <LanguageSwitcher />
         </div>
 
         {/* Center Content */}
-        <div className="mx-auto my-auto flex w-full max-w-[480px] flex-col gap-8 p-6">
+        <div className="mx-auto my-auto flex w-full max-w-[480px] flex-col gap-8 p-6 pt-24 md:pt-6">
           {/* Header */}
           <div className="space-y-2 text-center">
             <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">

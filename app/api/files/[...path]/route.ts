@@ -29,6 +29,12 @@ export async function GET(
   }
 
   const { path } = await params;
+
+  // Security: Prevent path traversal
+  if (path.some((segment) => segment.includes("..") || segment.includes("/") || segment.includes("\\"))) {
+    return new NextResponse(null, { status: 400 });
+  }
+
   const filePath = path.join("/");
 
   try {

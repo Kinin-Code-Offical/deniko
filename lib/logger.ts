@@ -29,7 +29,20 @@ const baseLogger = pino({
       : undefined,
 
   redact: {
-    paths: ["password", "token", "secret", "authorization", "cookie"],
+    paths: [
+      "password",
+      "token",
+      "secret",
+      "authorization",
+      "cookie",
+      "email",
+      "phoneNumber",
+      "creditCard",
+      "cvv",
+      "access_token",
+      "refresh_token",
+      "id_token",
+    ],
     remove: true, // Completely remove sensitive data
   },
 

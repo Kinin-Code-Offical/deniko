@@ -123,8 +123,8 @@ export default async function RegisterPage({
       {/* Right Panel - Form */}
       <div className="animate-in slide-in-from-right-4 relative flex flex-1 flex-col bg-linear-to-b from-white via-blue-50/60 to-white transition-colors duration-700 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
         {/* Mobile Header */}
-        <div className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-950/90">
-          <div className="flex items-center justify-between px-4 pt-4">
+        <div className="fixed top-0 z-50 w-full border-b bg-white/90 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-900/90">
+          <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-3">
               <Link
                 href="/"
@@ -147,9 +147,6 @@ export default async function RegisterPage({
               <LanguageSwitcher />
             </div>
           </div>
-          <div className="flex items-center justify-between px-4 pt-2 pb-4 text-xs text-slate-500 dark:text-slate-400">
-            <span>{dictionary.auth.register.mobile_hint}</span>
-          </div>
         </div>
 
         {/* Desktop Language Switcher */}
@@ -159,7 +156,7 @@ export default async function RegisterPage({
         </div>
 
         {/* Form Container */}
-        <div className="flex flex-1 items-center justify-center px-4 py-4 sm:px-6 sm:py-6 md:p-6">
+        <div className="flex flex-1 items-center justify-center px-4 py-4 pt-24 sm:px-6 sm:py-6 md:p-6 md:pt-6">
           <div className="w-full max-w-md space-y-4">
             <div className="space-y-1 text-center md:text-left">
               <h1 className="text-xl font-bold tracking-tight text-slate-900 md:text-2xl dark:text-white">

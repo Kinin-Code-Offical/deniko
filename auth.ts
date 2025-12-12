@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
-import * as bcrypt from "bcryptjs";
+import { verifyPassword } from "@/lib/password";
 import { z } from "zod";
 import { Role } from "@prisma/client";
 import { env } from "@/lib/env";
@@ -11,8 +11,10 @@ import { generateUniqueUsername } from "@/lib/username";
 import { assertLoginRateLimit } from "@/lib/rate-limit-login";
 import { getClientIp } from "@/lib/get-client-ip";
 import { logger } from "@/lib/logger";
+import { authConfig } from "./auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(db),
   secret: env.AUTH_SECRET,
   trustHost: true,
@@ -84,7 +86,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               throw new Error("ACCOUNT_INACTIVE");
             }
 
-            const passwordsMatch = await bcrypt.compare(password, user.password);
+            const passwordsMatch = await verifyPassword(password, user.password);
 
             if (passwordsMatch) {
               if (!user.emailVerified) {

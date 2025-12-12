@@ -131,8 +131,17 @@ export function UserProfileTabs({
                     <div className="text-sm font-medium">
                       {review.reviewerName}
                     </div>
-                    <div className="text-muted-foreground text-xs">
-                      ★ {review.rating.toFixed(1)}
+                    <div className="text-muted-foreground flex items-center gap-1 text-xs">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="h-3 w-3"
+                        aria-hidden="true"
+                      >
+                        <path d="M9.049 2.927a1 1 0 011.902 0l1.07 3.296a1 1 0 00.95.69h3.462a1 1 0 01.588 1.81l-2.802 2.037a1 1 0 00-.364 1.118l1.07 3.296a1 1 0 01-1.541 1.118L10 13.347l-3.384 2.945a1 1 0 01-1.54-1.118l1.07-3.296a1 1 0 00-.364-1.118L2.98 8.723a1 1 0 01.588-1.81h3.462a1 1 0 00.95-.69l1.069-3.296z" />
+                      </svg>
+                      {review.rating.toFixed(1)}
                     </div>
                   </div>
                   <p className="text-muted-foreground text-xs leading-relaxed">

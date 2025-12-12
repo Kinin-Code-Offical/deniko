@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import * as bcrypt from "bcryptjs";
+import { hashPassword, verifyPassword } from "@/lib/password";
 import { randomBytes } from "crypto";
 import { sendVerificationEmail, sendPasswordResetEmail } from "@/lib/email";
 import { AuthError } from "next-auth";
@@ -262,7 +262,7 @@ export async function registerUser(
     }
 
     // 2. Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
     // 3. Generate Username
     const username = await generateUniqueUsername(firstName, lastName);
@@ -581,7 +581,7 @@ export async function resetPassword(
 
     // Check if new password is same as old password
     if (existingUser.password) {
-      const isSamePassword = await bcrypt.compare(
+      const isSamePassword = await verifyPassword(
         newPassword,
         existingUser.password
       );
@@ -593,7 +593,7 @@ export async function resetPassword(
       }
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await hashPassword(newPassword);
 
     await db.user.update({
       where: { id: existingUser.id },

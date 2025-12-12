@@ -89,7 +89,7 @@ export default function ConflictResolutionModal({
   if (!isOpen) return null;
 
   return (
-    <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 backdrop-blur-sm duration-300 sm:p-4">
+    <div className="animate-in fade-in fixed inset-0 z-100 flex items-center justify-center bg-black/80 p-2 backdrop-blur-sm duration-300 sm:p-4">
       <Card className="border-border bg-background flex max-h-[90dvh] w-full max-w-3xl flex-col overflow-hidden shadow-2xl">
         {/* Header */}
         <CardHeader className="bg-muted/30 shrink-0 border-b p-4 pb-4 sm:p-6 sm:pb-6">

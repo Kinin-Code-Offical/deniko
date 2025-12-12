@@ -211,7 +211,7 @@ export default async function Home({
       <PerformanceTracker name="Homepage-Render" />
       <Navbar lang={lang} dictionary={dictionary} />
 
-      <main id="main-content" className="flex-1">
+      <main id="main-content" className="flex-1 pt-16 md:pt-20">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-linear-to-b from-[#020617] via-[#020617] to-[#020617] py-16 md:py-24">
           <div className="relative z-10 container mx-auto px-4">
@@ -528,7 +528,7 @@ export default async function Home({
                 style={featureAxisStyle}
               >
                 {/* Connecting Line */}
-                <FadeIn className="pointer-events-none absolute inset-y-3 left-1/2 z-0 flex w-10 -translate-x-1/2 justify-center lg:left-(--feature-axis) lg:translate-x-0">
+                <FadeIn className="pointer-events-none absolute inset-y-3 left-1 z-0 flex w-10 -translate-x-1/4 justify-center lg:left-(--feature-axis) lg:translate-x-0">
                   <div className="feature-line relative h-full w-1.5 -translate-x-1/2">
                     <span className="feature-flash"></span>
                     <span className="feature-node feature-node--top"></span>

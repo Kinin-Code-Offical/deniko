@@ -123,8 +123,8 @@ export default async function LoginPage({
       {/* Right Panel - Form */}
       <div className="animate-in slide-in-from-right-4 relative flex flex-1 flex-col bg-linear-to-b from-white via-blue-50/60 to-white transition-colors duration-700 dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
         {/* Mobile Header */}
-        <div className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-900/90">
-          <div className="flex items-center justify-between px-4 pt-4">
+        <div className="fixed top-0 z-50 w-full border-b bg-white/90 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-900/90">
+          <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-3">
               <Link
                 href="/"
@@ -147,9 +147,6 @@ export default async function LoginPage({
               <LanguageSwitcher />
             </div>
           </div>
-          <div className="flex items-center justify-between px-4 pt-2 pb-4 text-xs text-slate-500 dark:text-slate-400">
-            <span>{dictionary.auth.login.mobile_hint}</span>
-          </div>
         </div>
 
         {/* Desktop Language Switcher */}
@@ -159,7 +156,7 @@ export default async function LoginPage({
         </div>
 
         {/* Form Container */}
-        <div className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:p-12">
+        <div className="flex flex-1 items-center justify-center px-4 py-8 pt-24 sm:px-6 sm:py-10 md:p-12 md:pt-12">
           <div className="w-full max-w-md space-y-6">
             <div className="space-y-2 text-center md:text-left">
               <p className="mb-1 inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-[#2062A3] dark:bg-blue-900/30 dark:text-blue-300">

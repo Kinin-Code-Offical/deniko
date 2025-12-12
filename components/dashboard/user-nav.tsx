@@ -1,5 +1,6 @@
 "use client";
 
+import React, { memo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -28,7 +29,11 @@ interface UserNavProps {
   lang?: string;
 }
 
-export function UserNav({ user, dictionary, lang }: UserNavProps) {
+export const UserNav = memo(function UserNav({
+  user,
+  dictionary,
+  lang,
+}: UserNavProps) {
   const t = dictionary?.dashboard?.header;
 
   if (!t) return null;
@@ -72,4 +77,5 @@ export function UserNav({ user, dictionary, lang }: UserNavProps) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+});
+UserNav.displayName = "UserNav";

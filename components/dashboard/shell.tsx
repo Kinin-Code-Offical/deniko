@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -34,46 +34,21 @@ interface DashboardShellProps {
   lang: string;
 }
 
-export function DashboardShell({
-  children,
-  user,
-  dictionary,
-  lang,
-}: DashboardShellProps) {
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-
-  const navConfig = user.role === "TEACHER" ? teacherNav : studentNav;
-
-  // Helper to get current page title
-  const getCurrentTitle = () => {
-    const currentNav = navConfig.find(
-      (item) => pathname === `/${lang}${item.href}`
-    );
-    if (currentNav) {
-      return dictionary.dashboard.nav[
-        currentNav.title as keyof typeof dictionary.dashboard.nav
-      ];
-    }
-    // Fallback for subpages or unknown routes
-    if (pathname.includes("/messages"))
-      return dictionary.dashboard.nav.messages;
-    if (pathname.includes("/notifications"))
-      return dictionary.dashboard.nav.notifications;
-    if (pathname.includes("/profile")) return dictionary.dashboard.nav.profile;
-    if (pathname.includes("/settings"))
-      return dictionary.dashboard.nav.settings;
-    if (pathname.includes("/files")) return dictionary.dashboard.nav.files;
-
-    return dictionary.dashboard.nav.dashboard;
-  };
-
-  const NavItem = ({
+const NavItem = memo(
+  ({
     item,
     mobile = false,
+    lang,
+    pathname,
+    dictionary,
+    onMobileClick,
   }: {
     item: { title: string; href: string; icon: LucideIcon };
     mobile?: boolean;
+    lang: string;
+    pathname: string;
+    dictionary: Dictionary;
+    onMobileClick?: () => void;
   }) => {
     const href = `/${lang}${item.href}`;
     const isActive = pathname === href;
@@ -82,7 +57,7 @@ export function DashboardShell({
     return (
       <Link
         href={href}
-        onClick={() => mobile && setOpen(false)}
+        onClick={() => mobile && onMobileClick?.()}
         className={cn(
           "group flex items-center gap-3 rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-200",
           isActive
@@ -110,6 +85,44 @@ export function DashboardShell({
         )}
       </Link>
     );
+  }
+);
+NavItem.displayName = "NavItem";
+
+export function DashboardShell({
+  children,
+  user,
+  dictionary,
+  lang,
+}: DashboardShellProps) {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  const navConfig = user.role === "TEACHER" ? teacherNav : studentNav;
+
+  const handleMobileClick = useCallback(() => setOpen(false), []);
+
+  // Helper to get current page title
+  const getCurrentTitle = () => {
+    const currentNav = navConfig.find(
+      (item) => pathname === `/${lang}${item.href}`
+    );
+    if (currentNav) {
+      return dictionary.dashboard.nav[
+        currentNav.title as keyof typeof dictionary.dashboard.nav
+      ];
+    }
+    // Fallback for subpages or unknown routes
+    if (pathname.includes("/messages"))
+      return dictionary.dashboard.nav.messages;
+    if (pathname.includes("/notifications"))
+      return dictionary.dashboard.nav.notifications;
+    if (pathname.includes("/profile")) return dictionary.dashboard.nav.profile;
+    if (pathname.includes("/settings"))
+      return dictionary.dashboard.nav.settings;
+    if (pathname.includes("/files")) return dictionary.dashboard.nav.files;
+
+    return dictionary.dashboard.nav.dashboard;
   };
 
   return (
@@ -131,7 +144,13 @@ export function DashboardShell({
         <div className="flex-1 overflow-y-auto px-4 py-6">
           <nav className="space-y-1.5">
             {navConfig.map((item) => (
-              <NavItem key={item.href} item={item} />
+              <NavItem
+                key={item.href}
+                item={item}
+                lang={lang}
+                pathname={pathname}
+                dictionary={dictionary}
+              />
             ))}
           </nav>
         </div>
@@ -195,7 +214,15 @@ export function DashboardShell({
                 <div className="flex-1 overflow-y-auto px-4 py-6">
                   <nav className="space-y-1.5">
                     {navConfig.map((item) => (
-                      <NavItem key={item.href} item={item} mobile />
+                      <NavItem
+                        key={item.href}
+                        item={item}
+                        mobile
+                        lang={lang}
+                        pathname={pathname}
+                        dictionary={dictionary}
+                        onMobileClick={handleMobileClick}
+                      />
                     ))}
                   </nav>
                 </div>

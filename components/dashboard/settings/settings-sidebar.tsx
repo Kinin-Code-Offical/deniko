@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useMemo, memo } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,43 +12,46 @@ interface SettingsSidebarProps extends React.HTMLAttributes<HTMLElement> {
   dictionary: Dictionary["dashboard"]["settings"];
 }
 
-export function SettingsSidebar({
+export const SettingsSidebar = memo(function SettingsSidebar({
   className,
   dictionary,
   ...props
 }: SettingsSidebarProps) {
-  const items = [
-    {
-      value: "profile",
-      label: dictionary.nav.profile,
-      icon: User,
-    },
-    {
-      value: "security",
-      label: dictionary.nav.security,
-      icon: Shield,
-    },
-    {
-      value: "privacy",
-      label: dictionary.nav.privacy,
-      icon: Lock,
-    },
-    {
-      value: "notifications",
-      label: dictionary.nav.notifications,
-      icon: Bell,
-    },
-    {
-      value: "language",
-      label: dictionary.nav.language,
-      icon: Globe,
-    },
-    {
-      value: "cookies",
-      label: dictionary.nav.cookies,
-      icon: Cookie,
-    },
-  ];
+  const items = useMemo(
+    () => [
+      {
+        value: "profile",
+        label: dictionary.nav.profile,
+        icon: User,
+      },
+      {
+        value: "security",
+        label: dictionary.nav.security,
+        icon: Shield,
+      },
+      {
+        value: "privacy",
+        label: dictionary.nav.privacy,
+        icon: Lock,
+      },
+      {
+        value: "notifications",
+        label: dictionary.nav.notifications,
+        icon: Bell,
+      },
+      {
+        value: "language",
+        label: dictionary.nav.language,
+        icon: Globe,
+      },
+      {
+        value: "cookies",
+        label: dictionary.nav.cookies,
+        icon: Cookie,
+      },
+    ],
+    [dictionary]
+  );
 
   return (
     <aside className={cn("w-full lg:w-1/5", className)} {...props}>
@@ -77,4 +81,5 @@ export function SettingsSidebar({
       </div>
     </aside>
   );
-}
+});
+SettingsSidebar.displayName = "SettingsSidebar";
