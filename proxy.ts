@@ -32,6 +32,11 @@ const attachSecurityHeaders = (response: NextResponse, pathname: string, isSecur
     );
   }
 
+  // Add Cache-Control for landing pages to enable bf-cache
+  if (pathname === "/" || /^\/[a-z]{2}$/.test(pathname)) {
+    response.headers.set("Cache-Control", "public, max-age=3600, must-revalidate");
+  }
+
   return response;
 };
 

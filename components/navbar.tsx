@@ -23,6 +23,7 @@ import {
 import { useEffect, useState } from "react";
 import type { Dictionary } from "@/types/i18n";
 import { UserNav } from "@/components/dashboard/user-nav";
+import { useSession } from "next-auth/react";
 
 interface NavbarProps {
   lang: string;
@@ -37,7 +38,10 @@ interface NavbarProps {
   };
 }
 
-export function Navbar({ lang, dictionary, user }: NavbarProps) {
+export function Navbar({ lang, dictionary, user: propUser }: NavbarProps) {
+  const { data: session } = useSession();
+  const user = propUser || session?.user;
+
   const [open, setOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
@@ -79,7 +83,7 @@ export function Navbar({ lang, dictionary, user }: NavbarProps) {
                 <Button
                   variant="ghost"
                   asChild
-                  className="hidden h-10 rounded-full border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:text-[#2062A3] sm:inline-flex dark:border-slate-700 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-700 dark:hover:text-white"
+                  className="hidden h-11 rounded-full border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:text-[#2062A3] sm:inline-flex dark:border-slate-700 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-700 dark:hover:text-white"
                 >
                   <Link href={`/${lang}/dashboard`}>
                     <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -247,14 +251,14 @@ export function Navbar({ lang, dictionary, user }: NavbarProps) {
                     <div className="flex flex-col gap-1">
                       <Link
                         href={`/${lang}/faq`}
-                        className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                        className="flex items-center justify-between rounded-md px-2 py-3 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                         onClick={() => setOpen(false)}
                       >
                         {dictionary.support.nav.faq}
                       </Link>
                       <Link
                         href={`/${lang}/support`}
-                        className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                        className="flex items-center justify-between rounded-md px-2 py-3 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                         onClick={() => setOpen(false)}
                       >
                         {dictionary.support.contact.title}
@@ -270,35 +274,35 @@ export function Navbar({ lang, dictionary, user }: NavbarProps) {
                     <div className="flex flex-col gap-1">
                       <Link
                         href={`/${lang}/legal`}
-                        className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                        className="flex items-center justify-between rounded-md px-2 py-3 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                         onClick={() => setOpen(false)}
                       >
                         {dictionary.legal.center}
                       </Link>
                       <Link
                         href={`/${lang}/legal/terms`}
-                        className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                        className="flex items-center justify-between rounded-md px-2 py-3 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                         onClick={() => setOpen(false)}
                       >
                         {dictionary.navbar.terms}
                       </Link>
                       <Link
                         href={`/${lang}/legal/privacy`}
-                        className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                        className="flex items-center justify-between rounded-md px-2 py-3 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                         onClick={() => setOpen(false)}
                       >
                         {dictionary.navbar.privacy}
                       </Link>
                       <Link
                         href={`/${lang}/legal/cookies`}
-                        className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                        className="flex items-center justify-between rounded-md px-2 py-3 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                         onClick={() => setOpen(false)}
                       >
                         {dictionary.legal.nav.cookies}
                       </Link>
                       <Link
                         href={`/${lang}/legal/kvkk`}
-                        className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+                        className="flex items-center justify-between rounded-md px-2 py-3 text-sm text-slate-600 transition-colors hover:bg-blue-50 hover:text-[#2062A3] dark:text-slate-400 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
                         onClick={() => setOpen(false)}
                       >
                         {dictionary.legal.nav.kvkk}

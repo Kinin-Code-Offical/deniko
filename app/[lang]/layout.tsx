@@ -5,6 +5,10 @@ import type { Metadata } from "next";
 import { getDictionary } from "@/lib/get-dictionary";
 import { env } from "@/lib/env";
 
+export async function generateStaticParams() {
+  return i18n.locales.map((locale) => ({ lang: locale }));
+}
+
 export async function generateMetadata({
   params,
 }: {

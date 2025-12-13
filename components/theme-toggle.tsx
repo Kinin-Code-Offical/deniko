@@ -36,7 +36,7 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
       <Button
         variant="outline"
         size="icon"
-        className="h-10 w-10 rounded-full border-slate-200 bg-white/50 text-slate-600 shadow-sm"
+        className="h-11 w-11 rounded-full border-slate-200 bg-white/50 text-slate-600 shadow-sm"
       >
         <span className="sr-only">{t.loading}</span>
       </Button>
@@ -49,7 +49,7 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
         <Button
           variant="outline"
           size="icon"
-          className="h-10 w-10 rounded-full border-slate-200 bg-white/50 text-slate-600 shadow-sm transition-all duration-300 hover:border-blue-200 hover:bg-blue-50 hover:text-[#2062A3] hover:shadow-md hover:shadow-blue-900/5 dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-blue-400"
+          className="h-11 w-11 rounded-full border-slate-200 bg-white/50 text-slate-600 shadow-sm transition-all duration-300 hover:border-blue-200 hover:bg-blue-50 hover:text-[#2062A3] hover:shadow-md hover:shadow-blue-900/5 dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-blue-400"
         >
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 dark:text-blue-400" />

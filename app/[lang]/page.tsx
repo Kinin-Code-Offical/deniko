@@ -1,4 +1,5 @@
 import { getDictionary } from "@/lib/get-dictionary";
+import { i18n } from "@/i18n-config";
 import type { Locale } from "@/i18n-config";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -6,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { PerformanceTracker } from "@/components/performance-tracker";
-import { auth } from "@/auth"; // Import auth
 import {
   ArrowRight,
   Calendar,
@@ -69,6 +69,10 @@ const Carousel = dynamic(
   }
 );
 
+export async function generateStaticParams() {
+  return i18n.locales.map((locale) => ({ lang: locale }));
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -128,7 +132,6 @@ export default async function Home({
 }) {
   const { lang } = await params;
   const dictionary = await getDictionary(lang);
-  const session = await auth();
 
   // Fetch real stats with fallback
   let teacherCount = 0;
@@ -211,7 +214,7 @@ export default async function Home({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <PerformanceTracker name="Homepage-Render" />
-      <Navbar lang={lang} dictionary={dictionary} user={session?.user} />
+      <Navbar lang={lang} dictionary={dictionary} />
 
       <main id="main-content" className="flex-1 pt-16 md:pt-20">
         {/* Hero Section */}
