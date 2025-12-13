@@ -1,29 +1,25 @@
-# Prisma (`prisma/`)
+# Prisma Directory Documentation
 
-Bu klasör, veritabanı şemasını ve migration geçmişini barındırır.
+## Purpose
 
-## 📄 `schema.prisma`
+Contains the database schema, migrations, and seed scripts.
 
-Veritabanı modellerini tanımlayan ana dosyadır.
+## Structure
 
-### Ana Modeller
+- `schema.prisma`: The single source of truth for the database model.
+- `migrations/`: SQL migration history.
+- `seed.ts` (optional): Script to populate initial data.
 
-- **`User`**: Temel kullanıcı hesabı.
-- **`UserSettings`**: Kullanıcı tercihleri ve gizlilik ayarları.
-- **`TeacherProfile` / `StudentProfile`**: Role özgü detaylı bilgiler.
-- **`Classroom`**: Sınıf/Grup tanımları.
-- **`Lesson`**: Ders kayıtları (Zaman, Konu, Ücret vb.).
-- **`Homework`**: Ödevler.
-- **`File`**: Yüklenen dosyaların meta verileri.
+## Key Models
 
-### Enums
+| Model | Purpose | Relationships |
+|-------|---------|---------------|
+| `User` | Core identity | `Account`, `Session`, `TeacherProfile`, `StudentProfile` |
+| `UserSettings` | Privacy/Config | Belongs to `User` |
+| `File` | Metadata for uploaded files | Owned by `User` |
 
-Veritabanında kullanılan sabit listeler:
+## Workflow
 
-- `Role`: `ADMIN`, `TEACHER`, `STUDENT`
-- `LessonStatus`: `SCHEDULED`, `COMPLETED`, `CANCELLED`
-- `LessonType`: `PRIVATE`, `GROUP`
-
-## 📂 `migrations/`
-
-Veritabanı şemasında yapılan değişikliklerin SQL karşılıklarını içeren klasör. `prisma migrate` komutu ile oluşturulur.
+1. Modify `schema.prisma`.
+2. Run `pnpm prisma migrate dev --name <change_name>` to generate SQL and apply changes.
+3. Run `pnpm prisma generate` to update the TypeScript client.

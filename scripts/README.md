@@ -1,23 +1,16 @@
-# Scripts (`scripts/`)
+# Scripts Directory Documentation
 
-Bu klasör, geliştirme, bakım ve test süreçlerinde kullanılan yardımcı scriptleri içerir. Genellikle `package.json` üzerinden veya doğrudan `ts-node` ile çalıştırılırlar.
+## Purpose
 
-## 📜 Script Listesi
+Contains utility scripts for maintenance, testing, and documentation generation.
 
-### Kontrol ve Analiz
+## Scripts
 
-- **`check-env.ts`**: `.env` dosyasındaki eksik değişkenleri kontrol eder.
-- **`check-links.ts`**: Projedeki kırık linkleri tarar.
-- **`check-hardcoded.ts`**: Kod içinde hardcoded (sabit) kalmış metinleri veya değerleri arar.
-- **`check-console.ts`**: Unutulmuş `console.log` ifadelerini bulur.
-- **`analyze_issues.py`**: Python tabanlı sorun analiz scripti.
+| File | Purpose | Usage |
+|------|---------|-------|
+| `generate-docs.ts` | Generates Markdown API docs from TypeScript source | `pnpm docs:gen` |
+| `check-env.ts` | Validates environment variables | `pnpm test:cli` |
 
-### Veri Yönetimi
+## Internals
 
-- **`seed-avatars.ts`**: Test kullanıcılarına örnek avatar atamak için kullanılır.
-- **`upload-default-avatar.ts`**: Sisteme varsayılan avatar görselini yükler.
-- **`migrate-storage-urls.ts`**: Veritabanındaki dosya URL'lerini yeni formata dönüştürmek için migration scripti.
-
-### Kullanıcı İşlemleri
-
-- **`check-user.js` / `check-users.ts`**: Belirli bir kullanıcının verilerini kontrol etmek veya listelemek için CLI araçları.
+Scripts are written in TypeScript and executed via `tsx` (TypeScript Execute).

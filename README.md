@@ -47,6 +47,15 @@ pnpm lint        # ESLint kontrolü
 pnpm test:all    # Tüm testleri çalıştır
 ```
 
+## 📚 Dokümantasyon
+
+Detaylı teknik dokümantasyon `docs/` klasöründe bulunmaktadır:
+
+- [**Dokümantasyon Ana Sayfası**](./docs/README.md)
+- [Mimari Genel Bakış](./docs/architecture/overview.md)
+- [Sistem Diyagramları](./docs/diagrams/README.md)
+- [Yol Haritası](./docs/roadmap.md)
+
 ### Build
 
 Prodüksiyon sürümü almak için:

@@ -1,52 +1,36 @@
-# App Directory (`app/`)
+# App Directory Documentation
 
-Bu klasör, Next.js **App Router** yapısını barındırır. Projenin tüm sayfaları, API route'ları ve layout'ları burada bulunur.
+## Purpose
 
-## 📂 Klasör Yapısı
+The `app/` directory contains the application's routing logic, pages, layouts, and API endpoints, following the Next.js App Router paradigm.
 
-### `[lang]/` (Internationalization)
+## Structure
 
-Tüm sayfa rotaları bu dinamik segmentin altındadır. Bu sayede uygulama çoklu dil desteği (i18n) sunar.
+- `[lang]/`: Dynamic route for Internationalization (i18n). All visible pages live here.
+- `api/`: Backend API routes (Route Handlers).
+- `actions/`: Server Actions for form submissions and mutations.
+- `globals.css`: Global Tailwind styles.
+- `layout.tsx`: Root layout (HTML/Body structure).
 
-- Örnek: `/tr/dashboard`, `/en/dashboard`.
-- `lang` parametresi, sayfa bileşenlerine prop olarak iletilir ve uygun sözlük (`dictionaries/`) dosyasının yüklenmesini sağlar.
+## Key Files
 
-### `api/`
+| File | Purpose | Key Exports | Dependencies |
+|------|---------|-------------|--------------|
+| `layout.tsx` | Root layout, providers, fonts | `RootLayout`, `metadata` | `next/font`, `components/providers` |
+| `not-found.tsx` | 404 Page | `NotFound` | - |
+| `api/auth/[...nextauth]/route.ts` | Auth.js Entrypoint | `GET`, `POST` | `auth.ts` |
 
-Backend API endpoint'lerini içerir.
+## Getting Started
 
-- **`avatar/[userId]/route.ts`**: Kullanıcı avatarını sunar.
-- **`files/[fileId]/route.ts`**: Güvenli dosya indirme işlemi yapar.
-- **`auth/*`**: NextAuth.js endpoint'leri (otomatik oluşturulur/yönetilir).
+To add a new page:
 
-### `actions/`
+1. Create a folder inside `app/[lang]/`.
+2. Add `page.tsx`.
+3. Use `params: { lang }` to fetch dictionaries.
 
-Server Actions dosyaları. İstemci bileşenlerinden (Client Components) doğrudan sunucu fonksiyonlarını çağırmak için kullanılır.
-
-- Form gönderimleri, veri güncellemeleri vb. burada işlenir.
-
-### `simple/`
-
-Muhtemelen basitleştirilmiş veya test amaçlı sayfalar.
-
-## 📄 Önemli Dosyalar
-
-### `layout.tsx` (Root Layout)
-
-Uygulamanın en dış katmanıdır.
-
-- `<html>` ve `<body>` etiketlerini içerir.
-- Global CSS (`globals.css`) burada yüklenir.
-- Font konfigürasyonu burada yapılır.
-
-### `globals.css`
-
-Tüm uygulama için geçerli olan CSS stilleri ve Tailwind direktifleri (`@tailwind base`, vb.).
-
-### `not-found.tsx`
-
-404 - Sayfa bulunamadı hatası için özel tasarım.
-
-### `robots.ts` & `sitemap.ts`
-
-SEO için gerekli olan `robots.txt` ve `sitemap.xml` dosyalarını dinamik olarak üretir.
+```tsx
+export default async function Page({ params: { lang } }) {
+  const dict = await getDictionary(lang);
+  return <h1>{dict.home.title}</h1>;
+}
+```

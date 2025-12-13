@@ -1,47 +1,20 @@
-# Library Directory (`lib/`)
+# Lib Directory Documentation
 
-Bu klasör, uygulamanın iş mantığını, yardımcı fonksiyonlarını, veritabanı ve servis yapılandırmalarını içerir.
+## Purpose
 
-## 📄 Önemli Dosyalar
+The `lib/` directory contains pure utility functions, business logic, and shared services. It is the "brain" of the application, separated from the UI.
 
-### `db.ts`
+## Key Modules
 
-Prisma Client örneğini (instance) oluşturur ve dışa aktarır.
+| File | Purpose | Key Exports | Dependencies |
+|------|---------|-------------|--------------|
+| `db.ts` | Prisma Client Singleton | `db` | `@prisma/client` |
+| `auth.ts` | Auth Configuration | `auth`, `signIn`, `signOut` | `next-auth` |
+| `storage.ts` | GCS File Operations | `uploadObject`, `getSignedUrlForKey` | `@google-cloud/storage` |
+| `logger.ts` | Structured Logging | `logger` | `pino` |
+| `utils.ts` | UI Helpers (clsx) | `cn` | `clsx`, `tailwind-merge` |
 
-- **Amaç**: Veritabanı bağlantısını tek bir noktadan yönetmek ve development ortamında çoklu bağlantı oluşmasını engellemek (global caching).
-- **Kullanım**: `import { db } from "@/lib/db";`
+## Usage Guidelines
 
-### `storage.ts`
-
-Google Cloud Storage (GCS) işlemlerini yöneten yardımcı modül.
-
-- **Fonksiyonlar**:
-  - `uploadObject`: Dosya yükler.
-  - `getObjectStream`: Dosya okuma akışı (stream) döner.
-  - `getSignedUrlForKey`: Geçici erişim URL'i üretir.
-- **Güvenlik**: Dosya yollarını (`key`) doğrular, path traversal saldırılarını engeller.
-
-### `utils.ts`
-
-Genel amaçlı yardımcı fonksiyonlar.
-
-- **`cn(...)`**: Tailwind sınıflarını koşullu olarak birleştirmek için (clsx + tailwind-merge).
-- **`formatPhoneNumber(value)`**: Telefon numaralarını formatlar (Özellikle TR numaraları için).
-- **`getAvatarUrl(...)`**: Kullanıcı avatarı için doğru URL'i (GCS veya External) belirler.
-- **`createImage`, `getCroppedImg`**: Resim işleme (crop) yardımcıları.
-
-### `auth.ts` / `auth.config.ts` (Varsayılmıştır)
-
-NextAuth.js yapılandırması.
-
-### `logger.ts`
-
-Uygulama loglarını yönetmek için (muhtemelen Pino veya Winston wrapper).
-
-### `env.ts`
-
-Ortam değişkenlerini (Environment Variables) doğrulamak için (T3 Env veya Zod tabanlı). `process.env` yerine tip güvenli erişim sağlar.
-
-## 📂 Alt Klasörler
-
-- **`hooks/`**: React Custom Hooks.
+- **Stateless**: Functions here should generally be stateless.
+- **Environment**: Most files here run on the **Server**. If a file is safe for client use, ensure it doesn't import server-only secrets.
