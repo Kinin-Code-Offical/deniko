@@ -7,39 +7,57 @@ const project = new Project({
     skipAddingFilesFromTsConfig: true,
 });
 
-const SOURCE_DIRS = ["app", "lib", "components", "actions"];
+const SOURCE_DIRS = ["app", "lib", "components"];
 const OUTPUT_DIR = path.join(process.cwd(), "docs", "reference");
 
 async function generateDocs() {
-    console.log("🚀 Starting documentation generation...");
+    try {
+        console.log("🚀 Starting documentation generation...");
 
-    // Ensure output directory exists
-    if (!fs.existsSync(OUTPUT_DIR)) {
-        fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-    }
+        // Ensure output directory exists
+        if (!fs.existsSync(OUTPUT_DIR)) {
+            fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+        }
 
-    for (const dir of SOURCE_DIRS) {
-        const dirPath = path.join(process.cwd(), dir);
-        if (!fs.existsSync(dirPath)) continue;
-
-        // Add files to project
-        const files = project.addSourceFilesAtPaths(`${dir}/**/*.{ts,tsx}`);
-
-        for (const sourceFile of files) {
-            const relativePath = path.relative(process.cwd(), sourceFile.getFilePath());
-            const baseName = path.basename(relativePath, path.extname(relativePath));
-            const docPath = path.join(OUTPUT_DIR, path.dirname(relativePath));
-
-            if (!fs.existsSync(docPath)) {
-                fs.mkdirSync(docPath, { recursive: true });
+        for (const dir of SOURCE_DIRS) {
+            const dirPath = path.join(process.cwd(), dir);
+            if (!fs.existsSync(dirPath)) {
+                console.warn(`⚠️ Directory not found: ${dirPath}`);
+                continue;
             }
 
-            const mdContent = generateMarkdownForFile(sourceFile, relativePath);
-            if (mdContent) {
-                fs.writeFileSync(path.join(docPath, `${baseName}.md`), mdContent);
-                console.log(`✅ Generated: ${relativePath}`);
+            console.log(`📂 Processing directory: ${dir}`);
+
+            // Add files to project
+            const globPattern = `${dir}/**/*.{ts,tsx}`;
+            console.log(`   Glob: ${globPattern}`);
+
+            try {
+                const files = project.addSourceFilesAtPaths(globPattern);
+                console.log(`   Found ${files.length} files.`);
+
+                for (const sourceFile of files) {
+                    const relativePath = path.relative(process.cwd(), sourceFile.getFilePath());
+                    const baseName = path.basename(relativePath, path.extname(relativePath));
+                    const docPath = path.join(OUTPUT_DIR, path.dirname(relativePath));
+
+                    if (!fs.existsSync(docPath)) {
+                        fs.mkdirSync(docPath, { recursive: true });
+                    }
+
+                    const mdContent = generateMarkdownForFile(sourceFile, relativePath);
+                    if (mdContent) {
+                        fs.writeFileSync(path.join(docPath, `${baseName}.md`), mdContent);
+                        console.log(`   ✅ Generated: ${relativePath}`);
+                    }
+                }
+            } catch (err) {
+                console.error(`   ❌ Error processing ${dir}:`, err);
             }
         }
+    } catch (error) {
+        console.error("🔥 Fatal error:", error);
+        process.exit(1);
     }
 }
 
