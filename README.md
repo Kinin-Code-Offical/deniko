@@ -49,12 +49,17 @@ pnpm test:all    # Tüm testleri çalıştır
 
 ## 📚 Dokümantasyon
 
-Detaylı teknik dokümantasyon `docs/` klasöründe bulunmaktadır:
+Projenin detaylı teknik dokümantasyonu `docs/` klasörü altındadır:
 
-- [**Dokümantasyon Ana Sayfası**](./docs/README.md)
-- [Mimari Genel Bakış](./docs/architecture/overview.md)
-- [Sistem Diyagramları](./docs/diagrams/README.md)
-- [Yol Haritası](./docs/roadmap.md)
+- **[Dokümantasyon Ana Sayfası](./docs/README.md)**: Ana döküman.
+- **[Yol Haritası](./docs/roadmap.md)**: Yapılıcak eklenicek özellikler.
+- **[Sistem Diyagramları](./docs/diagrams/README.md)**: Basit anlaşılabilir diagramlar.
+- **[Mimari Genel Bakış](./docs/architecture/overview.md)**: Basit Mimari bakış.
+- **[Mimari ve Teknoloji Yığını](docs/architecture.md)**: Genel sistem yapısı.
+- **[Profil Sistemi](docs/profile.md)**: Kullanıcı profilleri, gizlilik ve avatar yönetimi.
+- **[Depolama (Storage)](docs/storage.md)**: Dosya yükleme ve GCS entegrasyonu.
+- **[Kimlik Doğrulama (Auth)](docs/auth.md)**: Giriş, kayıt ve güvenlik.
+- **[API Dokümantasyonu](app/README.md)**: API endpoint'leri.
 
 ### Build
 
@@ -75,15 +80,7 @@ Proje **Next.js 15 (App Router)** üzerine inşa edilmiştir.
 
 Daha detaylı bilgi için **[docs/architecture.md](docs/architecture.md)** dosyasına bakınız.
 
-## 📚 Dokümantasyon
 
-Projenin detaylı teknik dokümantasyonu `docs/` klasörü altındadır:
-
-- **[Mimari ve Teknoloji Yığını](docs/architecture.md)**: Genel sistem yapısı.
-- **[Profil Sistemi](docs/profile.md)**: Kullanıcı profilleri, gizlilik ve avatar yönetimi.
-- **[Depolama (Storage)](docs/storage.md)**: Dosya yükleme ve GCS entegrasyonu.
-- **[Kimlik Doğrulama (Auth)](docs/auth.md)**: Giriş, kayıt ve güvenlik.
-- **[API Dokümantasyonu](app/README.md)**: API endpoint'leri.
 
 ## 🤝 Katkıda Bulunma
 
