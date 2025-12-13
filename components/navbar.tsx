@@ -243,8 +243,9 @@ export function Navbar({ lang, dictionary, user: propUser }: NavbarProps) {
                     <Link
                       href={`/${lang}/support`}
                       onClick={() => setOpen(false)}
+                      className="block py-2"
                     >
-                      <h4 className="mb-3 px-2 text-xs font-semibold tracking-wider text-slate-900 uppercase hover:text-[#2062A3] dark:text-white dark:hover:text-blue-400">
+                      <h4 className="px-2 text-xs font-semibold tracking-wider text-slate-900 uppercase hover:text-[#2062A3] dark:text-white dark:hover:text-blue-400">
                         {dictionary.support.hero.title}
                       </h4>
                     </Link>

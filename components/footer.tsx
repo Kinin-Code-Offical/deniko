@@ -32,7 +32,7 @@ export function Footer({ lang, dictionary }: FooterProps) {
                 className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 transition-colors hover:border-blue-200 hover:text-[#2062A3] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-blue-800 dark:hover:text-blue-400"
               >
                 <svg
-                  className="h-5 w-5"
+                  className="h-8 w-8"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -54,7 +54,7 @@ export function Footer({ lang, dictionary }: FooterProps) {
                 <svg
                   className="h-5 w-5"
                   fill="currentColor"
-                  viewBox="0 0 24 24"
+                  viewBox="0 0 18 24"
                   aria-hidden="true"
                 >
                   <path
@@ -79,11 +79,11 @@ export function Footer({ lang, dictionary }: FooterProps) {
             <h2 className="mb-6 text-base font-medium text-slate-600 dark:text-white">
               {dictionary.home.footer.support}
             </h2>
-            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+            <ul className="flex flex-col text-sm text-slate-600 dark:text-slate-400">
               <li>
                 <Link
                   href={`/${lang}/faq`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="flex min-h-11 items-center gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.support.nav.faq}
@@ -92,7 +92,7 @@ export function Footer({ lang, dictionary }: FooterProps) {
               <li>
                 <Link
                   href={`/${lang}/support`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="flex min-h-11 items-center gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.support.nav.support}
@@ -106,11 +106,11 @@ export function Footer({ lang, dictionary }: FooterProps) {
             <h2 className="mb-6 text-base font-medium text-slate-600 dark:text-white">
               {dictionary.home.footer.platform}
             </h2>
-            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+            <ul className="flex flex-col text-sm text-slate-600 dark:text-slate-400">
               <li>
                 <Link
                   href={`/${lang}/login`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="min-h-11ms-center flex gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.home.login}
@@ -119,7 +119,7 @@ export function Footer({ lang, dictionary }: FooterProps) {
               <li>
                 <Link
                   href={`/${lang}/register`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="flex min-h-11 items-center gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.home.get_started}
@@ -128,7 +128,7 @@ export function Footer({ lang, dictionary }: FooterProps) {
               <li>
                 <Link
                   href={`/${lang}/legal`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="min-h-11ms-center flex gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.legal.center}
@@ -142,11 +142,11 @@ export function Footer({ lang, dictionary }: FooterProps) {
             <h2 className="mb-6 text-base font-medium text-slate-600 dark:text-white">
               {dictionary.home.footer.legal}
             </h2>
-            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+            <ul className="flex flex-col text-sm text-slate-600 dark:text-slate-400">
               <li>
                 <Link
                   href={`/${lang}/legal/terms`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="flex min-h-11 items-center gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.legal.nav.terms}
@@ -155,7 +155,7 @@ export function Footer({ lang, dictionary }: FooterProps) {
               <li>
                 <Link
                   href={`/${lang}/legal/privacy`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="min-h-11ms-center flex gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.legal.nav.privacy}
@@ -164,7 +164,7 @@ export function Footer({ lang, dictionary }: FooterProps) {
               <li>
                 <Link
                   href={`/${lang}/legal/cookies`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="flex min-h-11 items-center gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.legal.nav.cookies}
@@ -173,7 +173,7 @@ export function Footer({ lang, dictionary }: FooterProps) {
               <li>
                 <Link
                   href={`/${lang}/legal/kvkk`}
-                  className="flex items-center gap-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
+                  className="flex min-h-11 items-center gap-2 py-2 transition-colors hover:text-[#2062A3] dark:hover:text-blue-400"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-200 dark:bg-blue-800"></span>
                   {dictionary.legal.nav.kvkk}

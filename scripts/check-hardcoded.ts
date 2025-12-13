@@ -36,6 +36,7 @@ export function scanFile(filePath: string, sourceCode?: string): Issue[] {
           "tv",
           "signIn",
           "signOut",
+          "unstable_cache",
         ].includes(expression.text);
       }
       if (

@@ -80,8 +80,6 @@ Proje **Next.js 15 (App Router)** üzerine inşa edilmiştir.
 
 Daha detaylı bilgi için **[docs/architecture.md](docs/architecture.md)** dosyasına bakınız.
 
-
-
 ## 🤝 Katkıda Bulunma
 
 1. Yeni bir branch açın (`feature/ozellik-adi`).

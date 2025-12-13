@@ -9,4 +9,3 @@
 ```typescript
 export default function NotFound()
 ```
-
