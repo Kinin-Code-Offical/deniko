@@ -1,0 +1,16 @@
+# Deniko - Smart assistant designed for teachers and students
+
+Deniko is a comprehensive platform designed to streamline educational processes for both teachers and students.
+
+## Core Routes
+- **Homepage**: https://deniko.net/
+- **Login**: https://deniko.net/login
+- **Register**: https://deniko.net/register
+- **Dashboard**: https://deniko.net/dashboard
+
+## Key Features
+- **Schedule Management**: Organize classes and appointments efficiently.
+- **Student Tracking**: Monitor student performance and attendance.
+- **Performance Analytics**: Detailed insights and charts for educational metrics.
+- **Role-Based Access**: Tailored interfaces for Teachers and Students.
+- **Multi-language Support**: Available in English and Turkish.

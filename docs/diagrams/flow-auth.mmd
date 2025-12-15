@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant User
+    participant Client as Browser
+    participant Middleware
+    participant AuthHandler as /api/auth/*
+    participant DB as PostgreSQL
+
+    User->>Client: Click "Sign In with Google"
+    Client->>AuthHandler: POST /signin/google
+    AuthHandler->>AuthHandler: Generate State & Nonce
+    AuthHandler-->>Client: Redirect to Google OAuth
+
+    User->>Client: Authenticate at Google
+    Client->>AuthHandler: GET /callback/google?code=...
+    AuthHandler->>AuthHandler: Validate Code & State
+    AuthHandler->>DB: Find or Create User (upsert)
+    DB-->>AuthHandler: User Record
+    
+    AuthHandler->>DB: Create Session (if database strategy)
+    DB-->>AuthHandler: Session Token
+    
+    AuthHandler-->>Client: Set Session Cookie (HTTPOnly)
+    Client->>Middleware: Request Protected Route
+    Middleware->>Middleware: Verify Session Cookie
+    Middleware-->>Client: Allow Access

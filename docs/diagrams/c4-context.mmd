@@ -1,0 +1,32 @@
+graph TB
+    User((User))
+    Admin((Admin))
+
+    subgraph "Deniko System"
+        WAF[Web Application Firewall]
+        LB[Load Balancer]
+        
+        subgraph "Application Server (Next.js)"
+            App[Next.js App Router]
+            API[API Routes]
+            Auth[Auth.js Handler]
+        end
+
+        subgraph "Data Layer"
+            DB[(PostgreSQL)]
+            Redis[(Redis/Upstash)]
+            GCS[Google Cloud Storage]
+        end
+    end
+
+    User -->|HTTPS| WAF
+    Admin -->|HTTPS| WAF
+    WAF --> LB
+    LB --> App
+    
+    App -->|Read/Write| DB
+    App -->|Rate Limit/Cache| Redis
+    App -->|Upload/Download| GCS
+    
+    Auth -->|Verify| DB
+    API -->|Data| DB

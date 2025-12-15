@@ -1,0 +1,23 @@
+C4Component
+    title Component Diagram - Backend API & Services
+
+    Container(api, "API Application", "Next.js API Routes", "Backend logic.")
+
+    Boundary(api_routes, "API Routes") {
+        Component(auth_route, "Auth Route", "/api/auth/[...nextauth]", "Handles authentication flows.")
+        Component(avatar_route, "Avatar API", "/api/avatar/[userId]", "Serves user avatars securely.")
+        Component(upload_route, "Upload Action", "actions/upload.ts", "Handles file uploads.")
+    }
+
+    Boundary(services, "Services / Lib") {
+        Component(auth_service, "Auth Service", "lib/auth.ts", "NextAuth configuration.")
+        Component(db_service, "DB Service", "lib/db.ts", "Prisma Client instance.")
+        Component(storage_service, "Storage Service", "lib/storage.ts", "GCS wrapper functions.")
+        Component(email_service, "Email Service", "lib/email.ts", "Email sending logic.")
+    }
+
+    Rel(auth_route, auth_service, "Uses")
+    Rel(auth_service, db_service, "Persists session/user")
+    Rel(avatar_route, db_service, "Queries user info")
+    Rel(avatar_route, storage_service, "Generates signed URLs")
+    Rel(upload_route, storage_service, "Streams file to GCS")

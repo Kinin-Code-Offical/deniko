@@ -1,0 +1,1712 @@
+{
+  "metadata": {
+    "home": {
+      "title": "Private Tutoring Management Platform",
+      "description": "Manage student tracking, lesson scheduling, and student payments in one place. Digitalize your business with Deniko for free.",
+      "keywords": [
+        "private tutoring",
+        "student tracking",
+        "lesson scheduling",
+        "education management",
+        "tutor software",
+        "online teaching"
+      ]
+    },
+    "twitter": {
+      "creator": "@deniko"
+    },
+    "login": {
+      "title": "Login | Deniko",
+      "description": "Login to your Deniko account and access your dashboard."
+    },
+    "register": {
+      "title": "Register - Deniko",
+      "description": "Sign up for Deniko for free. Easy lesson management and tracking for teachers and students."
+    },
+    "forgot_password": {
+      "title": "Forgot Password | Deniko",
+      "description": "Forgot your password? Reset it with your email address."
+    },
+    "reset_password": {
+      "title": "Reset Password | Deniko",
+      "description": "Set your new password and access your account securely."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "student_title": "Student Dashboard - {name}",
+      "teacher_title": "Teacher Dashboard - {name}",
+      "description": "Manage your lessons and students with Deniko dashboard.",
+      "welcome_title": "Welcome to Deniko",
+      "contact_support": "Please contact support if you see this screen."
+    },
+    "finance": {
+      "title": "Finance | Deniko",
+      "description": "Financial status and payment tracking.",
+      "coming_soon": "Finance content coming soon..."
+    },
+    "schedule": {
+      "title": "Schedule | Deniko",
+      "description": "Schedule and calendar management.",
+      "coming_soon": "Schedule content coming soon..."
+    },
+    "join": {
+      "title": "Invitation | Deniko",
+      "description": "Join Deniko."
+    },
+    "onboarding": {
+      "title": "Onboarding | Deniko",
+      "description": "Complete your account setup and start using Deniko."
+    },
+    "verify": {
+      "title": "Verify Account | Deniko",
+      "description": "Verify your Deniko account."
+    },
+    "student_detail": {
+      "title": "{name} - Student Detail",
+      "description": "Details, schedule and payment history for {name}.",
+      "fallback_title": "Student Detail",
+      "fallback_description": "Student details."
+    },
+    "students": {
+      "title": "Students | Deniko",
+      "description": "Student list and management."
+    }
+  },
+  "verify_email_change": {
+    "success_title": "Email Verified!",
+    "success_description": "Your email address has been successfully updated.",
+    "login_button": "Go to Login",
+    "error_title": "Verification Failed",
+    "error_description": "Invalid or expired token.",
+    "back_button": "Back to Settings"
+  },
+  "server": {
+    "errors": {
+      "unauthorized": "Unauthorized",
+      "invalid_input": "Invalid input",
+      "failed_update_profile": "Failed to update profile",
+      "user_not_found_password": "User not found or no password set",
+      "incorrect_password": "Incorrect current password",
+      "failed_update_password": "Failed to update password",
+      "same_password": "New password cannot be the same as the current password",
+      "invalid_email": "Invalid email",
+      "email_in_use": "Email is already in use",
+      "user_not_found": "User not found",
+      "failed_request_email_change": "Failed to request email change",
+      "invalid_phone": "Invalid phone number",
+      "failed_update_phone": "Failed to update phone number",
+      "failed_deactivate": "Failed to deactivate account",
+      "failed_delete": "Failed to delete account",
+      "passwords_do_not_match": "Passwords do not match",
+      "username_min_length": "Username must be at least 3 characters",
+      "username_max_length": "Username must be at most 20 characters",
+      "username_pattern": "Username can only contain letters, numbers, dots, and underscores",
+      "username_taken": "Username is already taken",
+      "failed_update_username": "Failed to update username",
+      "invalid_token": "Invalid or expired token",
+      "token_expired": "Token expired",
+      "something_went_wrong": "Something went wrong",
+      "failed_update_notification_preferences": "Failed to update notification preferences",
+      "failed_update_region_timezone": "Failed to update region and timezone",
+      "failed_update_cookie_preferences": "Failed to update cookie preferences",
+      "no_image_provided": "No image provided",
+      "failed_update_avatar": "Failed to update avatar",
+      "no_file_provided": "No file provided",
+      "invalid_file_type": "Invalid file type. Please upload an image.",
+      "file_size_too_large": "File size too large. Max 5MB.",
+      "failed_upload_avatar": "Failed to upload avatar"
+    }
+  },
+  "profile": {
+    "public": {
+      "title": "{name} (@{username}) - Deniko",
+      "description": "Check out {name}'s profile on Deniko.",
+      "messageButton": "Message",
+      "notFound": "User not found",
+      "role_teacher": "Teacher",
+      "role_student": "Student",
+      "stats": {
+        "lessons": "Lessons",
+        "students": "Students",
+        "rating": "Rating"
+      },
+      "actions": {
+        "sendMessage": "Send Message",
+        "requestLesson": "Request Lesson"
+      },
+      "private": {
+        "title": "Private Profile",
+        "description": "This user's profile is private. Some information may be hidden."
+      },
+      "tabs": {
+        "overview": "Overview",
+        "lessons": "Lessons",
+        "reviews": "Reviews"
+      },
+      "sections": {
+        "about": "About",
+        "subjects": "Subjects",
+        "levels": "Levels",
+        "languages": "Languages",
+        "availability": "Availability"
+      },
+      "availability": {
+        "weekdays": "Weekdays",
+        "weekends": "Weekends"
+      },
+      "lessons": {
+        "placeholderTitle": "No lessons yet",
+        "placeholderDescription": "This user hasn't created any lessons yet."
+      },
+      "reviews": {
+        "placeholderTitle": "No reviews yet",
+        "placeholderDescription": "This user hasn't received any reviews yet."
+      }
+    },
+    "settings": {
+      "username": {
+        "title": "Username",
+        "description": "Your public profile URL: https://deniko.net/users/{username}",
+        "label": "Username",
+        "placeholder": "Enter username",
+        "button": "Save Changes",
+        "success": "Username updated successfully",
+        "error": "Failed to update username"
+      },
+      "basic": {
+        "title": "Basic Information",
+        "description": "Update your personal details.",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "John",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Doe",
+        "save": "Save Changes",
+        "success": "Profile updated successfully",
+        "saving": "Saving...",
+        "avatar": {
+          "label": "Avatar",
+          "upload": "Upload Photo",
+          "upload_hint": "JPG, GIF or PNG. Max 5MB.",
+          "presets": "Choose from presets",
+          "crop_title": "Crop Avatar",
+          "crop_desc": "Drag to position and use the slider to zoom.",
+          "cancel": "Cancel",
+          "save": "Save",
+          "error_file_type": "Please upload an image file",
+          "error_file_size": "File size must be less than 5MB",
+          "success_update": "Avatar updated successfully",
+          "error_upload": "Failed to upload avatar",
+          "error_generic": "An error occurred"
+        },
+        "phone": {
+          "label": "Phone Number",
+          "placeholder": "+1 234 567 890",
+          "countrySelectorLabel": "Country",
+          "noResultsMessage": "No results",
+          "searchPlaceholder": "Search"
+        },
+        "teacher": {
+          "branch": "Branch",
+          "branch_placeholder": "Mathematics",
+          "bio": "Bio",
+          "bio_placeholder": "Tell us about yourself..."
+        },
+        "student": {
+          "student_no": "Student Number",
+          "student_no_placeholder": "12345",
+          "grade_level": "Grade Level",
+          "grade_level_placeholder": "10th Grade",
+          "parent_name": "Parent Name",
+          "parent_name_placeholder": "Jane Doe",
+          "parent_phone": "Parent Phone",
+          "parent_email": "Parent Email",
+          "parent_email_placeholder": "parent@example.com"
+        }
+      },
+      "security": {
+        "password": {
+          "title": "Password",
+          "description": "Change your password.",
+          "currentPassword": "Current Password",
+          "newPassword": "New Password",
+          "confirmPassword": "Confirm Password",
+          "placeholder": "********",
+          "save": "Update Password",
+          "success": "Password updated successfully",
+          "security_strength": "Security Strength",
+          "saving": "Saving...",
+          "hide_password": "Hide password",
+          "show_password": "Show password",
+          "enter_password": "Enter Password",
+          "weak": "Weak",
+          "medium": "Medium",
+          "strong": "Strong",
+          "validation": {
+            "required": "This field is required",
+            "min_length": "Must be at least {length} characters",
+            "passwords_do_not_match": "Passwords do not match",
+            "uppercase": "At least one uppercase letter",
+            "lowercase": "At least one lowercase letter",
+            "number": "At least one number",
+            "special": "At least one special character"
+          }
+        },
+        "email": {
+          "title": "Email Address",
+          "description": "Change your email address.",
+          "currentEmail": "Current Email",
+          "newEmail": "New Email",
+          "sendVerification": "Send Verification Email",
+          "sending": "Sending...",
+          "success": "Verification email sent",
+          "placeholder": "example@mail.com"
+        }
+      },
+      "danger": {
+        "deactivate": {
+          "title": "Deactivate Account",
+          "description": "Temporarily disable your account. You can reactivate it anytime.",
+          "button": "Deactivate Account",
+          "confirmTitle": "Are you sure?",
+          "confirmDescription": "This will hide your profile and data from others. You can reactivate by logging in.",
+          "cancel": "Cancel",
+          "confirmButton": "Deactivate",
+          "success": "Account deactivated",
+          "processing": "Processing..."
+        },
+        "delete": {
+          "title": "Delete Account",
+          "description": "Permanently delete your account and all data.",
+          "button": "Delete Account",
+          "confirmTitle": "Are you absolutely sure?",
+          "confirmDescription": "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+          "cancel": "Cancel",
+          "confirmButton": "Delete Account",
+          "success": "Account deleted",
+          "typeToConfirm": "Type {keyword} to confirm.",
+          "deleting": "Deleting..."
+        }
+      },
+      "privacy": {
+        "title": "Privacy Settings",
+        "description": "Manage who can see your profile and contact you.",
+        "profileVisibility": {
+          "label": "Profile Visibility",
+          "description": "Control who can see your profile.",
+          "public": "Public",
+          "private": "Private"
+        },
+        "showAvatar": {
+          "label": "Show Avatar",
+          "description": "Show your profile picture to everyone."
+        },
+        "showEmail": {
+          "label": "Show Email",
+          "description": "Display your email address on your profile."
+        },
+        "showPhone": {
+          "label": "Show Phone Number",
+          "description": "Display your phone number on your profile."
+        },
+        "allowMessages": {
+          "label": "Allow Messages",
+          "description": "Allow other users to send you messages."
+        },
+        "showCourses": {
+          "label": "Show Courses",
+          "description": "Display your courses on your profile."
+        },
+        "save": "Save Privacy Settings",
+        "success": "Privacy settings updated",
+        "saving": "Saving...",
+        "messagingDisabled": "Messaging is disabled for this user."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Manage how you receive notifications.",
+        "email": {
+          "label": "Email Notifications",
+          "description": "Receive emails about your account activity."
+        },
+        "inApp": {
+          "label": "In-App Notifications",
+          "description": "Receive notifications within the application."
+        },
+        "marketing": {
+          "label": "Marketing Emails",
+          "description": "Receive emails about new features and offers."
+        },
+        "save": "Save Preferences",
+        "success": "Notification preferences updated",
+        "saving": "Saving..."
+      },
+      "region": {
+        "title": "Region & Timezone",
+        "description": "Set your preferred region and timezone.",
+        "country": {
+          "label": "Country",
+          "placeholder": "Select a country"
+        },
+        "timezone": {
+          "label": "Timezone",
+          "placeholder": "Select a timezone"
+        },
+        "save": "Save Preferences",
+        "success": "Region and timezone updated",
+        "saving": "Saving..."
+      },
+      "cookies": {
+        "title": "Cookies & Privacy",
+        "description": "Manage your cookie preferences and privacy settings.",
+        "necessary": {
+          "label": "Strictly Necessary Cookies",
+          "description": "These cookies are essential for the website to function and cannot be switched off."
+        },
+        "analytics": {
+          "label": "Analytics Cookies",
+          "description": "These cookies allow us to count visits and traffic sources so we can measure and improve the performance of our site."
+        },
+        "marketing": {
+          "label": "Marketing Cookies",
+          "description": "These cookies may be set through our site by our advertising partners."
+        },
+        "links": {
+          "privacy": "Privacy Policy",
+          "cookies": "Cookie Policy"
+        },
+        "save": "Save Preferences",
+        "success": "Cookie preferences updated",
+        "saving": "Saving..."
+      }
+    }
+  },
+  "not_found": {
+    "title": "Page Not Found",
+    "heading": "The page you are looking for seems to be lost",
+    "description": "The page you are trying to reach may have been deleted, moved, or never existed. Don't worry, we can get you back on track.",
+    "go_back": "Go Back",
+    "home": "Home"
+  },
+  "error_pages": {
+    "forbidden": {
+      "title": "Access Denied",
+      "description": "You don't have permission to view this content.",
+      "backToHome": "Back to home",
+      "backToDashboard": "Back to dashboard"
+    }
+  },
+  "navbar": {
+    "menu_open": "Open menu",
+    "menu": "Menu",
+    "theme": "Theme",
+    "language": "Language",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "mobile_menu_title": "Mobile Menu",
+    "mobile_menu_desc": "Mobile navigation menu",
+    "toggle_theme": "Toggle theme"
+  },
+  "newsletter": {
+    "title": "Subscribe to our newsletter",
+    "description": "Get the latest updates and news.",
+    "placeholder": "Enter your email",
+    "button": "Subscribe",
+    "success": "Thank you for subscribing!",
+    "error": "Something went wrong."
+  },
+  "legal": {
+    "cookie_consent": {
+      "title": "Cookie Policy",
+      "description": "We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking \"Accept\", you consent to our use of cookies.",
+      "accept": "Accept",
+      "decline": "Decline"
+    },
+    "title": "Legal Center",
+    "description": "Find detailed information about Deniko's terms of use, privacy policies, and legal obligations here.",
+    "read_more": "Read More",
+    "nav": {
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy",
+      "kvkk": "KVKK",
+      "back_to_home": "Back to Home"
+    },
+    "footer": {
+      "rights_reserved": "All rights reserved."
+    },
+    "docs": {
+      "terms": {
+        "title": "Terms of Service",
+        "description": "Terms and conditions for using the platform."
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "description": "How your data is collected and used."
+      },
+      "cookies": {
+        "title": "Cookie Policy",
+        "description": "Cookie usage and preference management."
+      },
+      "kvkk": {
+        "title": "KVKK Clarification Text",
+        "description": "Information about the law on the protection of personal data."
+      }
+    },
+    "terms_title": "Terms of Service",
+    "privacy_title": "Privacy Policy",
+    "accept_terms": "I have read and accept the [Terms of Service] and [Privacy Policy].",
+    "validation_terms": "You must accept the terms to continue.",
+    "validation_error": "You must accept the terms to continue.",
+    "marketing_consent": "I want to be informed about campaigns and announcements via email.",
+    "center": "Legal Center",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "kvkk": "KVKK",
+    "legal_suffix": "Legal",
+    "legal_center": "Deniko Legal Center"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggle_theme": "Toggle theme",
+    "loading": "Loading..."
+  },
+  "dashboard": {
+    "nav": {
+      "dashboard": "Overview",
+      "students": "Students",
+      "schedule": "Schedule",
+      "lessons": "Lessons",
+      "finance": "Finance",
+      "settings": "Settings",
+      "messages": "Messages",
+      "notifications": "Notifications",
+      "profile": "Profile",
+      "files": "Files",
+      "logout": "Log out",
+      "menu_title": "Menu",
+      "menu_desc": "Navigation menu",
+      "homework": "Homework",
+      "exams": "Exams",
+      "system_operational": "System Operational"
+    },
+    "overview": {
+      "title": "Overview",
+      "welcome": "Welcome back, {name}!",
+      "stats": {
+        "total_students": "Total Students",
+        "upcoming_lessons": "Upcoming Lessons",
+        "unread_messages": "Unread Messages",
+        "total_income": "Total Income"
+      },
+      "recent_activity": "Recent Activity",
+      "upcoming_lessons": "Upcoming Lessons"
+    },
+    "messages": {
+      "title": "Messages",
+      "search_placeholder": "Search messages...",
+      "type_message": "Type a message...",
+      "send": "Send",
+      "no_conversation": "Select a conversation to start messaging",
+      "online": "Online",
+      "mock_msg_1": "Hi, how are you?",
+      "mock_msg_2": "I'm good, thanks! About our lesson...",
+      "mock_msg_3": "See you tomorrow!",
+      "mock_msg_4": "Can we reschedule?",
+      "mock_time_1": "10:00 AM",
+      "mock_time_2": "10:05 AM",
+      "mock_time_3": "10:30 AM",
+      "mock_time_4": "Yesterday",
+      "mock_user_initial": "A",
+      "mock_user_name": "Alice Smith",
+      "mock_user_name_2": "Bob Johnson"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "all": "All",
+      "unread": "Unread",
+      "system": "System",
+      "mark_all_read": "Mark all as read",
+      "no_unread": "No unread notifications",
+      "no_system": "No system notifications",
+      "mock_title_1": "System Update",
+      "mock_msg_1": "Deniko has been updated to version 2.0",
+      "mock_time_1": "2 hours ago",
+      "mock_title_2": "Lesson Reminder",
+      "mock_msg_2": "You have a lesson with Alice in 1 hour",
+      "mock_time_2": "3 hours ago",
+      "mock_title_3": "Payment Received",
+      "mock_msg_3": "Payment of $50 received from Bob",
+      "mock_time_3": "1 day ago"
+    },
+    "profile": {
+      "title": "Profile",
+      "personal_info": "Personal Information",
+      "personal_info_desc": "Update your personal details here.",
+      "contact_info": "Contact Information",
+      "contact_info_desc": "How can we reach you?",
+      "save_changes": "Save Changes",
+      "change_avatar": "Change Avatar",
+      "full_name": "Full Name",
+      "email": "Email",
+      "role": "Role",
+      "phone": "Phone Number",
+      "phone_placeholder": "+1 234 567 890",
+      "address": "Address",
+      "address_placeholder": "123 Main St",
+      "bio": "Biography",
+      "bio_desc": "A short description that will appear on your profile.",
+      "bio_placeholder": "Tell us a little about yourself...",
+      "location": "Location",
+      "location_placeholder": "New York, USA",
+      "website": "Website",
+      "website_placeholder": "https://example.com",
+      "social_profiles": "Social Profiles",
+      "social_profiles_desc": "Connect your social media accounts.",
+      "activity_stats": {
+        "title": "Activity & Stats",
+        "description": "Your platform activity overview",
+        "lessons": "Lessons Taught",
+        "students": "Students Helped",
+        "hours": "Hours Online",
+        "rating": "Average Rating"
+      },
+      "public": {
+        "role_teacher": "Teacher",
+        "role_student": "Student",
+        "stats": {
+          "lessons": "Lessons"
+        },
+        "private": {
+          "title": "This profile is private",
+          "description": "The user has chosen to keep their profile information private."
+        },
+        "notFound": "User not found",
+        "title": "Public Profile",
+        "not_found_title": "Profile Not Found",
+        "not_found_desc": "The user profile you are looking for does not exist or is inaccessible.",
+        "private_title": "This Profile is Private",
+        "private_desc": "This user's profile is private. Only approved connections can see it.",
+        "back_home": "Back to Home",
+        "contact": "Contact",
+        "member_since": "Member Since",
+        "email": "Email",
+        "phone": "Phone",
+        "location": "Location",
+        "website": "Website",
+        "bio": "About"
+      }
+    },
+    "files": {
+      "title": "Files",
+      "upload": "Upload File",
+      "drag_drop": "Drag and drop files here",
+      "no_files": "No files uploaded yet",
+      "download": "Download",
+      "delete": "Delete"
+    },
+    "finance": {
+      "total_revenue": "Total Revenue",
+      "revenue_growth": "+20.1% from last month",
+      "outstanding": "Outstanding",
+      "pending_payments_count": "5 pending payments",
+      "active_subscriptions": "Recurring Lessons",
+      "subscriptions_growth": "+2 since last week",
+      "recent_transactions": "Recent Transactions",
+      "mock_revenue": "$1,234.56",
+      "mock_outstanding": "$345.00",
+      "mock_subscriptions": "+12"
+    },
+    "lessons": {
+      "title": "Lessons",
+      "schedule_lesson": "Schedule Lesson",
+      "at": "at",
+      "details": "Details"
+    },
+    "schedule": {
+      "title": "Schedule",
+      "new_lesson": "New Lesson",
+      "calendar": "Calendar",
+      "calendar_placeholder": "Interactive Calendar Component (Coming Soon)",
+      "upcoming": "Upcoming",
+      "math": "Mathematics",
+      "mock_lesson_1": "10:00 AM - Alice",
+      "physics": "Physics",
+      "mock_lesson_2": "02:00 PM - Bob"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Manage your account settings and preferences.",
+      "nav": {
+        "profile": "Profile",
+        "security": "Account & Security",
+        "privacy": "Privacy",
+        "notifications": "Notifications",
+        "language": "Language & Region",
+        "cookies": "Cookies & Data"
+      },
+      "tabs": {
+        "profile": "Profile",
+        "security": "Security",
+        "privacy": "Privacy",
+        "account": "Account"
+      },
+      "logout": "Log out",
+      "account": "Account",
+      "account_desc": "Manage your account settings.",
+      "security": "Security",
+      "privacy": {
+        "title": "Privacy Settings",
+        "description": "Manage who can see your profile and contact you.",
+        "visibility_title": "Profile Visibility",
+        "public_profile": "Public Profile",
+        "public_profile_desc": "Anyone can see your profile.",
+        "public": "Public",
+        "private": "Private",
+        "display_options": "Display Options",
+        "show_avatar": "Show Avatar",
+        "show_email": "Show Email",
+        "show_phone": "Show Phone Number",
+        "interactions": "Interactions",
+        "allow_messages": "Allow Messages",
+        "allow_messages_desc": "Allow users to send you messages.",
+        "profile_visibility": "Profile Visibility",
+        "profile_visibility_desc": "Control who can see your profile.",
+        "search_engine_indexing": "Search Engine Indexing",
+        "search_engine_indexing_desc": "Allow your profile to appear in search engines (Google, etc.).",
+        "show_email_desc": "Show your email address on your profile.",
+        "show_phone_desc": "Show your phone number on your profile.",
+        "show_courses": "Show Courses"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Configure how you receive notifications.",
+        "email": {
+          "label": "Email Notifications",
+          "description": "Receive emails about your account activity."
+        },
+        "inApp": {
+          "label": "In-App Notifications",
+          "description": "Receive notifications within the app."
+        },
+        "marketing": {
+          "label": "Marketing Emails",
+          "description": "Receive emails about new features and offers."
+        }
+      },
+      "language": "Language",
+      "language_desc": "Select your preferred language.",
+      "theme": "Theme",
+      "two_fa_label": "Two-Factor Authentication",
+      "two_fa_desc": "Add an extra layer of security to your account.",
+      "delete_account_label": "Delete Account",
+      "delete_account_desc": "Permanently remove your account and all data.",
+      "delete_account_button": "Delete Account",
+      "language_placeholder": "Select Language",
+      "en": "English",
+      "tr": "Türkçe",
+      "region": {
+        "country": {
+          "label": "Country"
+        }
+      }
+    },
+    "join": {
+      "error": "Invalid Invitation",
+      "error_desc": "The invitation link is invalid or has expired. Please ask your teacher for a new link.",
+      "already_used": "Invitation Already Used",
+      "already_used_desc": "This invitation has already been used. If you believe this is an error, please contact support.",
+      "welcome_title": "You're Invited!",
+      "unknown_teacher": "A Teacher",
+      "unknown_student": "Student",
+      "invite_desc": "{teacher} has invited you to join their class on Deniko.",
+      "login_desc": "Please log in or create an account to accept this invitation.",
+      "login_button": "Log In",
+      "register_button": "Create Account",
+      "title": "Join Class",
+      "desc": "Are you ready to start your learning journey with {teacher}?",
+      "confirm_checkbox": "I confirm that I want to join this class.",
+      "confirm_button": "Confirm & Join",
+      "email_not_verified": "Please verify your email address to join the class.",
+      "teacher_cannot_join": "Teachers cannot join classes as students.",
+      "teacher_cannot_join_desc": "You are logged in as a teacher. Please log in with a student account to join the class.",
+      "conflict": {
+        "title": "Verify Information",
+        "desc": "There are discrepancies between your profile and the class record. Please choose which information to keep.",
+        "your_profile": "YOUR PROFILE",
+        "teacher_record": "TEACHER RECORD",
+        "selected_source": "Selected Source",
+        "yours": "Yours",
+        "teachers": "Teacher's",
+        "save_join": "Save & Join",
+        "cancel": "Cancel",
+        "labels": {
+          "name": "Name",
+          "phone": "Phone",
+          "bio": "Bio",
+          "student_no": "Student No",
+          "grade": "Grade",
+          "parent": "Parent Info"
+        }
+      },
+      "success_title": "Welcome Aboard!",
+      "success_desc": "You have successfully joined the class.",
+      "go_dashboard": "Go to Dashboard",
+      "error_generic": "Something went wrong. Please try again.",
+      "already_student": "You are already a student in this class.",
+      "guest_error": "You must be logged in to join.",
+      "reject": "Reject"
+    },
+    "header": {
+      "search_placeholder": "Search...",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out"
+    },
+    "students": {
+      "title": "Students",
+      "add_student": "Add Student",
+      "search_placeholder": "Search by name...",
+      "no_results": "No students found.",
+      "columns": {
+        "name": "Student Name",
+        "no": "Number",
+        "class": "Classes",
+        "level": "Level",
+        "phone": "Phone",
+        "status": "Status",
+        "actions": "Actions",
+        "invite": "Invite"
+      },
+      "actions": {
+        "edit": "Edit",
+        "archive": "Archive",
+        "delete": "Delete",
+        "copy_invite": "Copy Invite Link",
+        "view_invite_link": "View Invite Link",
+        "regenerate_link": "Regenerate Link",
+        "share": "Share",
+        "view_details": "View Details",
+        "lessons": "Lessons",
+        "settings": "Settings",
+        "classes": "Classes",
+        "assign_homework": "Assign Homework",
+        "whatsapp": "WhatsApp",
+        "sms": "SMS",
+        "coming_soon": "Coming Soon"
+      },
+      "status": {
+        "shadow": "Pending Invite",
+        "active": "Active",
+        "verified": "Verified",
+        "pending": "Pending"
+      },
+      "table": {
+        "name": "Student",
+        "status": "Status",
+        "student_no": "Student No",
+        "grade": "Grade",
+        "actions": "Actions"
+      },
+      "add_dialog": {
+        "title": "Add New Student",
+        "desc": "Enter student details. An invite link will be generated.",
+        "name": "Name",
+        "surname": "Surname",
+        "student_no": "Student No (Optional)",
+        "grade": "Grade Level",
+        "phone_number": "Phone (Optional)",
+        "submit": "Create Student",
+        "email": "Email (Optional)",
+        "email_placeholder": "example@email.com",
+        "classrooms": "Classrooms",
+        "select_classrooms": "Select classrooms...",
+        "avatar": "Profile Photo",
+        "upload_photo": "Upload Photo",
+        "or_choose": "or choose avatar",
+        "cancel": "Cancel",
+        "save": "Save",
+        "clear": "Clear",
+        "search_classroom": "Search classroom...",
+        "no_classroom_found": "No classroom found.",
+        "select_grade": "Select Grade",
+        "success": "Student created successfully",
+        "copy_invite": "Invite link copied to clipboard",
+        "grades": {
+          "graduated": "Graduated",
+          "suffix": "th Grade"
+        }
+      }
+    },
+    "student": {
+      "upcoming_lessons": "Upcoming Lessons",
+      "completed_lessons": "Completed Lessons",
+      "pending_homework": "Pending Homework",
+      "no_upcoming_lessons": "No upcoming lessons.",
+      "next_lesson": "Next Lesson",
+      "assignments_todo": "Assignments To Do",
+      "weekly_schedule": "Weekly Schedule",
+      "no_pending_homework": "No pending homework.",
+      "due_date": "Due:",
+      "view_all": "View All",
+      "due": "Due:",
+      "start": "Start",
+      "all_caught_up": "All caught up!"
+    },
+    "teacher": {
+      "active_students": "Active Students",
+      "today_lessons_count": "Today's Lessons",
+      "pending_homework_count": "Pending Homework",
+      "upcoming_lessons": "Today's Schedule",
+      "no_lessons_today": "No lessons scheduled for today.",
+      "check_schedule_desc": "Check your schedule for upcoming days.",
+      "review": "Review",
+      "view": "View",
+      "mock_task_1": "Review homework for Math 101",
+      "mock_task_1_sub": "Pending review for 3 students",
+      "mock_task_2": "New student request",
+      "mock_task_2_sub": "Ali Yilmaz wants to join Physics class",
+      "take_attendance": "Take Attendance",
+      "quick_actions": {
+        "title": "Quick Actions",
+        "add_student": "Add Student",
+        "add_lesson": "Add Lesson",
+        "create_homework": "Create Homework",
+        "receive_payment": "Receive Payment"
+      }
+    },
+    "common": {
+      "loading": "Loading...",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "success": "Operation successful",
+      "error": "An error occurred",
+      "delete_confirm": "Are you sure?",
+      "delete_desc": "This action cannot be undone.",
+      "continue": "Continue",
+      "edit_photo": "Edit Photo",
+      "crop_description": "Drag to position and use slider to zoom."
+    },
+    "welcome_title": "Welcome to Deniko",
+    "contact_support": "Please contact support if you see this screen."
+  },
+  "common": {
+    "save": "Save",
+    "saved": "Saved",
+    "success": "Success",
+    "error": "Error",
+    "edit": "Edit",
+    "back_to_home": "Back to Home",
+    "all_rights_reserved": "All rights reserved.",
+    "copyright": "© 2025 Deniko.",
+    "copyright_long": "© 2025 Deniko Education Technologies",
+    "error_occurred": "An error occurred",
+    "back": "Back",
+    "print": "Print",
+    "password_placeholder": "******",
+    "toggle_password_visibility": "Toggle password visibility",
+    "github_profile": "My GitHub Profile",
+    "patreon_profile": "My Patreon Profile",
+    "brand_name": "Deniko",
+    "edit_photo": "Edit Photo",
+    "crop_description": "Drag to position and use slider to zoom.",
+    "zoom": "Zoom",
+    "crop_preview": "Crop Preview",
+    "crop_save": "Crop & Save",
+    "more_options": "More options",
+    "copied": "Copied",
+    "copied_desc": "Section copied to clipboard.",
+    "copy_failed": "Copy failed",
+    "phone_input": {
+      "search_placeholder": "Search country...",
+      "no_results": "No country found.",
+      "country_selector": "Country selector"
+    },
+    "skip_to_content": "Skip to main content",
+    "close": "Close",
+    "reset": "Reset",
+    "separator": "•",
+    "date_format_long": "PPP p",
+    "empty_placeholder": "-",
+    "google": "Google",
+    "student_initials": "ST",
+    "app_name": "Deniko",
+    "loading": "Loading...",
+    "avatar": "Avatar",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "toggle_theme": "Toggle theme",
+      "loading": "Loading..."
+    }
+  },
+  "repro": {
+    "title": "Repro Page"
+  },
+  "teacher": {
+    "invite_link_copied": "Invite link copied",
+    "invite_link_copy_failed": "Failed to copy invite link",
+    "copy_invite_link": "Copy Invite Link"
+  },
+  "components": {
+    "phone_input": {
+      "search_country": "Search country...",
+      "no_country_found": "No country found.",
+      "country_selector_label": "Country selector"
+    }
+  },
+  "student_detail": {
+    "tabs": {
+      "overview": "Overview",
+      "lessons": "Lessons",
+      "homework": "Homework",
+      "finance": "Finance",
+      "settings": "Settings",
+      "exams": "Exams",
+      "attendance": "Attendance",
+      "classes": "Classes"
+    },
+    "profile": {
+      "title": "Edit Profile",
+      "desc": "Update student's personal information and contact details.",
+      "contact_parent": "Contact Parent",
+      "save": "Save Changes",
+      "archive_student": "Archive Student",
+      "delete_student": "Delete Student",
+      "update_success": "Student updated successfully",
+      "update_error": "Failed to update",
+      "archive_confirm": "Are you sure you want to archive this student? They will be hidden from your active list.",
+      "delete_confirm": "Are you sure you want to delete this student? This action cannot be undone."
+    },
+    "header": {
+      "total_lessons": "Total Lessons",
+      "balance": "Balance",
+      "invite_link": "Copy Invite Link",
+      "status": {
+        "active": "Active",
+        "shadow": "Pending Invite"
+      },
+      "verified": "Verified",
+      "pending": "Pending",
+      "no_level": "No Level",
+      "no_number": "No Number",
+      "copy_link": "Copy Link",
+      "link_copied": "Invite link copied",
+      "unknown_student": "Unknown Student"
+    },
+    "overview": {
+      "general_info": "General Information",
+      "student_no": "Student No",
+      "grade": "Grade",
+      "phone": "Phone",
+      "email": "Email",
+      "parent_info": "Parent Information",
+      "parent_name": "Parent Name",
+      "parent_phone": "Parent Phone",
+      "parent_email": "Parent Email",
+      "private_notes": "Private Notes",
+      "private_notes_placeholder": "Add private notes about this student...",
+      "no_notes": "No notes added yet.",
+      "total_lessons": "Total Lessons"
+    },
+    "lessons": {
+      "title": "Lesson History",
+      "add_lesson": "Add Lesson for Student",
+      "no_lessons": "No lesson records found.",
+      "empty": "No upcoming lessons scheduled.",
+      "status": {
+        "scheduled": "Scheduled",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "missed": "Missed"
+      },
+      "table": {
+        "date": "Date",
+        "title": "Title",
+        "status": "Status",
+        "price": "Price"
+      }
+    },
+    "finance": {
+      "title": "Financial Transactions",
+      "receive_payment": "Receive Payment",
+      "lesson_fee": "Lesson Fee",
+      "payment_received": "Payment Received",
+      "balance": "Balance",
+      "no_transactions": "No financial transactions found.",
+      "empty": "Payment history will be here...",
+      "table": {
+        "date": "Date",
+        "type": "Type",
+        "description": "Description",
+        "amount": "Amount"
+      }
+    },
+    "homework": {
+      "title": "Homework Tracking",
+      "assign_homework": "Assign Homework",
+      "no_homework": "No homework found.",
+      "status": {
+        "pending": "Pending",
+        "completed": "Completed"
+      },
+      "table": {
+        "due_date": "Due Date",
+        "title": "Title",
+        "status": "Status",
+        "lesson": "Lesson"
+      }
+    },
+    "exams": {
+      "title": "Exams",
+      "no_exams": "No exams recorded yet."
+    },
+    "attendance": {
+      "title": "Attendance",
+      "present": "Present",
+      "absent": "Absent",
+      "late": "Late",
+      "history": "Attendance History",
+      "no_records": "No attendance records found."
+    },
+    "settings": {
+      "title": "Student Settings",
+      "description": "Manage student profile and preferences.",
+      "profile_photo": "Profile Photo",
+      "change_photo": "Change Photo",
+      "personal_info": "Personal Information",
+      "full_name": "Full Name",
+      "email": "Email",
+      "student_number": "Student Number",
+      "grade_level": "Grade Level",
+      "contact_info": "Contact Information",
+      "parent_information": "Parent Information",
+      "parent_full_name": "Parent Full Name",
+      "parent_phone_number": "Parent Phone Number",
+      "parent_email_address": "Parent Email Address",
+      "invite_link": "Invite Link",
+      "invite_link_desc": "Enable or disable the invite link for this student.",
+      "invite_link_active": "Invite Link Active",
+      "invite_link_inactive": "Invite Link Inactive",
+      "copy_link": "Copy Link",
+      "danger_zone": "Danger Zone",
+      "danger_zone_desc": "Irreversible actions for this student account.",
+      "delete_student": "Delete Student",
+      "delete_student_desc": "This action cannot be undone. This will permanently delete the student and remove their data from our servers.",
+      "delete_button": "Delete Student",
+      "save_changes": "Save Changes",
+      "saving": "Saving...",
+      "success": "Settings updated successfully.",
+      "error_message": "An error occurred while updating settings.",
+      "invite_toggled": "Invite link status updated.",
+      "link_copied": "Link copied to clipboard.",
+      "custom_name": "Display Name",
+      "custom_name_desc": "Only you will see this name.",
+      "phone": "Phone Number",
+      "phone_desc": "Contact number for notifications.",
+      "phone_claimed_desc": "Since this student has verified their account, only they can change their phone number.",
+      "notes": "Private Notes",
+      "notes_desc": "Notes only visible to you.",
+      "claimed_profile": "Claimed Profile",
+      "claimed_profile_desc": "This student has claimed their profile. You can only edit their display name and avatar for your view. Contact details are managed by the student.",
+      "real_first_name": "Real First Name",
+      "real_last_name": "Real Last Name",
+      "photo_claimed_desc": "This student has claimed their account. Only they can change their photo.",
+      "name_placeholder": "Ex: John Doe",
+      "student_no_placeholder": "123",
+      "grade_placeholder": "12th Grade",
+      "invite_link_status": "Invite Link Status",
+      "archive": {
+        "title": "Archive Student",
+        "desc": "Remove this student from your active list. History is preserved.",
+        "button": "Archive Student",
+        "confirm_title": "Are you sure?",
+        "confirm_desc": "This action will move the student to your archive. You can restore them later.",
+        "success": "Student archived"
+      },
+      "delete": {
+        "title": "Delete Student",
+        "desc": "Permanently delete this student and all associated data.",
+        "button": "Delete Student",
+        "confirm_title": "Are you absolutely sure?",
+        "confirm_desc": "This action cannot be undone. This will permanently delete the student profile and remove your data from our servers.",
+        "success": "Student deleted"
+      }
+    }
+  },
+  "join": {
+    "title": "Accept Invitation",
+    "desc": "{teacher} wants to add you as a student.",
+    "success": "Successfully joined!",
+    "error_used": "This link is invalid or has been used.",
+    "accept_button": "Accept and Join",
+    "welcome_user": "Dear {name},"
+  },
+  "seo": {
+    "profile": {
+      "title": "{name} — Deniko Profile",
+      "description": {
+        "teacher": "Teacher profile of {name} on Deniko. View details and contact.",
+        "student": "Student profile of {name} on Deniko.",
+        "generic": "Profile of {name} on Deniko."
+      },
+      "private": "This profile is private."
+    }
+  },
+  "auth": {
+    "placeholders": {
+      "email": "example@email.com",
+      "password": "******"
+    },
+    "register": {
+      "title": "Join Deniko",
+      "subtitle": "Professional tutoring management platform",
+      "hero_title": "Join Us",
+      "hero_desc": "Take your place in this big family with thousands of students and teachers.",
+      "role_select": "Select Account Type",
+      "student": "Student",
+      "student_desc": "I want to learn and grow",
+      "teacher": "Teacher",
+      "teacher_desc": "I want to teach and manage",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "username": "Username",
+      "email": "Email",
+      "phone": "Phone Number",
+      "password": "Password",
+      "password_confirm": "Confirm Password",
+      "confirm_password": "Confirm Password",
+      "submit": "Register",
+      "submitting": "Registering...",
+      "have_account": "Already have an account?",
+      "login_link": "Login",
+      "success_title": "Registration Successful!",
+      "success_desc": "We sent a verification link to your email address. Please check your inbox.",
+      "errors": {
+        "user_exists": "This email address is already in use",
+        "generic": "An error occurred during registration.",
+        "invalid_data": "Invalid form data"
+      },
+      "validation": {
+        "first_name_min": "First name must be at least 2 characters",
+        "last_name_min": "Last name must be at least 2 characters",
+        "email_invalid": "Please enter a valid email address",
+        "phone_min": "Please enter a valid phone number",
+        "role_required": "Please select a role",
+        "password_min": "Password must be at least 8 characters",
+        "password_regex": "Password must contain at least one uppercase, one lowercase, one number and one special character",
+        "password_mismatch": "Passwords do not match",
+        "password_required": "Password is required"
+      }
+    },
+    "login": {
+      "title": "Welcome to Deniko",
+      "subtitle": "Professional tutoring management platform",
+      "hero_title": "A New Era in Education",
+      "hero_desc": "Welcome to the modern and effective education platform that brings teachers and students together.",
+      "card_title": "Login",
+      "card_desc": "Login with Google or your email address",
+      "chip": "Designed for modern tutoring",
+      "google_login": "Continue with Google",
+      "or_email": "Or with Email",
+      "email": "Email",
+      "placeholder_email": "example@email.com",
+      "password": "Password",
+      "forgot_password_link": "Forgot Password?",
+      "submit": "Login",
+      "no_account": "Don't have an account?",
+      "register_link": "Register",
+      "back_to_home": "Back to Home",
+      "validation": {
+        "email_invalid": "Please enter a valid email address",
+        "password_required": "Password is required",
+        "invalid_credentials": "Invalid email or password.",
+        "rate_limit": "Too many login attempts. Please try again later."
+      }
+    },
+    "forgot_password": {
+      "title": "Forgot Password?",
+      "desc": "Enter your email address and we'll send you a link to reset your password.",
+      "chip": "No worries, it happens",
+      "email_label": "Email Address",
+      "submit": "Send Reset Link",
+      "submitting": "Sending...",
+      "back_to_login": "Back to Login",
+      "try_again": "Try with a different email",
+      "success": "If an account exists with this email, you will receive a password reset link shortly."
+    },
+    "reset_password": {
+      "title": "Reset Password",
+      "desc": "Enter your new password below.",
+      "new_password": "New Password",
+      "confirm_password": "Confirm Password",
+      "submit": "Reset Password",
+      "submitting": "Resetting...",
+      "success": "Your password has been reset successfully. You can now login.",
+      "success_title": "Password Reset Successful",
+      "success_desc": "Your password has been reset successfully. You can now login.",
+      "invalid_token": "Invalid or expired token.",
+      "expired_token": "This link has expired.",
+      "user_not_found": "User not found.",
+      "invalid_link_title": "Invalid Link",
+      "invalid_link_desc": "This password reset link is invalid or has expired. Please request a new one.",
+      "same_password": "New password cannot be the same as the old password."
+    },
+    "onboarding": {
+      "title": "Complete Your Profile",
+      "subtitle": "Please fill in the missing information to continue.",
+      "submit": "Save and Continue",
+      "submitting": "Saving..."
+    },
+    "verification": {
+      "unverified_title": "Email address not verified.",
+      "unverified_desc": "Please click the verification link sent to your email address to log in.",
+      "resend_button": "Resend Verification Code",
+      "sending": "Sending...",
+      "wait": "Please wait: {time}",
+      "success": "Verification link resent.",
+      "error": "An error occurred.",
+      "user_not_found": "User not found.",
+      "already_verified": "Email already verified."
+    },
+    "verify_page": {
+      "verifying": "Verifying...",
+      "success_title": "Email Verified!",
+      "error_title": "Verification Failed",
+      "verifying_desc": "Please wait, verifying your email address.",
+      "missing_token": "Verification token not found.",
+      "resend_button": "Resend Verification Code",
+      "back_to_login": "Login",
+      "messages": {
+        "invalid_token": "Invalid verification code.",
+        "expired_token": "Verification code expired.",
+        "user_not_found": "User not found.",
+        "success": "Email address successfully verified.",
+        "error": "An error occurred during verification."
+      }
+    },
+    "errors": {
+      "generic": "An error occurred."
+    }
+  },
+
+  "validation": {
+    "passwords_do_not_match": "Passwords do not match",
+    "min_length": "Must be at least {length} characters",
+    "required": "Required"
+  },
+
+  "home": {
+    "home": "Home",
+    "hero_title": "Digitize Your Education Life",
+    "hero_subtitle": "Smart assistant designed for teachers and students. Lesson schedule, student tracking, and performance analytics in one platform.",
+    "get_started": "Discover Deniko",
+    "login": "Login",
+    "features": {
+      "title": "Powerful Tools for Education",
+      "scheduling_title": "Smart Scheduling",
+      "scheduling_desc": "Optimize your lesson schedule, prevent conflicts, and use your time efficiently.",
+      "students_title": "Student Portfolio",
+      "students_desc": "Create custom progress reports, notes, and homework tracking for each student.",
+      "progress_title": "Data-Driven Analysis",
+      "progress_desc": "Review success charts, identify gaps, and focus on goals.",
+      "communication_title": "Seamless Communication",
+      "communication_desc": "Stay connected with students and parents through integrated messaging and announcements.",
+      "payments_title": "Tuition & Payments",
+      "payments_desc": "Track tuition plans, automate reminders, and keep every receipt synced.",
+      "guardians_title": "Guardian Portal",
+      "guardians_desc": "Share progress snapshots with families and centralize parent communication.",
+      "resources_title": "Resource Library",
+      "resources_desc": "Store and share educational materials, documents, and videos securely.",
+      "mobile_title": "Mobile Access",
+      "mobile_desc": "Access your dashboard from anywhere with our responsive mobile interface.",
+      "badge": "ALL-IN-ONE PLATFORM",
+      "subtitle": "Plan lessons, track students and understand performance in one clean, modern workspace."
+    },
+    "stats": {
+      "teachers_label": "Teachers",
+      "teachers_suffix": "educators",
+      "teachers_hint": "Professional educators using Deniko.",
+      "students_label": "Students",
+      "students_suffix": "profiles",
+      "students_hint": "Active student profiles.",
+      "lessons_label": "Lessons",
+      "lessons_suffix": "sessions",
+      "lessons_hint": "Total lessons scheduled and completed."
+    },
+    "how_it_works": {
+      "title": "How Deniko Works?",
+      "subtitle": "Simplify complex processes. Complete your digital transformation in just 3 steps.",
+      "step1_title": "Create Your Profile",
+      "step1_desc": "Create your digital identity by selecting your instructor or student role.",
+      "step2_title": "Organize Your Schedule",
+      "step2_desc": "Set lesson hours, availability, and work calendar.",
+      "step3_title": "Increase Efficiency",
+      "step3_desc": "Focus on the education process with automatic reminders and analytics.",
+      "step_1": "1",
+      "step_2": "2",
+      "step_3": "3"
+    },
+    "cta": {
+      "title": "Be Part of Modern Education",
+      "subtitle": "Leave traditional methods behind. Make your education process more organized and efficient with Deniko.",
+      "button": "Start Now"
+    },
+    "mock_dashboard": {
+      "attendance": "Attendance",
+      "attendance_value": "94%",
+      "attendance_change": "+4.5%",
+      "active_students": "Active Students",
+      "active_students_value": "48",
+      "classes_today": "Classes Today",
+      "classes_today_value": "12",
+      "schedule": "Schedule",
+      "math": "Mathematics",
+      "physics": "Physics",
+      "chemistry": "Chemistry",
+      "biology": "Biology",
+      "active": "Active",
+      "pending": "Pending",
+      "completed": "Completed",
+      "exam_results": "Exam Results",
+      "class_average": "Class Average",
+      "weekly": "Weekly",
+      "dashboard_title": "Dashboard",
+      "overview": "Overview",
+      "students": "Students",
+      "finance": "Finance",
+      "room": "Room",
+      "class_name": "12-A",
+      "room_number": "301",
+      "average_score": "84%",
+      "graphic_schedule": "Schedule",
+      "graphic_profile": "Student Profile",
+      "graphic_performance": "Performance",
+      "graphic_analysis": "Analysis",
+      "assignments": "Assignments",
+      "assignments_pending": "Pending",
+      "assignment_math_title": "Derivative Worksheet",
+      "assignment_physics_title": "Lab Report",
+      "assignment_lit_title": "Novel Summary",
+      "literature": "Literature",
+      "due_tomorrow": "Due: Tomorrow, 23:59",
+      "due_3days": "Due: 3 Days Left",
+      "announcements": "Announcements",
+      "school_board": "School Board",
+      "announcement_exam_title": "Exam Dates",
+      "announcement_exam_desc": "2nd Term midterm schedule published. Don't forget to check.",
+      "announcement_match_title": "Basketball Match",
+      "announcement_match_desc": "Match between 12-A and 12-B tomorrow at lunch! 🏀",
+      "see_all": "See All",
+      "lab": "Laboratory",
+      "carousel_back": {
+        "desc": "You can find all details about the {title} module here. Discover tools designed to increase your productivity.",
+        "feature_1": "Detailed analysis and reporting",
+        "feature_2": "Personalized recommendations",
+        "feature_3": "Instant notification system"
+      },
+      "time_ago": {
+        "10_min": "10 min ago",
+        "2_hours": "2 hours ago"
+      },
+      "vs_last_month": "vs last month",
+      "chart": {
+        "completed": "Completed",
+        "remaining": "Remaining"
+      },
+      "success": "Success",
+      "carousel_instructions": {
+        "swipe": "Swipe to navigate",
+        "hold": "Hold to flip"
+      }
+    },
+    "footer": {
+      "built_by": "Built by",
+      "source_code": ". The source code is available on",
+      "github": "GitHub",
+      "patreon": "Patreon",
+      "brand": "Deniko",
+      "support": "Support",
+      "platform": "Platform",
+      "legal": "Legal",
+      "patent": "Patent rights belong to Deniko."
+    }
+  },
+  "email": {
+    "verification": {
+      "subject": "Verify Your Deniko Account",
+      "title": "Welcome to Deniko!",
+      "greeting": "Hello,",
+      "body": "We are very happy to have you join us. Please verify your email address to keep your account secure and access all features.",
+      "button": "Verify My Account",
+      "ignore": "If you did not request this email, please ignore it.",
+      "footer": "Deniko - Teacher and Student Management Platform.",
+      "website": "Web Site",
+      "support": "Support",
+      "footer_disclaimer": "This email was sent regarding an important action on your Deniko account (membership verification).",
+      "footer_address": "Güzeltepe Mah., 747. Cd., No:14 Çankaya/Ankara",
+      "footer_copyright": "© 2025 Deniko. All rights reserved.",
+      "footer_terms": "Terms of Service",
+      "footer_privacy": "Privacy Policy"
+    },
+    "password_reset": {
+      "subject": "Reset Your Password - Deniko",
+      "title": "Reset Your Password",
+      "greeting": "Hello,",
+      "body": "We received a request to reset your password. Click the button below to create a new password. This link is valid for 1 hour.",
+      "button": "Reset Password",
+      "ignore": "If you didn't request this, you can safely ignore this email.",
+      "footer": "Deniko - Teacher and Student Management Platform.",
+      "website": "Web Site",
+      "support": "Support",
+      "footer_disclaimer": "This email contains important information about your Deniko account.",
+      "footer_address": "Güzeltepe Mah., 747. Cd., No:14 Çankaya/Ankara",
+      "footer_copyright": "© 2025 Deniko. All rights reserved.",
+      "footer_terms": "Terms of Service",
+      "footer_privacy": "Privacy Policy"
+    },
+    "email_change": {
+      "subject": "Verify Your New Email Address - Deniko",
+      "title": "Verify New Email Address",
+      "greeting": "Hello,",
+      "body": "We received a request to change your email address. Please click the button below to verify your new email address.",
+      "button": "Verify New Email",
+      "ignore": "If you did not request this change, please ignore this email.",
+      "footer": "Deniko - Teacher and Student Management Platform.",
+      "website": "Web Site",
+      "support": "Support",
+      "footer_disclaimer": "This email was sent regarding an email change request on your Deniko account.",
+      "footer_address": "Güzeltepe Mah., 747. Cd., No:14 Çankaya/Ankara",
+      "footer_copyright": "© 2025 Deniko. All rights reserved.",
+      "footer_terms": "Terms of Service",
+      "footer_privacy": "Privacy Policy"
+    }
+  },
+  "errors": {
+    "unauthorized": "Unauthorized",
+    "teacher_profile_not_found": "Teacher profile not found",
+    "student_not_found": "Student not found",
+    "invalid_fields": "Invalid fields",
+    "failed_to_create_student": "Failed to create student",
+    "failed_to_update_student": "Failed to update student",
+    "failed_to_delete_student": "Failed to delete student",
+    "failed_to_upload_avatar": "Failed to upload avatar",
+    "generic_error": "An error occurred",
+    "name_min_length": "Name must be at least 2 characters",
+    "surname_min_length": "Surname must be at least 2 characters",
+    "invalid_email": "Invalid email address",
+    "login_validation_failed": "Login validation failed",
+    "login_failed": "Login failed",
+    "email_not_verified": "Email not verified",
+    "resend_cooldown": "Please wait before resending",
+    "resend_error": "Resend Verification Error",
+    "registration_error": "Registration Error",
+    "verification_error": "Verification Error",
+    "forgot_password_error": "Forgot Password Error",
+    "reset_password_error": "Reset Password Error",
+    "onboarding_error": "Onboarding Error",
+    "session_not_found": "Session not found. Please login again.",
+    "accept_terms": "You must accept the terms of service.",
+    "phone_required": "Phone number is required.",
+    "password_required": "Password fields are required.",
+    "passwords_mismatch": "Passwords do not match.",
+    "password_min_length": "Password must be at least 8 characters.",
+    "password_complexity": "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character.",
+    "invalid_token": "Invalid or expired token",
+    "profile_already_claimed": "Profile already claimed",
+    "invite_expired": "Invitation link has expired. Please ask your teacher for a new one.",
+    "failed_to_claim_profile": "Failed to claim profile",
+    "failed_to_fetch_invite": "Failed to fetch invite details",
+    "failed_to_fetch_profile": "Failed to fetch profile by token",
+    "no_relation_found": "No relation found with this student",
+    "student_archived": "Student archived",
+    "failed_to_archive_student": "Failed to archive student",
+    "student_unlinked": "Student removed from your list (Unlinked).",
+    "shadow_student_deleted": "Shadow student and data completely deleted.",
+    "relation_not_found": "Relation not found",
+    "cannot_delete_claimed": "Cannot delete claimed student",
+    "invite_regenerated": "Invitation link regenerated.",
+    "failed_to_regenerate_token": "Failed to regenerate token",
+    "invite_opened": "Invitation link opened.",
+    "invite_closed": "Invitation link closed.",
+    "failed_to_toggle_invite": "Failed to toggle invite link",
+    "info_updated": "Information updated.",
+    "failed_to_update_settings": "Failed to update student settings",
+    "update_failed": "Update failed",
+    "file_not_found": "File not found",
+    "file_not_found_or_error": "File not found or Error",
+    "unknown_error": "Unknown error",
+    "phone_start_zero": "Phone number must not start with 0."
+  },
+  "support": {
+    "nav": {
+      "faq": "FAQ",
+      "support": "Support"
+    },
+    "hero": {
+      "title": "How can we help?",
+      "subtitle": "Search our knowledge base or contact our support team.",
+      "search_placeholder": "Search for answers..."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "no_results": "No results found",
+      "no_results_desc": "Try adjusting your search terms",
+      "categories": {
+        "general": "General",
+        "billing": "Finance Features",
+        "teachers": "Teachers",
+        "students": "Students"
+      },
+      "items": {
+        "general": [
+          {
+            "question": "What is Deniko?",
+            "answer": "Deniko is a comprehensive platform for private tutoring management. It helps teachers organize their schedule, track students, and manage payments efficiently."
+          },
+          {
+            "question": "Is it free?",
+            "answer": "Yes, Deniko is completely free to use. There are no hidden fees or subscriptions."
+          },
+          {
+            "question": "How secure is my data?",
+            "answer": "We use industry-standard encryption to protect your data. All connections are secured with SSL/TLS, and we perform regular backups."
+          },
+          {
+            "question": "Can I use Deniko on mobile?",
+            "answer": "Yes, Deniko is fully responsive and works great on all mobile devices, tablets, and desktops without needing a separate app."
+          },
+          {
+            "question": "Who can use Deniko?",
+            "answer": "Deniko is designed for private tutors, education coaches, study centers, and students taking private lessons."
+          },
+          {
+            "question": "Is an internet connection required?",
+            "answer": "Yes, Deniko is a cloud-based platform, so you need an internet connection to access your data and receive updates."
+          },
+          {
+            "question": "Can I use it on multiple devices?",
+            "answer": "Absolutely! You can access your account from your computer, tablet, or phone simultaneously. All your data is synced instantly."
+          }
+        ],
+        "billing": [
+          {
+            "question": "How do I track student payments?",
+            "answer": "You can record payments received from students, view pending payments, and create reminders through the finance module."
+          }
+        ],
+        "teachers": [
+          {
+            "question": "How do I add students?",
+            "answer": "Go to the Students tab in your dashboard and click the 'Add Student' button. You can then enter their details or send them an invite link."
+          },
+          {
+            "question": "Can I track student attendance?",
+            "answer": "Yes, you can mark attendance for each lesson directly from your calendar or lesson details page."
+          },
+          {
+            "question": "How do I share files with students?",
+            "answer": "You can upload and share documents, homework, and resources within each lesson or directly on a student's profile."
+          },
+          {
+            "question": "Is there a limit on the number of students?",
+            "answer": "No, there is no limit on the number of students you can add."
+          },
+          {
+            "question": "How do I create my schedule?",
+            "answer": "You can easily set your lesson hours, recurring lessons, and availability using the calendar module."
+          },
+          {
+            "question": "Can I communicate with parents?",
+            "answer": "Yes, you can add parent information to student profiles and send information messages or reports to parents through the system."
+          },
+          {
+            "question": "How is homework tracking done?",
+            "answer": "You can assign homework to students, set due dates, and track completion status."
+          }
+        ],
+        "students": [
+          {
+            "question": "How do I join a class?",
+            "answer": "Use the invite link provided by your teacher to create an account and automatically join their class."
+          },
+          {
+            "question": "How do I see my upcoming lessons?",
+            "answer": "Your dashboard shows a personalized calendar with all your upcoming lessons, assignments, and deadlines."
+          },
+          {
+            "question": "Can I message my teacher?",
+            "answer": "Yes, you can use the built-in messaging system to communicate with your teacher securely regarding lessons or assignments."
+          },
+          {
+            "question": "How do I submit homework?",
+            "answer": "Navigate to the specific lesson or assignment in your dashboard and use the upload button to submit your work."
+          },
+          {
+            "question": "How do I access lesson notes?",
+            "answer": "You can access lesson notes shared by your teacher from the relevant lesson's detail page or the resource library."
+          },
+          {
+            "question": "How do I change my notification settings?",
+            "answer": "You can customize your email and in-app notification preferences from the settings menu."
+          }
+        ]
+      }
+    },
+    "cta": {
+      "title": "Still need help?",
+      "subtitle": "Our support team is just a click away.",
+      "button_contact": "Contact Support",
+      "button_chat": "Live Chat"
+    },
+    "contact": {
+      "title": "Contact Support",
+      "subtitle": "Submit a ticket and we will get back to you.",
+      "info": {
+        "email": "support@deniko.com",
+        "email_label": "Email Us",
+        "office": "123 Education St, Tech City, TC 12345",
+        "chat_label": "Live Chat",
+        "chat_desc": "Available 9am - 5pm EST",
+        "phone_label": "Phone Support",
+        "phone_desc": "+90 (553) 000-0000"
+      },
+      "form": {
+        "name": "Name",
+        "name_placeholder": "John Doe",
+        "email": "Email",
+        "email_placeholder": "john@example.com",
+        "subject": "Subject",
+        "subject_placeholder": "How can we help?",
+        "type_label": "Topic",
+        "type_placeholder": "Select a topic",
+        "message": "Message",
+        "message_placeholder": "Please describe your issue...",
+        "submit": "Submit Ticket",
+        "submitting": "Submitting...",
+        "success_title": "Ticket Submitted",
+        "success_description": "We received your request. Ticket ID: {ticketId}",
+        "error_title": "Submission Failed",
+        "error_description": "Please try again later.",
+        "types": {
+          "general": "General Inquiry",
+          "bug": "Bug Report",
+          "billing": "Finance/Payment Tracking",
+          "feature": "Feature Request"
+        },
+        "validation": {
+          "name_required": "Name is required",
+          "email_invalid": "Invalid email address",
+          "subject_min": "Subject must be at least 5 characters",
+          "type_required": "Please select a topic",
+          "message_min": "Message must be at least 10 characters"
+        }
+      }
+    }
+  }
+}

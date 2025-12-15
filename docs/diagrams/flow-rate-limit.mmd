@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant Client
+    participant Middleware
+    participant RateLimit as Upstash/Redis
+    participant API
+
+    Client->>Middleware: POST /api/auth/signin
+    Middleware->>RateLimit: Increment(IP + "login")
+    RateLimit-->>Middleware: Count, ResetTime
+    
+    alt Count > Limit
+        Middleware-->>Client: 429 Too Many Requests
+    else Count <= Limit
+        Middleware->>API: Forward Request
+        API-->>Client: Response
+    end

@@ -1,0 +1,30 @@
+# Add 'frontend' label to any changes within 'app' or 'components' directories
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: ["app/**", "components/**", "lib/**"]
+
+# Add 'backend' label to any changes within 'prisma' or 'api' directories
+backend:
+  - changed-files:
+      - any-glob-to-any-file: ["prisma/**", "app/api/**", "lib/db.ts"]
+
+# Add 'tests' label to any changes within 'tests' directory or test files
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          ["tests/**", "__tests__/**", "**/*.test.ts", "**/*.test.tsx"]
+
+# Add 'ci' label to any changes within '.github' directory
+ci:
+  - changed-files:
+      - any-glob-to-any-file: [".github/**"]
+
+# Add 'docker' label to any changes to Dockerfile
+docker:
+  - changed-files:
+      - any-glob-to-any-file: ["Dockerfile", ".dockerignore", "cloudbuild.yaml"]
+
+# Add 'dependencies' label to any changes to package.json or lock file
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: ["package.json", "pnpm-lock.yaml"]
