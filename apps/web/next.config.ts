@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import withBundleAnalyzer from "@next/bundle-analyzer";
-import path from "node:path";
 
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -10,9 +9,9 @@ const nextConfig: NextConfig = {
   output: "standalone",
   compress: true,
   productionBrowserSourceMaps: false,
-  turbopack: {
-    root: path.join(__dirname, "../.."),
-  },
+  // turbopack: {
+  //   root: path.resolve(__dirname, "../.."),
+  // },
   transpilePackages: ["@deniko/db", "@deniko/logger", "@deniko/validation", "@deniko/storage"],
   experimental: {
     serverActions: {

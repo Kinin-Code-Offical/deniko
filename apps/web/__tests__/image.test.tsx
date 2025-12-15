@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { ImageComponent } from "../templates/nextjs-image/image-component";
+import { ImageComponent } from "../../../templates/nextjs-image/image-component";
 
 describe("Image Component Standards", () => {
   it("renders next/image with the required alt attribute", () => {

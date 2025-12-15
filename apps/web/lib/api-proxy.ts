@@ -22,7 +22,7 @@ export async function proxyToApi(req: NextRequest, path: string) {
             method: req.method,
             headers,
             body: req.body,
-            // @ts-ignore - duplex is needed for streaming bodies in some node versions
+            // @ts-expect-error - duplex is needed for streaming bodies in some node versions
             duplex: 'half'
         });
 

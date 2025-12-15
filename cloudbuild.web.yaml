@@ -5,8 +5,10 @@ steps:
         "build",
         "-t",
         "europe-west1-docker.pkg.dev/deniko/deniko/deniko-web:latest",
+        "-f",
+        "apps/web/Dockerfile",
         ".",
       ]
-    dir: "apps/web"
+    dir: "."
 images:
   - "europe-west1-docker.pkg.dev/deniko/deniko/deniko-web:latest"

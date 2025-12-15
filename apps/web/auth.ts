@@ -15,7 +15,8 @@ import { authConfig } from "./auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  adapter: PrismaAdapter(db),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  adapter: PrismaAdapter(db as any),
   secret: env.AUTH_SECRET,
   trustHost: true,
   session: { strategy: "jwt" },

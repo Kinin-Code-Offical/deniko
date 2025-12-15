@@ -20,7 +20,12 @@ Deniko, öğretmenler ve öğrenciler için geliştirilmiş kapsamlı bir eğiti
     ```
 
 2. Çevresel değişkenleri ayarlayın:
-    `.env.example` dosyasını `.env` olarak kopyalayın ve gerekli anahtarları (Database URL, Auth Secret, GCS Credentials) doldurun.
+
+    **Web Uygulaması (apps/web):**
+    `apps/web/.env.example` dosyasını `apps/web/.env` olarak kopyalayın ve gerekli anahtarları doldurun.
+
+    **API (apps/api):**
+    `apps/api/.env.example` dosyasını `apps/api/.env` olarak kopyalayın ve gerekli anahtarları doldurun.
 
 3. Veritabanını hazırlayın:
 

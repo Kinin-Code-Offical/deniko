@@ -17,20 +17,9 @@ const envSchema = z.object({
     .transform((value) => value === "true"),
   NEXTAUTH_URL: z.string().url({ message: "NEXTAUTH_URL must be a valid URL" }),
 
-  // Storage
-  GCS_BUCKET_NAME: z
-    .string()
-    .min(1, { message: "GCS_BUCKET_NAME is required" }),
-  GCS_PROJECT_ID: z.string().min(1, { message: "GCS_PROJECT_ID is required" }),
-  GCS_CLIENT_EMAIL: z
-    .string()
-    .email({ message: "GCS_CLIENT_EMAIL must be a valid email" }),
-  GCS_PRIVATE_KEY: z
-    .string()
-    .min(1, { message: "GCS_PRIVATE_KEY is required" }),
-
   // Auth
   AUTH_SECRET: z.string().min(1, { message: "AUTH_SECRET is required" }),
+
   AUTH_GOOGLE_ID: z.string().min(1, { message: "AUTH_GOOGLE_ID is required" }),
   AUTH_GOOGLE_SECRET: z
     .string()
@@ -81,7 +70,11 @@ const envSchema = z.object({
   SMTP_SUPPORT_FROM: z
     .string()
     .email({ message: "SMTP_SUPPORT_FROM must be a valid email" }),
+
+  // Internal
+  INTERNAL_API_URL: z.string().url().default("http://localhost:4000"),
 });
+
 
 export const env = envSchema.parse(process.env);
 export type Env = typeof env;

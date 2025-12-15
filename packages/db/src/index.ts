@@ -1,11 +1,24 @@
-import { PrismaClient } from './generated/client';
+import { PrismaClient } from '@prisma/client';
 
-export * from './generated/client';
+export * from '@prisma/client';
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-export const prisma = globalForPrisma.prisma || new PrismaClient({});
+export const createDb = (config: { isProduction: boolean; datasourceUrl?: string }) => {
+    if (globalForPrisma.prisma) return globalForPrisma.prisma;
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+    const prisma = new PrismaClient({
+        log: config.isProduction ? ['error'] : ['query', 'error', 'warn'],
+        datasources: config.datasourceUrl ? {
+            db: {
+                url: config.datasourceUrl,
+            },
+        } : undefined,
+    });
 
-export default prisma;
+    if (!config.isProduction) globalForPrisma.prisma = prisma;
+
+    return prisma;
+};
+
+

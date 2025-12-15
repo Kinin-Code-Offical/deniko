@@ -1,111 +1,74 @@
-import { Storage } from "@google-cloud/storage";
 import { env } from "@/lib/env";
-import logger from "@/lib/logger";
+import "server-only";
 import { v4 as uuidv4 } from "uuid";
 
-let storageInstance: Storage | null = null;
-const bucketName = env.GCS_BUCKET_NAME;
-const DEFAULT_SIGNED_URL_TTL_SECONDS = 300; // 5 minutes
-
-function getStorage() {
-  if (!storageInstance) {
-    storageInstance = new Storage({
-      projectId: env.GCS_PROJECT_ID,
-      credentials: {
-        client_email: env.GCS_CLIENT_EMAIL,
-        private_key: env.GCS_PRIVATE_KEY.replace(/\\n/g, "\n"),
-      },
-    });
-  }
-  return storageInstance;
-}
-
-function getBucket() {
-  if (!bucketName) throw new Error("GCS_BUCKET_NAME is not defined");
-  return getStorage().bucket(bucketName);
-}
-
-const ALLOWED_PREFIXES = ["avatars/", "files/", "uploads/", "default/"];
-
-function validateKey(key: string) {
-  if (!key) throw new Error("Key is required");
-
-  // Prevent path traversal
-  if (key.includes("..") || key.includes("//") || key.includes("\\")) {
-    throw new Error("Invalid key format: Path traversal detected");
-  }
-
-  // Ensure key starts with allowed prefix
-  const hasValidPrefix = ALLOWED_PREFIXES.some((prefix) => key.startsWith(prefix));
-  if (!hasValidPrefix) {
-    throw new Error(`Invalid key prefix. Allowed: ${ALLOWED_PREFIXES.join(", ")}`);
-  }
-}
+const API_URL = env.INTERNAL_API_URL;
 
 export async function uploadObject(
   key: string,
   data: Buffer | Uint8Array | string,
   options: { contentType: string; cacheControl?: string }
 ): Promise<void> {
-  validateKey(key);
+  const buffer = Buffer.isBuffer(data)
+    ? data
+    : typeof data === 'string'
+      ? Buffer.from(data)
+      : Buffer.from(data);
 
-  const file = getBucket().file(key);
-  const buffer = Buffer.isBuffer(data) ? data : Buffer.from(data);
+  const base64Data = buffer.toString('base64');
 
-  await file.save(buffer, {
-    contentType: options.contentType,
-    metadata: {
-      cacheControl: options.cacheControl || "private, max-age=3600",
-    },
+  const res = await fetch(`${API_URL}/files/upload`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      key,
+      data: base64Data,
+      contentType: options.contentType
+    })
   });
+
+  if (!res.ok) {
+    throw new Error(`Failed to upload file: ${res.statusText}`);
+  }
 }
 
 export async function getObjectStream(key: string) {
-  validateKey(key);
-  const file = getBucket().file(key);
-  const [exists] = await file.exists();
-  if (!exists) {
+  const res = await fetch(`${API_URL}/files/${encodeURIComponent(key)}`);
+  if (!res.ok) {
     throw new Error(`File not found: ${key}`);
   }
-  return file.createReadStream();
+  return res.body;
 }
 
 export async function getSignedUrlForKey(
   key: string,
   opts?: { expiresInSeconds?: number }
 ): Promise<string> {
-  validateKey(key);
+  const res = await fetch(`${API_URL}/files/signed-url`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      key,
+      expiresInSeconds: opts?.expiresInSeconds
+    })
+  });
 
-  const file = getBucket().file(key);
-  const expiresInSeconds = opts?.expiresInSeconds || DEFAULT_SIGNED_URL_TTL_SECONDS;
-
-  // Max 1 hour allowed for security
-  if (expiresInSeconds > 3600) {
-    throw new Error("Expiration time cannot exceed 1 hour");
+  if (!res.ok) {
+    throw new Error(`Failed to get signed URL: ${res.statusText}`);
   }
 
-  try {
-    const [url] = await file.getSignedUrl({
-      version: "v4",
-      action: "read",
-      expires: Date.now() + expiresInSeconds * 1000,
-    });
-    return url;
-  } catch (error) {
-    logger.error({ error, key }, "Signed URL Generation Error");
-    throw new Error("Failed to generate signed URL");
-  }
+  const json = await res.json() as { url: string };
+  return json.url;
 }
 
 export async function deleteObject(key: string): Promise<boolean> {
-  validateKey(key);
-  try {
-    await getBucket().file(key).delete();
-    return true;
-  } catch (error) {
-    logger.error({ error, key }, "GCS Delete Error");
-    return false;
-  }
+  const res = await fetch(`${API_URL}/files/${encodeURIComponent(key)}`, {
+    method: 'DELETE'
+  });
+
+  if (!res.ok) return false;
+  const json = await res.json() as { success: boolean };
+  return json.success;
 }
 
 // --- Legacy/Helper Wrappers ---
@@ -125,3 +88,4 @@ export async function uploadFile(file: File, folder: "avatars" | "files" | "uplo
 
   return key;
 }
+

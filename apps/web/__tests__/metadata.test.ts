@@ -32,8 +32,8 @@ export function validateMetadata(metadata: Metadata | undefined) {
 }
 
 // Import the templates to test them
-import * as PageTemplate from "../templates/nextjs-metadata/page-template";
-import * as LayoutTemplate from "../templates/nextjs-metadata/layout-template";
+import * as PageTemplate from "../../../templates/nextjs-metadata/page-template";
+import * as LayoutTemplate from "../../../templates/nextjs-metadata/layout-template";
 
 describe("Metadata Standards", () => {
   describe("Page Template", () => {
