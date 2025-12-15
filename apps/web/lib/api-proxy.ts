@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { env } from '@/lib/env';
+import "server-only";
 
-const API_URL = process.env.INTERNAL_API_URL || 'http://localhost:4000';
+const API_URL = env.INTERNAL_API_URL;
 
 export async function proxyToApi(req: NextRequest, path: string) {
+
     const session = await auth();
     const headers = new Headers(req.headers);
 
