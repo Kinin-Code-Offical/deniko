@@ -1,0 +1,12 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "europe-west1-docker.pkg.dev/deniko/deniko/deniko-api:latest",
+        ".",
+      ]
+    dir: "apps/api"
+images:
+  - "europe-west1-docker.pkg.dev/deniko/deniko/deniko-api:latest"
