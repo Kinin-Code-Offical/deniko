@@ -8,21 +8,19 @@ async function settingsRoutes(fastify) {
         const userId = request.headers['x-user-id'];
         if (!userId)
             return reply.code(401).send({ error: 'Unauthorized' });
-        const settings = await services_1.prisma.userSettings.findUnique({
+        return await services_1.prisma.userSettings.findUnique({
             where: { userId }
         });
-        return settings;
     });
     fastify.put('/', async (request, reply) => {
         const userId = request.headers['x-user-id'];
         if (!userId)
             return reply.code(401).send({ error: 'Unauthorized' });
         const body = request.body; // Use zod validation here
-        const settings = await services_1.prisma.userSettings.upsert({
+        return await services_1.prisma.userSettings.upsert({
             where: { userId },
             update: body,
             create: { ...body, userId }
         });
-        return settings;
     });
 }

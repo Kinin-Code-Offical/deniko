@@ -24,7 +24,8 @@ export async function avatarRoutes(fastify: FastifyInstance) {
             // return reply.code(403).send({ error: 'Access denied' });
         }
 
-        const stream = await storageClient.getObjectStream(user.image);
+        const stream = await storage.getObjectStream(user.image);
+
         if (!stream) {
             return reply.code(404).send({ error: 'File not found in storage' });
         }

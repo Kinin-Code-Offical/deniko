@@ -20,7 +20,7 @@ async function avatarRoutes(fastify) {
             // For now, return 403
             // return reply.code(403).send({ error: 'Access denied' });
         }
-        const stream = await storageClient.getObjectStream(user.image);
+        const stream = await services_1.storage.getObjectStream(user.image);
         if (!stream) {
             return reply.code(404).send({ error: 'File not found in storage' });
         }
