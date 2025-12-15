@@ -21,7 +21,22 @@ const envSchema = z.object({
     // Rate Limiting (Upstash Redis)
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+
+    // Email - No-Reply (System Notifications)
+    SMTP_NOREPLY_HOST: z.string().min(1),
+    SMTP_NOREPLY_PORT: z.string().default("465"),
+    SMTP_NOREPLY_USER: z.string().email(),
+    SMTP_NOREPLY_PASSWORD: z.string().min(1),
+    SMTP_NOREPLY_FROM: z.string().email(),
+
+    // Email - Support (Tickets & Inquiries)
+    SMTP_SUPPORT_HOST: z.string().min(1),
+    SMTP_SUPPORT_PORT: z.string().default("465"),
+    SMTP_SUPPORT_USER: z.string().email(),
+    SMTP_SUPPORT_PASSWORD: z.string().min(1),
+    SMTP_SUPPORT_FROM: z.string().email(),
 });
+
 
 export const env = envSchema.parse(process.env);
 export type Env = typeof env;

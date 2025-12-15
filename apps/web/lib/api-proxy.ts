@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { env } from '@/lib/env';
+import { internalApiFetch } from "@/lib/internal-api";
 import "server-only";
-
-const API_URL = env.INTERNAL_API_URL;
 
 export async function proxyToApi(req: NextRequest, path: string) {
 
@@ -18,10 +17,8 @@ export async function proxyToApi(req: NextRequest, path: string) {
     headers.delete('host');
     headers.delete('connection');
 
-    const url = `${API_URL}${path}`;
-
     try {
-        const response = await fetch(url, {
+        const response = await internalApiFetch(path, {
             method: req.method,
             headers,
             body: req.body,

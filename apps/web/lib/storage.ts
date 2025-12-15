@@ -1,8 +1,6 @@
-import { env } from "@/lib/env";
 import "server-only";
 import { v4 as uuidv4 } from "uuid";
-
-const API_URL = env.INTERNAL_API_URL;
+import { internalApiFetch } from "@/lib/internal-api";
 
 export async function uploadObject(
   key: string,
@@ -17,7 +15,7 @@ export async function uploadObject(
 
   const base64Data = buffer.toString('base64');
 
-  const res = await fetch(`${API_URL}/files/upload`, {
+  const res = await internalApiFetch(`/files/upload`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -33,7 +31,7 @@ export async function uploadObject(
 }
 
 export async function getObjectStream(key: string) {
-  const res = await fetch(`${API_URL}/files/${encodeURIComponent(key)}`);
+  const res = await internalApiFetch(`/files/${encodeURIComponent(key)}`);
   if (!res.ok) {
     throw new Error(`File not found: ${key}`);
   }
@@ -44,7 +42,7 @@ export async function getSignedUrlForKey(
   key: string,
   opts?: { expiresInSeconds?: number }
 ): Promise<string> {
-  const res = await fetch(`${API_URL}/files/signed-url`, {
+  const res = await internalApiFetch(`/files/signed-url`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -62,7 +60,7 @@ export async function getSignedUrlForKey(
 }
 
 export async function deleteObject(key: string): Promise<boolean> {
-  const res = await fetch(`${API_URL}/files/${encodeURIComponent(key)}`, {
+  const res = await internalApiFetch(`/files/${encodeURIComponent(key)}`, {
     method: 'DELETE'
   });
 
@@ -70,6 +68,7 @@ export async function deleteObject(key: string): Promise<boolean> {
   const json = await res.json() as { success: boolean };
   return json.success;
 }
+
 
 // --- Legacy/Helper Wrappers ---
 

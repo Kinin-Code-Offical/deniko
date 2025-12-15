@@ -1,36 +1,29 @@
-import nodemailer from "nodemailer";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import logger from "@/lib/logger";
 import { env } from "@/lib/env";
+import { internalApiFetch } from "@/lib/internal-api";
+import "server-only";
 
-// System / No-Reply Transporter
-const noReplyTransporter = nodemailer.createTransport({
-  pool: true,
-  host: env.SMTP_NOREPLY_HOST,
-  port: parseInt(env.SMTP_NOREPLY_PORT),
-  secure: parseInt(env.SMTP_NOREPLY_PORT) === 465,
-  auth: {
-    user: env.SMTP_NOREPLY_USER,
-    pass: env.SMTP_NOREPLY_PASSWORD,
-  },
-  maxConnections: 5,
-  maxMessages: 100,
-});
+async function sendEmail(payload: {
+  type: 'noreply' | 'support';
+  to: string;
+  subject: string;
+  html?: string;
+  text?: string;
+  replyTo?: string;
+}) {
+  const res = await internalApiFetch("/email/send", {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
 
-// Support Transporter
-const supportTransporter = nodemailer.createTransport({
-  pool: true,
-  host: env.SMTP_SUPPORT_HOST,
-  port: parseInt(env.SMTP_SUPPORT_PORT),
-  secure: parseInt(env.SMTP_SUPPORT_PORT) === 465,
-  auth: {
-    user: env.SMTP_SUPPORT_USER,
-    pass: env.SMTP_SUPPORT_PASSWORD,
-  },
-  maxConnections: 5,
-  maxMessages: 100,
-});
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`Failed to send email: ${res.status} ${error}`);
+  }
+}
 
 /**
  * Sends a password reset email to the user.
@@ -38,6 +31,7 @@ const supportTransporter = nodemailer.createTransport({
  * @param email - The recipient's email address.
  * @param token - The password reset token.
  * @param lang - The language locale.
+
  */
 export async function sendPasswordResetEmail(
   email: string,
@@ -56,12 +50,13 @@ export async function sendPasswordResetEmail(
       content
     );
 
-    await noReplyTransporter.sendMail({
-      from: `"Deniko" <${env.SMTP_NOREPLY_FROM}>`,
+    await sendEmail({
+      type: 'noreply',
       to: email,
       subject: content.subject,
-      html,
+      html
     });
+
   } catch (error) {
     logger.error(
       { context: "sendPasswordResetEmail", error },
@@ -82,10 +77,9 @@ export async function sendSupportTicketEmail(data: {
   message: string;
 }) {
   try {
-    await supportTransporter.sendMail({
-      from: `"Deniko Support" <${env.SMTP_SUPPORT_FROM}>`,
-      to: env.SMTP_SUPPORT_USER, // Send to support team inbox
-      replyTo: data.email,
+    await sendEmail({
+      type: 'support',
+      to: 'support',
       subject: `[${data.ticketId}] ${data.type}: ${data.name}`,
       text: `
 New Support Ticket
@@ -97,7 +91,9 @@ From: ${data.name} (${data.email})
 Message:
 ${data.message}
       `,
+      replyTo: data.email,
       html: `
+
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2>New Support Ticket</h2>
           <p><strong>Ticket ID:</strong> ${data.ticketId}</p>
@@ -265,13 +261,14 @@ export async function sendVerificationEmail(
   const html = getVerificationEmailTemplate(confirmLink, lang, content);
 
   try {
-    await noReplyTransporter.sendMail({
-      from: `"Deniko" <${env.SMTP_NOREPLY_FROM}>`,
+    await sendEmail({
+      type: 'noreply',
       to: email,
       subject: content.subject,
       html: html,
     });
     return { success: true };
+
   } catch (error) {
     logger.error(
       { context: "sendVerificationEmail", error },
@@ -301,13 +298,14 @@ export async function sendEmailChangeVerificationEmail(
   const html = getVerificationEmailTemplate(confirmLink, lang, content);
 
   try {
-    await noReplyTransporter.sendMail({
-      from: `"Deniko" <${env.SMTP_NOREPLY_FROM}>`,
+    await sendEmail({
+      type: 'noreply',
       to: email,
       subject: content.subject,
       html: html,
     });
     return { success: true };
+
   } catch (error) {
     logger.error(
       { context: "sendEmailChangeVerificationEmail", error },
