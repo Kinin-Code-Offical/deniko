@@ -1,9 +1,0 @@
-# PROJE KURALLARI
-
-1. **Veritabanı Bağlantısı:** Google Cloud SQL (Postgres) kullanıyoruz.
-2. **SSL Yönetimi:**
-   - Asla `fs.readFileSync` ile sertifika dosyası okuma.
-   - Sertifikalar Environment Variable içinde BASE64 formatındadır.
-   - Kullanım: `Buffer.from(process.env.DB_CA_BASE64, 'base64').toString('ascii')`
-3. **Secrets:** Şifreleri hardcode etme, `process.env` kullan. Cloud Run'da Secret Manager'dan otomatik inject edilir.
-4. **Altyapı:** Uygulama Cloud Run'da çalışacak (Stateless).

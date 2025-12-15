@@ -1,1 +1,0 @@
-{"kind":"FETCH","data":{"headers":{},"body":"{\"teacherCount\":150,\"studentCount\":1200,\"lessonCount\":5000}","status":200,"url":""},"revalidate":3600,"tags":["stats"]}
