@@ -69,7 +69,7 @@ export function AvatarCropper({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>{dictionary.crop_title}</DialogTitle>
           <DialogDescription>{dictionary.crop_desc}</DialogDescription>
