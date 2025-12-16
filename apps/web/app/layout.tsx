@@ -1,5 +1,5 @@
 import "@/lib/fix-performance";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -21,6 +21,15 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  themeColor: "#2362a1",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: {
@@ -67,8 +76,12 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     title: "Deniko",
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     capable: true,
+    startupImage: ["/icons/icon-512x512.png"],
+  },
+  formatDetection: {
+    telephone: false,
   },
   icons: {
     icon: [

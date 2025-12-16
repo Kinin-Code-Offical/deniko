@@ -2,9 +2,8 @@ import NextAuth from "next-auth";
 import { CustomAdapter } from "@/lib/auth-adapter";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { verifyPassword } from "@/lib/password";
 import { z } from "zod";
-import { Role, getUserByEmail, getUserById } from "@/lib/user-api";
+import { Role, getUserByEmail, getUserById, verifyCredentials } from "@/lib/user-api";
 import { env } from "@/lib/env";
 import { generateUniqueUsername } from "@/lib/username";
 import { assertLoginRateLimit } from "@/lib/rate-limit-login";
@@ -63,11 +62,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           if (parsedCredentials.success) {
             const { email, password } = parsedCredentials.data;
-            const user = await getUserByEmail(email);
 
-            if (!user || !user.password) {
+            const user = await verifyCredentials(email, password);
+
+            if (!user) {
               logger.warn({
-                event: "login_failed_user_not_found",
+                event: "login_failed_invalid_credentials",
                 ip,
                 email,
               });
@@ -85,35 +85,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               throw new Error("ACCOUNT_INACTIVE");
             }
 
-            const passwordsMatch = await verifyPassword(password, user.password);
-
-            if (passwordsMatch) {
-              if (!user.emailVerified) {
-                logger.warn({
-                  event: "login_blocked_unverified_email",
-                  ip,
-                  userId: user.id,
-                  email: user.email,
-                });
-                throw new Error("Email not verified");
-              }
-
-              logger.info({
-                event: "login_success",
-                ip,
-                userId: user.id,
-                email: user.email,
-                role: user.role,
-              });
-              return user;
-            } else {
+            if (!user.emailVerified) {
               logger.warn({
-                event: "login_failed_invalid_password",
+                event: "login_blocked_unverified_email",
                 ip,
                 userId: user.id,
                 email: user.email,
               });
+              throw new Error("Email not verified");
             }
+
+            logger.info({
+              event: "login_success",
+              ip,
+              userId: user.id,
+              email: user.email,
+              role: user.role,
+            });
+            return user;
           }
           return null;
         } catch (err) {

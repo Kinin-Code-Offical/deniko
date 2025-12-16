@@ -10,7 +10,7 @@ This document lists the core technologies and libraries used in the Deniko proje
 
 ## Database & ORM
 
-- **PostgreSQL:** `^8.16.3` - The World's Most Advanced Open Source Relational Database.
+- **PostgreSQL:** `v18` (Engine), `^8.16.3` (Driver) - The World's Most Advanced Open Source Relational Database.
 - **Prisma:** `^7.1.0` - Next-generation Node.js and TypeScript ORM.
   - `@prisma/client`: `^7.1.0`
   - `@prisma/adapter-pg`: `^7.1.0`

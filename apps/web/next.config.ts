@@ -1,5 +1,17 @@
 import type { NextConfig } from "next";
 import withBundleAnalyzer from "@next/bundle-analyzer";
+import withPWA from "@ducanh2912/next-pwa";
+
+const withPWAConfig = withPWA({
+  dest: "public",
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  disable: process.env.NODE_ENV === "development",
+  workboxOptions: {
+    disableDevLogs: true,
+  },
+});
 
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -9,10 +21,8 @@ const nextConfig: NextConfig = {
   output: "standalone",
   compress: true,
   productionBrowserSourceMaps: false,
-  // turbopack: {
-  //   root: path.resolve(__dirname, "../.."),
-  // },
-  transpilePackages: ["@deniko/logger", "@deniko/validation", "@deniko/storage"],
+  turbopack: {},
+  transpilePackages: ["@deniko/logger", "@deniko/validation"],
   experimental: {
     serverActions: {
       bodySizeLimit: "10mb",
@@ -25,13 +35,9 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-icons",
     ],
   },
-  // 👇 BU KISIM HAYATİ ÖNEM TAŞIYOR.
-  // Bu ayar olmadan argon2 ve storage kütüphaneleri derlenirken patlar.
   serverExternalPackages: [
     "pino",
     "pino-pretty",
-    "argon2",
-    "@google-cloud/storage",
     "nodemailer",
   ],
 
@@ -119,4 +125,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default bundleAnalyzer(nextConfig);
+export default withPWAConfig(bundleAnalyzer(nextConfig));

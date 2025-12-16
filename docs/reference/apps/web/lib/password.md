@@ -10,13 +10,6 @@ Hashes a password using argon2.
 
 ```typescript
 export async function hashPassword(password: string): Promise<string>
-```
-
-### Parameters
-
-| Name | Type | Required |
-|------|------|----------|
-| password | `string` | true |
 
 ## verifyPassword
 
@@ -34,4 +27,3 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 |------|------|----------|
 | password | `string` | true |
 | hash | `string` | true |
-

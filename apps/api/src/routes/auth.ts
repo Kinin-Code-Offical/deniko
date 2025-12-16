@@ -93,6 +93,23 @@ export async function authRoutes(fastify: FastifyInstance) {
         return user;
     });
 
+    // Verify Credentials
+    fastify.post('/adapter/verify-credentials', async (request, reply) => {
+        const { email, password } = z.object({ email: z.string().email(), password: z.string() }).parse(request.body);
+        const user = await db.user.findUnique({ where: { email } });
+
+        if (!user || !user.password) {
+            return reply.code(401).send(null);
+        }
+
+        const valid = await argon2.verify(user.password, password);
+        if (!valid) {
+            return reply.code(401).send(null);
+        }
+
+        return user;
+    });
+
     // Get User by Account
     fastify.get('/adapter/user/account/:provider/:providerAccountId', async (request, reply) => {
         const { provider, providerAccountId } = request.params as { provider: string, providerAccountId: string };

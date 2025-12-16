@@ -10,7 +10,9 @@ if (useWebpack) {
   console.log("Starting Next.js with Turbopack...");
 }
 
-const child = spawn("next", args, {
+const command = "next";
+
+const child = spawn(command, args, {
   stdio: "inherit",
   shell: true,
   env: process.env,

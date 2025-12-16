@@ -52,14 +52,9 @@ export const createImage = (url: string): Promise<HTMLImageElement> =>
     image.src = url;
   });
 
+// Deprecated: Use getAvatarSrc from @/lib/avatar instead
 export function getAvatarUrl(image: string | null | undefined, userId: string, version?: number) {
-  if (!image) return undefined; // Return undefined to let AvatarFallback show
-
-  // Always use the internal API proxy for consistency and privacy
-  // This handles both internal storage and potentially external URLs if the API supports it,
-  // OR we assume that if we have a userId, we want to fetch from our API.
-  // The user explicitly requested: "/api/avatar/${userId}?v=${avatarVersion}"
-
+  if (!image) return undefined;
   return `/api/avatar/${userId}${version ? `?v=${version}` : ""}`;
 }
 
@@ -132,10 +127,36 @@ export async function getCroppedImg(
   // paste generated rotate image at the top left corner
   ctx.putImageData(data, 0, 0);
 
+  // Resize to fixed 500x500 resolution for consistent quality
+  const outputSize = 500;
+  const finalCanvas = document.createElement("canvas");
+  finalCanvas.width = outputSize;
+  finalCanvas.height = outputSize;
+  const finalCtx = finalCanvas.getContext("2d");
+
+  if (!finalCtx) return null;
+
+  // Draw the cropped image onto the final canvas, scaling it
+  finalCtx.drawImage(
+    canvas,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    outputSize,
+    outputSize
+  );
+
   // As Blob
   return new Promise((resolve) => {
-    canvas.toBlob((file) => {
-      resolve(file);
-    }, "image/jpeg");
+    finalCanvas.toBlob(
+      (file) => {
+        resolve(file);
+      },
+      "image/jpeg",
+      0.85 // Optimized for web (good balance of size/quality)
+    );
   });
 }

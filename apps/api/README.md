@@ -15,7 +15,7 @@ Bu API servisi **Internal (Dahili)** olarak tasarlanmıştır.
 
 - **Framework**: Fastify v5
 - **Dil**: TypeScript
-- **ORM**: Prisma v7 (PostgreSQL)
+- **ORM**: Prisma v7 (PostgreSQL v18)
 - **Validasyon**: Zod
 - **Loglama**: Pino (@deniko/logger)
 - **Depolama**: Google Cloud Storage (@deniko/storage)

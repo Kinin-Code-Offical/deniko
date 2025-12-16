@@ -1,33 +1,90 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.avatarRoutes = avatarRoutes;
-const services_1 = require("../services");
+const db_1 = require("../db");
+const env_1 = require("../env");
+const crypto_1 = require("crypto");
+const storage_1 = require("../lib/storage");
 async function avatarRoutes(fastify) {
-    fastify.get('/:id', async (request, reply) => {
-        const { id } = request.params;
-        // TODO: Auth check
-        // TODO: Privacy check
-        const user = await services_1.prisma.user.findUnique({
-            where: { id },
-            select: { image: true, settings: { select: { showAvatar: true, profileVisibility: true } } }
+    fastify.get('/:userId', async (request, reply) => {
+        const { userId } = request.params;
+        // 1. Verify Signature
+        const requesterId = request.headers['x-deniko-requester-id'];
+        const timestamp = request.headers['x-deniko-timestamp'];
+        const signature = request.headers['x-deniko-signature'];
+        if (!requesterId || !timestamp || !signature) {
+            return reply.code(401).send({ error: 'Missing auth headers' });
+        }
+        // Check timestamp (max 60s drift)
+        const ts = parseInt(timestamp, 10);
+        const now = Date.now();
+        if (Math.abs(now - ts) > 60000) {
+            return reply.code(401).send({ error: 'Timestamp expired' });
+        }
+        // Verify HMAC
+        const secret = env_1.env.INTERNAL_API_SECRET;
+        const expectedSignature = (0, crypto_1.createHmac)('sha256', secret)
+            .update(`${userId}:${requesterId}:${timestamp}`)
+            .digest('hex');
+        if (signature !== expectedSignature) {
+            return reply.code(403).send({ error: 'Invalid signature' });
+        }
+        // 2. Check User & Privacy
+        const targetUser = await db_1.db.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                image: true,
+                isActive: true,
+                settings: {
+                    select: {
+                        profileVisibility: true,
+                        showAvatar: true,
+                    }
+                }
+            }
         });
-        if (!user || !user.image) {
-            return reply.code(404).send({ error: 'Avatar not found' });
+        if (!targetUser || !targetUser.isActive) {
+            return reply.code(404).send({ error: 'User not found' });
         }
-        // Privacy check logic here
-        if (user.settings?.profileVisibility === 'private' || !user.settings?.showAvatar) {
-            // Check if requester is allowed (e.g. same user)
-            // For now, return 403
-            // return reply.code(403).send({ error: 'Access denied' });
+        // Privacy Logic
+        const isSelf = requesterId === userId;
+        const isPrivateProfile = targetUser.settings?.profileVisibility === 'private';
+        const isAvatarHidden = targetUser.settings?.showAvatar === false;
+        if (!isSelf) {
+            if (isPrivateProfile) {
+                // If profile is private, no one sees anything (unless we add friend logic later)
+                return reply.code(404).send({ error: 'User not found' });
+            }
+            if (isAvatarHidden) {
+                // If avatar is specifically hidden
+                return reply.code(404).send({ error: 'Avatar hidden' });
+            }
         }
-        const stream = await services_1.storage.getObjectStream(user.image);
-        if (!stream) {
-            return reply.code(404).send({ error: 'File not found in storage' });
+        // 3. Serve Image
+        if (!targetUser.image) {
+            // Return default avatar or 404? 
+            // Usually 404 so frontend shows default.
+            return reply.code(404).send({ error: 'No avatar set' });
         }
-        return reply.send(stream);
-    });
-    fastify.post('/upload', async (request, reply) => {
-        // TODO: Implement upload logic
-        return { ok: true };
+        try {
+            // Assuming image field stores the storage key
+            const stream = await (0, storage_1.getObjectStream)(targetUser.image);
+            // Determine content type (simple guess or stored)
+            const contentType = targetUser.image.endsWith('.png') ? 'image/png' : 'image/jpeg';
+            reply.header('Content-Type', contentType);
+            // Cache control
+            if (requesterId === userId) {
+                reply.header('Cache-Control', 'private, no-store'); // Self sees latest
+            }
+            else {
+                reply.header('Cache-Control', 'public, max-age=300'); // Others cache for 5m
+            }
+            return reply.send(stream);
+        }
+        catch (error) {
+            request.log.error({ error, userId }, 'Failed to stream avatar');
+            return reply.code(404).send({ error: 'Image not found' });
+        }
     });
 }

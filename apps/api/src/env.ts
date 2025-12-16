@@ -36,6 +36,9 @@ const envSchema = z.object({
     SMTP_SUPPORT_USER: z.string().email(),
     SMTP_SUPPORT_PASSWORD: z.string().min(1),
     SMTP_SUPPORT_FROM: z.string().email(),
+
+    // Internal Security
+    INTERNAL_API_SECRET: z.string().min(1).default("dev-secret-key"),
 });
 
 

@@ -9,6 +9,8 @@ import { UserProfileHero } from "@/components/users/user-profile-hero";
 import { UserProfileTabs } from "@/components/users/user-profile-tabs";
 import { Lock } from "lucide-react";
 import { internalApiFetch } from "@/lib/internal-api";
+import { redirectToLogin, redirectToForbidden } from "@/lib/auth/redirects";
+import { getAvatarSrc } from "@/lib/avatar";
 
 interface UserProfilePageProps {
   params: Promise<{
@@ -70,7 +72,7 @@ export async function generateMetadata({
   let imageUrl = user.image;
   if (imageUrl && !imageUrl.startsWith("http")) {
     // Use API URL for internal images
-    imageUrl = `${env.NEXT_PUBLIC_SITE_URL || "https://deniko.net"}/api/avatar/${user.id}`;
+    imageUrl = `${env.NEXT_PUBLIC_SITE_URL || "https://deniko.net"}${getAvatarSrc(user.id, user.avatarVersion)}`;
   }
 
   const ogImageUrl =
@@ -149,8 +151,7 @@ export default async function UserProfilePage({
 
   let imageUrl = user.image;
   if (imageUrl && !imageUrl.startsWith("http")) {
-    // Use API URL for internal images
-    imageUrl = `${env.NEXT_PUBLIC_SITE_URL || "https://deniko.net"}/api/avatar/${user.id}`;
+    imageUrl = getAvatarSrc(user.id, user.avatarVersion);
   }
 
   // JSON-LD
@@ -181,21 +182,11 @@ export default async function UserProfilePage({
   };
 
   if (isPrivate) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <div className="mb-6 flex justify-center">
-          <div className="rounded-full bg-slate-100 p-6 dark:bg-slate-800">
-            <Lock className="h-12 w-12 text-slate-400" />
-          </div>
-        </div>
-        <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-slate-50">
-          {dictionary.profile.public.private.title}
-        </h1>
-        <p className="text-slate-600 dark:text-slate-400">
-          {dictionary.profile.public.private.description}
-        </p>
-      </div>
-    );
+    if (!session?.user) {
+      redirectToLogin(lang, `/users/${username}`);
+    } else {
+      redirectToForbidden(lang);
+    }
   }
 
   return (

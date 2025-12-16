@@ -30,6 +30,7 @@ const envSchema = z.object({
 
   // Internal
   INTERNAL_API_BASE_URL: z.string().url().default("http://127.0.0.1:4000"),
+  INTERNAL_API_SECRET: z.string().min(1).default("dev-secret-key"),
 });
 
 

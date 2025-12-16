@@ -85,7 +85,7 @@ export default async function SupportPage({
       />
       <Navbar lang={lang} dictionary={dictionary} user={session?.user} />
 
-      <section className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-16 lg:py-20">
+      <section className="mx-auto max-w-6xl px-4 pt-24 pb-10 md:px-6 md:pt-32 md:pb-16 lg:pt-36 lg:pb-20">
         <div className="mb-12 text-center">
           <h1 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl dark:text-white">
             {contact.title}

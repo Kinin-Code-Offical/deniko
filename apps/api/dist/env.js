@@ -35,5 +35,7 @@ const envSchema = zod_1.z.object({
     SMTP_SUPPORT_USER: zod_1.z.string().email(),
     SMTP_SUPPORT_PASSWORD: zod_1.z.string().min(1),
     SMTP_SUPPORT_FROM: zod_1.z.string().email(),
+    // Internal Security
+    INTERNAL_API_SECRET: zod_1.z.string().min(1).default("dev-secret-key"),
 });
 exports.env = envSchema.parse(process.env);

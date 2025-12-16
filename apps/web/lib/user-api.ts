@@ -48,6 +48,16 @@ export async function getUserById(id: string): Promise<User | null> {
     return { ...user, emailVerified: user.emailVerified ? new Date(user.emailVerified) : null };
 }
 
+export async function verifyCredentials(email: string, password: string): Promise<User | null> {
+    const user = await fetchJson<RawUser>("/auth/adapter/verify-credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+    });
+    if (!user) return null;
+    return { ...user, emailVerified: user.emailVerified ? new Date(user.emailVerified) : null };
+}
+
 export async function getUserByUsername(username: string): Promise<User | null> {
     const user = await fetchJson<RawUser>(`/auth/adapter/user/username/${username}`);
     if (!user) return null;

@@ -18,7 +18,8 @@ import { User, Settings, LogOut } from "lucide-react";
 
 import type { Dictionary } from "@/types/i18n";
 
-import { getAvatarUrl, cn } from "@/lib/utils";
+import { getAvatarSrc } from "@/lib/avatar";
+import { cn } from "@/lib/utils";
 
 interface UserNavProps {
   user: {
@@ -42,11 +43,9 @@ export const UserNav = memo(function UserNav({
   className,
 }: UserNavProps) {
   const t = dictionary?.dashboard?.header;
-  const avatarUrl = getAvatarUrl(
-    user.image,
-    user.id || "",
-    user.avatarVersion || 0
-  );
+  const avatarUrl = user.id
+    ? getAvatarSrc(user.id, user.avatarVersion || 0)
+    : undefined;
 
   if (!t) return null;
 
