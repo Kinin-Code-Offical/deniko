@@ -1,74 +1,62 @@
-# GEMINI.md - Project Context & Coding Guidelines
+---
+applyTo: "deniko/**"
+---
 
-## 🧠 Role & Persona
+# Copilot Instructions for deniko (Monorepo Final Rules)
 
-You are a Senior Backend Engineer specializing in **Node.js**, **TypeScript**, and **Google Cloud Platform (GCP)**. Your code is secure, stateless, and optimized for Cloud Run environments.
+## 0) Output Format
 
-## 🛠 Tech Stack
+- Varsayılan olarak yalnızca kod üret.
+- Mevcut dosyayı düzeltirken sadece ilgili bölümü değiştir.
+- Her dosya için tek bir uygun code block ver (ts/tsx/js/json/yml/md).
 
-- **Runtime:** Node.js (Latest LTS)
-- **Framework:** Next.js 16 (App Router)
-- **Language:** TypeScript (Strict Mode)
-- **Database:** PostgreSQL (Google Cloud SQL)
-- **ORM:** Prisma 7
-- **Infrastructure:** Google Cloud Run (Serverless)
-- **Secret Management:** Google Secret Manager & Dotenv
+## 1) Repo Mimarisi (ZORUNLU)
 
-## 🚨 CRITICAL RULES (DO NOT IGNORE)
+- Monorepo: `apps/web` (Next.js) + `apps/api` (backend) + `packages/*` (shared).
+- **DB/Prisma yalnızca `apps/api` veya `packages/db` içinde olabilir.**
+- **`apps/web` içinde @prisma/client, prisma.*, packages/db importu YASAK.**
+- Storage/Mail/Redis gibi secret gerektiren servisler yalnızca `apps/api` tarafında çalışır.
+- `packages/*` içinde **process.env kullanımı YASAK** (config parametre ile gelir).
 
-### 1. Database Connection & SSL (The "Base64 Rule")
+## 2) TypeScript Kuralları (NO ANY)
 
-We use SSL for database connections in both Localhost and Cloud Run.
+- `any` kesinlikle kullanılmayacak (explicit veya implicit).
+- `unknown` kullan ve daralt (type guard) ya da generics ile tip ver.
+- Her exported function için dönüş tipi belirt.
+- API response tipleri `ApiResponse<T>` gibi generics ile yazılacak.
+- JSON parse/response için tipli helper kullan (zod validate veya typed decode).
 
-- **NEVER** try to read certificate files using `fs.readFileSync` or file paths (e.g., `./server-ca.pem`).
-- **ALWAYS** expect SSL certificates to be injected as **Base64 encoded strings** in environment variables.
-- **DECODE** them in the code using `Buffer`.
+## 3) Next.js (apps/web) Kuralları
 
-**✅ CORRECT PATTERN:**
+- Server/Client ayrımı doğru olacak; gereksiz `use client` yok.
+- Server-only modüllerde en üste `import "server-only";`
+- Internal API çağrıları tek wrapper üzerinden:
+  - `INTERNAL_API_BASE_URL` sadece server-side kullanılır.
+- Web build sırasında DB bağlantısı denemesi olmayacak:
+  - DB gerektiren her şey `apps/api` endpointine taşınır.
+  - Statik prerender DB çağrısı yaratıyorsa ilgili route/layout: `export const dynamic = "force-dynamic";`
 
-````typescript
-const getSSLConfig = () => {
-  // Check if Base64 env var exists
-  if (!process.env.DB_CA_BASE64) return undefined;
+## 4) API (apps/api) Kuralları
 
-  return {
-    rejectUnauthorized: true,
-    // Decode Base64 to ASCII/UTF-8
-    ca: Buffer.from(process.env.DB_CA_BASE64, 'base64').toString('ascii'),
-    cert: Buffer.from(process.env.DB_CERT_BASE64, 'base64').toString('ascii'),
-    key: Buffer.from(process.env.DB_KEY_BASE64, 'base64').toString('ascii'),
-  };
-};
+- Prisma client sadece burada (veya packages/db üzerinden) kullanılacak.
+- Env validation (zod) sadece API tarafında DB/Storage/Mail secret’ları zorunlu tutar.
+- Hata yönetimi: anlamlı HTTP status + error response.
 
-**❌ WRONG PATTERN (Do not do this):**
-```typescript
-ssl: {
-  ca: fs.readFileSync('./server-ca.pem').toString(), // ⛔️ NO FILE SYSTEM ACCESS
-}
-````
+## 5) Env Düzeni
 
-### 2\. Secrets & Environment Variables
+- `apps/web/.env.example`: sadece Auth.js + NEXT_PUBLIC + INTERNAL_API_BASE_URL
+- `apps/api/.env.example`: DB + Storage + Mail + RateLimit
+- LHCI/GitHub token gibi şeyler `.env` değil GitHub Secrets’ta.
 
-- **NO HARDCODING:** Never write passwords, keys, or sensitive data in string literals.
-- **SOURCE:** Always use `process.env.VARIABLE_NAME`.
-- **GCP INTEGRATION:** Assume that in production (Cloud Run), secrets are automatically injected by Google Secret Manager.
+## 6) Test / CI
 
-### 3\. Cloud Run Compatibility
+- Root komutları:
+  - `pnpm lint` => `pnpm -r lint`
+  - `pnpm test:all` => `pnpm -r test`
+  - `pnpm build` => `pnpm -r build`
+- Testler deterministik; DB yoksa skip/guard.
 
-- The application must be **Stateless**.
-- Listen on the port defined by `process.env.PORT` (Default to 8080 if missing).
-- Do not rely on local file storage for persistence; use Cloud Storage or the Database.
+## 7) Güvenlik
 
-## 📝 Coding Standards
-
-- **Async/Await:** Use modern `async/await` syntax over Promise chains.
-- **Type Safety:** Define interfaces for your data models. Avoid `any`.
-- **Error Handling:** Wrap DB calls in `try/catch` blocks and log meaningful errors.
-
-## 🚀 Deployment Context
-
-- We deploy to **Google Cloud Run**.
-- The service account has `Cloud SQL Client` and `Secret Manager Secret Accessor` roles.
-- We do not need the Cloud SQL Auth Proxy in the code; we connect directly via IP or Cloud SQL Connector, but with the SSL Certs provided via Env Vars.
-
-<!-- end list -->
+- Secret stringleri loglama; logger redaction uygula.
+- Client’a secret taşıyan env ya da response üretme.

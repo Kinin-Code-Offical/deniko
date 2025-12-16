@@ -1013,6 +1013,10 @@ export interface Dictionary {
       unknown_student: string;
     };
     overview: {
+      upcoming_lessons: string;
+      no_upcoming_lessons: string;
+      recent_payments: string;
+      no_recent_payments: string;
       general_info: string;
       student_no: string;
       grade: string;
@@ -1026,6 +1030,9 @@ export interface Dictionary {
       private_notes_placeholder: string;
       no_notes: string;
       total_lessons: string;
+    };
+    classes: {
+      no_classes: string;
     };
     lessons: {
       title: string;

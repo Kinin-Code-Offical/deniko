@@ -38,7 +38,7 @@ const notificationsSchema = z.object({
 
 type NotificationsFormValues = z.infer<typeof notificationsSchema>;
 
-import type { User } from "@deniko/db";
+import type { User } from "@/types/api-models";
 import type { Dictionary } from "@/types/i18n";
 
 interface NotificationsPermissionsCardProps {

@@ -1,10 +1,12 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -47,46 +49,31 @@ export default async function DashboardLayout({
     redirect(`/${lang}/login`);
   }
 
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    include: {
-      teacherProfile: true,
-      studentProfile: true,
-    },
-  });
-
-  if (!user) {
-    redirect(`/${lang}/login`);
-  }
+  const { user } = session;
 
   // Enforce Onboarding Completion
   if (!user.isOnboardingCompleted) {
     redirect(`/${lang}/onboarding`);
   }
 
-  // Sign avatar URL if needed
-  let imageUrl = user.image;
-  if (imageUrl && !imageUrl.startsWith("http")) {
-    // Use API URL for internal images
-    // We don't need full URL here as it's used in client component (UserNav) which handles relative paths
-    // But UserNav expects a string.
-    // Actually UserNav uses getAvatarUrl internally too!
-    // But here we are passing it as a prop.
-    // Let's pass the relative API path.
-    imageUrl = `/api/avatar/${user.id}`;
-  }
+  // Construct user object for client components
+  // We pass minimal required data. Avatar URL is constructed on client or here.
+  // To ensure consistency, we can just pass the raw image field (to check existence)
+  // and let the client helper construct the URL, OR construct it here.
+  // The user wants: "/api/avatar/${userId}?v=${avatarVersion}"
 
-  const userWithSignedUrl = {
-    ...user,
-    image: imageUrl,
+  const userForClient = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    image: user.image, // Pass raw value to determine if avatar exists
+    role: user.role,
+    username: user.username,
+    avatarVersion: user.avatarVersion,
   };
 
   return (
-    <DashboardShell
-      user={userWithSignedUrl}
-      dictionary={dictionary}
-      lang={lang}
-    >
+    <DashboardShell user={userForClient} dictionary={dictionary} lang={lang}>
       {children}
     </DashboardShell>
   );

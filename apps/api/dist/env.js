@@ -11,6 +11,7 @@ const path_1 = __importDefault(require("path"));
 dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../.env') });
 const envSchema = zod_1.z.object({
     NODE_ENV: zod_1.z.enum(['development', 'test', 'production']).default('development'),
+    LOG_LEVEL: zod_1.z.string().default('info'),
     PORT: zod_1.z.string().default('4000').transform((val) => parseInt(val, 10)),
     // Database
     DATABASE_URL: zod_1.z.string().url({ message: "DATABASE_URL must be a valid URL" }),
@@ -22,5 +23,17 @@ const envSchema = zod_1.z.object({
     // Rate Limiting (Upstash Redis)
     UPSTASH_REDIS_REST_URL: zod_1.z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: zod_1.z.string().min(1),
+    // Email - No-Reply (System Notifications)
+    SMTP_NOREPLY_HOST: zod_1.z.string().min(1),
+    SMTP_NOREPLY_PORT: zod_1.z.string().default("465"),
+    SMTP_NOREPLY_USER: zod_1.z.string().email(),
+    SMTP_NOREPLY_PASSWORD: zod_1.z.string().min(1),
+    SMTP_NOREPLY_FROM: zod_1.z.string().email(),
+    // Email - Support (Tickets & Inquiries)
+    SMTP_SUPPORT_HOST: zod_1.z.string().min(1),
+    SMTP_SUPPORT_PORT: zod_1.z.string().default("465"),
+    SMTP_SUPPORT_USER: zod_1.z.string().email(),
+    SMTP_SUPPORT_PASSWORD: zod_1.z.string().min(1),
+    SMTP_SUPPORT_FROM: zod_1.z.string().email(),
 });
 exports.env = envSchema.parse(process.env);

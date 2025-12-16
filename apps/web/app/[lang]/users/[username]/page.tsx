@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { db } from "@/lib/db";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import { auth } from "@/auth";
@@ -9,6 +8,7 @@ import { env } from "@/lib/env";
 import { UserProfileHero } from "@/components/users/user-profile-hero";
 import { UserProfileTabs } from "@/components/users/user-profile-tabs";
 import { Lock } from "lucide-react";
+import { internalApiFetch } from "@/lib/internal-api";
 
 interface UserProfilePageProps {
   params: Promise<{
@@ -23,22 +23,16 @@ export async function generateMetadata({
   const { lang, username } = await params;
   const dictionary = await getDictionary(lang);
 
-  const user = await db.user.findUnique({
-    where: { username },
-    select: {
-      id: true,
-      name: true,
-      username: true,
-      role: true,
-      image: true,
-      settings: {
-        select: {
-          profileVisibility: true,
-          showAvatar: true,
-        },
-      },
-    },
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let user: any = null;
+  try {
+    const res = await internalApiFetch(`/public/users/${username}`);
+    if (res.ok) {
+      user = await res.json();
+    }
+  } catch (e) {
+    // ignore
+  }
 
   if (!user) {
     return {
@@ -120,14 +114,16 @@ export default async function UserProfilePage({
   const dictionary = await getDictionary(lang);
   const session = await auth();
 
-  const user = await db.user.findUnique({
-    where: { username },
-    include: {
-      teacherProfile: true,
-      studentProfile: true,
-      settings: true,
-    },
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let user: any = null;
+  try {
+    const res = await internalApiFetch(`/public/users/${username}`);
+    if (res.ok) {
+      user = await res.json();
+    }
+  } catch (e) {
+    // ignore
+  }
 
   if (!user) {
     notFound();

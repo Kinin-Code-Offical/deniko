@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { getInviteDetails } from "@/app/actions/student";
 import { getDictionary } from "@/lib/get-dictionary";
 import JoinClient from "./join-client";
-import { db } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,6 +17,7 @@ import Link from "next/link";
 import { AlertCircle, LogIn, UserPlus } from "lucide-react";
 import type { Metadata } from "next";
 import type { Locale } from "@/i18n-config";
+import { internalApiFetch } from "@/lib/internal-api";
 
 const PLACEHOLDERS = {
   TEACHER: "{teacher}",
@@ -179,10 +179,10 @@ export default async function JoinPage({
   }
 
   // 2. User IS Logged In -> Show Client Component
-  const userProfile = await db.user.findUnique({
-    where: { id: session.user.id },
-    include: { studentProfile: true },
+  const res = await internalApiFetch("/settings", {
+    headers: { "x-user-id": session.user.id || "" },
   });
+  const userProfile = res.ok ? await res.json() : null;
 
   // Error State: Teacher cannot join
   if (userProfile?.role === "TEACHER") {

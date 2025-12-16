@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.26.0",
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.2.1"
   },
   "scripts": {
     "dev:web": "pnpm -C apps/web dev",
@@ -15,6 +15,20 @@
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test:all": "pnpm -r test",
-    "db:generate": "pnpm --filter @deniko/db generate"
+    "db:generate": "pnpm --filter @deniko/db generate",
+    "prisma:generate": "pnpm -C apps/api prisma generate",
+    "prisma:migrate": "pnpm -C apps/api prisma migrate dev",
+    "prisma:studio": "pnpm -C apps/api prisma studio",
+    "docs:gen": "pnpm dlx tsx apps/web/scripts/generate-docs.ts"
+  },
+  "pnpm": {
+    "overrides": {
+      "prisma": "^7.1.0",
+      "@prisma/client": "^7.1.0",
+      "@prisma/engines": "^7.1.0"
+    },
+    "onlyBuiltDependencies": [
+      "argon2"
+    ]
   }
 }

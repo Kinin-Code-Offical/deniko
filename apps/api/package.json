@@ -9,26 +9,32 @@
     "start": "node dist/index.js",
     "test": "vitest run"
   },
+  "prisma": {
+    "schema": "../../packages/db/prisma/schema.prisma"
+  },
   "dependencies": {
     "@deniko/db": "workspace:*",
     "@deniko/logger": "workspace:*",
     "@deniko/storage": "workspace:*",
     "@deniko/validation": "workspace:*",
-    "@prisma/client": "6.0.1",
+    "@prisma/client": "^7.1.0",
     "@upstash/ratelimit": "^2.0.7",
     "@upstash/redis": "^1.35.8",
+    "argon2": "^0.44.0",
     "dotenv": "^17.2.3",
-    "fastify": "^5.2.0",
+    "fastify": "^5.6.2",
     "nodemailer": "^7.0.11",
+    "uuid": "^13.0.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.19.3",
     "@types/nodemailer": "^7.0.4",
     "@types/supertest": "^6.0.3",
+    "prisma": "^7.1.0",
     "supertest": "^7.1.4",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.15"
   }
 }

@@ -8,7 +8,6 @@ The `lib/` directory contains pure utility functions, business logic, and shared
 
 | File | Purpose | Key Exports | Dependencies |
 |------|---------|-------------|--------------|
-| `db.ts` | Prisma Client Singleton | `db` | `@prisma/client` |
 | `auth.ts` | Auth Configuration | `auth`, `signIn`, `signOut` | `next-auth` |
 | `storage.ts` | GCS File Operations | `uploadObject`, `getSignedUrlForKey` | `@google-cloud/storage` |
 | `logger.ts` | Structured Logging | `logger` | `pino` |

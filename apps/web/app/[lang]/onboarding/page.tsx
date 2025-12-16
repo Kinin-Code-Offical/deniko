@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { getDictionary } from "@/lib/get-dictionary";
 import { env } from "@/lib/env";
@@ -8,6 +7,7 @@ import { OnboardingClientPage } from "./client-page";
 import type { Metadata } from "next";
 
 import type { Locale } from "@/i18n-config";
+import { internalApiFetch } from "@/lib/internal-api";
 
 export async function generateMetadata({
   params,
@@ -68,13 +68,10 @@ export default async function OnboardingPage({
       redirect(`/${lang}/login`);
     }
 
-    const dbUser = await db.user.findUnique({
-      where: { id: session.user.id },
-      include: {
-        teacherProfile: true,
-        studentProfile: true,
-      },
+    const res = await internalApiFetch("/settings", {
+      headers: { "x-user-id": session.user.id },
     });
+    const dbUser = res.ok ? await res.json() : null;
 
     if (!dbUser) {
       redirect(`/${lang}/login?error=SessionMismatch`);

@@ -1,4 +1,4 @@
-import Fastify from 'fastify';
+import Fastify, { FastifyBaseLogger } from 'fastify';
 import { registerRoutes } from './routes';
 import { createLogger } from '@deniko/logger';
 import { env } from './env';
@@ -10,8 +10,7 @@ export const buildApp = () => {
     });
 
     const fastify = Fastify({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        loggerInstance: logger as any
+        loggerInstance: logger as unknown as FastifyBaseLogger
     });
 
     fastify.get('/health', async (request, reply) => {

@@ -10,7 +10,7 @@ import type { Dictionary } from "@/types/i18n";
 
 interface AvatarUploadDialogProps {
   children: React.ReactNode;
-  currentAvatarUrl: string;
+  currentAvatarUrl?: string | null;
   onAvatarUpdate: () => void;
   dictionary: Dictionary;
   lang: string;

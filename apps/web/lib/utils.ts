@@ -53,11 +53,13 @@ export const createImage = (url: string): Promise<HTMLImageElement> =>
   });
 
 export function getAvatarUrl(image: string | null | undefined, userId: string, version?: number) {
-  if (!image) return "/api/avatars/default";
-  if (image.startsWith("http") || image.startsWith("https")) {
-    return image;
-  }
-  // Internal key
+  if (!image) return undefined; // Return undefined to let AvatarFallback show
+
+  // Always use the internal API proxy for consistency and privacy
+  // This handles both internal storage and potentially external URLs if the API supports it,
+  // OR we assume that if we have a userId, we want to fetch from our API.
+  // The user explicitly requested: "/api/avatar/${userId}?v=${avatarVersion}"
+
   return `/api/avatar/${userId}${version ? `?v=${version}` : ""}`;
 }
 

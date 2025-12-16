@@ -27,71 +27,67 @@ import {
   Smartphone,
 } from "lucide-react";
 import type { CSSProperties } from "react";
-import { db } from "@/lib/db";
-import { unstable_cache } from "next/cache";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import type { CardItem } from "@/components/landing/carousel/types";
 import logger from "@/lib/logger";
+import { internalApiFetch } from "@/lib/internal-api";
+import { auth } from "@/auth";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 // Dynamic imports for heavy components to reduce initial bundle size
-const ScheduleCard = dynamic(
+const ScheduleCard = nextDynamic(
   () => import("@/components/landing/carousel/cards/ScheduleCard")
 );
-const ProfileCard = dynamic(
+const ProfileCard = nextDynamic(
   () => import("@/components/landing/carousel/cards/ProfileCard")
 );
-const PerformanceCard = dynamic(
+const PerformanceCard = nextDynamic(
   () => import("@/components/landing/carousel/cards/PerformanceCard")
 );
-const AssignmentsCard = dynamic(
+const AssignmentsCard = nextDynamic(
   () => import("@/components/landing/carousel/cards/AssignmentsCard")
 );
-const MessagesCard = dynamic(
+const MessagesCard = nextDynamic(
   () => import("@/components/landing/carousel/cards/MessagesCard")
 );
 
 // Dynamic imports for animation components (Framer Motion)
-const FadeIn = dynamic(() =>
+const FadeIn = nextDynamic(() =>
   import("@/components/ui/scroll-animation").then((mod) => mod.FadeIn)
 );
-const StaggerContainer = dynamic(() =>
+const StaggerContainer = nextDynamic(() =>
   import("@/components/ui/scroll-animation").then((mod) => mod.StaggerContainer)
 );
-const StaggerItem = dynamic(() =>
+const StaggerItem = nextDynamic(() =>
   import("@/components/ui/scroll-animation").then((mod) => mod.StaggerItem)
 );
 
-const Carousel = dynamic(
+const Carousel = nextDynamic(
   () => import("@/components/landing/carousel/Carousel"),
   {
     loading: () => (
-      <div className="h-[600px] w-full animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
+      <div className="h-150 w-full animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
     ),
   }
 );
 
-const getCachedStats = unstable_cache(
-  async () => {
-    try {
-      const [tCount, sCount, lCount] = await Promise.all([
-        db.teacherProfile.count(),
-        db.studentProfile.count(),
-        db.lesson.count(),
-      ]);
-      return {
-        teacherCount: tCount,
-        studentCount: sCount,
-        lessonCount: lCount,
-      };
-    } catch (error) {
-      logger.warn("Failed to fetch stats (using fallbacks):");
-      logger.warn(error instanceof Error ? error.message : String(error));
-      return { teacherCount: 150, studentCount: 1200, lessonCount: 5000 };
-    }
-  },
-  ["landing-stats"],
-  { revalidate: 3600, tags: ["stats"] }
-);
+async function getStats() {
+  try {
+    const res = await internalApiFetch("/public/stats", { cache: "no-store" });
+    if (!res.ok) throw new Error("Failed to fetch stats");
+    return (await res.json()) as {
+      teacherCount: number;
+      studentCount: number;
+      lessonCount: number;
+    };
+  } catch (error) {
+    logger.warn("Failed to fetch stats (using fallbacks):");
+    logger.warn(error instanceof Error ? error.message : String(error));
+    return { teacherCount: 150, studentCount: 1200, lessonCount: 5000 };
+  }
+}
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
@@ -156,8 +152,9 @@ export default async function Home({
 }) {
   const { lang } = await params;
   const dictionary = await getDictionary(lang);
+  const session = await auth();
 
-  const { teacherCount, studentCount, lessonCount } = await getCachedStats();
+  const { teacherCount, studentCount, lessonCount } = await getStats();
 
   const carouselItems: CardItem[] = [
     {
@@ -207,7 +204,7 @@ export default async function Home({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <PerformanceTracker name="Homepage-Render" />
-      <Navbar lang={lang} dictionary={dictionary} />
+      <Navbar lang={lang} dictionary={dictionary} user={session?.user} />
 
       <main id="main-content" className="flex-1 pt-16 md:pt-20">
         {/* Hero Section */}
@@ -514,7 +511,7 @@ export default async function Home({
                 <p className="max-w-xl leading-relaxed text-slate-700 dark:text-slate-200">
                   {dictionary.home.features.subtitle}
                 </p>
-                <div className="group relative mt-8 flex h-[600px] w-full items-center justify-center lg:mt-12 lg:h-[700px]">
+                <div className="group relative mt-8 flex h-150 w-full items-center justify-center lg:mt-12 lg:h-175">
                   <div className="relative h-full w-full">
                     <Carousel items={carouselItems} dictionary={dictionary} />
                   </div>
@@ -777,8 +774,8 @@ export default async function Home({
         <section className="relative overflow-hidden py-24">
           <div className="absolute inset-0 bg-[#1d4f87] transition-colors duration-300 dark:bg-slate-900">
             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 dark:opacity-5"></div>
-            <div className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full bg-blue-400/20 blur-3xl dark:bg-blue-900/10"></div>
-            <div className="absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full bg-indigo-500/20 blur-3xl dark:bg-indigo-900/10"></div>
+            <div className="absolute top-0 right-0 h-125 w-125 rounded-full bg-blue-400/20 blur-3xl dark:bg-blue-900/10"></div>
+            <div className="absolute bottom-0 left-0 h-125 w-125 rounded-full bg-indigo-500/20 blur-3xl dark:bg-indigo-900/10"></div>
           </div>
 
           <div className="relative z-10 container mx-auto px-4 text-center">

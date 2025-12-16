@@ -17,7 +17,7 @@ export async function GET(
         else if (ext === "png") contentType = "image/png";
         else if (ext === "jpg" || ext === "jpeg") contentType = "image/jpeg";
 
-        return new NextResponse(stream as unknown as BodyInit, {
+        return new NextResponse(stream as BodyInit, {
             headers: {
                 "Content-Type": contentType,
                 "Cache-Control": "public, max-age=31536000",

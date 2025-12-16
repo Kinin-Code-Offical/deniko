@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
   // turbopack: {
   //   root: path.resolve(__dirname, "../.."),
   // },
-  transpilePackages: ["@deniko/db", "@deniko/logger", "@deniko/validation", "@deniko/storage"],
+  transpilePackages: ["@deniko/logger", "@deniko/validation", "@deniko/storage"],
   experimental: {
     serverActions: {
       bodySizeLimit: "10mb",
@@ -26,11 +26,11 @@ const nextConfig: NextConfig = {
     ],
   },
   // 👇 BU KISIM HAYATİ ÖNEM TAŞIYOR.
-  // Bu ayar olmadan bcryptjs ve storage kütüphaneleri derlenirken patlar.
+  // Bu ayar olmadan argon2 ve storage kütüphaneleri derlenirken patlar.
   serverExternalPackages: [
     "pino",
     "pino-pretty",
-    "bcryptjs",
+    "argon2",
     "@google-cloud/storage",
     "nodemailer",
   ],

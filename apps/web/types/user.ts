@@ -1,4 +1,4 @@
-import type { User, TeacherProfile, StudentProfile, UserSettings } from "@deniko/db";
+import type { User, TeacherProfile, StudentProfile, UserSettings } from "@/types/api-models";
 
 export type UserWithProfile = User & {
     teacherProfile?: TeacherProfile | null;

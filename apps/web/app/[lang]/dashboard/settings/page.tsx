@@ -10,10 +10,10 @@ import { SettingsSidebar } from "@/components/dashboard/settings/settings-sideba
 import { NotificationsForm } from "@/components/dashboard/settings/notifications-form";
 import { RegionForm } from "@/components/dashboard/settings/region-form";
 import { CookiesForm } from "@/components/dashboard/settings/cookies-form";
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { getDefaultAvatarsAction } from "@/app/actions/settings";
+import { internalApiFetch } from "@/lib/internal-api";
 
 export default async function SettingsPage({
   params,
@@ -28,46 +28,15 @@ export default async function SettingsPage({
     redirect(`/${lang}/login`);
   }
 
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      id: true,
-      username: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      phoneNumber: true,
-      image: true,
-      avatarVersion: true,
-      role: true,
-      settings: true,
-      notificationEmailEnabled: true,
-      notificationInAppEnabled: true,
-      preferredCountry: true,
-      preferredTimezone: true,
-      cookieAnalyticsEnabled: true,
-      isMarketingConsent: true,
-      teacherProfile: {
-        select: {
-          branch: true,
-          bio: true,
-        },
-      },
-      studentProfile: {
-        select: {
-          studentNo: true,
-          gradeLevel: true,
-          parentName: true,
-          parentPhone: true,
-          parentEmail: true,
-        },
-      },
-    },
+  const res = await internalApiFetch("/settings", {
+    headers: { "x-user-id": session.user.id },
   });
 
-  if (!user) {
+  if (!res.ok) {
     redirect(`/${lang}/login`);
   }
+
+  const user = await res.json();
 
   const imageUrl = user.image;
 

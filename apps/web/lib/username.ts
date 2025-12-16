@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { getUserByUsername } from "@/lib/user-api";
 
 export async function generateUniqueUsername(
     firstName: string,
@@ -22,10 +22,7 @@ export async function generateUniqueUsername(
 
     // Loop until a free username is found
     while (true) {
-        const exists = await db.user.findUnique({
-            where: { username: candidate },
-            select: { id: true },
-        });
+        const exists = await getUserByUsername(candidate);
 
         if (!exists) {
             return candidate;

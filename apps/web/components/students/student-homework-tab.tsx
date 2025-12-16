@@ -16,7 +16,11 @@ import { Plus } from "lucide-react";
 import { format } from "date-fns";
 import { tr, enUS } from "date-fns/locale";
 import type { Dictionary } from "@/types/i18n";
-import { type Homework, type HomeworkTracking, type Lesson } from "@deniko/db";
+import {
+  type Homework,
+  type HomeworkTracking,
+  type Lesson,
+} from "@/types/api-models";
 
 type HomeworkWithTracking = HomeworkTracking & {
   homework: Homework & {

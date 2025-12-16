@@ -1,18 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { db } from "@/lib/db";
 import { auth, signOut } from "@/auth";
 import { revalidatePath } from "next/cache";
-import * as bcrypt from "bcryptjs";
-import { deleteUserAndRelatedData } from "@/lib/account-deletion";
 import { v4 as uuidv4 } from "uuid";
 import { sendEmailChangeVerificationEmail } from "@/lib/email";
-import { Prisma } from "@deniko/db";
 import type { Locale } from "@/i18n-config";
 import { getDictionary } from "@/lib/get-dictionary";
 import logger from "@/lib/logger";
-import { deleteFile } from "@/lib/storage";
+import { internalApiFetch } from "@/lib/internal-api";
 
 // --- Schemas ---
 
@@ -52,64 +48,17 @@ export async function updateProfileBasicAction(input: unknown, lang: string) {
     if (!result.success) return { error: dictionary.server.errors.invalid_input };
 
     try {
-        const updateData: Prisma.UserUpdateInput = {};
-        if (result.data.firstName) updateData.firstName = result.data.firstName;
-        if (result.data.lastName) updateData.lastName = result.data.lastName;
-        if (result.data.firstName && result.data.lastName) updateData.name = `${result.data.firstName} ${result.data.lastName}`;
-        if (result.data.username) updateData.username = result.data.username;
-        if (result.data.phoneNumber !== undefined) updateData.phoneNumber = result.data.phoneNumber;
-        if (result.data.preferredCountry !== undefined) updateData.preferredCountry = result.data.preferredCountry;
-        if (result.data.preferredTimezone !== undefined) updateData.preferredTimezone = result.data.preferredTimezone;
-        if (result.data.notificationEmailEnabled !== undefined) updateData.notificationEmailEnabled = result.data.notificationEmailEnabled;
-        if (result.data.notificationInAppEnabled !== undefined) updateData.notificationInAppEnabled = result.data.notificationInAppEnabled;
-        if (result.data.isMarketingConsent !== undefined) updateData.isMarketingConsent = result.data.isMarketingConsent;
-
-        await db.user.update({
-            where: { id: session.user.id },
-            data: updateData,
+        const res = await internalApiFetch("/settings/profile", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-user-id": session.user.id,
+            },
+            body: JSON.stringify(result.data),
         });
 
-        // Update Teacher Profile if exists
-        if (result.data.branch !== undefined || result.data.bio !== undefined) {
-            const teacherProfile = await db.teacherProfile.findUnique({
-                where: { userId: session.user.id },
-            });
-
-            if (teacherProfile) {
-                await db.teacherProfile.update({
-                    where: { userId: session.user.id },
-                    data: {
-                        branch: result.data.branch || teacherProfile.branch,
-                        bio: result.data.bio,
-                    },
-                });
-            }
-        }
-
-        // Update Student Profile if exists
-        if (
-            result.data.studentNo !== undefined ||
-            result.data.gradeLevel !== undefined ||
-            result.data.parentName !== undefined ||
-            result.data.parentPhone !== undefined ||
-            result.data.parentEmail !== undefined
-        ) {
-            const studentProfile = await db.studentProfile.findUnique({
-                where: { userId: session.user.id },
-            });
-
-            if (studentProfile) {
-                await db.studentProfile.update({
-                    where: { userId: session.user.id },
-                    data: {
-                        studentNo: result.data.studentNo,
-                        gradeLevel: result.data.gradeLevel,
-                        parentName: result.data.parentName,
-                        parentPhone: result.data.parentPhone,
-                        parentEmail: result.data.parentEmail === "" ? null : result.data.parentEmail,
-                    },
-                });
-            }
+        if (!res.ok) {
+            throw new Error("Failed to update profile");
         }
 
         revalidatePath("/dashboard/settings");
@@ -152,19 +101,23 @@ export async function changePasswordAction(input: unknown, lang: string) {
         return { error: dictionary.server.errors.same_password };
     }
 
-    const user = await db.user.findUnique({ where: { id: session.user.id } });
-    if (!user || !user.password) return { error: dictionary.server.errors.user_not_found_password };
-
-    const passwordsMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!passwordsMatch) return { error: dictionary.server.errors.incorrect_password };
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
     try {
-        await db.user.update({
-            where: { id: session.user.id },
-            data: { password: hashedPassword },
+        const res = await internalApiFetch("/settings/password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-user-id": session.user.id,
+            },
+            body: JSON.stringify({ currentPassword, newPassword }),
         });
+
+        if (!res.ok) {
+            const errorData = await res.json() as { error?: string };
+            if (errorData.error === 'user_not_found_password') return { error: dictionary.server.errors.user_not_found_password };
+            if (errorData.error === 'incorrect_password') return { error: dictionary.server.errors.incorrect_password };
+            throw new Error("Failed to change password");
+        }
+
         logger.info({ event: "password_changed", userId: session.user.id });
         return { success: true };
     } catch (error) {
@@ -181,38 +134,40 @@ export async function requestEmailChangeAction(newEmail: string, lang: string) {
     const result = emailChangeSchema.safeParse({ newEmail });
     if (!result.success) return { error: dictionary.server.errors.invalid_email };
 
-    // Check if email is already taken
-    const existingUser = await db.user.findUnique({ where: { email: newEmail } });
-    if (existingUser) return { error: dictionary.server.errors.email_in_use };
-
-    const user = await db.user.findUnique({ where: { id: session.user.id } });
-    if (!user) return { error: dictionary.server.errors.user_not_found };
-
     const token = uuidv4();
     const expires = new Date(new Date().getTime() + 24 * 60 * 60 * 1000); // 24 hours
 
     try {
-        // Create EmailChangeRequest
-        await db.emailChangeRequest.create({
-            data: {
-                userId: user.id,
+        const res = await internalApiFetch("/settings/email-change", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-user-id": session.user.id,
+            },
+            body: JSON.stringify({
                 newEmail,
                 token,
-                expires,
-            },
+                expires: expires.toISOString(),
+            }),
         });
+
+        if (!res.ok) {
+            const errorData = await res.json() as { error?: string };
+            if (errorData.error === 'email_in_use') return { error: dictionary.server.errors.email_in_use };
+            throw new Error("Failed to request email change");
+        }
 
         await sendEmailChangeVerificationEmail(newEmail, token, lang as Locale);
 
         logger.info({
             event: "email_change_requested",
-            userId: user.id,
+            userId: session.user.id,
             newEmail,
         });
 
         return { success: true };
     } catch (error) {
-        logger.error({ event: "request_email_change_error", error, userId: user.id });
+        logger.error({ event: "request_email_change_error", error, userId: session.user.id });
         return { error: dictionary.server.errors.failed_request_email_change };
     }
 }
@@ -223,31 +178,17 @@ export async function deactivateAccountAction(lang: string) {
     if (!session?.user?.id) return { error: dictionary.server.errors.unauthorized };
 
     try {
-        await db.user.update({
-            where: { id: session.user.id },
-            data: {
-                isActive: false,
+        const res = await internalApiFetch("/settings/deactivate", {
+            method: "POST",
+            headers: {
+                "x-user-id": session.user.id,
             },
         });
 
-        await db.userSettings.upsert({
-            where: { userId: session.user.id },
-            create: {
-                userId: session.user.id,
-                profileVisibility: "private",
-                showAvatar: false,
-                showEmail: false,
-                showPhone: false,
-                allowMessages: false,
-            },
-            update: {
-                profileVisibility: "private",
-                showAvatar: false,
-                showEmail: false,
-                showPhone: false,
-                allowMessages: false,
-            },
-        });
+        if (!res.ok) {
+            throw new Error("Failed to deactivate account");
+        }
+
         await signOut({ redirectTo: "/" });
         logger.info({
             event: "account_deactivated",
@@ -266,16 +207,23 @@ export async function deleteAccountAction(lang: string) {
     const session = await auth();
     if (!session?.user?.id) return { error: dictionary.server.errors.unauthorized };
 
-    const user = await db.user.findUnique({ where: { id: session.user.id } });
-    if (!user) return { error: dictionary.server.errors.user_not_found };
-
     try {
-        await deleteUserAndRelatedData(user.id);
+        const res = await internalApiFetch("/settings/account", {
+            method: "DELETE",
+            headers: {
+                "x-user-id": session.user.id,
+            },
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to delete account");
+        }
+
         await signOut({ redirectTo: "/" });
-        logger.info({ event: "account_deleted", userId: user.id });
+        logger.info({ event: "account_deleted", userId: session.user.id });
         return { success: true };
     } catch (error) {
-        logger.error({ event: "delete_account_error", userId: user.id, error: (error as Error).message });
+        logger.error({ event: "delete_account_error", userId: session.user.id, error: (error as Error).message });
         return { error: dictionary.server.errors.failed_delete };
     }
 }
@@ -337,13 +285,18 @@ export async function updateNotificationPreferencesAction(input: unknown, lang: 
     if (!result.success) return { error: dictionary.server.errors.invalid_input };
 
     try {
-        await db.user.update({
-            where: { id: session.user.id },
-            data: {
-                notificationEmailEnabled: result.data.emailEnabled,
-                notificationInAppEnabled: result.data.inAppEnabled,
+        const res = await internalApiFetch("/settings/notifications", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-user-id": session.user.id,
             },
+            body: JSON.stringify(result.data),
         });
+
+        if (!res.ok) {
+            throw new Error("Failed to update notification preferences");
+        }
 
         logger.info({
             event: "user_notification_preferences_updated",
@@ -369,13 +322,18 @@ export async function updateRegionTimezonePreferencesAction(input: unknown, lang
     if (!result.success) return { error: dictionary.server.errors.invalid_input };
 
     try {
-        await db.user.update({
-            where: { id: session.user.id },
-            data: {
-                preferredCountry: result.data.country,
-                preferredTimezone: result.data.timezone,
+        const res = await internalApiFetch("/settings/region", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-user-id": session.user.id,
             },
+            body: JSON.stringify(result.data),
         });
+
+        if (!res.ok) {
+            throw new Error("Failed to update region/timezone");
+        }
 
         revalidatePath("/dashboard/settings");
         return { success: true };
@@ -394,13 +352,18 @@ export async function updateCookiePreferencesAction(input: unknown, lang: string
     if (!result.success) return { error: dictionary.server.errors.invalid_input };
 
     try {
-        await db.user.update({
-            where: { id: session.user.id },
-            data: {
-                cookieAnalyticsEnabled: result.data.analyticsEnabled,
-                isMarketingConsent: result.data.marketingEnabled,
+        const res = await internalApiFetch("/settings/cookies", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-user-id": session.user.id,
             },
+            body: JSON.stringify(result.data),
         });
+
+        if (!res.ok) {
+            throw new Error("Failed to update cookie preferences");
+        }
 
         logger.info({
             event: "user_cookie_preferences_updated",
@@ -426,39 +389,19 @@ export async function updateAvatarAction(input: unknown, lang: string) {
     if (!result.success) return { error: dictionary.server.errors.invalid_input };
 
     try {
-        let imagePath = result.data.url;
-        if (result.data.type === "default") {
-            imagePath = result.data.key;
-        }
-
-        if (!imagePath) return { error: dictionary.server.errors.no_image_provided };
-
-        // Get current user to check for existing avatar
-        const currentUser = await db.user.findUnique({
-            where: { id: session.user.id },
-            select: { image: true },
-        });
-
-        await db.user.update({
-            where: { id: session.user.id },
-            data: {
-                image: imagePath,
-                avatarVersion: { increment: 1 }
+        const res = await internalApiFetch("/settings/avatar", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-user-id": session.user.id,
             },
+            body: JSON.stringify(result.data),
         });
 
-        // Delete old avatar if it exists, is not the new one, and is not a default avatar
-        if (
-            currentUser?.image &&
-            currentUser.image !== imagePath &&
-            !currentUser.image.startsWith("http") &&
-            !currentUser.image.startsWith("default/")
-        ) {
-            try {
-                await deleteFile(currentUser.image);
-            } catch (err) {
-                logger.warn({ event: "delete_old_avatar_failed", error: err, path: currentUser.image });
-            }
+        if (!res.ok) {
+            const errorData = await res.json() as { error?: string };
+            if (errorData.error === 'no_image_provided') return { error: dictionary.server.errors.no_image_provided };
+            throw new Error("Failed to update avatar");
         }
 
         logger.info({

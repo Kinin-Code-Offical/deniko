@@ -1,13 +1,25 @@
-import { Project, SyntaxKind } from "ts-morph";
+import { Project, SyntaxKind, SourceFile, ExportedDeclarations } from "ts-morph";
 import * as fs from "fs";
 import * as path from "path";
 
 const project = new Project({
-    tsConfigFilePath: path.join(process.cwd(), "tsconfig.json"),
+    // tsConfigFilePath: path.join(process.cwd(), "tsconfig.json"), // Removed dependency on root tsconfig
     skipAddingFilesFromTsConfig: true,
+    compilerOptions: {
+        allowJs: true,
+    }
 });
 
-const SOURCE_DIRS = ["app", "lib", "components"];
+const SOURCE_DIRS = [
+    "apps/web/app",
+    "apps/web/components",
+    "apps/web/lib",
+    "apps/api/src",
+    "packages/db/src",
+    "packages/logger/src",
+    "packages/storage/src",
+    "packages/validation/src"
+];
 const OUTPUT_DIR = path.join(process.cwd(), "docs", "reference");
 
 async function generateDocs() {
@@ -61,8 +73,7 @@ async function generateDocs() {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function generateMarkdownForFile(sourceFile: any, relativePath: string): string | null {// ignore-any-check
+function generateMarkdownForFile(sourceFile: SourceFile, relativePath: string): string | null {
     const exports = sourceFile.getExportedDeclarations();
     if (exports.size === 0) return null;
 
@@ -75,8 +86,7 @@ function generateMarkdownForFile(sourceFile: any, relativePath: string): string 
         md += `${fileComments[0].getText()}\n\n`;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    exports.forEach((declarations: any[], name: string) => { // ignore-any-check
+    exports.forEach((declarations: ExportedDeclarations[], name: string) => {
         declarations.forEach((decl) => {
             md += `## ${name}\n\n`;
 
@@ -84,6 +94,7 @@ function generateMarkdownForFile(sourceFile: any, relativePath: string): string 
             md += `**Type**: \`${decl.getKindName()}\`\n\n`;
 
             // JSDoc / TSDoc
+            // @ts-expect-error - getJsDocs might not exist on all types in the union, but we check existence
             const jsDocs = decl.getJsDocs ? decl.getJsDocs() : [];
             if (jsDocs.length > 0) {
                 md += `${jsDocs[0].getDescription().trim()}\n\n`;
@@ -95,17 +106,19 @@ function generateMarkdownForFile(sourceFile: any, relativePath: string): string 
                 md += "```typescript\n" + signature + "\n```\n\n";
 
                 // Parameters
-                const params = decl.getParameters();
-                if (params.length > 0) {
-                    md += "### Parameters\n\n";
-                    md += "| Name | Type | Required |\n";
-                    md += "|------|------|----------|\n";
+                const functionDecl = decl.asKind(SyntaxKind.FunctionDeclaration) || decl.asKind(SyntaxKind.ArrowFunction);
+                if (functionDecl) {
+                    const params = functionDecl.getParameters();
+                    if (params.length > 0) {
+                        md += "### Parameters\n\n";
+                        md += "| Name | Type | Required |\n";
+                        md += "|------|------|----------|\n";
 
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    params.forEach((p: any) => {// ignore-any-check
-                        md += `| ${p.getName()} | \`${p.getType().getText()}\` | ${!p.isOptional()} |\n`;
-                    });
-                    md += "\n";
+                        params.forEach((p) => {
+                            md += `| ${p.getName()} | \`${p.getType().getText()}\` | ${!p.isOptional()} |\n`;
+                        });
+                        md += "\n";
+                    }
                 }
             }
 
@@ -115,11 +128,13 @@ function generateMarkdownForFile(sourceFile: any, relativePath: string): string 
                 md += "| Name | Type |\n";
                 md += "|------|------|\n";
 
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                decl.getProperties().forEach((p: any) => {// ignore-any-check
-                    md += `| ${p.getName()} | \`${p.getType().getText()}\` |\n`;
-                });
-                md += "\n";
+                const interfaceDecl = decl.asKind(SyntaxKind.InterfaceDeclaration);
+                if (interfaceDecl) {
+                    interfaceDecl.getProperties().forEach((p) => {
+                        md += `| ${p.getName()} | \`${p.getType().getText()}\` |\n`;
+                    });
+                    md += "\n";
+                }
             }
         });
     });

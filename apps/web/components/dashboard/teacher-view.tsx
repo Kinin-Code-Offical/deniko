@@ -17,7 +17,11 @@ import { format } from "date-fns";
 import { tr, enUS } from "date-fns/locale";
 import Link from "next/link";
 import type { Dictionary } from "@/types/i18n";
-import { type Lesson, type StudentProfile, type User } from "@deniko/db";
+import {
+  type Lesson,
+  type StudentProfile,
+  type User,
+} from "@/types/api-models";
 import { cn } from "@/lib/utils";
 
 type LessonWithStudents = Lesson & {

@@ -1,7 +1,5 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { getDictionary } from "@/lib/get-dictionary";
-import { formatPhoneNumber } from "@/lib/utils";
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import type { Locale } from "@/i18n-config";
@@ -16,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { getStudent, type StudentDetailResponse } from "@/lib/api/students";
+import { type Lesson, type Payment } from "@/types/api-models";
 
 interface StudentPageProps {
   params: Promise<{
@@ -24,6 +24,13 @@ interface StudentPageProps {
   }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
+
+type StudentView = StudentDetailResponse & {
+  student: StudentDetailResponse["student"] & {
+    lessons: Lesson[];
+    payments: Payment[];
+  };
+};
 
 export async function generateMetadata({
   params,
@@ -34,27 +41,18 @@ export async function generateMetadata({
   const dictionary = await getDictionary(lang);
 
   try {
-    const student = await db.studentProfile.findUnique({
-      where: { id: studentId },
-      select: {
-        tempFirstName: true,
-        tempLastName: true,
-        isClaimed: true,
-        user: {
-          select: { name: true },
-        },
-      },
-    });
+    const student = await getStudent(studentId);
 
     let studentName = dictionary.auth.register.student;
     if (student) {
-      if (student.isClaimed && student.user?.name) {
-        studentName = student.user.name;
+      if (student.customName) {
+        studentName = student.customName;
       } else {
-        const tempName = `${student.tempFirstName || ""} ${
-          student.tempLastName || ""
-        }`.trim();
-        if (tempName) studentName = tempName;
+        const s = student.student;
+        const u = s.user;
+        const first = s.tempFirstName || u?.firstName || u?.name || "";
+        const last = s.tempLastName || u?.lastName || "";
+        studentName = `${first} ${last}`.trim();
       }
     }
 
@@ -115,49 +113,27 @@ export default async function StudentPage({
     redirect(`/${lang}/login`);
   }
 
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    include: { teacherProfile: true },
-  });
-
-  if (!user?.teacherProfile) {
-    redirect(`/${lang}/onboarding`);
-  }
-
-  // Fetch Student Relation
-  let relation;
+  let studentData;
   try {
-    relation = await db.studentTeacherRelation.findUnique({
-      where: {
-        teacherId_studentId: {
-          teacherId: user.teacherProfile.id,
-          studentId: studentId,
-        },
-      },
-      include: {
-        student: {
-          include: {
-            user: true,
-            classrooms: true,
-            lessons: {
-              orderBy: { startTime: "desc" },
-              take: 5,
-            },
-            payments: {
-              orderBy: { date: "desc" },
-              take: 5,
-            },
-          },
-        },
-      },
-    });
-  } catch {
+    studentData = await getStudent(studentId);
+  } catch (error) {
+    console.error("Failed to fetch student:", error);
     notFound();
   }
 
-  if (!relation || relation.status === "ARCHIVED") {
+  if (!studentData) {
     notFound();
   }
+
+  // Construct the relation object expected by components
+  const relation: StudentView = {
+    ...studentData,
+    student: {
+      ...studentData.student,
+      lessons: [],
+      payments: [],
+    },
+  };
 
   const activeTab = typeof tab === "string" ? tab : "overview";
 
@@ -177,7 +153,11 @@ export default async function StudentPage({
         </Button>
       </div>
 
-      <StudentHeader relation={relation} dictionary={dictionary} lang={lang} />
+      <StudentHeader
+        relation={relation}
+        dictionary={dictionary}
+        lang={lang as Locale}
+      />
 
       <Tabs defaultValue={activeTab} className="w-full">
         <TabsList className="grid h-auto w-full grid-cols-3 lg:grid-cols-7">
@@ -204,163 +184,151 @@ export default async function StudentPage({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-6">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {/* Student Info Card */}
-            <Card className="col-span-2">
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card>
               <CardHeader>
                 <CardTitle>
-                  {dictionary.student_detail.overview.general_info}
+                  {dictionary.student_detail.overview.upcoming_lessons}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview.student_no}
+              <CardContent>
+                {relation.student.lessons.length === 0 ? (
+                  <p className="text-muted-foreground text-sm">
+                    {dictionary.student_detail.overview.no_upcoming_lessons}
                   </p>
-                  <p>{relation.student.studentNo || "-"}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview.grade}
-                  </p>
-                  <p>{relation.student.gradeLevel || "-"}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview.phone}
-                  </p>
-                  <p>
-                    {formatPhoneNumber(
-                      relation.student.isClaimed
-                        ? relation.student.user?.phoneNumber
-                        : relation.student.tempPhone
-                    )}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview.email}
-                  </p>
-                  <p>
-                    {relation.student.isClaimed
-                      ? relation.student.user?.email
-                      : relation.student.tempEmail || "-"}
-                  </p>
-                </div>
-
-                <div className="mt-2 space-y-1 border-t pt-4 sm:col-span-2">
-                  <h4 className="font-semibold">
-                    {dictionary.student_detail.overview.parent_info}
-                  </h4>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview.parent_name}
-                  </p>
-                  <p>{relation.student.parentName || "-"}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview.parent_phone}
-                  </p>
-                  <p>{formatPhoneNumber(relation.student.parentPhone)}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-muted-foreground text-sm font-medium">
-                    {dictionary.student_detail.overview.parent_email}
-                  </p>
-                  <p>{relation.student.parentEmail || "-"}</p>
-                </div>
+                ) : (
+                  <div className="space-y-4">
+                    {relation.student.lessons.map((lesson) => (
+                      <div
+                        key={lesson.id}
+                        className="flex items-center justify-between"
+                      >
+                        <div>
+                          <p className="font-medium">{lesson.title}</p>
+                          <p className="text-muted-foreground text-sm">
+                            {new Date(lesson.startTime).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <Badge>{lesson.status}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
-            {/* Private Notes Card */}
+
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  {dictionary.student_detail.overview.recent_payments}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {relation.student.payments.length === 0 ? (
+                  <p className="text-muted-foreground text-sm">
+                    {dictionary.student_detail.overview.no_recent_payments}
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {relation.student.payments.map((payment) => (
+                      <div
+                        key={payment.id}
+                        className="flex items-center justify-between"
+                      >
+                        <div>
+                          <p className="font-medium">
+                            {new Intl.NumberFormat(lang, {
+                              style: "currency",
+                              currency: "TRY",
+                            }).format(Number(payment.amount))}
+                          </p>
+                          <p className="text-muted-foreground text-sm">
+                            {new Date(payment.date).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <Badge variant="default">{payment.type}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             <StudentNotes
               studentId={studentId}
               initialNotes={relation.privateNotes}
               dictionary={dictionary}
               lang={lang}
             />
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {dictionary.student_detail.overview.total_lessons}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {relation.student.lessons.length}
-                </div>
-              </CardContent>
-            </Card>
-            {/* Add more stats here */}
           </div>
         </TabsContent>
 
-        <TabsContent value="lessons" className="mt-6">
+        <TabsContent value="lessons">
           <Card>
             <CardHeader>
-              <CardTitle>{dictionary.student_detail.lessons.title}</CardTitle>
+              <CardTitle>{dictionary.student_detail.tabs.lessons}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground text-sm">
-                {dictionary.student_detail.lessons.empty}
+              <p className="text-muted-foreground">
+                Lessons content coming soon...
               </p>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="homework" className="mt-6">
+        <TabsContent value="homework">
           <Card>
             <CardHeader>
               <CardTitle>{dictionary.student_detail.tabs.homework}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground text-sm">
-                {dictionary.student_detail.homework.no_homework}
+              <p className="text-muted-foreground">
+                Homework content coming soon...
               </p>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="exams" className="mt-6">
-          <StudentExamsTab dictionary={dictionary} lang={lang} />
+        <TabsContent value="exams">
+          <StudentExamsTab lang={lang} dictionary={dictionary} />
         </TabsContent>
 
-        <TabsContent value="attendance" className="mt-6">
-          <StudentAttendanceTab dictionary={dictionary} lang={lang} />
+        <TabsContent value="attendance">
+          <StudentAttendanceTab lang={lang} dictionary={dictionary} />
         </TabsContent>
 
-        <TabsContent value="classes" className="mt-6">
+        <TabsContent value="classes">
           <Card>
             <CardHeader>
               <CardTitle>{dictionary.student_detail.tabs.classes}</CardTitle>
             </CardHeader>
             <CardContent>
-              {relation.student.classrooms.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
+              {relation.student.classrooms.length === 0 ? (
+                <p className="text-muted-foreground">
+                  {dictionary.student_detail.classes.no_classes}
+                </p>
+              ) : (
+                <div className="grid gap-4 md:grid-cols-2">
                   {relation.student.classrooms.map((c) => (
-                    <Badge key={c.id} variant="secondary">
-                      {c.name}
-                    </Badge>
+                    <Card key={c.id}>
+                      <CardHeader>
+                        <CardTitle className="text-base">{c.name}</CardTitle>
+                      </CardHeader>
+                    </Card>
                   ))}
                 </div>
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  {dictionary.common.empty_placeholder}
-                </p>
               )}
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="settings" className="mt-6">
+        <TabsContent value="settings">
           <StudentSettingsTab
             relation={relation}
-            studentId={studentId}
             dictionary={dictionary}
-            lang={lang}
+            lang={lang as Locale}
+            studentId={studentId}
           />
         </TabsContent>
       </Tabs>

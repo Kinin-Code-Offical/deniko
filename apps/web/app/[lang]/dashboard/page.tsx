@@ -1,10 +1,10 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import { internalApiFetch } from "@/lib/internal-api";
 
 const TeacherView = dynamic(
   () =>
@@ -94,206 +94,40 @@ export default async function DashboardPage({
     redirect(`/${lang}/login`);
   }
 
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    include: {
-      teacherProfile: true,
-      studentProfile: true,
-    },
+  const res = await internalApiFetch("/dashboard", {
+    headers: { "x-user-id": session.user.id },
   });
 
-  if (!user) {
+  if (!res.ok) {
     redirect(`/${lang}/login`);
   }
 
-  // Role Dispatch
-  if (user.role === "TEACHER") {
-    if (!user.teacherProfile) {
-      // Data inconsistency: Teacher role but no profile
-      redirect(`/${lang}/onboarding`);
-    }
+  const data = await res.json();
 
-    const activeStudentsCount = await db.studentTeacherRelation.count({
-      where: {
-        teacherId: user.teacherProfile.id,
-        status: "ACTIVE",
-      },
-    });
+  if (data.needsOnboarding) {
+    redirect(`/${lang}/onboarding`);
+  }
 
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-
-    const todayLessonsCount = await db.lesson.count({
-      where: {
-        teacherId: user.teacherProfile.id,
-        startTime: {
-          gte: startOfDay,
-          lte: endOfDay,
-        },
-        status: {
-          not: "CANCELLED",
-        },
-      },
-    });
-
-    const pendingHomeworkCount = await db.homeworkTracking.count({
-      where: {
-        homework: {
-          lesson: {
-            teacherId: user.teacherProfile.id,
-          },
-        },
-        status: "SUBMITTED",
-      },
-    });
-
-    const todaySchedule = await db.lesson.findMany({
-      where: {
-        teacherId: user.teacherProfile.id,
-        startTime: {
-          gte: startOfDay,
-          lte: endOfDay,
-        },
-        status: {
-          not: "CANCELLED",
-        },
-      },
-      take: 5,
-      orderBy: {
-        startTime: "asc",
-      },
-      include: {
-        students: {
-          include: {
-            user: true,
-          },
-        },
-        classroom: true,
-      },
-    });
-
+  if (data.role === "TEACHER") {
     return (
       <TeacherView
         dictionary={dictionary}
         lang={lang}
-        stats={{
-          activeStudentsCount,
-          todayLessonsCount,
-          pendingHomeworkCount,
-        }}
-        schedule={todaySchedule}
+        stats={data.stats}
+        schedule={data.schedule}
       />
     );
   }
 
-  if (user.role === "STUDENT") {
-    if (!user.studentProfile) {
-      // Data inconsistency: Student role but no profile
-      redirect(`/${lang}/onboarding`);
-    }
-
-    const completedLessons = await db.lesson.count({
-      where: {
-        students: {
-          some: {
-            id: user.studentProfile.id,
-          },
-        },
-        status: "COMPLETED",
-      },
-    });
-
-    const homeworkCount = await db.homeworkTracking.count({
-      where: {
-        studentId: user.studentProfile.id,
-        status: {
-          not: "COMPLETED",
-        },
-      },
-    });
-
-    const nextLesson = await db.lesson.findFirst({
-      where: {
-        students: {
-          some: {
-            id: user.studentProfile.id,
-          },
-        },
-        startTime: {
-          gt: new Date(),
-        },
-        status: {
-          not: "CANCELLED",
-        },
-      },
-      orderBy: {
-        startTime: "asc",
-      },
-      include: {
-        teacher: {
-          include: {
-            user: true,
-          },
-        },
-        classroom: true,
-      },
-    });
-
-    const upcomingLessons = await db.lesson.findMany({
-      where: {
-        students: {
-          some: {
-            id: user.studentProfile.id,
-          },
-        },
-        startTime: {
-          gte: new Date(),
-        },
-        status: {
-          not: "CANCELLED",
-        },
-      },
-      take: 5,
-      orderBy: {
-        startTime: "asc",
-      },
-      include: {
-        teacher: {
-          include: {
-            user: true,
-          },
-        },
-        classroom: true,
-      },
-    });
-
-    const pendingHomeworks = await db.homeworkTracking.findMany({
-      where: {
-        studentId: user.studentProfile.id,
-        status: "PENDING",
-      },
-      include: {
-        homework: {
-          include: { lesson: true },
-        },
-      },
-      orderBy: { homework: { dueDate: "asc" } },
-      take: 5,
-    });
-
+  if (data.role === "STUDENT") {
     return (
       <StudentView
         dictionary={dictionary}
         lang={lang}
-        stats={{
-          completedLessons,
-          homeworkCount,
-        }}
-        nextLesson={nextLesson}
-        upcomingLessons={upcomingLessons}
-        pendingHomeworks={pendingHomeworks}
+        stats={data.stats}
+        nextLesson={data.nextLesson}
+        upcomingLessons={data.upcomingLessons}
+        pendingHomeworks={data.pendingHomeworks}
       />
     );
   }

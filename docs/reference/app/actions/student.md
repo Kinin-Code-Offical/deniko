@@ -203,4 +203,3 @@ export async function updateStudentSettings(
 |------|------|----------|
 | studentId | `string` | true |
 | formData | `FormData` | true |
-

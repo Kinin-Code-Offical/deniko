@@ -18,10 +18,15 @@ import {
   type StudentTeacherRelation,
   type StudentProfile,
   type User,
-} from "@deniko/db";
+} from "@/types/api-models";
 
 type RelationWithStudent = StudentTeacherRelation & {
-  student: StudentProfile & { user: User | null };
+  student: StudentProfile & {
+    user: Pick<
+      User,
+      "id" | "name" | "firstName" | "lastName" | "email" | "image"
+    > | null;
+  };
 };
 
 interface StudentHeaderProps {

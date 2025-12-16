@@ -27,7 +27,7 @@ import {
   type StudentProfile,
   type StudentTeacherRelation,
   type User,
-} from "@deniko/db";
+} from "@/types/api-models";
 
 type StudentWithRelations = StudentProfile & {
   teacherRelations: (StudentTeacherRelation & {
@@ -93,10 +93,9 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
     startTransition(async () => {
       const result = await updateStudent({
         studentId: id,
-        firstName: formData.name,
-        lastName: formData.surname,
-        phone: formData.phoneNumber,
-        avatarUrl: formData.avatarUrl,
+        name: formData.name,
+        surname: formData.surname,
+        tempPhone: formData.phoneNumber,
       });
 
       if (result.success) {
@@ -116,7 +115,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
     startTransition(async () => {
       const result = await unlinkStudent(id);
       if (result.success) {
-        toast.success(result.message);
+        toast.success(dictionary.student_detail.profile.update_success);
         router.push("/dashboard/students");
       } else {
         toast.error(result.error);
@@ -130,7 +129,7 @@ export function StudentEditForm({ student, dictionary }: StudentEditFormProps) {
     startTransition(async () => {
       const result = await deleteStudent(id);
       if (result.success) {
-        toast.success(result.message);
+        toast.success(dictionary.student_detail.profile.update_success);
         router.push("/dashboard/students");
       } else {
         toast.error(result.error);

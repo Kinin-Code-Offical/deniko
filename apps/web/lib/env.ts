@@ -5,9 +5,6 @@ const envSchema = z.object({
     .enum(["development", "test", "production"])
     .default("development"),
   NEXT_RUNTIME: z.enum(["edge", "nodejs"]).optional(),
-  DATABASE_URL: z.string().url({ message: "DATABASE_URL must be a valid URL" }),
-  INSTANCE_CONNECTION_NAME: z.string().optional(),
-  DIRECT_URL: z.string().url().optional(),
   NEXTAUTH_URL: z.string().url({ message: "NEXTAUTH_URL must be a valid URL" }),
 
   // Auth
@@ -32,7 +29,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_GA_ID: z.string().optional(),
 
   // Internal
-  INTERNAL_API_BASE_URL: z.string().url().default("http://localhost:4000"),
+  INTERNAL_API_BASE_URL: z.string().url().default("http://127.0.0.1:4000"),
 });
 
 

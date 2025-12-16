@@ -1,11 +1,8 @@
-import { createDb } from '@deniko/db';
 import { createStorage } from '@deniko/storage';
 import { env } from './env';
+import { db } from './db';
 
-export const prisma = createDb({
-    isProduction: env.NODE_ENV === 'production',
-    datasourceUrl: env.DATABASE_URL
-});
+export const prisma = db;
 
 
 export const storage = createStorage({

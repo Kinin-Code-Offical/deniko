@@ -20,6 +20,7 @@ import { Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ResendAlert } from "@/components/auth/resend-alert";
+import { useRouter } from "next/navigation";
 
 import type { Dictionary } from "@/types/i18n";
 
@@ -29,6 +30,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ dictionary, lang }: LoginFormProps) {
+  const router = useRouter();
   const d = dictionary.auth.login;
   const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
@@ -57,6 +59,9 @@ export function LoginForm({ dictionary, lang }: LoginFormProps) {
             setUnverifiedEmail(result.email);
           }
           toast.error(result.message);
+        } else {
+          router.refresh();
+          router.replace(`/${lang}/dashboard`);
         }
       } catch {
         // Verify if it's a redirect error (usually has a DIGEST property or just ignore)

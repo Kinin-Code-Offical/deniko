@@ -2,11 +2,16 @@ import "server-only";
 import { GoogleAuth } from "google-auth-library";
 import { env } from "@/lib/env";
 import { v4 as uuidv4 } from "uuid";
+import logger from "@/lib/logger";
 
 const BASE_URL = env.INTERNAL_API_BASE_URL;
 const auth = new GoogleAuth();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let client: any;
+
+interface AuthClient {
+    getRequestHeaders(): Promise<Record<string, string>>;
+}
+
+let client: AuthClient | undefined;
 
 async function getAuthHeaders() {
     if (env.NODE_ENV !== "production") {
@@ -15,19 +20,22 @@ async function getAuthHeaders() {
 
     try {
         if (!client) {
-            client = await auth.getIdTokenClient(BASE_URL);
+            client = await auth.getIdTokenClient(BASE_URL) as unknown as AuthClient;
         }
-        const headers = await client.getRequestHeaders();
-        return headers;
+        return await client.getRequestHeaders();
     } catch (error) {
-        console.error("Failed to get ID token for internal API", error);
-        // Fallback or throw? For now, let's return empty and let the API decide (it might be public or protected by other means in some setups, but strictly it should fail if auth is required)
-        // However, if we are in production but maybe running locally against prod? No, NODE_ENV=production implies real prod.
+        logger.error("Failed to get ID token for internal API", { error });
         return {};
     }
 }
 
-export async function internalApiFetch(path: string, init?: RequestInit) {
+interface InternalApiOptions extends RequestInit {
+    timeout?: number;
+    retries?: number;
+}
+
+export async function internalApiFetch(path: string, options: InternalApiOptions = {}) {
+    const { timeout = 5000, retries = 1, ...init } = options;
     const requestId = uuidv4();
     const authHeaders = await getAuthHeaders();
 
@@ -41,8 +49,47 @@ export async function internalApiFetch(path: string, init?: RequestInit) {
 
     const url = `${BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 
-    return fetch(url, {
-        ...init,
-        headers,
-    });
+    let lastError: unknown;
+
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+
+            const response = await fetch(url, {
+                ...init,
+                headers,
+                signal: controller.signal,
+            });
+
+            clearTimeout(id);
+
+            if (!response.ok) {
+                // Log warning for non-2xx responses but don't retry unless it's a 5xx
+                logger.warn(`Internal API Error: ${response.status} ${response.statusText}`, {
+                    url,
+                    requestId,
+                    status: response.status
+                });
+            }
+
+            return response;
+        } catch (error) {
+            lastError = error;
+            const isRetryable = attempt < retries && (init.method === "GET" || !init.method);
+
+            logger.warn(`Internal API Fetch Failed (Attempt ${attempt + 1}/${retries + 1})`, {
+                url,
+                requestId,
+                error: error instanceof Error ? error.message : String(error)
+            });
+
+            if (!isRetryable) break;
+
+            // Exponential backoff
+            await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 100));
+        }
+    }
+
+    throw lastError;
 }

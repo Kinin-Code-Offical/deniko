@@ -1,10 +1,11 @@
 # Project Roadmap
 
-## Phase 1: Foundation & Security (Now)
+## Phase 1: Foundation & Security (Current Status)
 
-- [x] **Authentication**: NextAuth v5 setup with Google & Credentials.
-- [x] **Database**: Prisma schema design and migration workflow.
-- [x] **Storage**: GCS integration with Signed URLs.
+- [x] **Authentication**: NextAuth v5 setup with Google & Credentials (Argon2).
+- [x] **Database**: Prisma v7 upgrade & Schema design.
+- [x] **Architecture**: Monorepo split (Web/API) & Internal API implementation.
+- [x] **Storage**: GCS integration.
 - [ ] **Hardening**: Implement full Rate Limiting on all mutation endpoints.
 - [ ] **Testing**: Increase unit test coverage for `lib/` utilities to >80%.
 

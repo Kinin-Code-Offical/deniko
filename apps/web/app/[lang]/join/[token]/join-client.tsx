@@ -32,7 +32,7 @@ import ConflictResolutionModal, {
   type SelectionSource,
 } from "@/components/join/conflict-resolution-modal";
 import type { Dictionary } from "@/types/i18n";
-import type { StudentProfile, User } from "@deniko/db";
+import type { StudentProfile, User } from "@/types/api-models";
 
 const CONFLICT_KEYS = {
   STUDENT_NO: "student_no",

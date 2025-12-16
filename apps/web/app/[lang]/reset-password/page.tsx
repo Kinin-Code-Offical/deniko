@@ -7,8 +7,8 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import Link from "next/link";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
 import { Button } from "@/components/ui/button";
+import { internalApiFetch } from "@/lib/internal-api";
 
 export async function generateMetadata({
   params,
@@ -58,11 +58,11 @@ export default async function ResetPasswordPage({
   }
 
   // Server-side token validation
-  const existingToken = await db.passwordResetToken.findUnique({
-    where: { token },
-  });
-
-  const isInvalid = !existingToken || new Date() > existingToken.expires;
+  const res = await internalApiFetch(
+    `/auth/reset-password/validate?token=${token}`
+  );
+  const data = res.ok ? await res.json() : { valid: false };
+  const isInvalid = !data.valid;
 
   if (isInvalid) {
     return (
@@ -181,7 +181,7 @@ export default async function ResetPasswordPage({
         </div>
 
         <div className="flex flex-1 items-center justify-center p-6 md:p-12">
-          <div className="w-full max-w-[400px] rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:border-none md:bg-transparent md:p-0 md:shadow-none dark:border-slate-800 dark:bg-slate-900 md:dark:bg-transparent">
+          <div className="w-full max-w-100 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:border-none md:bg-transparent md:p-0 md:shadow-none dark:border-slate-800 dark:bg-slate-900 md:dark:bg-transparent">
             <ResetPasswordForm
               dictionary={dictionary}
               lang={lang}

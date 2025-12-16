@@ -9,7 +9,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
 import { logout } from "@/app/actions/auth";
 
 export async function generateMetadata({
@@ -44,6 +43,10 @@ export async function generateMetadata({
   };
 }
 
+import { internalApiFetch } from "@/lib/internal-api";
+
+// ...
+
 export default async function RegisterPage({
   params,
 }: {
@@ -53,9 +56,10 @@ export default async function RegisterPage({
   const session = await auth();
 
   if (session?.user) {
-    const user = await db.user.findUnique({
-      where: { id: session.user.id },
+    const res = await internalApiFetch("/settings", {
+      headers: { "x-user-id": session.user.id || "" },
     });
+    const user = res.ok ? await res.json() : null;
 
     if (user && user.isActive !== false) {
       if (user.role) {

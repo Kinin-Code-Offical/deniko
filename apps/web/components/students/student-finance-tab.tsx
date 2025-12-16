@@ -16,14 +16,13 @@ import { Plus, ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import { format } from "date-fns";
 import { tr, enUS } from "date-fns/locale";
 import type { Dictionary } from "@/types/i18n";
-import { type PaymentType, Prisma } from "@deniko/db";
 
 interface Transaction {
   id: string;
   date: Date;
-  type: PaymentType | "LESSON_FEE";
+  type: string;
   description: string;
-  amount: Prisma.Decimal;
+  amount: number | string;
 }
 
 interface StudentFinanceTabProps {

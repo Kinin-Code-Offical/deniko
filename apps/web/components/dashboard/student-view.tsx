@@ -23,7 +23,7 @@ import {
   type User,
   type HomeworkTracking,
   type TeacherProfile,
-} from "@deniko/db";
+} from "@/types/api-models";
 import { cn } from "@/lib/utils";
 
 type LessonWithDetails = Lesson & {

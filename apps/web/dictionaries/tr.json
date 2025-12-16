@@ -1000,6 +1000,10 @@
       "unknown_student": "Bilinmeyen Öğrenci"
     },
     "overview": {
+      "upcoming_lessons": "Yaklaşan Dersler",
+      "no_upcoming_lessons": "Yaklaşan ders bulunmuyor.",
+      "recent_payments": "Son Ödemeler",
+      "no_recent_payments": "Son ödeme bulunmuyor.",
       "general_info": "Genel Bilgiler",
       "student_no": "Öğrenci No",
       "grade": "Sınıf",
@@ -1013,6 +1017,9 @@
       "private_notes_placeholder": "Bu öğrenci hakkında özel notlar ekleyin...",
       "no_notes": "Henüz not eklenmemiş.",
       "total_lessons": "Toplam Ders"
+    },
+    "classes": {
+      "no_classes": "Sınıf bulunamadı."
     },
     "lessons": {
       "title": "Ders Geçmişi",

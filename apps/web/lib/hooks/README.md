@@ -13,7 +13,7 @@ Belirli bir süre sonra bir fonksiyonu çalıştıran hook. `setTimeout`'un Reac
 Metin kopyalama işlevini yönetir.
 
 - **Dönüş**: `[copiedText, copyFn]`
-- **Özellik**: Kopyalama işleminden sonra belirli bir süre "kopyalandı" durumunu tutabilir.
+- **Özellik**: Kopyalama işleminden sonra belirli bir zaman "kopyalandı" durumunu tutabilir.
 
 ### `useUserTiming.ts`
 

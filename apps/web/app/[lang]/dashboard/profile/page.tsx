@@ -1,11 +1,11 @@
 import { auth } from "@/auth";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
-import { db } from "@/lib/db";
 import { ProfileSummaryCard } from "@/components/dashboard/profile/profile-summary-card";
 import { PrivacyPreferencesCard } from "@/components/dashboard/profile/privacy-preferences-card";
 import { ActivityStatsCard } from "@/components/dashboard/profile/activity-stats-card";
 import { NotificationsPermissionsCard } from "@/components/dashboard/profile/notifications-permissions-card";
+import { internalApiFetch } from "@/lib/internal-api";
 
 export default async function ProfilePage({
   params,
@@ -18,26 +18,18 @@ export default async function ProfilePage({
 
   if (!session?.user?.id) return null;
 
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    include: {
-      settings: true,
-      teacherProfile: {
-        include: {
-          _count: {
-            select: { lessons: true, studentRelations: true },
-          },
-        },
-      },
-      studentProfile: {
-        include: {
-          _count: {
-            select: { lessons: true },
-          },
-        },
-      },
-    },
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let user: any = null;
+  try {
+    const res = await internalApiFetch("/settings", {
+      headers: { "x-user-id": session.user.id },
+    });
+    if (res.ok) {
+      user = await res.json();
+    }
+  } catch (e) {
+    // ignore
+  }
 
   if (!user) return null;
 

@@ -30,8 +30,6 @@ COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=deps /app/patches ./patches
 
 # Build ENV
-ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
-ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 ENV NEXTAUTH_URL="http://localhost:3000"
 ENV AUTH_SECRET="dummy_secret_for_build"
 ENV AUTH_GOOGLE_ID="dummy_google_id"
@@ -56,7 +54,6 @@ ENV DISABLE_DB_FOR_SITEMAP="true"
 
 # Build
 WORKDIR /app/apps/web
-RUN pnpm exec prisma generate
 RUN pnpm run build
 
 # Runner

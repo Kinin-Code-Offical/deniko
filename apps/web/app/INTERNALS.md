@@ -6,7 +6,7 @@ We use a `[lang]` dynamic segment at the root of the app to handle localization.
 
 ## Data Fetching
 
-- **Server Components**: Fetch data directly using `lib/db.ts` or `lib/api-wrappers.ts`.
+- **Server Components**: Fetch data using `internalApiFetch` (communicates with `apps/api`). Direct DB access is NOT allowed.
 - **Client Components**: Should generally receive data via props or use Server Actions for mutations. Avoid `useEffect` for initial data load if possible.
 
 ## API Routes (`app/api`)

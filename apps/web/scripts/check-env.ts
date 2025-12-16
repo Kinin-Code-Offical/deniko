@@ -111,7 +111,6 @@ if (isMainModule) {
       return; // Config files often need process.env
     if (file.endsWith("vitest.config.ts")) return;
     if (file.endsWith("vitest.setup.ts")) return;
-    if (file.endsWith("prisma.config.ts")) return;
     if (file.endsWith("proxy.ts")) return;
     if (file.endsWith("auth.ts")) return; // Auth config often uses process.env directly or via lib, but let's check. Actually auth.ts should probably use env.ts too. Let's leave it for now and see if it fails.
 

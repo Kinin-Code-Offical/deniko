@@ -102,11 +102,22 @@ import {
   type StudentTeacherRelation,
   type StudentProfile,
   type User,
-} from "@deniko/db";
+} from "@/types/api-models";
 
 interface StudentSettingsTabProps {
   relation: StudentTeacherRelation & {
-    student: StudentProfile & { user: User | null };
+    student: StudentProfile & {
+      user: Pick<
+        User,
+        | "id"
+        | "name"
+        | "firstName"
+        | "lastName"
+        | "email"
+        | "image"
+        | "phoneNumber"
+      > | null;
+    };
   };
   studentId: string;
   dictionary: Dictionary;
@@ -175,7 +186,7 @@ export function StudentSettingsTab({
     startTransition(async () => {
       const result = await toggleInviteLink(studentId, checked);
       if (result.success) {
-        toast.success(result.message);
+        toast.success(dictionary.student_detail.settings.success);
         router.refresh();
       } else {
         toast.error(result.error);

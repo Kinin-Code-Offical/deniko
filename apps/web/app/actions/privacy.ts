@@ -1,12 +1,12 @@
 "use server";
 
 import { z } from "zod";
-import { db } from "@/lib/db";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import logger from "@/lib/logger";
+import { internalApiFetch } from "@/lib/internal-api";
 
 const privacySchema = z.object({
     profileVisibility: z.enum(["public", "private"]),
@@ -36,42 +36,30 @@ export async function updateProfilePrivacyAction(input: unknown, lang: string) {
         return { error: dictionary.server.errors.invalid_input };
     }
 
-    const {
-        profileVisibility,
-        showAvatar,
-        showEmail,
-        showPhone,
-        allowMessages,
-        showCourses,
-    } = result.data;
-
     try {
-        await db.userSettings.upsert({
-            where: { userId: session.user.id },
-            update: {
-                profileVisibility,
-                showAvatar,
-                showEmail,
-                showPhone,
-                allowMessages,
-                showCourses,
+        const res = await internalApiFetch("/privacy", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-user-id": session.user.id,
             },
-            create: {
-                userId: session.user.id,
-                profileVisibility,
-                showAvatar,
-                showEmail,
-                showPhone,
-                allowMessages,
-                showCourses,
-            },
+            body: JSON.stringify(result.data),
         });
 
-        revalidatePath("/[lang]/dashboard/settings", "page");
+        if (!res.ok) {
+            throw new Error("Failed to update privacy settings");
+        }
 
+        logger.info({
+            event: "privacy_settings_updated",
+            userId: session.user.id,
+            settings: result.data,
+        });
+
+        revalidatePath("/dashboard/settings");
         return { success: true };
     } catch (error) {
-        logger.error(error, "Failed to update privacy settings:");
+        logger.error({ event: "update_privacy_settings_error", error, userId: session.user.id });
         return { error: dictionary.server.errors.failed_update_profile };
     }
 }

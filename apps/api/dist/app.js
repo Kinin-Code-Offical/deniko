@@ -14,7 +14,6 @@ const buildApp = () => {
         isProduction: env_1.env.NODE_ENV === 'production'
     });
     const fastify = (0, fastify_1.default)({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         loggerInstance: logger
     });
     fastify.get('/health', async (request, reply) => {

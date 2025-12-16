@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
-import { db } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { internalApiFetch } from "@/lib/internal-api";
 
 export const dynamic = "force-dynamic";
 
@@ -40,26 +40,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Add public user profiles
   try {
-    if (!process.env.DISABLE_DB_FOR_SITEMAP) { // ignore-env-check
-      const users = await db.user.findMany({
-        where: {
-          settings: {
-            profileVisibility: "public",
-          },
-          username: { not: null },
-        },
-        select: {
-          username: true,
-          updatedAt: true,
-        },
-      });
+    const res = await internalApiFetch("/public/users");
+    if (res.ok) {
+      const users = await res.json() as { username: string; updatedAt: string }[];
 
       users.forEach((user) => {
         if (user.username) {
           locales.forEach((locale) => {
             sitemapEntries.push({
               url: `${baseUrl}/${locale}/users/${user.username}`,
-              lastModified: user.updatedAt,
+              lastModified: new Date(user.updatedAt),
               changeFrequency: "weekly",
               priority: 0.6,
             });
@@ -69,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch (error) {
     logger.warn({
-      event: "sitemap_db_error",
+      event: "sitemap_api_error",
       errorMessage: (error as Error).message,
     });
   }

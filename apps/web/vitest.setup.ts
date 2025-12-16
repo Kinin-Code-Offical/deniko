@@ -27,7 +27,6 @@ vi.mock("next-auth", () => ({
 }));
 
 // Mock environment variables for testing
-process.env.DATABASE_URL = "postgresql://user:password@localhost:5432/testdb";
 process.env.NEXTAUTH_URL = "http://localhost:3000";
 process.env.GCS_BUCKET_NAME = "test-bucket";
 process.env.GCS_PROJECT_ID = "test-project";
@@ -55,7 +54,7 @@ process.env.SMTP_SUPPORT_PASSWORD = "support-password";
 process.env.SMTP_SUPPORT_FROM = "support@example.com";
 
 global.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() { }
+  unobserve() { }
+  disconnect() { }
 };

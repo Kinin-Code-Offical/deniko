@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { InviteButton } from "./invite-button";
 import type { Dictionary } from "@/types/i18n";
-import { type StudentProfile, type User } from "@deniko/db";
+import { type StudentProfile, type User } from "@/types/api-models";
 
 type StudentWithUser = StudentProfile & {
   user: User | null;

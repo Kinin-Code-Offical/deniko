@@ -39,7 +39,7 @@ const privacySchema = z.object({
 
 type PrivacyFormValues = z.infer<typeof privacySchema>;
 
-import type { UserSettings } from "@deniko/db";
+import type { UserSettings } from "@/types/api-models";
 import type { Dictionary } from "@/types/i18n";
 
 interface PrivacyPreferencesCardProps {

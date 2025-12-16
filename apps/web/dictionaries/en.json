@@ -971,6 +971,25 @@
       "attendance": "Attendance",
       "classes": "Classes"
     },
+    "overview": {
+      "upcoming_lessons": "Upcoming Lessons",
+      "no_upcoming_lessons": "No upcoming lessons.",
+      "recent_payments": "Recent Payments",
+      "no_recent_payments": "No recent payments.",
+      "general_info": "General Information",
+      "student_no": "Student No",
+      "grade": "Grade",
+      "phone": "Phone",
+      "email": "Email",
+      "parent_info": "Parent Information",
+      "parent_name": "Parent Name",
+      "parent_phone": "Parent Phone",
+      "parent_email": "Parent Email",
+      "private_notes": "Private Notes",
+      "private_notes_placeholder": "Add private notes about this student...",
+      "no_notes": "No notes added yet.",
+      "total_lessons": "Total Lessons"
+    },
     "profile": {
       "title": "Edit Profile",
       "desc": "Update student's personal information and contact details.",
@@ -999,20 +1018,8 @@
       "link_copied": "Invite link copied",
       "unknown_student": "Unknown Student"
     },
-    "overview": {
-      "general_info": "General Information",
-      "student_no": "Student No",
-      "grade": "Grade",
-      "phone": "Phone",
-      "email": "Email",
-      "parent_info": "Parent Information",
-      "parent_name": "Parent Name",
-      "parent_phone": "Parent Phone",
-      "parent_email": "Parent Email",
-      "private_notes": "Private Notes",
-      "private_notes_placeholder": "Add private notes about this student...",
-      "no_notes": "No notes added yet.",
-      "total_lessons": "Total Lessons"
+    "classes": {
+      "no_classes": "No classes found."
     },
     "lessons": {
       "title": "Lesson History",

@@ -1,20 +1,13 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
-import { Prisma } from "@deniko/db";
+import { internalApiFetch } from "@/lib/internal-api";
 import { z } from "zod";
-import { hashPassword, verifyPassword } from "@/lib/password";
-import { randomBytes } from "crypto";
-import { sendVerificationEmail, sendPasswordResetEmail } from "@/lib/email";
 import { AuthError } from "next-auth";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import logger from "@/lib/logger";
-
-import { generateUniqueUsername } from "@/lib/username";
+import { sendVerificationEmail, sendPasswordResetEmail } from "@/lib/email";
 
 /**
  * Logs out the current user and redirects to the login page.
@@ -80,8 +73,6 @@ export async function login(formData: LoginFormData, lang: string = "tr") {
             message: dict.auth.login.validation.invalid_credentials,
           };
         default:
-          // Check if the error message contains "Email not verified" or rate limit codes
-
           const cause = error.cause as
             | { err?: { message?: string; code?: string }; code?: string }
             | undefined;
@@ -98,140 +89,52 @@ export async function login(formData: LoginFormData, lang: string = "tr") {
           }
 
           if (cause?.err?.message === "Email not verified") {
-            logger.info({ event: "login_blocked_unverified", email });
             return {
               success: false,
+              message: dict.auth.verification.unverified_title,
               error: "NOT_VERIFIED",
-              email: email,
-              message: dict.auth.verification.unverified_desc,
+              email: email // Return email so client can offer resend
             };
           }
-          return { success: false, message: dict.auth.register.errors.generic };
+
+          return {
+            success: false,
+            message: dict.server.errors.something_went_wrong,
+          };
       }
     }
     throw error;
   }
 
-  // If we reached here, login was successful!
-  // Delete the cooldown cookie
-  const cookieStore = await cookies();
-  cookieStore.delete("resend_cooldown");
-
-  redirect(`/${lang}/dashboard`);
-}
-
-/**
- * Resends the email verification code to the user.
- *
- * @param email - The user's email address.
- * @param lang - The current language locale.
- * @returns An object indicating success or failure.
- */
-export async function resendVerificationCode(
-  email: string,
-  lang: string = "tr"
-) {
-  const dict = await getDictionary(lang as Locale);
-  try {
-    const user = await db.user.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      return { success: false, message: dict.auth.verification.user_not_found };
-    }
-
-    if (user.emailVerified) {
-      return {
-        success: false,
-        message: dict.auth.verification.already_verified,
-      };
-    }
-
-    // Delete existing tokens
-    await db.verificationToken.deleteMany({
-      where: { identifier: email },
-    });
-
-    // Generate new token
-    const token = randomBytes(32).toString("hex");
-    const expires = new Date(new Date().getTime() + 24 * 60 * 60 * 1000); // 24 hours
-
-    await db.verificationToken.create({
-      data: {
-        identifier: email,
-        token,
-        expires,
-      },
-    });
-
-    // Send Email
-    await sendVerificationEmail(email, token, lang as Locale);
-
-    return { success: true, message: dict.auth.verification.success };
-  } catch (error) {
-    logger.error({
-      event: "resend_verification_code_error",
-      error: (error as Error).message,
-    });
-    return { success: false, message: dict.auth.register.errors.generic };
-  }
+  return { success: true };
 }
 
 interface RegisterFormData {
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string;
-  role: "TEACHER" | "STUDENT";
   password: string;
-  confirmPassword: string;
-  terms: boolean;
+  role: "TEACHER" | "STUDENT";
+  phoneNumber?: string;
   marketingConsent?: boolean;
-  preferredTimezone?: string;
-  preferredCountry?: string;
+  browserTimezone?: string;
+  browserCountry?: string;
 }
 
-/**
- * Registers a new user.
- *
- * @param formData - The registration form data.
- * @param lang - The current language locale.
- * @returns An object indicating success or failure.
- */
-export async function registerUser(
-  formData: RegisterFormData,
-  lang: string = "tr"
-) {
+export async function register(formData: RegisterFormData, lang: string = "tr") {
   const dict = await getDictionary(lang as Locale);
-  const d = dict.auth.register.validation;
 
-  const registerSchema = z
-    .object({
-      firstName: z.string().min(2, d.first_name_min),
-      lastName: z.string().min(2, d.last_name_min),
-      email: z.string().email(d.email_invalid),
-      phoneNumber: z.string().regex(/^\+\d{10,15}$/, d.phone_min),
-      role: z.enum(["TEACHER", "STUDENT"]),
-      password: z
-        .string()
-        .min(8, d.password_min)
-        .regex(/[A-Z]/, d.password_regex)
-        .regex(/[a-z]/, d.password_regex)
-        .regex(/[0-9]/, d.password_regex)
-        .regex(/[^A-Za-z0-9]/, d.password_regex),
-      confirmPassword: z.string(),
-      terms: z.boolean().refine((val) => val === true, {
-        message: dict.legal.validation_terms,
-      }),
-      marketingConsent: z.boolean().optional(),
-      preferredTimezone: z.string().optional(),
-      preferredCountry: z.string().optional(),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: d.password_mismatch,
-      path: ["confirmPassword"],
-    });
+  const registerSchema = z.object({
+    firstName: z.string().min(2, dict.auth.register.validation.first_name_min),
+    lastName: z.string().min(2, dict.auth.register.validation.last_name_min),
+    email: z.string().email(dict.auth.register.validation.email_invalid),
+    password: z.string().min(8, dict.auth.register.validation.password_min),
+    role: z.enum(["TEACHER", "STUDENT"]),
+    phoneNumber: z.string().optional(),
+    marketingConsent: z.boolean().optional(),
+    browserTimezone: z.string().optional(),
+    browserCountry: z.string().optional(),
+  });
 
   const validatedFields = registerSchema.safeParse(formData);
 
@@ -240,33 +143,18 @@ export async function registerUser(
   }
 
   const {
-    email,
-    password,
     firstName,
     lastName,
+    email,
+    password,
     role,
     phoneNumber,
     marketingConsent,
-    preferredTimezone: browserTimezone,
-    preferredCountry: browserCountry,
+    browserTimezone,
+    browserCountry,
   } = validatedFields.data;
 
   try {
-    // 1. Check if user exists
-    const existingUser = await db.user.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
-      return { success: false, message: dict.auth.register.errors.user_exists };
-    }
-
-    // 2. Hash password
-    const hashedPassword = await hashPassword(password);
-
-    // 3. Generate Username
-    const username = await generateUniqueUsername(firstName, lastName);
-
     // Determine preferences based on browser data or fallback to lang
     let preferredCountry = browserCountry || "US";
     let preferredTimezone = browserTimezone || "UTC";
@@ -278,390 +166,196 @@ export async function registerUser(
       preferredTimezone = "Europe/Istanbul";
     }
 
-    // 4. Create User & Profile
-    await db.$transaction(async (tx: Prisma.TransactionClient) => {
-      const user = await tx.user.create({
-        data: {
-          email,
-          username,
-          password: hashedPassword,
-          firstName,
-          lastName,
-          role,
-          phoneNumber,
-          name: `${firstName} ${lastName}`,
-          emailVerified: null,
-          isOnboardingCompleted: true,
-          isMarketingConsent: marketingConsent || false,
-          preferredCountry,
-          preferredTimezone,
-        },
-      });
+    const res = await internalApiFetch("/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        password,
+        role,
+        phoneNumber,
+        marketingConsent,
+        preferredCountry,
+        preferredTimezone,
+      }),
+    });
 
-      if (role === "TEACHER") {
-        await tx.teacherProfile.create({
-          data: {
-            userId: user.id,
-            branch: "Genel",
-          },
-        });
-      } else {
-        await tx.studentProfile.create({
-          data: {
-            userId: user.id,
-            isClaimed: true,
-          },
-        });
+    if (!res.ok) {
+      const errorData = await res.json() as { error?: string };
+      if (errorData.error === 'user_exists') {
+        return { success: false, message: dict.auth.register.errors.user_exists };
       }
-    });
+      throw new Error("Failed to register");
+    }
 
-    // 4. Generate Verification Token
-    const token = randomBytes(32).toString("hex");
-    const expires = new Date(new Date().getTime() + 24 * 60 * 60 * 1000); // 24 hours
+    const { token } = await res.json() as { token: string };
 
-    await db.verificationToken.create({
-      data: {
-        identifier: email,
-        token,
-        expires,
-      },
-    });
+    await sendVerificationEmail(email, token, lang as Locale);
 
-    // 5. Send Email
-    await sendVerificationEmail(email, token, lang as "tr" | "en");
+    logger.info({ event: "user_registered", email, role });
 
-    return { success: true, message: dict.auth.register.success_desc };
+    return {
+      success: true,
+      message: dict.auth.register.success_title,
+    };
   } catch (error) {
-    logger.error({ event: "register_user_error", error: (error as Error).message });
+    logger.error({ event: "register_error", error });
     return { success: false, message: dict.auth.register.errors.generic };
   }
 }
 
-/**
- * Verifies a user's email address using a token.
- *
- * @param token - The verification token.
- * @param lang - The current language locale.
- * @returns An object indicating success or failure.
- */
 export async function verifyEmail(token: string, lang: string = "tr") {
   const dict = await getDictionary(lang as Locale);
-  const d = dict.auth.verify_page.messages;
 
   try {
-    const verificationToken = await db.verificationToken.findUnique({
-      where: { token },
+    const res = await internalApiFetch("/auth/verify-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
     });
 
-    if (!verificationToken) {
-      return { success: false, message: d.invalid_token };
+    if (!res.ok) {
+      const errorData = await res.json() as { error?: string };
+      if (errorData.error === 'invalid_token') return { success: false, message: dict.auth.verify_page.messages.invalid_token, email: undefined };
+      if (errorData.error === 'token_expired') return { success: false, message: dict.auth.verify_page.messages.expired_token, email: undefined };
+      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.verify_page.messages.user_not_found, email: undefined };
+      throw new Error("Failed to verify email");
     }
 
-    const hasExpired = new Date(verificationToken.expires) < new Date();
-
-    if (hasExpired) {
-      return {
-        success: false,
-        message: d.expired_token,
-        email: verificationToken.identifier,
-      };
-    }
-
-    const existingUser = await db.user.findUnique({
-      where: { email: verificationToken.identifier },
-    });
-
-    if (!existingUser) {
-      return { success: false, message: d.user_not_found };
-    }
-
-    await db.user.update({
-      where: { id: existingUser.id },
-      data: {
-        emailVerified: new Date(),
-        email: existingUser.email, // Required for update, but doesn't change
-      },
-    });
-
-    await db.verificationToken.delete({
-      where: { token: verificationToken.token },
-    });
-
-    return { success: true, message: d.success };
+    return { success: true, message: dict.auth.verify_page.messages.success };
   } catch (error) {
-    logger.error({ event: "verify_email_error", error: (error as Error).message });
-    return { success: false, message: d.error };
+    logger.error({ event: "verify_email_error", error });
+    return {
+      success: false,
+      message: dict.auth.verify_page.messages.error,
+    };
   }
 }
 
-/**
- * Resends the verification email (alternative action).
- *
- * @param email - The user's email address.
- * @param lang - The current language locale.
- * @returns An object indicating success or failure.
- */
-export async function resendVerificationEmailAction(
-  email: string,
-  lang: string = "tr"
-) {
+export async function resendVerificationEmail(email: string, lang: string = "tr") {
   const dict = await getDictionary(lang as Locale);
-  const d = dict.auth.verification;
 
   try {
-    const existingUser = await db.user.findUnique({
-      where: { email },
+    const res = await internalApiFetch("/auth/resend-verification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
     });
 
-    if (!existingUser) {
-      return { success: false, message: d.user_not_found };
+    if (!res.ok) {
+      const errorData = await res.json() as { error?: string };
+      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.verification.user_not_found };
+      if (errorData.error === 'already_verified') return { success: false, message: dict.auth.verification.already_verified };
+      throw new Error("Failed to resend verification");
     }
 
-    if (existingUser.emailVerified) {
-      return { success: false, message: d.already_verified };
-    }
-
-    await db.verificationToken.deleteMany({
-      where: { identifier: email },
-    });
-
-    const token = randomBytes(32).toString("hex");
-    const expires = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-
-    await db.verificationToken.create({
-      data: {
-        identifier: email,
-        token,
-        expires,
-      },
-    });
+    const { token } = await res.json() as { token: string };
 
     await sendVerificationEmail(email, token, lang as Locale);
-    return { success: true, message: d.success };
+
+    return { success: true, message: dict.auth.verification.success };
   } catch (error) {
-    logger.error({
-      event: "resend_verification_email_error",
-      error: (error as Error).message,
-    });
-    return { success: false, message: d.error };
+    logger.error({ event: "resend_verification_error", error });
+    return {
+      success: false,
+      message: dict.auth.verification.error,
+    };
   }
 }
 
-/**
- * Initiates the password reset flow.
- *
- * @param email - The user's email address.
- * @param lang - The current language locale.
- * @returns An object indicating success (always true for security).
- */
 export async function forgotPassword(email: string, lang: string = "tr") {
   const dict = await getDictionary(lang as Locale);
 
   try {
-    const emailSchema = z.string().email();
-    const validatedEmail = emailSchema.safeParse(email);
+    const res = await internalApiFetch("/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
 
-    if (!validatedEmail.success) {
-      return {
-        success: false,
-        message: dict.auth.register.validation.email_invalid,
-      };
+    if (!res.ok) {
+      const errorData = await res.json() as { error?: string };
+      if (errorData.error === 'user_not_found') return { success: false, message: dict.server.errors.user_not_found };
+      throw new Error("Failed to request password reset");
     }
 
-    const user = await db.user.findUnique({
-      where: { email },
-    });
+    const { token } = await res.json() as { token: string };
 
-    // Security: Always return success to prevent email enumeration
-    if (!user) {
-      return { success: true, message: dict.auth.forgot_password.success };
-    }
-
-    // If user has no password (OAuth only), we can't reset it
-    if (!user.password) {
-      // Optional: Send an email saying "You use Google Login"
-      return { success: true, message: dict.auth.forgot_password.success };
-    }
-
-    // Delete existing tokens
-    await db.passwordResetToken.deleteMany({
-      where: { email },
-    });
-
-    // Generate new token
-    const token = randomBytes(32).toString("hex");
-    const expires = new Date(new Date().getTime() + 60 * 60 * 1000); // 1 hour
-
-    await db.passwordResetToken.create({
-      data: {
-        email,
-        token,
-        expires,
-      },
-    });
-
-    await sendPasswordResetEmail(email, token, lang);
-
-    logger.info({
-      event: "password_reset_token_created",
-      userId: user.id,
-      email,
-    });
+    await sendPasswordResetEmail(email, token, lang as Locale);
 
     return { success: true, message: dict.auth.forgot_password.success };
   } catch (error) {
-    logger.error({ event: "forgot_password_error", error: (error as Error).message });
-    return { success: false, message: dict.auth.register.errors.generic };
+    logger.error({ event: "forgot_password_error", error });
+    return {
+      success: false,
+      message: dict.server.errors.something_went_wrong,
+    };
   }
 }
 
-/**
- * Resets the user's password using a token.
- *
- * @param token - The reset token.
- * @param newPassword - The new password.
- * @param lang - The current language locale.
- * @returns An object indicating success or failure.
- */
 export async function resetPassword(
   token: string,
-  newPassword: string,
+  password: string,
   lang: string = "tr"
 ) {
   const dict = await getDictionary(lang as Locale);
-  const d = dict.auth.register.validation;
 
   try {
-    const passwordSchema = z
-      .string()
-      .min(8, d.password_min)
-      .regex(/[A-Z]/, d.password_regex)
-      .regex(/[a-z]/, d.password_regex)
-      .regex(/[0-9]/, d.password_regex)
-      .regex(/[^A-Za-z0-9]/, d.password_regex);
-
-    const validatedPassword = passwordSchema.safeParse(newPassword);
-
-    if (!validatedPassword.success) {
-      return {
-        success: false,
-        message: validatedPassword.error.issues[0].message,
-      };
-    }
-
-    const existingToken = await db.passwordResetToken.findUnique({
-      where: { token },
+    const res = await internalApiFetch("/auth/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, password }),
     });
 
-    if (!existingToken) {
-      return {
-        success: false,
-        message: dict.auth.reset_password.invalid_token,
-      };
+    if (!res.ok) {
+      const errorData = await res.json() as { error?: string };
+      if (errorData.error === 'invalid_token') return { success: false, message: dict.auth.reset_password.invalid_token };
+      if (errorData.error === 'token_expired') return { success: false, message: dict.auth.reset_password.expired_token };
+      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.reset_password.user_not_found };
+      if (errorData.error === 'same_password') return { success: false, message: dict.auth.reset_password.same_password };
+      throw new Error("Failed to reset password");
     }
-
-    const hasExpired = new Date() > existingToken.expires;
-    if (hasExpired) {
-      return {
-        success: false,
-        message: dict.auth.reset_password.expired_token,
-      };
-    }
-
-    const existingUser = await db.user.findUnique({
-      where: { email: existingToken.email },
-    });
-
-    if (!existingUser) {
-      return {
-        success: false,
-        message: dict.auth.reset_password.user_not_found,
-      };
-    }
-
-    // Check if new password is same as old password
-    if (existingUser.password) {
-      const isSamePassword = await verifyPassword(
-        newPassword,
-        existingUser.password
-      );
-      if (isSamePassword) {
-        return {
-          success: false,
-          message: dict.auth.reset_password.same_password,
-        };
-      }
-    }
-
-    const hashedPassword = await hashPassword(newPassword);
-
-    await db.user.update({
-      where: { id: existingUser.id },
-      data: { password: hashedPassword },
-    });
-
-    await db.passwordResetToken.delete({
-      where: { id: existingToken.id },
-    });
-
-    logger.info({
-      event: "password_reset_success",
-      userId: existingUser.id,
-    });
 
     return { success: true, message: dict.auth.reset_password.success };
   } catch (error) {
-    logger.error({ event: "reset_password_error", error: (error as Error).message });
-    return { success: false, message: dict.auth.register.errors.generic };
+    logger.error({ event: "reset_password_error", error });
+    return {
+      success: false,
+      message: dict.server.errors.something_went_wrong,
+    };
   }
 }
 
-export async function verifyEmailChangeAction(token: string, lang: string) {
+export async function verifyEmailChange(token: string, lang: string = "tr") {
   const dict = await getDictionary(lang as Locale);
+
   try {
-    const emailChangeRequest = await db.emailChangeRequest.findUnique({
-      where: { token },
+    const res = await internalApiFetch("/auth/verify-email-change", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
     });
 
-    if (!emailChangeRequest) {
-      return { error: dict.server.errors.invalid_token };
+    if (!res.ok) {
+      const errorData = await res.json() as { error?: string };
+      if (errorData.error === 'invalid_token') return { success: false, message: dict.server.errors.invalid_token };
+      if (errorData.error === 'token_expired') return { success: false, message: dict.server.errors.token_expired };
+      if (errorData.error === 'email_in_use') return { success: false, message: dict.server.errors.email_in_use };
+      throw new Error("Failed to verify email change");
     }
-
-    if (emailChangeRequest.expires < new Date()) {
-      return { error: dict.server.errors.token_expired };
-    }
-
-    const existingUser = await db.user.findUnique({
-      where: { email: emailChangeRequest.newEmail },
-    });
-
-    if (existingUser) {
-      return { error: dict.server.errors.email_in_use };
-    }
-
-    await db.$transaction([
-      db.user.update({
-        where: { id: emailChangeRequest.userId },
-        data: { email: emailChangeRequest.newEmail },
-      }),
-      db.emailChangeRequest.delete({
-        where: { id: emailChangeRequest.id },
-      }),
-    ]);
-
-    logger.info({
-      event: "email_change_verified",
-      userId: emailChangeRequest.userId,
-      newEmail: emailChangeRequest.newEmail,
-    });
 
     return { success: true };
   } catch (error) {
-    logger.error({
-      event: "verify_email_change_error",
-      error: (error as Error).message,
-    });
-    return { error: dict.server.errors.something_went_wrong };
+    logger.error({ event: "verify_email_change_error", error });
+    return { success: false, message: dict.server.errors.something_went_wrong };
   }
 }
+
+// Aliases for backward compatibility or component usage
+export const verifyEmailChangeAction = verifyEmailChange;
+export const registerUser = register;
+export const resendVerificationCode = resendVerificationEmail;
+export const resendVerificationEmailAction = resendVerificationEmail;
 

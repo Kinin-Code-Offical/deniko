@@ -1,11 +1,10 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { CustomAdapter } from "@/lib/auth-adapter";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
 import { z } from "zod";
-import { Role } from "@deniko/db";
+import { Role, getUserByEmail, getUserById } from "@/lib/user-api";
 import { env } from "@/lib/env";
 import { generateUniqueUsername } from "@/lib/username";
 import { assertLoginRateLimit } from "@/lib/rate-limit-login";
@@ -15,8 +14,7 @@ import { authConfig } from "./auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  adapter: PrismaAdapter(db as any),
+  adapter: CustomAdapter(),
   secret: env.AUTH_SECRET,
   trustHost: true,
   session: { strategy: "jwt" },
@@ -65,7 +63,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           if (parsedCredentials.success) {
             const { email, password } = parsedCredentials.data;
-            const user = await db.user.findUnique({ where: { email } });
+            const user = await getUserByEmail(email);
 
             if (!user || !user.password) {
               logger.warn({
@@ -153,9 +151,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (account?.provider === "google") {
         if (!user.email) return false;
 
-        const existingUser = await db.user.findUnique({
-          where: { email: user.email },
-        });
+        const existingUser = await getUserByEmail(user.email);
 
         if (existingUser) {
           // Check if user is active
@@ -169,9 +165,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // For credentials, we also want to check isActive if not already done in authorize
       if (user.email) {
-        const existingUser = await db.user.findUnique({
-          where: { email: user.email },
-        });
+        const existingUser = await getUserByEmail(user.email);
         if (existingUser && existingUser.isActive === false) return false;
       }
 
@@ -202,9 +196,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token }) {
       if (!token.sub) return token;
 
-      const existingUser = await db.user.findUnique({
-        where: { id: token.sub },
-      });
+      const existingUser = await getUserById(token.sub);
 
       // If user is deleted or inactive, invalidate token
       if (!existingUser || existingUser.isActive === false) {

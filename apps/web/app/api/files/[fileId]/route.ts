@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { getObjectStream } from "@/lib/storage";
 import { NextResponse } from "next/server";
 import { i18n } from "@/i18n-config";
+import { internalApiFetch } from "@/lib/internal-api";
 
 function isHtmlRequest(req: Request): boolean {
     const accept = req.headers.get("accept") || "";
@@ -24,30 +24,30 @@ export async function GET(
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const file = await db.file.findUnique({
-        where: { id: fileId },
-    });
-
-    if (!file) {
-        return new NextResponse("File not found", { status: 404 });
-    }
-
-    // Permission Check
-    // Owner can access
-    if (file.ownerId !== session.user.id) {
-        // TODO: Add logic for shared files (e.g. if user is in the same class/lesson)
-        // For now, strict owner check
-        if (isHtmlRequest(req)) {
-            const defaultLang = i18n.defaultLocale;
-            return NextResponse.redirect(new URL(`/${defaultLang}/forbidden`, req.url), 302);
-        }
-        return new NextResponse("Forbidden", { status: 403 });
-    }
-
     try {
+        // Fetch file metadata from API (which should handle permission checks)
+        const res = await internalApiFetch(`/files/${fileId}/metadata`, {
+            headers: {
+                "x-user-id": session.user.id || "",
+            }
+        });
+
+        if (!res.ok) {
+            if (res.status === 403) {
+                if (isHtmlRequest(req)) {
+                    const defaultLang = i18n.defaultLocale;
+                    return NextResponse.redirect(new URL(`/${defaultLang}/forbidden`, req.url), 302);
+                }
+                return new NextResponse("Forbidden", { status: 403 });
+            }
+            return new NextResponse("File not found", { status: 404 });
+        }
+
+        const file = await res.json() as { key: string; mimeType: string; sizeBytes: number; filename: string };
+
         const stream = await getObjectStream(file.key);
 
-        return new NextResponse(stream as unknown as BodyInit, {
+        return new NextResponse(stream as BodyInit, {
             headers: {
                 "Content-Type": file.mimeType,
                 "Content-Length": file.sizeBytes.toString(),

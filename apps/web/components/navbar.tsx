@@ -94,7 +94,7 @@ export function Navbar({ lang, dictionary, user: propUser }: NavbarProps) {
                   user={user}
                   dictionary={dictionary}
                   lang={lang}
-                  className="h-[50px] w-[50px] border border-slate-200 p-0 dark:border-slate-700"
+                  className="h-12.5 w-12.5 border border-slate-200 p-0 dark:border-slate-700"
                 />
               </>
             ) : (
@@ -148,7 +148,7 @@ export function Navbar({ lang, dictionary, user: propUser }: NavbarProps) {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="flex w-[250px] flex-col overflow-y-auto border-l bg-white sm:w-[300px] dark:border-slate-800 dark:bg-slate-950"
+                className="flex w-62.5 flex-col overflow-y-auto border-l bg-white sm:w-75 dark:border-slate-800 dark:bg-slate-950"
               >
                 <SheetTitle className="sr-only">
                   {dictionary.navbar.mobile_menu_title}

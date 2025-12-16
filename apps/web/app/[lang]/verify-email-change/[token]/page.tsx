@@ -43,7 +43,8 @@ export default async function VerifyEmailChangePage({
               {dictionary.verify_email_change.error_title}
             </h1>
             <p className="text-muted-foreground">
-              {result.error || dictionary.verify_email_change.error_description}
+              {result.message ||
+                dictionary.verify_email_change.error_description}
             </p>
             <Button asChild variant="outline" className="w-full">
               <Link href={`/${lang}/dashboard/settings`}>

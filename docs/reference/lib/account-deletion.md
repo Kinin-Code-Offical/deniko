@@ -18,4 +18,3 @@ export async function deleteUserAndRelatedData(userId: string)
 | Name | Type | Required |
 |------|------|----------|
 | userId | `string` | true |
-

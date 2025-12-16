@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
@@ -7,6 +6,8 @@ import type { Metadata } from "next";
 import { AddStudentDialog } from "@/components/students/add-student-dialog";
 import { StudentTable } from "@/components/students/student-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getStudents } from "@/lib/api/students";
+import { getClassrooms } from "@/lib/api/classrooms";
 
 export async function generateMetadata({
   params,
@@ -54,57 +55,10 @@ export default async function StudentsPage({
     redirect(`/${lang}/login`);
   }
 
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    include: {
-      teacherProfile: true,
-    },
-  });
-
-  if (!user || user.role !== "TEACHER" || !user.teacherProfile) {
-    redirect(`/${lang}/dashboard`);
-  }
-
-  const relations = await db.studentTeacherRelation.findMany({
-    where: { teacherId: user.teacherProfile.id },
-    include: {
-      student: {
-        include: {
-          user: true,
-          classrooms: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-
-  const classrooms = await db.classroom.findMany({
-    where: { teacherId: user.teacherProfile.id },
-    select: { id: true, name: true },
-  });
-
-  const students = relations.map((rel) => ({
-    id: rel.student.id,
-    user: rel.student.user,
-    tempFirstName: rel.student.tempFirstName,
-    tempLastName: rel.student.tempLastName,
-    tempAvatarKey: rel.student.tempAvatarKey,
-    tempPhone: rel.student.tempPhone,
-    relation: { customName: rel.customName },
-    name:
-      rel.customName ||
-      (rel.student.isClaimed && rel.student.user?.name
-        ? rel.student.user.name
-        : `${rel.student.tempFirstName || ""} ${rel.student.tempLastName || ""}`.trim()),
-    email: rel.student.isClaimed ? rel.student.user?.email : null,
-    status: rel.student.isClaimed ? "CLAIMED" : "SHADOW",
-    studentNo: rel.student.studentNo,
-    inviteToken: rel.student.inviteToken,
-    isClaimed: rel.student.isClaimed,
-    gradeLevel: rel.student.gradeLevel,
-    classrooms: rel.student.classrooms,
-    phoneNumber: rel.student.isClaimed ? rel.student.user?.phoneNumber : null,
-  }));
+  const [students, classrooms] = await Promise.all([
+    getStudents(),
+    getClassrooms(),
+  ]);
 
   return (
     <div className="space-y-6">

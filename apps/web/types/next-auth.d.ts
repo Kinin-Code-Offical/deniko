@@ -1,5 +1,5 @@
 import { DefaultSession } from "next-auth";
-import { Role } from "@deniko/db";
+import { Role } from "@/types/api-models";
 
 declare module "next-auth" {
   interface Session {

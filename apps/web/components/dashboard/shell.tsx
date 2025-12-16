@@ -24,11 +24,13 @@ import type { Dictionary } from "@/types/i18n";
 interface DashboardShellProps {
   children: React.ReactNode;
   user: {
+    id?: string;
     name?: string | null;
     email?: string | null;
     image?: string | null;
     role?: "TEACHER" | "STUDENT" | "ADMIN" | null;
     username?: string | null;
+    avatarVersion?: number | null;
   };
   dictionary: Dictionary;
   lang: string;
@@ -128,7 +130,7 @@ export function DashboardShell({
   return (
     <div className="bg-background flex min-h-dvh">
       {/* Desktop Sidebar */}
-      <aside className="border-sidebar-border bg-sidebar fixed inset-y-0 z-50 hidden w-[260px] flex-col border-r md:flex">
+      <aside className="border-sidebar-border bg-sidebar fixed inset-y-0 z-50 hidden w-65 flex-col border-r md:flex">
         <div className="flex h-16 items-center px-6">
           <Link
             href={`/${lang}/dashboard`}
@@ -180,9 +182,9 @@ export function DashboardShell({
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex flex-1 flex-col transition-all duration-300 md:pl-[260px]">
+      <div className="flex flex-1 flex-col transition-all duration-300 md:pl-65">
         {/* Header */}
-        <header className="border-border bg-background/80 fixed top-0 right-0 left-0 z-40 flex h-16 items-center justify-between border-b px-4 backdrop-blur-md md:left-[260px] md:px-6">
+        <header className="border-border bg-background/80 fixed top-0 right-0 left-0 z-40 flex h-16 items-center justify-between border-b px-4 backdrop-blur-md md:left-65 md:px-6">
           <div className="flex items-center gap-4">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
@@ -197,7 +199,7 @@ export function DashboardShell({
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="border-border bg-card text-foreground flex w-[260px] flex-col border-r p-0"
+                className="border-border bg-card text-foreground flex w-65 flex-col border-r p-0"
               >
                 <SheetTitle className="sr-only">
                   {dictionary.dashboard.nav.menu_title}
@@ -287,7 +289,7 @@ export function DashboardShell({
               user={user}
               dictionary={dictionary}
               lang={lang}
-              className="h-[50px] w-[50px] border border-slate-200 p-0 dark:border-slate-700"
+              className="h-12.5 w-12.5 border border-slate-200 p-0 dark:border-slate-700"
             />
           </div>
         </header>

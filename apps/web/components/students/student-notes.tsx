@@ -67,7 +67,7 @@ export function StudentNotes({
           placeholder={
             dictionary.student_detail.overview.private_notes_placeholder
           }
-          className="min-h-[150px] resize-none"
+          className="min-h-37.5 resize-none"
         />
       </CardContent>
     </Card>

@@ -6,10 +6,26 @@ const files_1 = require("./files");
 const settings_1 = require("./settings");
 const privacy_1 = require("./privacy");
 const messages_1 = require("./messages");
+const email_1 = require("./email");
+const ratelimit_1 = require("./ratelimit");
+const auth_1 = require("./auth");
+const student_1 = require("./student");
+const onboarding_1 = require("./onboarding");
+const classroom_1 = require("./classroom");
+const public_1 = require("./public");
+const dashboard_1 = require("./dashboard");
 async function registerRoutes(fastify) {
     fastify.register(avatar_1.avatarRoutes, { prefix: '/avatar' });
     fastify.register(files_1.filesRoutes, { prefix: '/files' });
     fastify.register(settings_1.settingsRoutes, { prefix: '/settings' });
     fastify.register(privacy_1.privacyRoutes, { prefix: '/privacy' });
     fastify.register(messages_1.messagesRoutes, { prefix: '/messages' });
+    fastify.register(email_1.emailRoutes, { prefix: '/email' });
+    fastify.register(ratelimit_1.ratelimitRoutes, { prefix: '/ratelimit' });
+    fastify.register(auth_1.authRoutes, { prefix: '/auth' });
+    fastify.register(student_1.studentRoutes, { prefix: '/student' });
+    fastify.register(onboarding_1.onboardingRoutes, { prefix: '/onboarding' });
+    fastify.register(classroom_1.classroomRoutes, { prefix: '/classroom' });
+    fastify.register(public_1.publicRoutes, { prefix: '/public' });
+    fastify.register(dashboard_1.dashboardRoutes, { prefix: '/dashboard' });
 }

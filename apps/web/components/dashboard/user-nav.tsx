@@ -55,12 +55,21 @@ export const UserNav = memo(function UserNav({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className={cn("relative h-8 w-8 rounded-full", className)}
+          className={cn(
+            "relative h-8 w-8 overflow-hidden rounded-full",
+            className
+          )}
           suppressHydrationWarning
         >
           <Avatar className="h-full w-full">
-            <AvatarImage src={avatarUrl} alt={user.name || ""} />
-            <AvatarFallback>{user.name?.charAt(0) || "U"}</AvatarFallback>
+            <AvatarImage
+              src={avatarUrl}
+              alt={user.name || "User"}
+              className="object-cover"
+            />
+            <AvatarFallback className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+              {user.name?.charAt(0).toUpperCase() || "U"}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

@@ -46,6 +46,13 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // Enforce no-any
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "error",
+    },
+  },
 ]);
 
 export default eslintConfig;

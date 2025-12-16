@@ -7,6 +7,31 @@ import SettingsPage from "../app/[lang]/dashboard/settings/page";
 import FilesPage from "../app/[lang]/dashboard/files/page";
 import LessonsPage from "../app/[lang]/dashboard/lessons/page";
 
+// Mock internal-api
+vi.mock("@/lib/internal-api", () => ({
+  internalApiFetch: vi.fn().mockResolvedValue({
+    ok: true,
+    json: vi.fn().mockResolvedValue({
+      id: "user-123",
+      firstName: "Test",
+      lastName: "User",
+      email: "test@example.com",
+      role: "STUDENT",
+      settings: {},
+      teacherProfile: {
+        bio: "Bio",
+        branch: "Math",
+        _count: { lessons: 10, studentRelations: 5 },
+      },
+      studentProfile: {
+        gradeLevel: "10",
+        studentNo: "123",
+        _count: { lessons: 5 },
+      },
+    }),
+  }),
+}));
+
 // Mock next/navigation
 vi.mock("next/navigation", () => ({
   usePathname: () => "/en/dashboard",

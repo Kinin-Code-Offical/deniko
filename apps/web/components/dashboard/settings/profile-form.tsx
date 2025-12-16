@@ -137,7 +137,7 @@ export function ProfileForm({
       initialData.image,
       initialData.id,
       initialData.avatarVersion || 0
-    )
+    ) || null
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -288,7 +288,7 @@ export function ProfileForm({
           // Optimistic update with new version (assuming +1)
           const newVersion = (initialData.avatarVersion || 0) + 1;
           setAvatarUrl(
-            getAvatarUrl(uploadResult.path, initialData.id, newVersion)
+            getAvatarUrl(uploadResult.path, initialData.id, newVersion) || null
           );
           toast.success(dictionary.avatar.success_update);
           router.refresh();

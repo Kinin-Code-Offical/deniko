@@ -26,6 +26,7 @@ export const useUserTiming = (componentName: string) => {
           `${componentName}-end`
         );
 
+
         // Retrieve the measurement to log it
         const entries = performance.getEntriesByName(componentName);
         const entry = entries[entries.length - 1];
