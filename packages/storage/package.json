@@ -1,0 +1,14 @@
+{
+  "name": "@deniko/storage",
+  "version": "0.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@google-cloud/storage": "^7.18.0",
+    "@prisma/client": "6.0.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

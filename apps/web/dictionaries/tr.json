@@ -1,0 +1,1719 @@
+{
+  "metadata": {
+    "home": {
+      "title": "Özel Ders Yönetim Platformu",
+      "description": "Öğrenci takibi, ders programı ve öğrenci ödemelerini tek bir yerden yönetin. Deniko ile işinizi ücretsiz dijitalleştirin.",
+      "keywords": [
+        "özel ders",
+        "öğrenci takibi",
+        "ders programı",
+        "eğitim yönetimi",
+        "öğretmen yazılımı",
+        "online ders"
+      ]
+    },
+    "twitter": {
+      "creator": "@deniko"
+    },
+    "login": {
+      "title": "Giriş Yap | Deniko",
+      "description": "Deniko hesabınıza giriş yapın ve yönetim panelinize erişin."
+    },
+    "register": {
+      "title": "Kayıt Ol - Deniko",
+      "description": "Deniko'ya ücretsiz kayıt olun. Öğretmenler ve öğrenciler için kolay ders yönetimi ve takibi."
+    },
+    "forgot_password": {
+      "title": "Şifremi Unuttum | Deniko",
+      "description": "Şifrenizi mi unuttunuz? E-posta adresinizle şifrenizi sıfırlayın."
+    },
+    "reset_password": {
+      "title": "Şifre Sıfırlama | Deniko",
+      "description": "Yeni şifrenizi belirleyerek hesabınıza güvenle erişin."
+    },
+    "dashboard": {
+      "title": "Panel",
+      "student_title": "Öğrenci Paneli - {name}",
+      "teacher_title": "Öğretmen Paneli - {name}",
+      "description": "Deniko yönetim paneli ile derslerinizi ve öğrencilerinizi yönetin.",
+      "welcome_title": "Deniko'ya Hoşgeldiniz",
+      "contact_support": "Bu ekranı görüyorsanız lütfen destek ile iletişime geçin."
+    },
+    "finance": {
+      "title": "Finans | Deniko",
+      "description": "Finansal durum ve ödeme takibi.",
+      "coming_soon": "Finans içeriği yakında..."
+    },
+    "schedule": {
+      "title": "Ders Programı | Deniko",
+      "description": "Ders programı ve takvim yönetimi.",
+      "coming_soon": "Ders programı içeriği yakında..."
+    },
+    "join": {
+      "title": "Davet | Deniko",
+      "description": "Deniko'ya katılın."
+    },
+    "onboarding": {
+      "title": "Kurulum | Deniko",
+      "description": "Hesap kurulumunuzu tamamlayın ve Deniko'yu kullanmaya başlayın."
+    },
+    "verify": {
+      "title": "Hesap Doğrulama | Deniko",
+      "description": "Deniko hesabınızı doğrulayın."
+    },
+    "student_detail": {
+      "title": "{name} - Öğrenci Detayı",
+      "description": "{name} isimli öğrencinin detayları, ders programı ve ödeme geçmişi.",
+      "fallback_title": "Öğrenci Detayı",
+      "fallback_description": "Öğrenci detayları."
+    },
+    "students": {
+      "title": "Öğrenciler | Deniko",
+      "description": "Öğrenci listesi ve yönetimi."
+    }
+  },
+  "verify_email_change": {
+    "success_title": "E-posta Doğrulandı!",
+    "success_description": "E-posta adresiniz başarıyla güncellendi.",
+    "login_button": "Giriş Yap",
+    "error_title": "Doğrulama Başarısız",
+    "error_description": "Geçersiz veya süresi dolmuş jeton.",
+    "back_button": "Ayarlara Dön"
+  },
+  "server": {
+    "errors": {
+      "unauthorized": "Yetkisiz işlem",
+      "invalid_input": "Geçersiz giriş",
+      "failed_update_profile": "Profil güncellenemedi",
+      "user_not_found_password": "Kullanıcı bulunamadı veya şifre ayarlanmamış",
+      "incorrect_password": "Mevcut şifre yanlış",
+      "failed_update_password": "Şifre güncellenemedi",
+      "same_password": "Yeni şifre mevcut şifre ile aynı olamaz",
+      "invalid_email": "Geçersiz e-posta adresi",
+      "email_in_use": "E-posta adresi zaten kullanımda",
+      "user_not_found": "Kullanıcı bulunamadı",
+      "failed_request_email_change": "E-posta değişikliği isteği başarısız oldu",
+      "invalid_phone": "Geçersiz telefon numarası",
+      "failed_update_phone": "Telefon numarası güncellenemedi",
+      "failed_deactivate": "Hesap dondurulamadı",
+      "failed_delete": "Hesap silinemedi",
+      "passwords_do_not_match": "Şifreler eşleşmiyor",
+      "username_min_length": "Kullanıcı adı en az 3 karakter olmalıdır",
+      "username_max_length": "Kullanıcı adı en fazla 20 karakter olmalıdır",
+      "username_pattern": "Kullanıcı adı sadece harf, rakam, nokta ve alt çizgi içerebilir",
+      "username_taken": "Kullanıcı adı zaten alınmış",
+      "failed_update_username": "Kullanıcı adı güncellenemedi",
+      "invalid_token": "Geçersiz veya süresi dolmuş jeton",
+      "token_expired": "Jeton süresi doldu",
+      "something_went_wrong": "Bir şeyler ters gitti",
+      "failed_update_notification_preferences": "Bildirim tercihleri güncellenemedi",
+      "failed_update_region_timezone": "Bölge ve saat dilimi güncellenemedi",
+      "failed_update_cookie_preferences": "Çerez tercihleri güncellenemedi",
+      "no_image_provided": "Resim sağlanmadı",
+      "failed_update_avatar": "Avatar güncellenemedi",
+      "no_file_provided": "Dosya sağlanmadı",
+      "invalid_file_type": "Geçersiz dosya türü. Lütfen bir resim yükleyin.",
+      "file_size_too_large": "Dosya boyutu çok büyük. Maksimum 5MB.",
+      "failed_upload_avatar": "Avatar yüklenemedi"
+    }
+  },
+  "profile": {
+    "public": {
+      "title": "{name} (@{username}) - Deniko",
+      "description": "{name} kullanıcısının Deniko profilini inceleyin.",
+      "messageButton": "Mesaj Gönder",
+      "notFound": "Kullanıcı bulunamadı",
+      "role_teacher": "Öğretmen",
+      "role_student": "Öğrenci",
+      "stats": {
+        "lessons": "Dersler",
+        "students": "Öğrenciler",
+        "rating": "Puan"
+      },
+      "actions": {
+        "sendMessage": "Mesaj Gönder",
+        "requestLesson": "Ders Talep Et"
+      },
+      "private": {
+        "title": "Gizli Profil",
+        "description": "Bu kullanıcının profili gizlidir. Bazı bilgiler gizlenmiş olabilir."
+      },
+      "tabs": {
+        "overview": "Genel Bakış",
+        "lessons": "Dersler",
+        "reviews": "Değerlendirmeler"
+      },
+      "sections": {
+        "about": "Hakkında",
+        "subjects": "Konular",
+        "levels": "Seviyeler",
+        "languages": "Diller",
+        "availability": "Müsaitlik"
+      },
+      "availability": {
+        "weekdays": "Hafta İçi",
+        "weekends": "Hafta Sonu"
+      },
+      "lessons": {
+        "placeholderTitle": "Henüz ders yok",
+        "placeholderDescription": "Bu kullanıcı henüz ders oluşturmadı."
+      },
+      "reviews": {
+        "placeholderTitle": "Henüz değerlendirme yok",
+        "placeholderDescription": "Bu kullanıcı henüz değerlendirme almadı."
+      }
+    },
+    "settings": {
+      "username": {
+        "title": "Kullanıcı Adı",
+        "description": "Herkese açık profil bağlantınız: https://deniko.net/users/{username}",
+        "label": "Kullanıcı Adı",
+        "placeholder": "Kullanıcı adı girin",
+        "button": "Değişiklikleri Kaydet",
+        "success": "Kullanıcı adı başarıyla güncellendi",
+        "error": "Kullanıcı adı güncellenemedi"
+      },
+      "basic": {
+        "title": "Temel Bilgiler",
+        "description": "Kişisel bilgilerinizi güncelleyin.",
+        "firstName": "Ad",
+        "firstNamePlaceholder": "Ahmet",
+        "lastName": "Soyad",
+        "lastNamePlaceholder": "Yılmaz",
+        "save": "Değişiklikleri Kaydet",
+        "success": "Profil başarıyla güncellendi",
+        "saving": "Kaydediliyor...",
+        "avatar": {
+          "label": "Avatar",
+          "upload": "Fotoğraf Yükle",
+          "upload_hint": "JPG, GIF veya PNG. Maks 5MB.",
+          "presets": "Hazır avatarlardan seç",
+          "crop_title": "Avatarı Kırp",
+          "crop_desc": "Konumlandırmak için sürükleyin ve yakınlaştırmak için kaydırıcıyı kullanın.",
+          "cancel": "İptal",
+          "save": "Kaydet",
+          "error_file_type": "Lütfen bir resim dosyası yükleyin",
+          "error_file_size": "Dosya boyutu 5MB'dan küçük olmalıdır",
+          "success_update": "Avatar başarıyla güncellendi",
+          "error_upload": "Avatar yüklenemedi",
+          "error_generic": "Bir hata oluştu"
+        },
+        "phone": {
+          "label": "Telefon Numarası",
+          "placeholder": "+90 555 555 55 55",
+          "countrySelectorLabel": "Ülke",
+          "noResultsMessage": "Sonuç bulunamadı",
+          "searchPlaceholder": "Ara"
+        },
+        "teacher": {
+          "branch": "Branş",
+          "branch_placeholder": "Matematik",
+          "bio": "Hakkında",
+          "bio_placeholder": "Kendinizden bahsedin..."
+        },
+        "student": {
+          "student_no": "Öğrenci Numarası",
+          "student_no_placeholder": "12345",
+          "grade_level": "Sınıf Seviyesi",
+          "grade_level_placeholder": "10. Sınıf",
+          "parent_name": "Veli Adı",
+          "parent_name_placeholder": "Ayşe Yılmaz",
+          "parent_phone": "Veli Telefonu",
+          "parent_email": "Veli E-posta",
+          "parent_email_placeholder": "veli@ornek.com"
+        }
+      },
+      "security": {
+        "password": {
+          "title": "Şifre",
+          "description": "Şifrenizi değiştirin.",
+          "currentPassword": "Mevcut Şifre",
+          "newPassword": "Yeni Şifre",
+          "confirmPassword": "Şifre Tekrarı",
+          "placeholder": "********",
+          "save": "Şifreyi Güncelle",
+          "success": "Şifre başarıyla güncellendi",
+          "security_strength": "Güvenlik Gücü",
+          "saving": "Kaydediliyor...",
+          "hide_password": "Şifreyi gizle",
+          "show_password": "Şifreyi göster",
+          "enter_password": "Şifre Girin",
+          "weak": "Zayıf",
+          "medium": "Orta",
+          "strong": "Güçlü",
+          "validation": {
+            "required": "Bu alan zorunludur",
+            "min_length": "En az {length} karakter olmalıdır",
+            "passwords_do_not_match": "Şifreler eşleşmiyor",
+            "uppercase": "En az bir büyük harf",
+            "lowercase": "En az bir küçük harf",
+            "number": "En az bir rakam",
+            "special": "En az bir özel karakter"
+          }
+        },
+        "email": {
+          "title": "E-posta Adresi",
+          "description": "E-posta adresinizi değiştirin.",
+          "currentEmail": "Mevcut E-posta",
+          "newEmail": "Yeni E-posta",
+          "sendVerification": "Doğrulama E-postası Gönder",
+          "sending": "Gönderiliyor...",
+          "success": "Doğrulama e-postası gönderildi",
+          "placeholder": "ornek@mail.com"
+        }
+      },
+      "danger": {
+        "deactivate": {
+          "title": "Hesabı Dondur",
+          "description": "Hesabınızı geçici olarak devre dışı bırakın. İstediğiniz zaman tekrar etkinleştirebilirsiniz.",
+          "button": "Hesabı Dondur",
+          "confirmTitle": "Emin misiniz?",
+          "confirmDescription": "Bu işlem profilinizi ve verilerinizi başkalarından gizleyecektir. Giriş yaparak tekrar etkinleştirebilirsiniz.",
+          "cancel": "İptal",
+          "confirmButton": "Dondur",
+          "success": "Hesap donduruldu",
+          "processing": "İşleniyor..."
+        },
+        "delete": {
+          "title": "Hesabı Sil",
+          "description": "Hesabınızı ve tüm verilerinizi kalıcı olarak silin.",
+          "button": "Hesabı Sil",
+          "confirmTitle": "Kesinlikle emin misiniz?",
+          "confirmDescription": "Bu işlem geri alınamaz. Hesabınız ve verileriniz sunucularımızdan kalıcı olarak silinecektir.",
+          "cancel": "İptal",
+          "confirmButton": "Hesabı Sil",
+          "success": "Hesap silindi",
+          "typeToConfirm": "Onaylamak için {keyword} yazın.",
+          "deleting": "Siliniyor..."
+        }
+      },
+      "privacy": {
+        "title": "Gizlilik Ayarları",
+        "description": "Profilinizi kimlerin görebileceğini ve sizinle iletişime geçebileceğini yönetin.",
+        "profileVisibility": {
+          "label": "Profil Görünürlüğü",
+          "description": "Profilinizi kimlerin görebileceğini kontrol edin.",
+          "public": "Herkese Açık",
+          "private": "Gizli"
+        },
+        "showAvatar": {
+          "label": "Avatarı Göster",
+          "description": "Profil resminizi herkese gösterin."
+        },
+        "showEmail": {
+          "label": "E-postayı Göster",
+          "description": "E-posta adresinizi profilinizde gösterin."
+        },
+        "showPhone": {
+          "label": "Telefon Numarasını Göster",
+          "description": "Telefon numaranızı profilinizde gösterin."
+        },
+        "allowMessages": {
+          "label": "Mesajlara İzin Ver",
+          "description": "Diğer kullanıcıların size mesaj göndermesine izin verin."
+        },
+        "showCourses": {
+          "label": "Dersleri Göster",
+          "description": "Derslerinizi profilinizde gösterin."
+        },
+        "save": "Gizlilik Ayarlarını Kaydet",
+        "success": "Gizlilik ayarları güncellendi",
+        "saving": "Kaydediliyor...",
+        "messagingDisabled": "Bu kullanıcı için mesajlaşma devre dışı."
+      },
+      "notifications": {
+        "title": "Bildirimler",
+        "description": "Bildirimleri nasıl alacağınızı yönetin.",
+        "email": {
+          "label": "E-posta Bildirimleri",
+          "description": "Hesap etkinliğiniz hakkında e-postalar alın."
+        },
+        "inApp": {
+          "label": "Uygulama İçi Bildirimler",
+          "description": "Uygulama içinde bildirimler alın."
+        },
+        "marketing": {
+          "label": "Pazarlama E-postaları",
+          "description": "Yeni özellikler ve teklifler hakkında e-posta alın."
+        },
+        "save": "Tercihleri Kaydet",
+        "success": "Bildirim tercihleri güncellendi",
+        "saving": "Kaydediliyor..."
+      },
+      "region": {
+        "title": "Bölge ve Saat Dilimi",
+        "description": "Tercih ettiğiniz bölgeyi ve saat dilimini ayarlayın.",
+        "country": {
+          "label": "Ülke",
+          "placeholder": "Bir ülke seçin"
+        },
+        "timezone": {
+          "label": "Saat Dilimi",
+          "placeholder": "Bir saat dilimi seçin"
+        },
+        "save": "Tercihleri Kaydet",
+        "success": "Bölge ve saat dilimi güncellendi",
+        "saving": "Kaydediliyor..."
+      },
+      "cookies": {
+        "title": "Çerezler ve Gizlilik",
+        "description": "Çerez tercihlerinizi ve gizlilik ayarlarınızı yönetin.",
+        "necessary": {
+          "label": "Zorunlu Çerezler",
+          "description": "Bu çerezler web sitesinin çalışması için gereklidir ve kapatılamaz."
+        },
+        "analytics": {
+          "label": "Analitik Çerezleri",
+          "description": "Bu çerezler, sitemizin performansını ölçebilmemiz ve iyileştirebilmemiz için ziyaretleri ve trafik kaynaklarını saymamıza olanak tanır."
+        },
+        "marketing": {
+          "label": "Pazarlama Çerezleri",
+          "description": "Bu çerezler, reklam ortaklarımız tarafından sitemiz üzerinden ayarlanabilir."
+        },
+        "links": {
+          "privacy": "Gizlilik Politikası",
+          "cookies": "Çerez Politikası"
+        },
+        "save": "Tercihleri Kaydet",
+        "success": "Çerez tercihleri güncellendi",
+        "saving": "Kaydediliyor..."
+      }
+    }
+  },
+  "not_found": {
+    "title": "Sayfa Bulunamadı",
+    "heading": "Aradığınız sayfa kaybolmuş gibi görünüyor",
+    "description": "Ulaşmaya çalıştığınız sayfa silinmiş, taşınmış veya hiç var olmamış olabilir. Endişelenmeyin, sizi doğru yola geri döndürebiliriz.",
+    "go_back": "Geri Dön",
+    "home": "Ana Sayfa"
+  },
+  "error_pages": {
+    "forbidden": {
+      "title": "Yetkiniz Yok",
+      "description": "Bu içeriği görüntülemek için gerekli izniniz bulunmuyor.",
+      "backToHome": "Ana sayfaya dön",
+      "backToDashboard": "Dashboard'a dön"
+    }
+  },
+  "navbar": {
+    "menu_open": "Menüyü aç",
+    "menu": "Menü",
+    "theme": "Tema",
+    "language": "Dil",
+    "legal": "Yasal",
+    "terms": "Kullanıcı Sözleşmesi",
+    "privacy": "Gizlilik Politikası",
+    "mobile_menu_title": "Mobil Menü",
+    "mobile_menu_desc": "Mobil navigasyon menüsü",
+    "toggle_theme": "Temayı değiştir"
+  },
+  "newsletter": {
+    "title": "Bültenimize abone olun",
+    "description": "En son güncellemeleri ve haberleri alın.",
+    "placeholder": "E-posta adresinizi girin",
+    "button": "Abone Ol",
+    "success": "Abone olduğunuz için teşekkürler!",
+    "error": "Bir şeyler ters gitti."
+  },
+  "legal": {
+    "cookie_consent": {
+      "title": "Çerez Politikası",
+      "description": "Tarama deneyiminizi geliştirmek, kişiselleştirilmiş reklamlar veya içerik sunmak ve trafiğimizi analiz etmek için çerezleri kullanıyoruz. \"Kabul Et\"e tıklayarak çerez kullanımımıza izin vermiş olursunuz.",
+      "accept": "Kabul Et",
+      "decline": "Reddet"
+    },
+    "title": "Yasal Merkez",
+    "description": "Deniko'nun kullanım şartları, gizlilik politikaları ve yasal yükümlülükleri hakkında detaylı bilgilere buradan ulaşabilirsiniz.",
+    "read_more": "İncele",
+    "nav": {
+      "terms": "Kullanıcı Sözleşmesi",
+      "privacy": "Gizlilik Politikası",
+      "cookies": "Çerez Politikası",
+      "kvkk": "KVKK",
+      "back_to_home": "Ana Sayfaya Dön"
+    },
+    "footer": {
+      "rights_reserved": "Tüm hakları saklıdır."
+    },
+    "docs": {
+      "terms": {
+        "title": "Kullanıcı Sözleşmesi",
+        "description": "Platform kullanım şartları ve kuralları."
+      },
+      "privacy": {
+        "title": "Gizlilik Politikası",
+        "description": "Verilerinizin nasıl toplandığı ve kullanıldığı."
+      },
+      "cookies": {
+        "title": "Çerez Politikası",
+        "description": "Çerez kullanımı ve tercihlerin yönetimi."
+      },
+      "kvkk": {
+        "title": "KVKK Aydınlatma Metni",
+        "description": "Kişisel verilerin korunması kanunu hakkında bilgilendirme."
+      }
+    },
+    "terms_title": "Kullanıcı Sözleşmesi",
+    "privacy_title": "Gizlilik Politikası",
+    "accept_terms": "[Kullanıcı Sözleşmesi] ve [Gizlilik Politikası]'nı okudum ve kabul ediyorum.",
+    "validation_terms": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
+    "validation_error": "Devam etmek için sözleşmeleri kabul etmelisiniz.",
+    "marketing_consent": "Kampanya ve duyurulardan e-posta ile haberdar olmak istiyorum.",
+    "center": "Yasal Merkez",
+    "terms": "Kullanım Koşulları",
+    "privacy": "Gizlilik Politikası",
+    "cookies": "Çerez Politikası",
+    "kvkk": "KVKK",
+    "legal_suffix": "Yasal",
+    "legal_center": "Deniko Yasal Merkez"
+  },
+  "theme": {
+    "light": "Aydınlık",
+    "dark": "Karanlık",
+    "system": "Sistem",
+    "toggle_theme": "Temayı değiştir",
+    "loading": "Yükleniyor..."
+  },
+  "dashboard": {
+    "nav": {
+      "dashboard": "Genel Bakış",
+      "students": "Öğrenciler",
+      "schedule": "Ders Programı",
+      "lessons": "Dersler",
+      "finance": "Finans",
+      "settings": "Ayarlar",
+      "messages": "Mesajlar",
+      "notifications": "Bildirimler",
+      "profile": "Profil",
+      "files": "Dosyalar",
+      "logout": "Çıkış Yap",
+      "menu_title": "Menü",
+      "menu_desc": "Navigasyon menüsü",
+      "homework": "Ödevler",
+      "exams": "Sınavlar",
+      "system_operational": "Sistem Çalışıyor"
+    },
+    "overview": {
+      "title": "Genel Bakış",
+      "welcome": "Tekrar hoşgeldin, {name}!",
+      "stats": {
+        "total_students": "Toplam Öğrenci",
+        "upcoming_lessons": "Yaklaşan Dersler",
+        "unread_messages": "Okunmamış Mesajlar",
+        "total_income": "Toplam Gelir"
+      },
+      "recent_activity": "Son Aktiviteler",
+      "upcoming_lessons": "Yaklaşan Dersler"
+    },
+    "messages": {
+      "title": "Mesajlar",
+      "search_placeholder": "Mesajlarda ara...",
+      "type_message": "Bir mesaj yazın...",
+      "send": "Gönder",
+      "no_conversation": "Mesajlaşmaya başlamak için bir sohbet seçin",
+      "online": "Çevrimiçi",
+      "mock_msg_1": "Selam, nasılsın?",
+      "mock_msg_2": "İyiyim, teşekkürler! Dersimiz hakkında...",
+      "mock_msg_3": "Yarın görüşürüz!",
+      "mock_msg_4": "Dersi erteleyebilir miyiz?",
+      "mock_time_1": "10:00",
+      "mock_time_2": "10:05",
+      "mock_time_3": "10:30",
+      "mock_time_4": "Dün",
+      "mock_user_initial": "A",
+      "mock_user_name": "Alice Smith",
+      "mock_user_name_2": "Bob Johnson"
+    },
+    "notifications": {
+      "title": "Bildirimler",
+      "all": "Tümü",
+      "unread": "Okunmamış",
+      "system": "Sistem",
+      "mark_all_read": "Tümünü okundu işaretle",
+      "no_unread": "Okunmamış bildirim yok",
+      "no_system": "Sistem bildirimi yok",
+      "mock_title_1": "Sistem Güncellemesi",
+      "mock_msg_1": "Deniko sürüm 2.0'a güncellendi",
+      "mock_time_1": "2 saat önce",
+      "mock_title_2": "Ders Hatırlatıcı",
+      "mock_msg_2": "Alice ile 1 saat içinde dersiniz var",
+      "mock_time_2": "3 saat önce",
+      "mock_title_3": "Ödeme Alındı",
+      "mock_msg_3": "Bob'dan $50 ödeme alındı",
+      "mock_time_3": "1 gün önce"
+    },
+    "profile": {
+      "title": "Profil",
+      "personal_info": "Kişisel Bilgiler",
+      "personal_info_desc": "Kişisel bilgilerinizi buradan güncelleyin.",
+      "contact_info": "İletişim Bilgileri",
+      "contact_info_desc": "Size nasıl ulaşabiliriz?",
+      "save_changes": "Değişiklikleri Kaydet",
+      "change_avatar": "Avatarı Değiştir",
+      "full_name": "Ad Soyad",
+      "email": "E-posta",
+      "role": "Rol",
+      "phone": "Telefon Numarası",
+      "phone_placeholder": "+90 555 123 45 67",
+      "address": "Adres",
+      "address_placeholder": "Örnek Mah. Cad. No:1",
+      "bio": "Biyografi",
+      "bio_placeholder": "Kendinizden kısaca bahsedin...",
+      "bio_desc": "Profilinizde görünecek kısa bir açıklama.",
+      "location": "Konum",
+      "location_placeholder": "İstanbul, Türkiye",
+      "website": "Web Sitesi",
+      "website_placeholder": "https://ornek.com",
+      "social_profiles": "Sosyal Medya Profilleri",
+      "social_profiles_desc": "Sosyal medya hesaplarınızı bağlayın.",
+      "activity_stats": {
+        "title": "Aktivite ve İstatistikler",
+        "description": "Platform aktivite özetiniz",
+        "lessons": "Verilen Dersler",
+        "students": "Öğrenciler",
+        "hours": "Çevrimiçi Saat",
+        "rating": "Ortalama Puan"
+      },
+      "public": {
+        "title": "Herkese Açık Profil",
+        "not_found_title": "Profil Bulunamadı",
+        "not_found_desc": "Aradığınız kullanıcı profili mevcut değil veya erişilemiyor.",
+        "private_title": "Bu Profil Gizli",
+        "private_desc": "Bu kullanıcının profili gizli. Sadece onaylı bağlantılar görebilir.",
+        "back_home": "Ana Sayfaya Dön",
+        "contact": "İletişim",
+        "member_since": "Üyelik Tarihi",
+        "email": "E-posta",
+        "phone": "Telefon",
+        "location": "Konum",
+        "website": "Web Sitesi",
+        "bio": "Hakkında",
+        "role_teacher": "Öğretmen",
+        "role_student": "Öğrenci",
+        "stats": {
+          "lessons": "Dersler"
+        },
+        "private": {
+          "title": "Bu profil gizli",
+          "description": "Kullanıcı profil bilgilerini gizli tutmayı tercih etti."
+        },
+        "notFound": "Kullanıcı bulunamadı"
+      }
+    },
+    "files": {
+      "title": "Dosyalar",
+      "upload": "Dosya Yükle",
+      "drag_drop": "Dosyaları buraya sürükleyip bırakın",
+      "no_files": "Henüz dosya yüklenmemiş",
+      "download": "İndir",
+      "delete": "Sil"
+    },
+    "finance": {
+      "total_revenue": "Toplam Gelir",
+      "revenue_growth": "Geçen aya göre +%20.1",
+      "outstanding": "Bekleyen Ödemeler",
+      "pending_payments_count": "5 bekleyen ödeme",
+      "active_subscriptions": "Düzenli Dersler",
+      "subscriptions_growth": "Geçen haftadan beri +2",
+      "recent_transactions": "Son İşlemler",
+      "mock_revenue": "$1,234.56",
+      "mock_outstanding": "$345.00",
+      "mock_subscriptions": "+12"
+    },
+    "lessons": {
+      "title": "Dersler",
+      "schedule_lesson": "Ders Planla",
+      "at": "saat",
+      "details": "Detaylar"
+    },
+    "schedule": {
+      "title": "Takvim",
+      "new_lesson": "Yeni Ders",
+      "calendar": "Takvim",
+      "calendar_placeholder": "İnteraktif Takvim Bileşeni (Yakında)",
+      "upcoming": "Yaklaşanlar",
+      "math": "Matematik",
+      "mock_lesson_1": "10:00 - Ayşe",
+      "physics": "Fizik",
+      "mock_lesson_2": "14:00 - Mehmet"
+    },
+    "settings": {
+      "title": "Ayarlar",
+      "description": "Hesap ayarlarınızı ve tercihlerinizi yönetin.",
+      "nav": {
+        "profile": "Profil",
+        "security": "Hesap ve Güvenlik",
+        "privacy": "Gizlilik",
+        "notifications": "Bildirimler",
+        "language": "Dil ve Bölge",
+        "cookies": "Çerezler ve Veri"
+      },
+      "tabs": {
+        "profile": "Profil",
+        "security": "Güvenlik",
+        "privacy": "Gizlilik",
+        "account": "Hesap"
+      },
+      "logout": "Çıkış Yap",
+      "account": "Hesap",
+      "account_desc": "Hesap ayarlarınızı yönetin.",
+      "security": "Güvenlik",
+      "privacy": {
+        "title": "Gizlilik Ayarları",
+        "description": "Profilinizin görünürlüğünü ve veri paylaşımını yönetin.",
+        "visibility_title": "Profil Görünürlüğü",
+        "public_profile": "Herkese Açık Profil",
+        "public_profile_desc": "Profilinizi herkes görebilir.",
+        "public": "Herkese Açık",
+        "private": "Gizli",
+        "display_options": "Görüntüleme Seçenekleri",
+        "show_avatar": "Avatarı Göster",
+        "show_email": "E-postayı Göster",
+        "show_phone": "Telefonu Göster",
+        "interactions": "Etkileşimler",
+        "allow_messages": "Mesajlara İzin Ver",
+        "allow_messages_desc": "Kullanıcıların size mesaj göndermesine izin verin.",
+        "profile_visibility": "Profil Görünürlüğü",
+        "profile_visibility_desc": "Profilinizin kimler tarafından görülebileceğini kontrol edin.",
+        "show_email_desc": "E-posta adresiniz profilinizde görünsün.",
+        "show_phone_desc": "Telefon numaranız profilinizde görünsün.",
+        "search_engine_indexing": "Arama Motoru İndeksleme",
+        "search_engine_indexing_desc": "Profilinizin arama motorlarında (Google vb.) görünmesine izin verin.",
+        "show_courses": "Dersleri Göster"
+      },
+      "notifications": {
+        "title": "Bildirimler",
+        "description": "Bildirim tercihlerinizi yapılandırın.",
+        "email": {
+          "label": "E-posta Bildirimleri",
+          "description": "Hesap aktiviteleriniz hakkında e-posta alın."
+        },
+        "inApp": {
+          "label": "Uygulama İçi Bildirimler",
+          "description": "Uygulama içinde bildirimler alın."
+        },
+        "marketing": {
+          "label": "Pazarlama E-postaları",
+          "description": "Yeni özellikler ve teklifler hakkında e-posta alın."
+        }
+      },
+      "language": "Dil",
+      "language_desc": "Tercih ettiğiniz dili seçin.",
+      "theme": "Tema",
+      "two_fa_label": "İki Faktörlü Doğrulama",
+      "two_fa_desc": "Hesabınıza ekstra güvenlik katmanı ekleyin.",
+      "delete_account_label": "Hesabı Sil",
+      "delete_account_desc": "Hesabınızı ve tüm verilerinizi kalıcı olarak silin.",
+      "delete_account_button": "Hesabı Sil",
+      "language_placeholder": "Dil Seçin",
+      "en": "English",
+      "tr": "Türkçe",
+      "region": {
+        "country": {
+          "label": "Ülke"
+        }
+      }
+    },
+    "join": {
+      "error": "Geçersiz Davet",
+      "error_desc": "Davet bağlantısı geçersiz veya süresi dolmuş. Lütfen öğretmeninizden yeni bir bağlantı isteyin.",
+      "already_used": "Davet Zaten Kullanılmış",
+      "already_used_desc": "Bu davet zaten kullanılmış. Bunun bir hata olduğunu düşünüyorsanız, lütfen destek ekibiyle iletişime geçin.",
+      "welcome_title": "Davet Edildiniz!",
+      "unknown_teacher": "Bir Öğretmen",
+      "unknown_student": "Öğrenci",
+      "invite_desc": "{teacher} sizi Deniko'daki sınıfına katılmaya davet etti.",
+      "login_desc": "Bu daveti kabul etmek için lütfen giriş yapın veya hesap oluşturun.",
+      "login_button": "Giriş Yap",
+      "register_button": "Hesap Oluştur",
+      "title": "Sınıfa Katıl",
+      "desc": "{teacher} ile eğitim yolculuğunuza başlamaya hazır mısınız?",
+      "confirm_checkbox": "Bu sınıfa katılmak istediğimi onaylıyorum.",
+      "confirm_button": "Onayla ve Katıl",
+      "email_not_verified": "Sınıfa katılmak için lütfen e-posta adresinizi doğrulayın.",
+      "teacher_cannot_join": "Öğretmenler öğrenci olarak sınıflara katılamaz.",
+      "teacher_cannot_join_desc": "Öğretmen hesabınızla giriş yaptınız. Sınıfa katılmak için lütfen öğrenci hesabınızla giriş yapın.",
+      "conflict": {
+        "title": "Bilgileri Doğrula",
+        "desc": "Sınıf kaydınız ile mevcut profiliniz arasında farklılıklar var. Hangi bilgilerin profilinizde kalacağını seçin.",
+        "your_profile": "SENİN PROFİLİN",
+        "teacher_record": "ÖĞRETMEN KAYDI",
+        "selected_source": "Seçilen Kaynak",
+        "yours": "Benim",
+        "teachers": "Öğretmenin",
+        "save_join": "Seçimleri Kaydet ve Katıl",
+        "cancel": "Vazgeç",
+        "labels": {
+          "name": "Ad Soyad",
+          "phone": "Telefon",
+          "bio": "Hakkında",
+          "student_no": "Öğrenci No",
+          "grade": "Sınıf",
+          "parent": "Veli Bilgisi"
+        }
+      },
+      "success_title": "Aramıza Hoşgeldin!",
+      "success_desc": "Sınıfa başarıyla katıldınız.",
+      "go_dashboard": "Panele Git",
+      "error_generic": "Bir hata oluştu. Lütfen tekrar deneyin.",
+      "already_student": "Zaten bu sınıfta öğrencisiniz.",
+      "guest_error": "Katılmak için giriş yapmalısınız.",
+      "reject": "Reddet"
+    },
+    "header": {
+      "search_placeholder": "Arama yap...",
+      "profile": "Profil",
+      "settings": "Ayarlar",
+      "logout": "Çıkış Yap"
+    },
+    "students": {
+      "title": "Öğrenciler",
+      "add_student": "Öğrenci Ekle",
+      "search_placeholder": "İsim ile ara...",
+      "no_results": "Öğrenci bulunamadı.",
+      "columns": {
+        "name": "Öğrenci Adı",
+        "no": "Numara",
+        "class": "Sınıflar",
+        "level": "Seviye",
+        "phone": "Telefon",
+        "status": "Durum",
+        "actions": "İşlemler",
+        "invite": "Davet"
+      },
+      "actions": {
+        "edit": "Düzenle",
+        "archive": "Arşivle",
+        "delete": "Sil",
+        "copy_invite": "Davet Linki",
+        "view_invite_link": "Davet Linkini Görüntüle",
+        "regenerate_link": "Link Yenile",
+        "share": "Paylaş",
+        "view_details": "Detayları Gör",
+        "lessons": "Dersler",
+        "settings": "Ayarlar",
+        "classes": "Sınıflar",
+        "assign_homework": "Ödev Ver",
+        "whatsapp": "WhatsApp",
+        "sms": "SMS",
+        "coming_soon": "Çok Yakında"
+      },
+      "status": {
+        "shadow": "Davet Bekliyor",
+        "active": "Aktif",
+        "verified": "Onaylı",
+        "pending": "Bekliyor"
+      },
+      "table": {
+        "name": "Öğrenci",
+        "status": "Durum",
+        "student_no": "Öğrenci No",
+        "grade": "Sınıf",
+        "actions": "İşlemler"
+      },
+      "add_dialog": {
+        "title": "Yeni Öğrenci Ekle",
+        "desc": "Öğrenci bilgilerini giriniz. Davet linki oluşturulacaktır.",
+        "name": "Ad",
+        "surname": "Soyad",
+        "student_no": "Öğrenci No (İsteğe bağlı)",
+        "grade": "Sınıf Seviyesi",
+        "phone_number": "Telefon (İsteğe bağlı)",
+        "submit": "Öğrenci Oluştur",
+        "email": "E-posta (İsteğe Bağlı)",
+        "email_placeholder": "ornek@email.com",
+        "classrooms": "Sınıflar",
+        "select_classrooms": "Sınıf seçiniz...",
+        "avatar": "Profil Fotoğrafı",
+        "upload_photo": "Fotoğraf Yükle",
+        "or_choose": "veya avatar seç",
+        "cancel": "İptal",
+        "save": "Kaydet",
+        "clear": "Temizle",
+        "search_classroom": "Sınıf ara...",
+        "no_classroom_found": "Sınıf bulunamadı.",
+        "select_grade": "Seviye Seçin",
+        "success": "Öğrenci başarıyla oluşturuldu",
+        "copy_invite": "Davet linki kopyalandı",
+        "grades": {
+          "graduated": "Mezun",
+          "suffix": ". Sınıf"
+        }
+      }
+    },
+    "student": {
+      "upcoming_lessons": "Yaklaşan Dersler",
+      "completed_lessons": "Tamamlanan Dersler",
+      "pending_homework": "Bekleyen Ödevler",
+      "no_upcoming_lessons": "Yaklaşan ders bulunmuyor.",
+      "next_lesson": "Sonraki Ders",
+      "assignments_todo": "Yapılacak Ödevler",
+      "weekly_schedule": "Haftalık Program",
+      "no_pending_homework": "Bekleyen ödev yok.",
+      "due_date": "Son Tarih:",
+      "view_all": "Tümünü Gör",
+      "due": "Bitiş:",
+      "start": "Başla",
+      "all_caught_up": "Her şey tamam!"
+    },
+    "teacher": {
+      "active_students": "Aktif Öğrenciler",
+      "today_lessons_count": "Bugünkü Dersler",
+      "pending_homework_count": "Bekleyen Ödevler",
+      "take_attendance": "Yoklama Al",
+      "upcoming_lessons": "Bugünkü Program",
+      "no_lessons_today": "Bugün için planlanmış ders yok.",
+      "check_schedule_desc": "Gelecek günler için programınızı kontrol edin.",
+      "review": "İncele",
+      "view": "Görüntüle",
+      "mock_task_1": "Matematik 101 ödevini incele",
+      "mock_task_1_sub": "3 öğrenci inceleme bekliyor",
+      "mock_task_2": "Yeni öğrenci isteği",
+      "mock_task_2_sub": "Ali Yılmaz Fizik sınıfına katılmak istiyor",
+      "quick_actions": {
+        "title": "Hızlı İşlemler",
+        "add_student": "Öğrenci Ekle",
+        "add_lesson": "Ders Ekle",
+        "create_homework": "Ödev Oluştur",
+        "receive_payment": "Ödeme Al"
+      }
+    },
+    "common": {
+      "loading": "Yükleniyor...",
+      "save": "Kaydet",
+      "cancel": "İptal",
+      "delete_confirm": "Emin misiniz?",
+      "delete_desc": "Bu işlem geri alınamaz.",
+      "continue": "Devam Et",
+      "edit": "Düzenle",
+      "success": "İşlem başarılı",
+      "error": "Bir hata oluştu",
+      "edit_photo": "Fotoğrafı Düzenle",
+      "crop_description": "Konumlandırmak için sürükleyin ve yakınlaştırmak için kaydırıcıyı kullanın."
+    },
+    "welcome_title": "Deniko'ya Hoşgeldiniz",
+    "contact_support": "Bu ekranı görüyorsanız lütfen destek ile iletişime geçin."
+  },
+  "common": {
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "success": "Başarılı",
+    "error": "Hata",
+    "edit": "Düzenle",
+    "back_to_home": "Ana Sayfaya Dön",
+    "all_rights_reserved": "Tüm hakları saklıdır.",
+    "copyright": "© 2025 Deniko.",
+    "copyright_long": "© 2025 Deniko Eğitim Teknolojileri",
+    "error_occurred": "Bir hata oluştu",
+    "back": "Geri",
+    "print": "Yazdır",
+    "password_placeholder": "******",
+    "toggle_password_visibility": "Şifre görünürlüğünü değiştir",
+    "github_profile": "GitHub Profilim",
+    "patreon_profile": "Patreon Profilim",
+    "brand_name": "Deniko",
+    "zoom": "Yakınlaştır",
+    "crop_preview": "Kırpma Önizlemesi",
+    "crop_save": "Kırp ve Kaydet",
+    "edit_photo": "Fotoğrafı Düzenle",
+    "crop_description": "Konumlandırmak için sürükleyin ve yakınlaştırmak için kaydırıcıyı kullanın.",
+    "more_options": "Diğer seçenekler",
+    "copied": "Kopyalandı",
+    "copied_desc": "Bölüm panoya kopyalandı.",
+    "copy_failed": "Kopyalama başarısız",
+    "phone_input": {
+      "search_placeholder": "Ülke ara...",
+      "no_results": "Ülke bulunamadı.",
+      "country_selector": "Ülke seçici"
+    },
+    "skip_to_content": "Ana içeriğe atla",
+    "close": "Kapat",
+    "reset": "Sıfırla",
+    "separator": "•",
+    "date_format_long": "PPP p",
+    "empty_placeholder": "-",
+    "google": "Google",
+    "student_initials": "ÖĞ",
+    "app_name": "Deniko",
+    "loading": "Yükleniyor...",
+    "avatar": "Avatar",
+    "theme": {
+      "light": "Aydınlık",
+      "dark": "Karanlık",
+      "system": "Sistem",
+      "toggle_theme": "Temayı değiştir",
+      "loading": "Yükleniyor..."
+    }
+  },
+  "repro": {
+    "title": "Repro Sayfası"
+  },
+  "teacher": {
+    "invite_link_copied": "Davet linki kopyalandı",
+    "invite_link_copy_failed": "Davet linki kopyalanamadı",
+    "copy_invite_link": "Davet Linkini Kopyala"
+  },
+  "components": {
+    "phone_input": {
+      "search_country": "Ülke ara...",
+      "no_country_found": "Ülke bulunamadı.",
+      "country_selector_label": "Ülke seçici"
+    }
+  },
+  "student_detail": {
+    "tabs": {
+      "overview": "Genel Bakış",
+      "lessons": "Dersler",
+      "homework": "Ödevler",
+      "finance": "Finans",
+      "settings": "Ayarlar",
+      "exams": "Sınavlar",
+      "attendance": "Devamsızlık",
+      "classes": "Sınıflar"
+    },
+    "profile": {
+      "title": "Profili Düzenle",
+      "desc": "Öğrencinin kişisel bilgilerini ve iletişim detaylarını güncelleyin.",
+      "contact_parent": "Veli ile İletişime Geç",
+      "save": "Değişiklikleri Kaydet",
+      "archive_student": "Öğrenciyi Arşivle",
+      "delete_student": "Öğrenciyi Sil",
+      "update_success": "Öğrenci başarıyla güncellendi",
+      "update_error": "Güncelleme başarısız",
+      "archive_confirm": "Bu öğrenciyi arşivlemek istediğinize emin misiniz? Aktif listenizden gizlenecektir.",
+      "delete_confirm": "Bu öğrenciyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+    },
+    "header": {
+      "total_lessons": "Toplam Ders",
+      "balance": "Kalan Bakiye",
+      "invite_link": "Davet Linkini Kopyala",
+      "status": {
+        "active": "Aktif",
+        "shadow": "Davet Bekliyor"
+      },
+      "verified": "Onaylı",
+      "pending": "Bekliyor",
+      "no_level": "Seviye Yok",
+      "no_number": "No Yok",
+      "copy_link": "Linki Kopyala",
+      "link_copied": "Davet linki kopyalandı",
+      "unknown_student": "Bilinmeyen Öğrenci"
+    },
+    "overview": {
+      "upcoming_lessons": "Yaklaşan Dersler",
+      "no_upcoming_lessons": "Yaklaşan ders bulunmuyor.",
+      "recent_payments": "Son Ödemeler",
+      "no_recent_payments": "Son ödeme bulunmuyor.",
+      "general_info": "Genel Bilgiler",
+      "student_no": "Öğrenci No",
+      "grade": "Sınıf",
+      "phone": "Telefon",
+      "email": "E-posta",
+      "parent_info": "Veli Bilgileri",
+      "parent_name": "Veli Adı",
+      "parent_phone": "Veli Telefonu",
+      "parent_email": "Veli E-posta",
+      "private_notes": "Özel Notlar",
+      "private_notes_placeholder": "Bu öğrenci hakkında özel notlar ekleyin...",
+      "no_notes": "Henüz not eklenmemiş.",
+      "total_lessons": "Toplam Ders"
+    },
+    "classes": {
+      "no_classes": "Sınıf bulunamadı."
+    },
+    "lessons": {
+      "title": "Ders Geçmişi",
+      "add_lesson": "Bu Öğrenciye Ders Ekle",
+      "no_lessons": "Henüz ders kaydı bulunmuyor.",
+      "empty": "Planlanmış yaklaşan ders yok.",
+      "status": {
+        "scheduled": "Planlandı",
+        "completed": "Tamamlandı",
+        "cancelled": "İptal",
+        "missed": "Katılmadı"
+      },
+      "table": {
+        "date": "Tarih",
+        "title": "Başlık",
+        "status": "Durum",
+        "price": "Ücret"
+      }
+    },
+    "finance": {
+      "title": "Finansal Hareketler",
+      "receive_payment": "Ödeme Al",
+      "lesson_fee": "Ders Ücreti",
+      "payment_received": "Ödeme Alındı",
+      "balance": "Bakiye",
+      "no_transactions": "Henüz finansal işlem bulunmuyor.",
+      "empty": "Ödeme geçmişi buraya gelecek...",
+      "table": {
+        "date": "Tarih",
+        "type": "Tür",
+        "description": "Açıklama",
+        "amount": "Tutar"
+      }
+    },
+    "homework": {
+      "title": "Ödev Takibi",
+      "assign_homework": "Ödev Ata",
+      "no_homework": "Henüz ödev bulunmuyor.",
+      "status": {
+        "pending": "Bekliyor",
+        "completed": "Tamamlandı"
+      },
+      "table": {
+        "due_date": "Teslim Tarihi",
+        "title": "Başlık",
+        "status": "Durum",
+        "lesson": "Ders"
+      }
+    },
+    "exams": {
+      "title": "Sınavlar",
+      "no_exams": "Henüz sınav kaydı bulunmuyor."
+    },
+    "attendance": {
+      "title": "Devamsızlık",
+      "present": "Katılım",
+      "absent": "Devamsızlık",
+      "late": "Geç Kalma",
+      "history": "Devamsızlık Geçmişi",
+      "no_records": "Henüz devamsızlık kaydı bulunmuyor."
+    },
+    "settings": {
+      "title": "Öğrenci Ayarları",
+      "description": "Öğrenci profilini ve tercihlerini yönetin.",
+      "profile_photo": "Profil Fotoğrafı",
+      "change_photo": "Fotoğrafı Değiştir",
+      "personal_info": "Kişisel Bilgiler",
+      "full_name": "Ad Soyad",
+      "email": "E-posta",
+      "student_number": "Öğrenci Numarası",
+      "grade_level": "Sınıf Seviyesi",
+      "contact_info": "İletişim Bilgileri",
+      "parent_information": "Veli Bilgileri",
+      "parent_full_name": "Veli Adı Soyadı",
+      "parent_phone_number": "Veli Telefon Numarası",
+      "parent_email_address": "Veli E-posta Adresi",
+      "invite_link": "Davet Bağlantısı",
+      "invite_link_desc": "Bu öğrenci için davet bağlantısını etkinleştirin veya devre dışı bırakın.",
+      "invite_link_active": "Davet Bağlantısı Aktif",
+      "invite_link_inactive": "Davet Bağlantısı Pasif",
+      "copy_link": "Bağlantıyı Kopyala",
+      "danger_zone": "Tehlikeli Bölge",
+      "danger_zone_desc": "Bu öğrenci hesabı için geri alınamaz işlemler.",
+      "delete_student": "Öğrenciyi Sil",
+      "delete_student_desc": "Bu işlem geri alınamaz. Öğrenci ve tüm verileri kalıcı olarak silinecektir.",
+      "delete_button": "Öğrenciyi Sil",
+      "save_changes": "Değişiklikleri Kaydet",
+      "saving": "Kaydediliyor...",
+      "success": "Ayarlar başarıyla güncellendi.",
+      "error_message": "Ayarlar güncellenirken bir hata oluştu.",
+      "invite_toggled": "Davet bağlantısı durumu güncellendi.",
+      "link_copied": "Bağlantı panoya kopyalandı.",
+      "custom_name": "Görünen İsim",
+      "custom_name_desc": "Bu ismi sadece siz göreceksiniz.",
+      "phone": "Telefon Numarası",
+      "phone_desc": "Bildirimler için iletişim numarası.",
+      "phone_claimed_desc": "Bu öğrenci hesabını onayladığı için telefon numarasını sadece kendisi değiştirebilir.",
+      "notes": "Özel Notlar",
+      "notes_desc": "Sadece sizin görebileceğiniz notlar.",
+      "claimed_profile": "Onaylanmış Profil",
+      "claimed_profile_desc": "Bu öğrenci profilini sahiplendi. Sadece kendi görünümünüz için görünen adını ve avatarını düzenleyebilirsiniz. İletişim bilgileri öğrenci tarafından yönetilir.",
+      "real_first_name": "Gerçek Ad",
+      "real_last_name": "Gerçek Soyad",
+      "photo_claimed_desc": "Onaylı hesaplarda fotoğraf değiştirilemez.",
+      "name_placeholder": "Örn: Ahmet Yılmaz",
+      "student_no_placeholder": "123",
+      "grade_placeholder": "12. Sınıf",
+      "invite_link_status": "Davet Bağlantısı Durumu",
+      "archive": {
+        "title": "Öğrenciyi Arşivle",
+        "desc": "Bu öğrenciyi aktif listenizden kaldırın. Geçmiş veriler korunur.",
+        "button": "Öğrenciyi Arşivle",
+        "confirm_title": "Emin misiniz?",
+        "confirm_desc": "Bu işlem öğrenciyi arşivinize taşıyacaktır. Daha sonra geri yükleyebilirsiniz.",
+        "success": "Öğrenci arşivlendi"
+      },
+      "delete": {
+        "title": "Öğrenciyi Sil",
+        "desc": "Bu öğrenciyi ve tüm ilişkili verileri kalıcı olarak silin.",
+        "button": "Öğrenciyi Sil",
+        "confirm_title": "Kesinlikle emin misiniz?",
+        "confirm_desc": "Bu işlem geri alınamaz. Öğrenci profili ve verileriniz sunucularımızdan kalıcı olarak silinecektir.",
+        "success": "Öğrenci silindi"
+      }
+    }
+  },
+  "join": {
+    "title": "Davetiyeyi Kabul Et",
+    "desc": "{teacher} sizi öğrencisi olarak eklemek istiyor.",
+    "success": "Başarıyla katıldınız!",
+    "error_used": "Bu bağlantı geçersiz veya kullanılmış.",
+    "accept_button": "Kabul Et ve Birleştir",
+    "welcome_user": "Sayın {name},"
+  },
+  "seo": {
+    "profile": {
+      "title": "{name} — Deniko Profili",
+      "description": {
+        "teacher": "{name} adlı öğretmenin Deniko profili. Detayları inceleyin ve iletişime geçin.",
+        "student": "{name} adlı öğrencinin Deniko profili.",
+        "generic": "{name} adlı kullanıcının Deniko profili."
+      },
+      "private": "Bu profil gizlidir."
+    }
+  },
+  "auth": {
+    "placeholders": {
+      "email": "ornek@email.com",
+      "password": "******"
+    },
+    "register": {
+      "title": "Deniko'ya Katıl",
+      "subtitle": "Profesyonel özel ders yönetim platformu",
+      "hero_title": "Aramıza Katılın",
+      "hero_desc": "Binlerce öğrenci ve öğretmenin yer aldığı bu büyük ailede yerinizi alın.",
+      "role_select": "Hesap Türü Seçin",
+      "student": "Öğrenci",
+      "student_desc": "Ders almak ve gelişmek istiyorum",
+      "teacher": "Öğretmen",
+      "teacher_desc": "Ders vermek ve yönetmek istiyorum",
+      "first_name": "Ad",
+      "last_name": "Soyad",
+      "username": "Kullanıcı Adı",
+      "email": "E-posta",
+      "phone": "Telefon Numarası",
+      "password": "Şifre",
+      "password_confirm": "Şifre Tekrarı",
+      "confirm_password": "Şifre Tekrarı",
+      "submit": "Kayıt Ol",
+      "submitting": "Kayıt Yapılıyor...",
+      "have_account": "Zaten hesabınız var mı?",
+      "login_link": "Giriş Yap",
+      "success_title": "Kayıt Başarılı!",
+      "success_desc": "E-posta adresinize bir doğrulama bağlantısı gönderdik. Lütfen gelen kutunuzu kontrol ediniz.",
+      "errors": {
+        "user_exists": "Bu e-posta adresi zaten kullanımda",
+        "generic": "Kayıt sırasında bir hata oluştu.",
+        "invalid_data": "Geçersiz form verileri"
+      },
+      "validation": {
+        "first_name_min": "Ad en az 2 karakter olmalıdır",
+        "last_name_min": "Soyad en az 2 karakter olmalıdır",
+        "email_invalid": "Geçerli bir e-posta adresi giriniz",
+        "phone_min": "Geçerli bir telefon numarası giriniz",
+        "role_required": "Lütfen bir rol seçiniz",
+        "password_min": "Şifre en az 8 karakter olmalıdır",
+        "password_regex": "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir",
+        "password_mismatch": "Şifreler eşleşmiyor",
+        "password_required": "Şifre gereklidir"
+      }
+    },
+    "login": {
+      "title": "Deniko'ya Hoş Geldiniz",
+      "subtitle": "Profesyonel özel ders yönetim platformu",
+      "hero_title": "Eğitimde Yeni Bir Dönem",
+      "hero_desc": "Öğretmen ve öğrencileri bir araya getiren, modern ve etkili eğitim platformuna hoş geldiniz.",
+      "card_title": "Giriş Yap",
+      "card_desc": "Google ile veya e-posta adresinle giriş yap",
+      "chip": "Modern özel dersler için tasarlandı",
+      "google_login": "Google ile Devam Et",
+      "or_email": "Veya E-posta ile",
+      "email": "E-posta",
+      "placeholder_email": "ornek@email.com",
+      "password": "Şifre",
+      "forgot_password_link": "Şifremi Unuttum",
+      "submit": "Giriş Yap",
+      "no_account": "Hesabınız yok mu?",
+      "register_link": "Kayıt Ol",
+      "back_to_home": "Ana Sayfaya Dön",
+      "validation": {
+        "email_invalid": "Geçerli bir e-posta adresi giriniz",
+        "password_required": "Şifre gereklidir",
+        "invalid_credentials": "Hatalı e-posta veya şifre.",
+        "rate_limit": "Çok fazla giriş denemesi yaptınız. Lütfen daha sonra tekrar deneyiniz."
+      }
+    },
+    "forgot_password": {
+      "title": "Şifrenizi mi Unuttunuz?",
+      "desc": "E-posta adresinizi girin, size şifrenizi sıfırlamanız için bir bağlantı gönderelim.",
+      "chip": "Sorun değil, herkesin başına gelir",
+      "email_label": "E-posta Adresi",
+      "submit": "Sıfırlama Linki Gönder",
+      "submitting": "Gönderiliyor...",
+      "back_to_login": "Girişe Dön",
+      "try_again": "Farklı bir e-posta ile dene",
+      "success": "Bu e-posta adresiyle kayıtlı bir hesap varsa, kısa süre içinde şifre sıfırlama bağlantısı alacaksınız."
+    },
+    "reset_password": {
+      "title": "Şifre Sıfırlama",
+      "desc": "Yeni şifrenizi aşağıya girin.",
+      "new_password": "Yeni Şifre",
+      "confirm_password": "Şifre Tekrarı",
+      "submit": "Şifreyi Sıfırla",
+      "submitting": "Sıfırlanıyor...",
+      "success": "Şifreniz başarıyla sıfırlandı. Artık giriş yapabilirsiniz.",
+      "success_title": "Şifre Sıfırlama Başarılı",
+      "success_desc": "Şifreniz başarıyla sıfırlandı. Artık giriş yapabilirsiniz.",
+      "invalid_token": "Geçersiz veya süresi dolmuş token.",
+      "expired_token": "Bu bağlantının süresi dolmuş.",
+      "user_not_found": "Kullanıcı bulunamadı.",
+      "invalid_link_title": "Geçersiz Bağlantı",
+      "invalid_link_desc": "Bu şifre sıfırlama bağlantısı geçersiz veya süresi dolmuş. Lütfen yeni bir tane talep edin.",
+      "same_password": "Yeni şifre eski şifre ile aynı olamaz."
+    },
+    "onboarding": {
+      "title": "Profilinizi Tamamlayın",
+      "subtitle": "Devam etmek için lütfen eksik bilgilerinizi giriniz.",
+      "submit": "Kaydet ve Devam Et",
+      "submitting": "Kaydediliyor..."
+    },
+    "verification": {
+      "unverified_title": "E-posta adresiniz doğrulanmamış.",
+      "unverified_desc": "Giriş yapabilmek için lütfen e-posta adresinize gönderilen doğrulama bağlantısına tıklayın.",
+      "resend_button": "Doğrulama Kodunu Tekrar Gönder",
+      "sending": "Gönderiliyor...",
+      "wait": "Lütfen bekleyin: {time}",
+      "success": "Doğrulama bağlantısı tekrar gönderildi.",
+      "error": "Bir hata oluştu.",
+      "user_not_found": "Kullanıcı bulunamadı.",
+      "already_verified": "E-posta zaten doğrulanmış."
+    },
+    "verify_page": {
+      "verifying": "Doğrulanıyor...",
+      "success_title": "E-posta Doğrulandı!",
+      "error_title": "Doğrulama Başarısız",
+      "verifying_desc": "Lütfen bekleyin, e-posta adresiniz doğrulanıyor.",
+      "missing_token": "Doğrulama kodu bulunamadı.",
+      "resend_button": "Doğrulama Kodunu Tekrar Gönder",
+      "back_to_login": "Giriş Yap",
+      "messages": {
+        "invalid_token": "Geçersiz doğrulama kodu.",
+        "expired_token": "Doğrulama kodunun süresi dolmuş.",
+        "user_not_found": "Kullanıcı bulunamadı.",
+        "success": "E-posta adresi başarıyla doğrulandı.",
+        "error": "Doğrulama sırasında bir hata oluştu."
+      }
+    },
+    "errors": {
+      "generic": "Bir hata oluştu."
+    }
+  },
+
+  "validation": {
+    "passwords_do_not_match": "Şifreler eşleşmiyor",
+    "min_length": "En az {length} karakter olmalı",
+    "required": "Zorunlu"
+  },
+
+  "home": {
+    "home": "Ana Sayfa",
+    "hero_title": "Eğitim Hayatınızı Dijitalleştirin",
+    "hero_subtitle": "Öğretmenler ve öğrenciler için tasarlanmış akıllı asistan. Ders programı, öğrenci takibi ve performans analizleri tek bir platformda.",
+    "get_started": "Deniko'yu Keşfet",
+    "login": "Giriş Yap",
+    "features": {
+      "title": "Eğitim İçin Güçlü Araçlar",
+      "scheduling_title": "Akıllı Planlama",
+      "scheduling_desc": "Ders programınızı optimize edin, çakışmaları önleyin ve zamanınızı verimli kullanın.",
+      "students_title": "Öğrenci Portföyü",
+      "students_desc": "Her öğrenci için özel gelişim raporları, notlar ve ödev takibi oluşturun.",
+      "progress_title": "Veri Odaklı Analiz",
+      "progress_desc": "Başarı grafiklerini inceleyin, eksikleri belirleyin ve hedeflere odaklanın.",
+      "communication_title": "Kesintisiz İletişim",
+      "communication_desc": "Entegre mesajlaşma ve duyurular ile öğrenci ve velilerle her zaman iletişimde kalın.",
+      "payments_title": "Ödeme Takibi",
+      "payments_desc": "Ders ücretlerini izleyin, hatırlatmaları otomatikleştirin ve tüm makbuzları tek yerde tutun.",
+      "guardians_title": "Veli Portalı",
+      "guardians_desc": "İlerleme özetlerini velilerle paylaşın ve iletişimi merkezileştirin.",
+      "resources_title": "Kaynak Kütüphanesi",
+      "resources_desc": "Eğitim materyallerini, belgeleri ve videoları güvenle saklayın ve paylaşın.",
+      "mobile_title": "Mobil Erişim",
+      "mobile_desc": "Duyarlı mobil arayüzümüz ile panelinize her yerden erişin.",
+      "badge": "HEPSİ BİR ARADA PLATFORM",
+      "subtitle": "Dersleri planlayın, öğrencileri takip edin ve performansı tek, modern bir ekranda görün."
+    },
+    "stats": {
+      "teachers_label": "Öğretmenler",
+      "teachers_suffix": "eğitmen",
+      "teachers_hint": "Deniko kullanan profesyonel eğitmenler.",
+      "students_label": "Öğrenciler",
+      "students_suffix": "profil",
+      "students_hint": "Aktif öğrenci profilleri.",
+      "lessons_label": "Dersler",
+      "lessons_suffix": "oturum",
+      "lessons_hint": "Planlanan ve tamamlanan toplam ders."
+    },
+    "how_it_works": {
+      "title": "Deniko Nasıl Çalışır?",
+      "subtitle": "Karmaşık süreçleri basitleştirin. Sadece 3 adımda dijital dönüşümünüzü tamamlayın.",
+      "step1_title": "Profilinizi Oluşturun",
+      "step1_desc": "Eğitmen veya öğrenci rolünüzü seçerek dijital kimliğinizi oluşturun.",
+      "step2_title": "Programınızı Düzenleyin",
+      "step2_desc": "Ders saatlerini, müsaitlik durumunu ve çalışma takviminizi ayarlayın.",
+      "step3_title": "Verimliliği Artırın",
+      "step3_desc": "Otomatik hatırlatmalar ve analizlerle eğitim sürecine odaklanın.",
+      "step_1": "1",
+      "step_2": "2",
+      "step_3": "3"
+    },
+    "cta": {
+      "title": "Modern Eğitimin Bir Parçası Olun",
+      "subtitle": "Klasik yöntemleri geride bırakın. Deniko ile eğitim sürecinizi daha organize ve verimli hale getirin.",
+      "button": "Hemen Başlayın"
+    },
+    "mock_dashboard": {
+      "attendance": "Katılım",
+      "attendance_value": "%94",
+      "attendance_change": "+%4.5",
+      "active_students": "Aktif Öğrenci",
+      "active_students_value": "48",
+      "classes_today": "Bugünkü Dersler",
+      "classes_today_value": "12",
+      "schedule": "Ders Programı",
+      "math": "Matematik",
+      "physics": "Fizik",
+      "chemistry": "Kimya",
+      "biology": "Biyoloji",
+      "active": "Aktif",
+      "pending": "Bekliyor",
+      "completed": "Tamamlandı",
+      "exam_results": "Sınav Sonuçları",
+      "class_average": "Sınıf Ortalaması",
+      "weekly": "Haftalık",
+      "dashboard_title": "Panel",
+      "overview": "Genel Bakış",
+      "students": "Öğrenciler",
+      "finance": "Finans",
+      "room": "Derslik",
+      "class_name": "12-A",
+      "room_number": "301",
+      "average_score": "%84",
+      "graphic_schedule": "Ders Programı",
+      "graphic_profile": "Öğrenci Profili",
+      "graphic_performance": "Performans",
+      "graphic_analysis": "Analiz",
+      "assignments": "Ödevler",
+      "assignments_pending": "Bekleyenler",
+      "assignment_math_title": "Türev Çalışma Kağıdı",
+      "assignment_physics_title": "Laboratuvar Raporu",
+      "assignment_lit_title": "Roman Özeti",
+      "literature": "Edebiyat",
+      "due_tomorrow": "Son Teslim: Yarın, 23:59",
+      "due_3days": "Son Teslim: 3 Gün Kaldı",
+      "announcements": "Duyurular",
+      "school_board": "Okul Panosu",
+      "announcement_exam_title": "Sınav Tarihleri",
+      "announcement_exam_desc": "2. Dönem vize sınav takvimi yayınlandı. Kontrol etmeyi unutmayın.",
+      "announcement_match_title": "Basketbol Maçı",
+      "announcement_match_desc": "Yarın öğle arasında 12-A ve 12-B sınıf maçı var! 🏀",
+      "see_all": "Tümünü Gör",
+      "lab": "Laboratuvar",
+      "carousel_back": {
+        "desc": "{title} modülü ile ilgili tüm detaylara buradan ulaşabilirsiniz. Verimliliğinizi artırmak için tasarlanmış araçları keşfedin.",
+        "feature_1": "Detaylı analiz ve raporlama",
+        "feature_2": "Kişiselleştirilmiş öneriler",
+        "feature_3": "Anlık bildirim sistemi"
+      },
+      "time_ago": {
+        "10_min": "10 dk önce",
+        "2_hours": "2 saat önce"
+      },
+      "vs_last_month": "geçen aya göre",
+      "chart": {
+        "completed": "Tamamlanan",
+        "remaining": "Kalan"
+      },
+      "success": "Başarı",
+      "carousel_instructions": {
+        "swipe": "Kaydırarak geç",
+        "hold": "Çevirmek için basılı tut"
+      }
+    },
+    "footer": {
+      "built_by": "Geliştirici:",
+      "source_code": ". Kaynak koduna şuradan ulaşabilirsiniz:",
+      "github": "GitHub",
+      "patreon": "Patreon",
+      "brand": "Deniko",
+      "support": "Destek",
+      "platform": "Platform",
+      "legal": "Yasal",
+      "patent": "Patent hakları Deniko'ya aittir."
+    }
+  },
+  "email": {
+    "verification": {
+      "subject": "Deniko Hesabınızı Doğrulayın",
+      "title": "Deniko'ya Hoş Geldiniz!",
+      "greeting": "Merhaba,",
+      "body": "Aramıza katıldığınız için çok mutluyuz. Hesabınızı güvenli tutmak ve tüm özelliklere erişmek için lütfen e-posta adresinizi doğrulayın.",
+      "button": "Hesabımı Doğrula",
+      "ignore": "Bu e-postayı siz talep etmediyseniz, lütfen dikkate almayınız.",
+      "footer": "Deniko - Öğretmen ve Öğrenci Yönetim Platformu.",
+      "website": "Web Site",
+      "support": "Destek",
+      "footer_disclaimer": "Bu e-posta, Deniko hesabınızla ilgili önemli bir işlem (üyelik doğrulama) hakkında olduğu için gönderilmiştir.",
+      "footer_address": "Güzeltepe Mah., 747. Cd., No:14 Çankaya/Ankara",
+      "footer_copyright": "© 2025 Deniko. Tüm hakları saklıdır.",
+      "footer_terms": "Kullanıcı Sözleşmesi",
+      "footer_privacy": "Gizlilik Politikası"
+    },
+    "password_reset": {
+      "subject": "Deniko Şifre Sıfırlama Talebi",
+      "title": "Şifrenizi Sıfırlayın",
+      "greeting": "Merhaba,",
+      "body": "Hesabınız için bir şifre sıfırlama talebi aldık. Şifrenizi yenilemek için aşağıdaki butona tıklayın. Bu link 1 saat süreyle geçerlidir.",
+      "button": "Şifreyi Sıfırla",
+      "ignore": "Bu talebi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.",
+      "footer": "Deniko - Öğretmen ve Öğrenci Yönetim Platformu.",
+      "website": "Web Sitesi",
+      "support": "Destek",
+      "footer_disclaimer": "Bu e-posta Deniko hesabınızla ilgili önemli bilgiler içermektedir.",
+      "footer_address": "Güzeltepe Mah., 747. Cd., No:14 Çankaya/Ankara",
+      "footer_copyright": "© 2025 Deniko. Tüm hakları saklıdır.",
+      "footer_terms": "Kullanım Koşulları",
+      "footer_privacy": "Gizlilik Politikası"
+    },
+    "email_change": {
+      "subject": "Yeni E-posta Adresinizi Doğrulayın - Deniko",
+      "title": "Yeni E-posta Adresini Doğrula",
+      "greeting": "Merhaba,",
+      "body": "E-posta adresinizi değiştirme talebi aldık. Yeni e-posta adresinizi doğrulamak için lütfen aşağıdaki butona tıklayın.",
+      "button": "Yeni E-postayı Doğrula",
+      "ignore": "Bu değişikliği siz talep etmediyseniz, lütfen bu e-postayı dikkate almayınız.",
+      "footer": "Deniko - Öğretmen ve Öğrenci Yönetim Platformu.",
+      "website": "Web Sitesi",
+      "support": "Destek",
+      "footer_disclaimer": "Bu e-posta, Deniko hesabınızdaki e-posta değişikliği talebi hakkında gönderilmiştir.",
+      "footer_address": "Güzeltepe Mah., 747. Cd., No:14 Çankaya/Ankara",
+      "footer_copyright": "© 2025 Deniko. Tüm hakları saklıdır.",
+      "footer_terms": "Kullanıcı Sözleşmesi",
+      "footer_privacy": "Gizlilik Politikası"
+    }
+  },
+  "errors": {
+    "unauthorized": "Yetkisiz erişim",
+    "teacher_profile_not_found": "Öğretmen profili bulunamadı",
+    "student_not_found": "Öğrenci bulunamadı",
+    "invalid_fields": "Geçersiz alanlar",
+    "failed_to_create_student": "Öğrenci oluşturulamadı",
+    "failed_to_update_student": "Öğrenci güncellenemedi",
+    "failed_to_delete_student": "Öğrenci silinemedi",
+    "failed_to_upload_avatar": "Avatar yüklenemedi",
+    "generic_error": "Bir hata oluştu",
+    "name_min_length": "İsim en az 2 karakter olmalıdır",
+    "surname_min_length": "Soyisim en az 2 karakter olmalıdır",
+    "invalid_email": "Geçersiz e-posta adresi",
+    "login_validation_failed": "Giriş doğrulama hatası",
+    "login_failed": "Giriş başarısız",
+    "email_not_verified": "E-posta doğrulanmamış",
+    "resend_cooldown": "Yeniden göndermeden önce lütfen bekleyin",
+    "resend_error": "Doğrulama Kodu Gönderme Hatası",
+    "registration_error": "Kayıt Hatası",
+    "verification_error": "Doğrulama Hatası",
+    "forgot_password_error": "Şifremi Unuttum Hatası",
+    "reset_password_error": "Şifre Sıfırlama Hatası",
+    "onboarding_error": "Kurulum Hatası",
+    "session_not_found": "Oturum bulunamadı. Lütfen tekrar giriş yapın.",
+    "accept_terms": "Hizmet şartlarını kabul etmelisiniz.",
+    "phone_required": "Telefon numarası gereklidir.",
+    "password_required": "Şifre alanları gereklidir.",
+    "passwords_mismatch": "Şifreler eşleşmiyor.",
+    "password_min_length": "Şifre en az 8 karakter olmalıdır.",
+    "password_complexity": "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.",
+    "invalid_token": "Geçersiz veya süresi dolmuş token",
+    "profile_already_claimed": "Profil zaten sahiplenilmiş",
+    "invite_expired": "Davet bağlantısının süresi dolmuş. Lütfen öğretmeninizden yeni bir tane isteyin.",
+    "failed_to_claim_profile": "Profil sahiplenilemedi",
+    "failed_to_fetch_invite": "Davet detayları alınamadı",
+    "failed_to_fetch_profile": "Token ile profil alınamadı",
+    "no_relation_found": "Bu öğrenci ile ilişki bulunamadı",
+    "student_archived": "Öğrenci arşivlendi",
+    "failed_to_archive_student": "Öğrenci arşivlenemedi",
+    "student_unlinked": "Öğrenci listenizden kaldırıldı (Bağlantı kesildi).",
+    "shadow_student_deleted": "Gölge öğrenci ve veriler tamamen silindi.",
+    "relation_not_found": "İlişki bulunamadı",
+    "cannot_delete_claimed": "Sahiplenilmiş öğrenci silinemez",
+    "invite_regenerated": "Davet bağlantısı yenilendi.",
+    "failed_to_regenerate_token": "Token yenilenemedi",
+    "invite_opened": "Davet bağlantısı açıldı.",
+    "invite_closed": "Davet bağlantısı kapatıldı.",
+    "failed_to_toggle_invite": "Davet bağlantısı değiştirilemedi",
+    "info_updated": "Bilgiler güncellendi.",
+    "failed_to_update_settings": "Öğrenci ayarları güncellenemedi",
+    "update_failed": "Güncelleme başarısız",
+    "file_not_found": "Dosya bulunamadı",
+    "file_not_found_or_error": "Dosya bulunamadı veya Hata",
+    "unknown_error": "Bilinmeyen hata",
+    "phone_start_zero": "Telefon numarası 0 ile başlamamalıdır."
+  },
+  "support": {
+    "nav": {
+      "faq": "SSS",
+      "support": "Destek"
+    },
+    "hero": {
+      "title": "Nasıl yardımcı olabiliriz?",
+      "subtitle": "Bilgi bankamızda arama yapın veya destek ekibimizle iletişime geçin.",
+      "search_placeholder": "Cevaplarda ara..."
+    },
+    "faq": {
+      "title": "Sıkça Sorulan Sorular",
+      "no_results": "Sonuç bulunamadı",
+      "no_results_desc": "Arama terimlerinizi değiştirmeyi deneyin",
+      "categories": {
+        "general": "Genel",
+        "billing": "Finansal Özellikler",
+        "teachers": "Öğretmenler",
+        "students": "Öğrenciler"
+      },
+      "items": {
+        "general": [
+          {
+            "question": "Deniko nedir?",
+            "answer": "Deniko, özel ders yönetimi için kapsamlı bir platformdur. Öğretmenlerin ders programlarını düzenlemelerine, öğrencileri takip etmelerine ve ödemeleri verimli bir şekilde yönetmelerine yardımcı olur."
+          },
+          {
+            "question": "Ücretsiz mi?",
+            "answer": "Evet, Deniko tamamen ücretsizdir. Hiçbir gizli ücret veya abonelik yoktur."
+          },
+          {
+            "question": "Verilerim ne kadar güvende?",
+            "answer": "Verilerinizi korumak için endüstri standardı şifreleme kullanıyoruz. Tüm bağlantılar SSL/TLS ile güvence altına alınmıştır ve düzenli yedeklemeler yapıyoruz."
+          },
+          {
+            "question": "Deniko'yu mobilde kullanabilir miyim?",
+            "answer": "Evet, Deniko tamamen mobil uyumludur ve ayrı bir uygulamaya ihtiyaç duymadan tüm mobil cihazlarda, tabletlerde ve masaüstü bilgisayarlarda harika çalışır."
+          },
+          {
+            "question": "Deniko'yu kimler kullanabilir?",
+            "answer": "Deniko, özel ders veren öğretmenler, eğitim koçları, etüt merkezleri ve özel ders alan öğrenciler için tasarlanmıştır."
+          },
+          {
+            "question": "İnternet bağlantısı gerekli mi?",
+            "answer": "Evet, Deniko bulut tabanlı bir platformdur, bu nedenle verilerinize erişmek ve güncellemeleri almak için internet bağlantısına ihtiyacınız vardır."
+          },
+          {
+            "question": "Birden fazla cihazda kullanabilir miyim?",
+            "answer": "Kesinlikle! Hesabınıza bilgisayar, tablet veya telefonunuzdan aynı anda erişebilirsiniz. Tüm verileriniz anlık olarak senkronize edilir."
+          }
+        ],
+        "billing": [
+          {
+            "question": "Öğrenci ödemelerini nasıl takip ederim?",
+            "answer": "Finans modülü üzerinden öğrencilerden aldığınız ödemeleri kaydedebilir, bekleyen ödemeleri görebilir ve hatırlatmalar oluşturabilirsiniz."
+          }
+        ],
+        "teachers": [
+          {
+            "question": "Öğrenci nasıl eklerim?",
+            "answer": "Panelinizdeki Öğrenciler sekmesine gidin ve 'Öğrenci Ekle' butonuna tıklayın. Bilgilerini girebilir veya onlara bir davet bağlantısı gönderebilirsiniz."
+          },
+          {
+            "question": "Öğrenci devamsızlığını takip edebilir miyim?",
+            "answer": "Evet, takviminizden veya ders detay sayfasından her ders için yoklamayı doğrudan alabilirsiniz."
+          },
+          {
+            "question": "Öğrencilerle dosya paylaşabilir miyim?",
+            "answer": "Her ders içinde veya doğrudan bir öğrenci profilinde belge, ödev ve kaynak yükleyip paylaşabilirsiniz."
+          },
+          {
+            "question": "Öğrenci sayısında bir sınır var mı?",
+            "answer": "Hayır, öğrenci sayısında herhangi bir sınır yoktur."
+          },
+          {
+            "question": "Ders programımı nasıl oluştururum?",
+            "answer": "Takvim modülünü kullanarak ders saatlerinizi, tekrarlayan dersleri ve müsaitlik durumunuzu kolayca ayarlayabilirsiniz."
+          },
+          {
+            "question": "Velilerle iletişim kurabilir miyim?",
+            "answer": "Evet, öğrenci profillerine veli bilgilerini ekleyebilir ve sistem üzerinden velilere bilgilendirme mesajları veya raporlar gönderebilirsiniz."
+          },
+          {
+            "question": "Ödev takibi nasıl yapılır?",
+            "answer": "Öğrencilere ödev atayabilir, teslim tarihlerini belirleyebilir ve tamamlanma durumlarını takip edebilirsiniz."
+          }
+        ],
+        "students": [
+          {
+            "question": "Bir sınıfa nasıl katılırım?",
+            "answer": "Bir hesap oluşturmak ve otomatik olarak sınıfa katılmak için öğretmeniniz tarafından sağlanan davet bağlantısını kullanın."
+          },
+          {
+            "question": "Gelecek derslerimi nasıl görebilirim?",
+            "answer": "Paneliniz, tüm yaklaşan derslerinizi, ödevlerinizi ve teslim tarihlerinizi içeren kişiselleştirilmiş bir takvim gösterir."
+          },
+          {
+            "question": "Öğretmenime mesaj atabilir miyim?",
+            "answer": "Evet, dersler veya ödevler hakkında öğretmeninizle güvenli bir şekilde iletişim kurmak için dahili mesajlaşma sistemini kullanabilirsiniz."
+          },
+          {
+            "question": "Ödevimi nasıl gönderirim?",
+            "answer": "Panelinizdeki ilgili derse veya ödeve gidin ve çalışmanızı göndermek için yükleme butonunu kullanın."
+          },
+          {
+            "question": "Ders notlarına nasıl ulaşırım?",
+            "answer": "Öğretmeninizin paylaştığı ders notlarına, ilgili dersin detay sayfasından veya kaynak kütüphanesinden ulaşabilirsiniz."
+          },
+          {
+            "question": "Bildirim ayarlarımı nasıl değiştiririm?",
+            "answer": "Ayarlar menüsünden e-posta ve uygulama içi bildirim tercihlerinizi özelleştirebilirsiniz."
+          }
+        ]
+      }
+    },
+    "cta": {
+      "title": "Hala yardıma mı ihtiyacınız var?",
+      "subtitle": "Destek ekibimiz bir tık uzağınızda.",
+      "button_contact": "Destek ile İletişime Geç",
+      "button_chat": "Canlı Sohbet"
+    },
+    "contact": {
+      "title": "Destek ile İletişime Geçin",
+      "subtitle": "Bir bilet oluşturun, size geri dönelim.",
+      "info": {
+        "email": "support@deniko.com",
+        "email_label": "Bize E-posta Gönderin",
+        "office": "123 Education St, Tech City, TC 12345",
+        "chat_label": "Canlı Sohbet",
+        "chat_desc": "09:00 - 17:00 (EST) arası müsait",
+        "phone_label": "Telefon Desteği",
+        "phone_desc": "+90 (553) 000-0000"
+      },
+      "form": {
+        "name": "İsim",
+        "name_placeholder": "Ad Soyad",
+        "email": "E-posta",
+        "email_placeholder": "ornek@email.com",
+        "subject": "Konu",
+        "subject_placeholder": "Nasıl yardımcı olabiliriz?",
+        "type_label": "Konu Başlığı",
+        "type_placeholder": "Bir konu seçin",
+        "message": "Mesaj",
+        "message_placeholder": "Lütfen sorununuzu açıklayın...",
+        "submit": "Bilet Gönder",
+        "submitting": "Gönderiliyor...",
+        "success_title": "Bilet Gönderildi",
+        "success_description": "Talebinizi aldık. Bilet ID: {ticketId}",
+        "error_title": "Gönderim Başarısız",
+        "error_description": "Lütfen daha sonra tekrar deneyin.",
+        "types": {
+          "general": "Genel Soru",
+          "bug": "Hata Bildirimi",
+          "billing": "Finans/Ödeme Takibi",
+          "feature": "Özellik İsteği"
+        },
+        "validation": {
+          "name_required": "İsim gereklidir",
+          "email_invalid": "Geçersiz e-posta adresi",
+          "subject_min": "Konu en az 5 karakter olmalıdır",
+          "type_required": "Lütfen bir konu seçin",
+          "message_min": "Mesaj en az 10 karakter olmalıdır"
+        }
+      }
+    }
+  }
+}

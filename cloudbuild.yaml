@@ -1,61 +1,62 @@
 steps:
   # -------------------------------------------------------------------------
-  # 1. ADIM: Önceki İmajı Çek (Cache Hazırlığı)
+  # 1. Build API
   # -------------------------------------------------------------------------
-  # Amacı: Eğer daha önce build aldıysak, o imajı indirip "kopya çekmek" için kullanacağız.
-  # '|| exit 0' kısmı: Eğer ilk kez çalışıyorsa hata verip durmasın, devam etsin diye.
-  - name: "gcr.io/cloud-builders/docker"
-    entrypoint: "bash"
-    args: ["-c", "docker pull gcr.io/$PROJECT_ID/deniko:latest || exit 0"]
-
-  # -------------------------------------------------------------------------
-  # 2. ADIM: Build İşlemi (Cache Kullanarak)
-  # -------------------------------------------------------------------------
-  # '--cache-from': Sihirli komut budur. Değişmeyen kısımları (npm install vb.) atlar.
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
         "-t",
-        "gcr.io/$PROJECT_ID/deniko:latest",
-        "--cache-from",
-        "gcr.io/$PROJECT_ID/deniko:latest",
+        "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-api:latest",
+        "-f",
+        "apps/api/Dockerfile",
         ".",
       ]
+    id: "Build API"
 
   # -------------------------------------------------------------------------
-  # 3. ADIM: İmajı Gönder (Push)
+  # 2. Build Web
   # -------------------------------------------------------------------------
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/$PROJECT_ID/deniko:latest"]
+    args:
+      [
+        "build",
+        "-t",
+        "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-web:latest",
+        "-f",
+        "apps/web/Dockerfile",
+        ".",
+      ]
+    id: "Build Web"
+    waitFor: ["-"] # Run in parallel with API build
 
   # -------------------------------------------------------------------------
-  # 4. ADIM: Cloud Run'a Dağıt (Deploy)
+  # 3. Push API
   # -------------------------------------------------------------------------
-  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
-    entrypoint: gcloud
+  - name: "gcr.io/cloud-builders/docker"
     args:
-      - "run"
-      - "deploy"
-      - "deniko"
-      - "--image"
-      - "gcr.io/$PROJECT_ID/deniko:latest"
-      - "--region"
-      - "europe-west1"
-      - "--platform"
-      - "managed"
-      - "--allow-unauthenticated"
-      - "--port"
-      - "8080"
-      # Cloud SQL Bağlantı Adını buraya tekrar yazman gerekebilir
-      # Veya Cloud Run ayarlarında zaten kayıtlıysa bu satırı silebilirsin ama durması garanti olur.
-      - "--add-cloudsql-instances"
-      - "deniko:europe-west1:deniko-sql" # <-- BURAYI KENDİ BAĞLANTINLA GÜNCELLE
+      [
+        "push",
+        "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-api:latest",
+      ]
+    id: "Push API"
+    waitFor: ["Build API"]
+
+  # -------------------------------------------------------------------------
+  # 4. Push Web
+  # -------------------------------------------------------------------------
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-web:latest",
+      ]
+    id: "Push Web"
+    waitFor: ["Build Web"]
 
 images:
-  - "gcr.io/$PROJECT_ID/deniko:latest"
+  - "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-api:latest"
+  - "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-web:latest"
 
-# Log ayarı (Hata almamak için eklemiştik)
 options:
   logging: CLOUD_LOGGING_ONLY
-  # Hızlandırmak için daha güçlü makine kullanalım (Maliyeti çok az etkiler çünkü süre kısalır)

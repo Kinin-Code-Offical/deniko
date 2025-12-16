@@ -1,0 +1,29 @@
+# password.ts
+
+**Path**: `apps\web\lib\password.ts`
+
+## hashPassword
+
+**Type**: `FunctionDeclaration`
+
+Hashes a password using argon2.
+
+```typescript
+export async function hashPassword(password: string): Promise<string>
+
+## verifyPassword
+
+**Type**: `FunctionDeclaration`
+
+Verifies a password against a hash.
+
+```typescript
+export async function verifyPassword(password: string, hash: string): Promise<boolean>
+```
+
+### Parameters
+
+| Name | Type | Required |
+|------|------|----------|
+| password | `string` | true |
+| hash | `string` | true |

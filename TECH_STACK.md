@@ -10,7 +10,7 @@ This document lists the core technologies and libraries used in the Deniko proje
 
 ## Database & ORM
 
-- **PostgreSQL:** `^8.16.3` - The World's Most Advanced Open Source Relational Database.
+- **PostgreSQL:** `v18` (Engine), `^8.16.3` (Driver) - The World's Most Advanced Open Source Relational Database.
 - **Prisma:** `^7.1.0` - Next-generation Node.js and TypeScript ORM.
   - `@prisma/client`: `^7.1.0`
   - `@prisma/adapter-pg`: `^7.1.0`
@@ -19,7 +19,7 @@ This document lists the core technologies and libraries used in the Deniko proje
 
 - **NextAuth.js (Auth.js):** `5.0.0-beta.30` - Authentication for Next.js.
 - **Jose:** `^6.1.3` - JSON Web Almost Everything (JWA, JWS, JWE, JWT, JWK).
-- **Bcryptjs:** `^3.0.3` - Optimized bcrypt in JavaScript with zero dependencies.
+- **Argon2:** `^0.41.1` - Secure password hashing.
 
 ## Styling & UI
 
@@ -55,4 +55,4 @@ This document lists the core technologies and libraries used in the Deniko proje
 
 ---
 
-_Last Updated: December 7, 2025_
+_Last Updated: December 16, 2025_

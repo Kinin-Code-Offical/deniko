@@ -4,72 +4,76 @@ Bu belge, **Deniko** projesinin genel teknik mimarisini, kullanılan teknolojile
 
 ## 🏗️ Teknoloji Yığını (Tech Stack)
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Monorepo Yönetimi**: pnpm workspaces
+- **Frontend**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Backend API**: [Fastify](https://fastify.dev/)
 - **Dil**: TypeScript
 - **Veritabanı**: PostgreSQL
-- **ORM**: [Prisma](https://www.prisma.io/)
-- **Kimlik Doğrulama**: Auth.js (NextAuth.js v5)
+- **ORM**: [Prisma v7](https://www.prisma.io/) (Sadece API servisinde)
+- **Kimlik Doğrulama**: Auth.js (NextAuth.js v5) + Argon2
 - **Dosya Depolama**: Google Cloud Storage (GCS)
-- **Stil**: Tailwind CSS
+- **Stil**: Tailwind CSS v4
 - **UI Kütüphanesi**: Radix UI / shadcn-ui
-- **Uluslararasılaştırma (i18n)**: URL tabanlı (`/[lang]/...`)
 
-## 🧩 Temel Modüller
+## 🧩 Sistem Mimarisi
 
-Proje modüler bir yapıda tasarlanmıştır. Ana modüller şunlardır:
+Proje, sorumlulukların ayrıldığı bir monorepo yapısındadır:
 
-### 1. Kimlik ve Yetkilendirme (Auth)
+### 1. Frontend (`apps/web`)
 
-- **Konum**: `auth.ts`, `auth.config.ts`, `app/api/auth/*`
-- **Amaç**: Kullanıcı girişi (Google, Email/Şifre), oturum yönetimi ve rol tabanlı erişim kontrolü (RBAC).
-- **Modeller**: `User`, `Account`, `Session`, `VerificationToken`.
+- **Teknoloji**: Next.js 16
+- **Sorumluluk**: Kullanıcı arayüzü, SSR, Auth.js entegrasyonu.
+- **Kısıtlamalar**: **Veritabanına doğrudan erişimi yoktur.** Tüm veri işlemleri için Dahili API'yi kullanır.
+- **İletişim**: `lib/internal-api.ts` üzerinden `apps/api` ile konuşur.
 
-### 2. Profil Sistemi
+### 2. Backend API (`apps/api`)
 
-- **Konum**: `app/[lang]/users/*`, `components/dashboard/user-nav.tsx`
-- **Amaç**: Kullanıcıların (Öğretmen/Öğrenci) profillerini yönetmesi ve görüntülemesi.
-- **Özellikler**:
-  - **Polimorfik Profil Yapısı**: `User` tablosu temel kimliktir. `TeacherProfile` ve `StudentProfile` tabloları role özgü verileri tutar.
-  - **Gizlilik**: `UserSettings` tablosu ile profil görünürlüğü (`public`/`private`) ve iletişim tercihleri yönetilir.
+- **Teknoloji**: Fastify
+- **Sorumluluk**: İş mantığı, veritabanı erişimi, veri doğrulama.
+- **Erişim**: Sadece dahili ağdan (internal network) erişilebilir. Dış dünyaya kapalıdır.
+- **Veritabanı**: Prisma Client'ı barındıran tek servistir.
 
-### 3. Akademik Yönetim (LMS)
+### 3. Paylaşılan Paketler (`packages/*`)
 
-- **Konum**: `app/[lang]/dashboard/*`
-- **Amaç**: Ders, sınıf, ödev ve sınav yönetimi.
-- **Modeller**: `Classroom`, `Lesson`, `Homework`, `SchoolExam`, `TrialExam`.
-- **İlişkiler**: Öğretmenler öğrencileri `StudentTeacherRelation` üzerinden yönetir.
-
-### 4. Dosya ve Medya Yönetimi
-
-- **Konum**: `lib/storage.ts`, `app/api/files/*`, `app/api/avatar/*`
-- **Amaç**: Kullanıcı avatarları, ödev dosyaları ve ders materyallerinin güvenli depolanması.
-- **Altyapı**: Google Cloud Storage. Dosyalar `File` modeli ile veritabanında indekslenir.
+- **`packages/db`**: Prisma şeması ve generated client.
+- **`packages/storage`**: Google Cloud Storage işlemleri.
+- **`packages/logger`**: Pino tabanlı yapılandırılmış loglama.
+- **`packages/validation`**: Zod şemaları (Frontend ve Backend arasında paylaşılır).
 
 ## 🔄 Veri Akışı
 
-### İstemci (Client) -> Sunucu (Server)
+### İstemci (Browser) -> Frontend (Next.js) -> Backend (Fastify) -> DB
 
-Veri alışverişi iki ana yöntemle yapılır:
-
-1. **Server Actions**: Form gönderimleri ve mutasyonlar (veri değiştirme) için kullanılır.
-    - Örnek: `actions/auth.ts` -> `login()`, `actions/user.ts` -> `updateProfile()`.
-2. **API Routes**: Dosya sunumu ve bazı dinamik veri çekme işlemleri için kullanılır.
-    - Örnek: `/api/avatar/[userId]` -> Avatar görselini stream eder.
-
-### Veritabanı Erişimi
-
-Tüm veritabanı işlemleri **Prisma Client** (`lib/db.ts`) üzerinden yapılır. Doğrudan SQL sorgusu yerine Prisma'nın tip güvenli metodları kullanılır.
+1. **İstemci İsteği**: Kullanıcı tarayıcıdan bir işlem yapar (örn. profil güncelleme).
+2. **Next.js Server Action**: İstek `apps/web` tarafında bir Server Action tarafından karşılanır.
+3. **Dahili API Çağrısı**: Server Action, `internalApiFetch` kullanarak `http://localhost:4000` (veya prodüksiyon URL'i) adresindeki Fastify servisine istek atar.
+4. **İş Mantığı & DB**: Fastify servisi isteği doğrular, Prisma aracılığıyla veritabanı işlemini yapar.
+5. **Yanıt**: Sonuç zincirleme olarak geriye döner.
 
 ### Dosya Erişimi
 
-1. Kullanıcı dosya yükler -> Sunucu GCS'ye yazar -> `File` kaydı oluşturulur.
-2. Kullanıcı dosya ister -> `/api/files/[fileId]` endpoint'i yetki kontrolü yapar -> GCS'den `ReadStream` açar -> İstemciye pipe eder.
+1. **Yükleme**: Frontend -> API (Stream) -> GCS.
+2. **Okuma**: Frontend -> API (Signed URL veya Stream) -> GCS.
 
-## 📂 Klasör Yapısı Özeti
+## 🛡️ Güvenlik Önlemleri
 
-- **`app/`**: Sayfalar, layout'lar ve API route'ları.
-- **`components/`**: Yeniden kullanılabilir React bileşenleri.
-- **`lib/`**: Yardımcı fonksiyonlar, konfigürasyonlar ve iş mantığı (business logic).
-- **`prisma/`**: Veritabanı şeması ve migration dosyaları.
-- **`types/`**: Global TypeScript tip tanımları.
-- **`scripts/`**: Bakım ve kontrol scriptleri.
+- **Veritabanı İzolasyonu**: Frontend'in veritabanı şifrelerine veya bağlantısına erişimi yoktur.
+- **Internal API**: API servisi public internete açılmaz, sadece Next.js sunucusu erişebilir.
+- **Argon2**: Şifreler Argon2 algoritması ile hashlenir.
+- **CI Kontrolleri**: `scripts/check-internal-api-usage.ts` scripti, frontend kodunda yanlışlıkla doğrudan API URL'i (localhost:4000) kullanımını engeller.
+
+## 📂 Klasör Yapısı
+
+```
+deniko/
+├── apps/
+│   ├── web/          # Next.js Frontend
+│   └── api/          # Fastify Backend
+├── packages/
+│   ├── db/           # Prisma & DB Client
+│   ├── storage/      # GCS Wrapper
+│   ├── logger/       # Logging
+│   └── validation/   # Shared Zod Schemas
+├── docs/             # Dokümantasyon
+└── scripts/          # CI/CD Scriptleri
+```

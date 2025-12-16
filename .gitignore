@@ -1,8 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
+**/node_modules
+**/.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -14,11 +14,11 @@
 /coverage
 
 # next.js
-/.next/
-/out/
+**/.next/
+**/.next/**out/
 
 # production
-/build
+*/build
 
 # misc
 .DS_Store
@@ -31,7 +31,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+**.env
+**.env.local
 
 # vercel
 .vercel
@@ -40,4 +41,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .gemini
-/app/generated/prisma
+*/generated/prisma
+node_modules

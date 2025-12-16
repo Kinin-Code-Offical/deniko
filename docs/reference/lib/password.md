@@ -12,12 +12,6 @@ Hashes a password using bcryptjs.
 export async function hashPassword(password: string): Promise<string>
 ```
 
-### Parameters
-
-| Name | Type | Required |
-|------|------|----------|
-| password | `string` | true |
-
 ## verifyPassword
 
 **Type**: `FunctionDeclaration`
@@ -34,4 +28,3 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 |------|------|----------|
 | password | `string` | true |
 | hash | `string` | true |
-

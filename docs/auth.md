@@ -44,6 +44,11 @@ Kullanıcı ana tablosu.
 - `emailVerified`: Email doğrulama tarihi. Boşsa kullanıcı doğrulanmamıştır.
 - `password`: Hashlenmiş şifre (sadece Credentials girişi için).
 
+## 🛡️ Güvenlik
+
+- **Şifre Hashing**: Kullanıcı şifreleri **Argon2** algoritması ile güvenli bir şekilde hashlenir.
+- **Oturum Yönetimi**: JWT veya Veritabanı tabanlı oturumlar desteklenir (varsayılan: Database).
+
 ### `Account`
 
 OAuth sağlayıcılarından gelen bağlantı bilgileri (Google Access Token vb.) burada tutulur.

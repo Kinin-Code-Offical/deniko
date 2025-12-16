@@ -20,12 +20,17 @@ Deniko, öğretmenler ve öğrenciler için geliştirilmiş kapsamlı bir eğiti
     ```
 
 2. Çevresel değişkenleri ayarlayın:
-    `.env.example` dosyasını `.env` olarak kopyalayın ve gerekli anahtarları (Database URL, Auth Secret, GCS Credentials) doldurun.
+
+    **Web Uygulaması (apps/web):**
+    `apps/web/.env.example` dosyasını `apps/web/.env` olarak kopyalayın ve gerekli anahtarları doldurun.
+
+    **API (apps/api):**
+    `apps/api/.env.example` dosyasını `apps/api/.env` olarak kopyalayın ve gerekli anahtarları doldurun.
 
 3. Veritabanını hazırlayın:
 
     ```bash
-    pnpm prisma migrate dev
+    pnpm prisma:migrate
     ```
 
 ### Geliştirme
@@ -36,7 +41,8 @@ Geliştirme sunucusunu başlatmak için:
 pnpm dev
 ```
 
-Uygulama `http://localhost:3000` adresinde çalışacaktır.
+- Web Uygulaması: `http://localhost:3000`
+- API Sunucusu: `http://localhost:4000` (Sadece dahili kullanım)
 
 ### Test ve Lint
 
@@ -59,7 +65,7 @@ Projenin detaylı teknik dokümantasyonu `docs/` klasörü altındadır:
 - **[Profil Sistemi](docs/profile.md)**: Kullanıcı profilleri, gizlilik ve avatar yönetimi.
 - **[Depolama (Storage)](docs/storage.md)**: Dosya yükleme ve GCS entegrasyonu.
 - **[Kimlik Doğrulama (Auth)](docs/auth.md)**: Giriş, kayıt ve güvenlik.
-- **[API Dokümantasyonu](app/README.md)**: API endpoint'leri.
+- **[API Dokümantasyonu](apps/api/README.md)**: API endpoint'leri.
 
 ### Build
 
@@ -71,12 +77,13 @@ pnpm build
 
 ## 🏗️ Mimari Özeti
 
-Proje **Next.js 15 (App Router)** üzerine inşa edilmiştir.
+Proje **Next.js 16 (App Router)** ve **Fastify** üzerine inşa edilmiş bir monorepo yapısındadır.
 
-- **`app/`**: Sayfalar ve API route'ları. Çoklu dil desteği (`[lang]`) içerir.
-- **`components/`**: UI bileşenleri.
-- **`lib/`**: İş mantığı, veritabanı (`db.ts`) ve depolama (`storage.ts`) araçları.
-- **`prisma/`**: Veritabanı şeması (`schema.prisma`).
+- **`apps/web`**: Next.js frontend uygulaması.
+- **`apps/api`**: Fastify backend API servisi.
+- **`packages/db`**: Prisma şeması ve veritabanı istemcisi.
+- **`packages/storage`**: Dosya depolama işlemleri.
+- **`packages/logger`**: Merkezi loglama.
 
 Daha detaylı bilgi için **[docs/architecture.md](docs/architecture.md)** dosyasına bakınız.
 
