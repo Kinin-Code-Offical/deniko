@@ -63,15 +63,17 @@ export async function internalApiFetch(path: string, options: InternalApiOptions
             });
 
             clearTimeout(id);
+            // Log warning for non-2xx responses but don't retry unless it's a 5xx
+            // Skip logging for 429 (Rate Limit) and 404 (Not Found) as they are often expected
 
-            if (!response.ok) {
-                // Log warning for non-2xx responses but don't retry unless it's a 5xx
+            if (!response.ok && (response.status !== 429 && response.status !== 404)) {
                 logger.warn(`Internal API Error: ${response.status} ${response.statusText}`, {
                     url,
                     requestId,
                     status: response.status
                 });
             }
+
 
             return response;
         } catch (error) {
