@@ -55,6 +55,11 @@ const getClientIp = (request: NextRequest) =>
   "unknown";
 
 const isRateLimited = (ip: string) => {
+  // Prevent memory leak by clearing if too large
+  if (rateLimitBuckets.size > 10000) {
+    rateLimitBuckets.clear();
+  }
+
   const now = Date.now();
   const bucket = rateLimitBuckets.get(ip);
 
