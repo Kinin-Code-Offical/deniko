@@ -9,8 +9,8 @@ COPY apps/api ./apps/api
 
 RUN pnpm install --frozen-lockfile
 
-# Generate Prisma Client
-RUN pnpm --filter @deniko/db generate
+# Build packages
+RUN pnpm --filter "./packages/**" build
 
 # Build API
 WORKDIR /app/apps/api

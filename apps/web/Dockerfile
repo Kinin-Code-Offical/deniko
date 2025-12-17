@@ -37,6 +37,10 @@ ENV UPSTASH_REDIS_REST_URL="https://dummy.upstash.io"
 ENV UPSTASH_REDIS_REST_TOKEN="dummy_token"
 ENV DISABLE_DB_FOR_SITEMAP="true"
 
+# Build packages
+WORKDIR /app
+RUN pnpm --filter "./packages/**" build
+
 # Build
 WORKDIR /app/apps/web
 RUN pnpm run build
