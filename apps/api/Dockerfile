@@ -20,20 +20,30 @@ RUN pnpm build
 WORKDIR /app
 RUN pnpm deploy --filter=@deniko/api --prod --legacy /prod/api
 
-# Copy generated Prisma Client to the deployed directory
-# It might be in packages/db/node_modules or root node_modules depending on hoisting
-RUN if [ -d "/app/packages/db/node_modules/.prisma" ]; then \
-      cp -r /app/packages/db/node_modules/.prisma /prod/api/node_modules/.prisma; \
-    elif [ -d "/app/node_modules/.prisma" ]; then \
+# Robustly locate and copy the generated Prisma Client
+# It is usually in node_modules/.prisma (root) or packages/db/node_modules/.prisma
+RUN echo "Locating .prisma folder..." && \
+    find /app -type d -name ".prisma" && \
+    if [ -d "/app/node_modules/.prisma" ]; then \
+      echo "Found in root node_modules"; \
       cp -r /app/node_modules/.prisma /prod/api/node_modules/.prisma; \
+    elif [ -d "/app/packages/db/node_modules/.prisma" ]; then \
+      echo "Found in packages/db/node_modules"; \
+      mkdir -p /prod/api/node_modules; \
+      cp -r /app/packages/db/node_modules/.prisma /prod/api/node_modules/.prisma; \
     else \
-      echo "Warning: Could not find .prisma folder"; \
+      echo "WARNING: Could not find .prisma folder. Attempting to generate it..."; \
+      cd /app && pnpm --filter @deniko/db generate && \
+      cp -r /app/node_modules/.prisma /prod/api/node_modules/.prisma; \
     fi
 
 FROM node:25-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
+
+# Install runtime dependencies for Prisma (OpenSSL)
+RUN apk add --no-cache openssl libc6-compat
 
 COPY --from=builder /prod/api/node_modules ./node_modules
 COPY --from=builder /prod/api/package.json ./package.json

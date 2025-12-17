@@ -39,6 +39,8 @@ ENV DISABLE_DB_FOR_SITEMAP="true"
 
 # Build packages
 WORKDIR /app
+# Ensure Prisma Client is generated before building packages
+RUN pnpm --filter @deniko/db generate
 RUN pnpm --filter "./packages/**" build
 
 # Build
