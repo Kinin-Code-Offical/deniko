@@ -12,18 +12,22 @@ RUN pnpm install --frozen-lockfile
 # Generate Prisma Client
 RUN pnpm --filter @deniko/db generate
 
+# Build API
 WORKDIR /app/apps/api
 RUN pnpm build
+
+# Deploy
+WORKDIR /app
+RUN pnpm deploy --filter=@deniko/api --prod /prod/api
 
 FROM node:25-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages ./packages
+COPY --from=builder /prod/api/node_modules ./node_modules
+COPY --from=builder /prod/api/package.json ./package.json
 COPY --from=builder /app/apps/api/dist ./dist
-COPY --from=builder /app/apps/api/package.json ./
 
 EXPOSE 8080
 CMD ["node", "dist/index.js"]
