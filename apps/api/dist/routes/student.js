@@ -55,7 +55,7 @@ async function studentRoutes(fastify) {
             },
             orderBy: { createdAt: 'desc' }
         });
-        return relations.map(rel => ({
+        return relations.map((rel) => ({
             ...rel.student,
             relationId: rel.id,
             isCreator: rel.isCreator,

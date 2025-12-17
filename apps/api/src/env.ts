@@ -16,8 +16,6 @@ const envSchema = z.object({
     // Storage (Google Cloud Storage)
     GCS_BUCKET_NAME: z.string().min(1),
     GCS_PROJECT_ID: z.string().min(1),
-    GCS_CLIENT_EMAIL: z.string().email(),
-    GCS_PRIVATE_KEY: z.string().min(1),
 
     // Rate Limiting (Upstash Redis)
     UPSTASH_REDIS_REST_URL: z.string().url(),
