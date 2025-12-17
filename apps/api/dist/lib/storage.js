@@ -7,11 +7,7 @@ const storage = new storage_1.Storage({
     projectId: env_1.env.GCS_PROJECT_ID,
 });
 const bucket = storage.bucket(env_1.env.GCS_BUCKET_NAME);
-async function getObjectStream(key) {
+function getObjectStream(key) {
     const file = bucket.file(key);
-    const [exists] = await file.exists();
-    if (!exists) {
-        throw new Error(`File not found: ${key}`);
-    }
     return file.createReadStream();
 }

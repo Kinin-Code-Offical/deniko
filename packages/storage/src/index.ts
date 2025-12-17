@@ -11,10 +11,8 @@ export const createStorage = (config: StorageConfig) => {
 
     return {
         bucket,
-        async getObjectStream(key: string) {
+        getObjectStream(key: string) {
             const file = bucket.file(key);
-            const [exists] = await file.exists();
-            if (!exists) return null;
             return file.createReadStream();
         },
         async putObject(key: string, buffer: Buffer, mimeType: string) {
