@@ -26,6 +26,7 @@ ENV NODE_ENV=production
 ENV PORT=8080
 
 COPY --from=builder /prod/api/node_modules ./node_modules
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /prod/api/package.json ./package.json
 COPY --from=builder /app/apps/api/dist ./dist
 
