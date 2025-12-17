@@ -18,7 +18,7 @@ RUN pnpm build
 
 # Deploy
 WORKDIR /app
-RUN pnpm deploy --filter=@deniko/api --prod /prod/api
+RUN pnpm deploy --filter=@deniko/api --prod --legacy /prod/api
 
 FROM node:25-alpine AS runner
 WORKDIR /app

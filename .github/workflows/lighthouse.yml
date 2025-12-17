@@ -36,8 +36,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -58,8 +56,6 @@ jobs:
           AUTH_GOOGLE_SECRET: "dummy_google_secret"
           GCS_BUCKET_NAME: "dummy-bucket"
           GCS_PROJECT_ID: "dummy-project"
-          GCS_CLIENT_EMAIL: "dummy@example.com"
-          GCS_PRIVATE_KEY: "dummy_private_key"
           SMTP_NOREPLY_HOST: "smtp.example.com"
           SMTP_NOREPLY_PORT: "465"
           SMTP_NOREPLY_USER: "no-replay@deniko.net"
@@ -90,8 +86,7 @@ jobs:
           AUTH_GOOGLE_SECRET: "dummy_google_secret"
           GCS_BUCKET_NAME: "dummy-bucket"
           GCS_PROJECT_ID: "dummy-project"
-          GCS_CLIENT_EMAIL: "dummy@example.com"
-          GCS_PRIVATE_KEY: "dummy_private_key"
+
           SMTP_NOREPLY_HOST: "smtp.example.com"
           SMTP_NOREPLY_PORT: "465"
           SMTP_NOREPLY_USER: "no-replay@deniko.net"
@@ -119,8 +114,7 @@ jobs:
           AUTH_GOOGLE_SECRET: "dummy_google_secret"
           GCS_BUCKET_NAME: "dummy-bucket"
           GCS_PROJECT_ID: "dummy-project"
-          GCS_CLIENT_EMAIL: "dummy@example.com"
-          GCS_PRIVATE_KEY: "dummy_private_key"
+
           SMTP_NOREPLY_HOST: "smtp.example.com"
           SMTP_NOREPLY_PORT: "465"
           SMTP_NOREPLY_USER: "no-replay@deniko.net"
