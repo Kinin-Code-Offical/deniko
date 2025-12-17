@@ -39,6 +39,7 @@ const db_1 = require("../db");
 const argon2 = __importStar(require("argon2"));
 const crypto_1 = require("crypto");
 const username_1 = require("../lib/username");
+const rate_limit_1 = require("../lib/rate-limit");
 // Schemas
 const userSchema = zod_1.z.object({
     name: zod_1.z.string().nullable().optional(),
@@ -119,6 +120,11 @@ async function authRoutes(fastify) {
     });
     // Verify Credentials
     fastify.post('/adapter/verify-credentials', async (request, reply) => {
+        const { ip } = request;
+        const { success } = await rate_limit_1.loginRateLimit.limit(ip);
+        if (!success) {
+            return reply.code(429).send({ error: 'Too many requests' });
+        }
         const { email, password } = zod_1.z.object({ email: zod_1.z.string().email(), password: zod_1.z.string() }).parse(request.body);
         const user = await db_1.db.user.findUnique({ where: { email } });
         if (!user || !user.password) {
