@@ -1,5 +1,5 @@
 # check=skip=SecretsUsedInArgOrEnv
-FROM node:25-alpine AS deps
+FROM node:22-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN npm install -g pnpm
@@ -15,7 +15,7 @@ COPY apps/web ./apps/web
 RUN pnpm install --frozen-lockfile
 
 # Builder
-FROM node:25-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 RUN npm install -g pnpm
 
@@ -39,8 +39,6 @@ ENV DISABLE_DB_FOR_SITEMAP="true"
 
 # Build packages
 WORKDIR /app
-# Ensure Prisma Client is generated before building packages
-RUN pnpm --filter @deniko/db generate
 RUN pnpm --filter "./packages/**" build
 
 # Build
@@ -48,7 +46,7 @@ WORKDIR /app/apps/web
 RUN pnpm run build
 
 # Runner
-FROM node:25-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080

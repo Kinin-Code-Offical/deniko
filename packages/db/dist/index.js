@@ -15,10 +15,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createDb = void 0;
-const client_1 = require("@prisma/client");
+const client_1 = require("./generated/client");
 const adapter_pg_1 = require("@prisma/adapter-pg");
 const pg_1 = require("pg");
-__exportStar(require("@prisma/client"), exports);
+__exportStar(require("./generated/client"), exports);
 const globalForPrisma = globalThis;
 const createDb = (config) => {
     if (globalForPrisma.prisma)

@@ -1,53 +1,49 @@
-FROM node:25-alpine AS builder
-WORKDIR /app
+# 1. AŞAMA: BUILDER
+FROM node:22-alpine AS builder
+# Node 25 yerine LTS veya stabil 22-alpine önerilir (GCP uyumluluğu için)
 RUN apk add --no-cache libc6-compat openssl
-RUN npm install -g pnpm
+WORKDIR /app
+RUN npm install -g pnpm@10
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Monorepo yapısı için kök dosyalar
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./
 COPY packages ./packages
 COPY apps/api ./apps/api
 
+# Bağımlılıkları yükle
 RUN pnpm install --frozen-lockfile
 
-# Build packages
+# 1. Önce Prisma Client oluştur (Custom output sayesinde packages/db/src içine gider)
+RUN pnpm --filter @deniko/db generate
+
+# 2. Paketleri build et (Type stripping hatasını önlemek için JS çıktılarını üretir)
 RUN pnpm --filter "./packages/**" build
 
-# Build API
+# 3. API'yi build et
 WORKDIR /app/apps/api
 RUN pnpm build
 
-# Deploy
+# 4. Üretim dosyalarını ayrıştır (Deploy)
 WORKDIR /app
 RUN pnpm deploy --filter=@deniko/api --prod --legacy /prod/api
 
-# Robustly locate and copy the generated Prisma Client
-# It is usually in node_modules/.prisma (root) or packages/db/node_modules/.prisma
-RUN echo "Locating .prisma folder..." && \
-    find /app -type d -name ".prisma" && \
-    if [ -d "/app/node_modules/.prisma" ]; then \
-      echo "Found in root node_modules"; \
-      cp -r /app/node_modules/.prisma /prod/api/node_modules/.prisma; \
-    elif [ -d "/app/packages/db/node_modules/.prisma" ]; then \
-      echo "Found in packages/db/node_modules"; \
-      mkdir -p /prod/api/node_modules; \
-      cp -r /app/packages/db/node_modules/.prisma /prod/api/node_modules/.prisma; \
-    else \
-      echo "WARNING: Could not find .prisma folder. Attempting to generate it..."; \
-      cd /app && pnpm --filter @deniko/db generate && \
-      cp -r /app/node_modules/.prisma /prod/api/node_modules/.prisma; \
-    fi
+# Üretilen Prisma Client'ı deploy klasörüne kopyala (Runtime'da erişim için)
+RUN mkdir -p /prod/api/node_modules/.prisma && \
+    cp -r /app/packages/db/src/generated/client/* /prod/api/node_modules/.prisma/
 
-FROM node:25-alpine AS runner
+# 2. AŞAMA: RUNNER
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
 
-# Install runtime dependencies for Prisma (OpenSSL)
 RUN apk add --no-cache openssl libc6-compat
 
+# Sadece gerekli olan üretim bağımlılıklarını ve derlenmiş kodu al
 COPY --from=builder /prod/api/node_modules ./node_modules
 COPY --from=builder /prod/api/package.json ./package.json
 COPY --from=builder /app/apps/api/dist ./dist
 
+# Port ve Çalıştırma
 EXPOSE 8080
 CMD ["node", "dist/index.js"]

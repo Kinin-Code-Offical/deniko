@@ -4,12 +4,13 @@
 
 generator client {
   provider      = "prisma-client-js"
-  output        = "../src/generated/client" 
+  output        = "../src/generated/client"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
   engineType    = "library"
 }
+
 datasource db {
-    provider = "postgresql"
+  provider = "postgresql"
 }
 
 // ========================================================
@@ -25,33 +26,32 @@ model User {
   name          String? // Google/Provider'dan gelen tam isim
   firstName     String? // Manuel girilen ad
   lastName      String? // Manuel girilen soyad
-  username      String?  @unique // Kullanıcı adı Public Name
+  username      String?   @unique // Kullanıcı adı Public Name
   email         String?   @unique
   emailVerified DateTime?
-  image         String?   // GCS Key or External URL
+  image         String? // GCS Key or External URL
   avatarVersion Int       @default(0)
   password      String?
   phoneNumber   String?
 
   // -- Soft Delete --
-  isDeleted   Boolean   @default(false)
-  deletedAt   DateTime?
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
 
   // -- Roller ve Durumlar --
   role                  Role?
   isActive              Boolean @default(true)
   isOnboardingCompleted Boolean @default(false)
-  
+
   // -- Settings Preferences --
   settings UserSettings?
 
-  notificationEmailEnabled  Boolean @default(true)
-  notificationInAppEnabled  Boolean @default(true)
-  preferredCountry          String?
-  preferredTimezone         String?
-  cookieAnalyticsEnabled    Boolean @default(false)
-  isMarketingConsent    Boolean @default(false)
-
+  notificationEmailEnabled Boolean @default(true)
+  notificationInAppEnabled Boolean @default(true)
+  preferredCountry         String?
+  preferredTimezone        String?
+  cookieAnalyticsEnabled   Boolean @default(false)
+  isMarketingConsent       Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,8 +61,8 @@ model User {
   studentProfile StudentProfile?
 
   // -- Auth.js (NextAuth) İlişkileri --
-  accounts Account[]
-  sessions Session[]
+  accounts            Account[]
+  sessions            Session[]
   emailChangeRequests EmailChangeRequest[]
 
   // -- Diğer İlişkiler --
@@ -77,9 +77,9 @@ model User {
 
 /// Kullanıcı gizlilik ve tercih ayarları.
 model UserSettings {
-  id               String   @id @default(uuid())
-  userId           String   @unique
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   profileVisibility String  @default("public") // "public" | "private"
   showAvatar        Boolean @default(true)
@@ -88,8 +88,8 @@ model UserSettings {
   allowMessages     Boolean @default(true)
   showCourses       Boolean @default(true)
 
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 /// OAuth hesapları (Google, Apple vb. ile giriş için).
@@ -141,14 +141,14 @@ model PasswordResetToken {
 
 /// E-posta değişikliği istekleri.
 model EmailChangeRequest {
-  id        String   @id @default(uuid())
-  userId    String
-  newEmail  String
-  token     String   @unique
-  expires   DateTime
-  usedAt    DateTime?
+  id       String    @id @default(uuid())
+  userId   String
+  newEmail String
+  token    String    @unique
+  expires  DateTime
+  usedAt   DateTime?
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 /// Kullanıcının giriş yaptığı cihazlar (Bildirim göndermek için).
@@ -367,14 +367,14 @@ model Lesson {
 
 /// Derse eklenen dosya veya linkler.
 model Material {
-  id        String   @id @default(uuid())
-  title     String
-  
+  id    String @id @default(uuid())
+  title String
+
   // File storage fields
-  fileId    String?
-  file      File?    @relation(fields: [fileId], references: [id])
-  linkUrl   String?  // External Link
-  
+  fileId  String?
+  file    File?   @relation(fields: [fileId], references: [id])
+  linkUrl String? // External Link
+
   type      FileType
   lessonId  String
   createdAt DateTime @default(now())
@@ -403,11 +403,11 @@ model HomeworkTracking {
   status      HomeworkStatus @default(PENDING)
   studentNote String?
   teacherNote String?
-  
-  fileId      String?
-  file        File?    @relation(fields: [fileId], references: [id])
 
-  checkedAt   DateTime?
+  fileId String?
+  file   File?   @relation(fields: [fileId], references: [id])
+
+  checkedAt DateTime?
 
   homework Homework       @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
   student  StudentProfile @relation(fields: [studentId], references: [id])
@@ -415,10 +415,10 @@ model HomeworkTracking {
 
 /// Öğrencinin ödev teslimi (Gelişmiş kullanım).
 model HomeworkSubmission {
-  id          String         @id @default(uuid())
-  
-  fileId      String?
-  file        File?    @relation(fields: [fileId], references: [id])
+  id String @id @default(uuid())
+
+  fileId String?
+  file   File?   @relation(fields: [fileId], references: [id])
 
   note        String?
   submittedAt DateTime       @default(now())
@@ -537,11 +537,11 @@ model Event {
 
 /// Kullanıcılar arası mesajlaşma.
 model Message {
-  id        String    @id @default(uuid())
-  content   String?
-  
-  fileId    String?
-  file      File?     @relation(fields: [fileId], references: [id])
+  id      String  @id @default(uuid())
+  content String?
+
+  fileId String?
+  file   File?   @relation(fields: [fileId], references: [id])
 
   createdAt DateTime  @default(now())
   isRead    Boolean   @default(false)
@@ -572,17 +572,17 @@ model Notification {
 // ========================================================
 
 model File {
-  id          String   @id @default(cuid())
-  key         String   // GCS Key: "files/<ownerId>/<uuid>.<ext>"
-  filename    String   // Original filename
-  mimeType    String
-  sizeBytes   Int
-  
-  ownerId     String
-  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String @id @default(cuid())
+  key       String // GCS Key: "files/<ownerId>/<uuid>.<ext>"
+  filename  String // Original filename
+  mimeType  String
+  sizeBytes Int
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   materials           Material[]
