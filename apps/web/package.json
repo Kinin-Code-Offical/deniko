@@ -109,7 +109,7 @@
     "typedoc": "^0.28.15",
     "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.15",
+    "vitest": "^4.0.16",
     "wait-on": "^8.0.5",
     "why-is-node-running": "^3.2.2"
   }
