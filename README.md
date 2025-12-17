@@ -6,10 +6,11 @@ Deniko, öğretmenler ve öğrenciler için geliştirilmiş kapsamlı bir eğiti
 
 ### Gereksinimler
 
-- Node.js 18+
-- pnpm
-- PostgreSQL Veritabanı
+- Node.js 22+
+- pnpm 9+
+- PostgreSQL 18 Veritabanı
 - Google Cloud Storage Hesabı (veya emülatör)
+- Docker (Opsiyonel, container ile çalıştırmak için)
 
 ### Kurulum
 
@@ -27,7 +28,13 @@ Deniko, öğretmenler ve öğrenciler için geliştirilmiş kapsamlı bir eğiti
     **API (apps/api):**
     `apps/api/.env.example` dosyasını `apps/api/.env` olarak kopyalayın ve gerekli anahtarları doldurun.
 
-3. Veritabanını hazırlayın:
+3. Veritabanı İstemcisini Oluşturun:
+
+    ```bash
+    pnpm prisma:generate
+    ```
+
+4. Veritabanını hazırlayın:
 
     ```bash
     pnpm prisma:migrate
@@ -77,13 +84,14 @@ pnpm build
 
 ## 🏗️ Mimari Özeti
 
-Proje **Next.js 16 (App Router)** ve **Fastify** üzerine inşa edilmiş bir monorepo yapısındadır.
+Proje **Next.js 16 (App Router)** ve **Fastify** üzerine inşa edilmiş bir **Monorepo** yapısındadır.
 
-- **`apps/web`**: Next.js frontend uygulaması.
-- **`apps/api`**: Fastify backend API servisi.
-- **`packages/db`**: Prisma şeması ve veritabanı istemcisi.
-- **`packages/storage`**: Dosya depolama işlemleri.
-- **`packages/logger`**: Merkezi loglama.
+- **`apps/web`**: Next.js frontend uygulaması (Port: 3000).
+- **`apps/api`**: Fastify backend API servisi (Port: 4000).
+- **`packages/db`**: Paylaşılan Prisma şeması ve veritabanı istemcisi.
+- **`packages/storage`**: Google Cloud Storage dosya işlemleri.
+- **`packages/logger`**: Merkezi Pino loglama yapılandırması.
+- **`packages/validation`**: Paylaşılan Zod şemaları.
 
 Daha detaylı bilgi için **[docs/architecture.md](docs/architecture.md)** dosyasına bakınız.
 

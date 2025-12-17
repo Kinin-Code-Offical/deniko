@@ -9,7 +9,10 @@ Bu paket, Deniko projesinin veritabanı katmanını oluşturur. **Prisma ORM** �
 
 ## 🚀 Kullanım
 
-Bu paket doğrudan `apps/api` tarafından kullanılır. `apps/web` uygulamasının bu pakete erişimi **yoktur** (mimari gereği).
+Bu paket `apps/api` ve `apps/web` tarafından kullanılır.
+
+- **apps/api**: Tüm okuma ve yazma işlemleri için kullanır.
+- **apps/web**: Sadece **okuma (read-only)** işlemleri için Server Component'lerde performans optimizasyonu amacıyla kullanabilir. Yazma işlemleri API üzerinden yapılmalıdır.
 
 ```typescript
 import { prisma } from '@deniko/db';

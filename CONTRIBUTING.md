@@ -1,33 +1,51 @@
-# Contributing to Deniko
+# Deniko'ya Katkıda Bulunma
 
-## Development Workflow
+## Geliştirme Süreci
 
-1.  **Clone & Install**
+1. **Klonla & Yükle**
+
     ```bash
     git clone <repo>
     pnpm install
     ```
 
-2.  **Environment Setup**
-    - Copy `.env.example` to `.env`
-    - Fill in required keys (DATABASE_URL, AUTH_SECRET, GCS_*)
+2. **Ortam Kurulumu**
+    - `.env.example` dosyalarını `.env` olarak kopyalayın (`apps/web`, `apps/api` ve kök dizin için gerekliyse).
+    - Gerekli anahtarları doldurun (DATABASE_URL, AUTH_SECRET, GCS_*).
 
-3.  **Database**
+3. **Veritabanı**
+
     ```bash
-    pnpm prisma migrate dev
+    pnpm prisma:generate
+    pnpm prisma:migrate
     ```
 
-4.  **Run Dev Server**
+4. **Geliştirme Sunucusunu Başlat**
+    Tüm projeyi (Web + API) başlatmak için:
+
     ```bash
     pnpm dev
     ```
 
-## Code Style
-- **Linting**: ESLint is enforced. Run `pnpm lint`.
-- **Formatting**: Prettier is enforced. Run `pnpm format`.
-- **Commits**: Use Conventional Commits (feat, fix, docs, chore).
+    Sadece Web:
 
-## Documentation
-- Update `README.md` in folders if you add new files.
-- Add TSDoc comments `/** ... */` to exported functions.
-- Run `pnpm docs:gen` to update API docs.
+    ```bash
+    pnpm --filter @deniko/web dev
+    ```
+
+    Sadece API:
+
+    ```bash
+    pnpm --filter @deniko/api dev
+    ```
+
+## Kod Stili
+
+- **Linting**: ESLint zorunludur. `pnpm lint` komutunu çalıştırın.
+- **Formatlama**: Prettier zorunludur. `pnpm format` komutunu çalıştırın.
+- **Commitler**: Conventional Commits formatını kullanın (feat, fix, docs, chore).
+
+## Dokümantasyon
+
+- Yeni dosyalar eklerseniz ilgili klasördeki `README.md` dosyasını güncelleyin.
+- Dışa aktarılan (exported) fonksiyonlara TSDoc yorumları `/** ... */` ekleyin.

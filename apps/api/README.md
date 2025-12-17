@@ -24,9 +24,9 @@ Bu API servisi **Internal (Dahili)** olarak tasarlanmıştır.
 
 ### Gereksinimler
 
-- Node.js 18+
-- pnpm
-- PostgreSQL
+- Node.js 22+
+- pnpm 9+
+- PostgreSQL 18
 - `.env` dosyası (bkz. `.env.example`)
 
 ### Komutlar

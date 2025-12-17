@@ -1,62 +1,75 @@
 # 🤖 AI Context & Project Overview
 
-This document is designed to provide high-level context for AI assistants (Copilot, ChatGPT, Claude, etc.) working on the Deniko project.
+This document provides high-level context for AI assistants (Copilot, ChatGPT, Claude, etc.) working on the Deniko project.
 
 ## 🎯 Project Mission
 
 Deniko is a SaaS platform for private tutors and coaching centers. It aims to digitize the management of students, lessons, and payments.
 
-## 🏗️ Architecture Overview
+## 🏗️ Architecture Overview (Monorepo)
 
-- **Frontend:** Next.js 16 (App Router). heavily relies on Server Components. Client components are leaf nodes where possible.
-- **Backend:** Next.js Route Handlers (`app/api`) + Server Actions.
-- **Database:** PostgreSQL managed via Prisma ORM.
-- **Auth:** Auth.js (NextAuth) v5. Uses JWT strategy.
-- **Deployment:** Dockerized application running on Google Cloud Run.
+The project is a **Monorepo** managed by **pnpm workspaces**.
+
+### 📂 Structure
+
+- **`apps/web`**: Next.js 16 (App Router) application.
+  - **Role:** Frontend UI, Auth (NextAuth v5), Server Actions (BFF pattern).
+  - **Port:** 3000
+- **`apps/api`**: Fastify (Node.js) application.
+  - **Role:** Core business logic, heavy processing, internal API.
+  - **Port:** 4000
+- **`packages/db`**: Shared Prisma ORM configuration.
+  - **Role:** Database client generator, schema definition.
+- **`packages/logger`**: Shared Pino logger configuration.
+- **`packages/validation`**: Shared Zod schemas.
+- **`packages/storage`**: Shared Google Cloud Storage wrapper.
+
+### 🛠️ Tech Stack
+
+- **Frontend:** Next.js 16, React 19, Tailwind CSS v4, Shadcn UI.
+- **Backend:** Fastify (API), Next.js Server Actions (Web).
+- **Database:** PostgreSQL 18 (managed via Prisma 7).
+- **Auth:** Auth.js (NextAuth) v5 with JWT strategy.
+- **Infrastructure:** Docker, Google Cloud Run.
 
 ## 🧩 Key Patterns
 
 ### 1. Internationalization (i18n)
 
-- **Strategy:** Path-based routing (`/[lang]/...`).
-- **Implementation:** No external i18n library for components. We fetch a raw JSON dictionary on the server and pass it down.
+- **Strategy:** Path-based routing (`/[lang]/...`) in `apps/web`.
+- **Implementation:** Server-side dictionary fetching.
 - **Rule:** Do not hardcode text. Always use `dictionary.section.key`.
 
-### 2. Data Fetching
+### 2. Data Fetching & State
 
-- **Server Components:** Fetch data directly from the DB using Prisma (`db.user.find...`).
-- **Client Components:** Use Server Actions or API routes via React Query (if installed) or `fetch`.
-- **Caching:** Utilize Next.js Request Memoization and Data Cache where appropriate.
+- **Web (Server Components):** Fetch data directly from `apps/api` (via internal fetch) or DB (read-only optimization).
+- **Web (Client Components):** Use Server Actions.
+- **API:** Fastify routes handle core logic (`apps/api/src/routes`).
 
 ### 3. Styling
 
-- **Tailwind CSS v4:** Use utility classes.
-- **Shadcn UI:** We use a copy-paste component library. Components are in `components/ui`.
-- **Dark Mode:** Supported via `next-themes`.
+- **Tailwind CSS v4:** Utility-first.
+- **Shadcn UI:** Components in `apps/web/components/ui`.
+- **Dark Mode:** `next-themes`.
 
 ### 4. Type Safety
 
-- **Strict Mode:** TypeScript strict mode is enabled.
-- **No `any`:** Avoid `any`. Define interfaces for props and data models.
-- **Zod:** Use Zod for form validation and API input parsing.
+- **Strict Mode:** Enabled.
+- **No `any`:** Forbidden.
+- **Zod:** Mandatory for all input validation (API & Forms).
 
-## 📂 Critical Directories
+## 🚀 Recent Changes & Status
 
-- `app/[lang]`: All page routes.
-- `lib/db.ts`: Database client.
-- `prisma/schema.prisma`: Data models.
-- `dictionaries/`: Translation files.
+- **Database:** Upgraded to PostgreSQL 18.
+- **ORM:** Upgraded to Prisma 7.
+- **Security:** Rate limiting implemented (Redis/Upstash).
+- **PWA:** Splash screens and manifest optimized.
+- **Build:** Dockerfiles optimized for pnpm workspaces (patches removed).
 
-## 🚀 Current Status
+## 📝 Rules for AI
 
-- **Phase:** Active Development / Beta.
-- **Focus:** SEO optimization, Legal compliance pages, Mobile responsiveness.
-
-## 📝 Note to AI
-
-When generating code:
-
-1. Check `package.json` for versions (Next.js 16, Prisma 7).
-2. Prefer Server Actions over API routes for form submissions.
-3. Always consider the `lang` parameter for i18n.
-4. Use `lucide-react` for icons.
+1. **Context Awareness:** Check if you are in `apps/web` or `apps/api`.
+2. **Imports:** Use workspace packages (`@deniko/db`, `@deniko/logger`) instead of relative paths where possible.
+3. **I18n:** Always consider the `lang` parameter in Next.js pages.
+4. **Icons:** Use `lucide-react`.
+5. **Validation:** Always validate inputs with Zod.

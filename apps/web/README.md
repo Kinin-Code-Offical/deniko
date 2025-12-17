@@ -13,18 +13,18 @@ Bu proje, Deniko platformunun kullanıcı arayüzünü oluşturan **Next.js 16**
 
 ## ⚠️ Önemli Mimari Kural
 
-**Bu uygulama veritabanına (PostgreSQL) doğrudan bağlanmaz.**
+**Veri Erişimi:**
 
-- Tüm veri işlemleri (okuma/yazma) için **Internal API** (`apps/api`) servisini kullanır.
-- API çağrıları `lib/internal-api.ts` dosyasındaki `internalApiFetch` fonksiyonu ile yapılır.
-- Doğrudan `prisma` veya veritabanı bağlantısı kullanmak **YASAKTIR**.
+- **Yazma İşlemleri (Mutations):** Kesinlikle **Internal API** (`apps/api`) üzerinden yapılmalıdır.
+- **Okuma İşlemleri (Queries):** Performans optimizasyonu için Server Component'ler içerisinde **doğrudan veritabanı erişimi (Read-Only)** yapılabilir. Ancak karmaşık iş mantığı gerektiren durumlarda API tercih edilmelidir.
+- **API Çağrıları:** `lib/internal-api.ts` dosyasındaki `internalApiFetch` fonksiyonu kullanılmalıdır.
 
 ## 🚀 Kurulum ve Çalıştırma
 
 ### Gereksinimler
 
-- Node.js 18+
-- pnpm
+- Node.js 22+
+- pnpm 9+
 - `.env` dosyası (bkz. `.env.example`)
 - `apps/api` servisinin çalışıyor olması gerekir (API çağrıları için).
 
