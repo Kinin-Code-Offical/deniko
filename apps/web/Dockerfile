@@ -1,5 +1,5 @@
 # check=skip=SecretsUsedInArgOrEnv
-FROM node:lts-alpine AS deps
+FROM node:22-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN npm install -g pnpm
@@ -10,14 +10,12 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages ./packages
 # Copy app
 COPY apps/web ./apps/web
-# Copy patches
-COPY patches ./patches
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
 # Builder
-FROM node:lts-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 RUN npm install -g pnpm
 
@@ -27,7 +25,6 @@ COPY --from=deps /app/apps/web ./apps/web
 COPY --from=deps /app/package.json ./package.json
 COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=deps /app/patches ./patches
 
 # Build ENV
 ENV NEXTAUTH_URL="http://localhost:3000"
@@ -40,12 +37,16 @@ ENV UPSTASH_REDIS_REST_URL="https://dummy.upstash.io"
 ENV UPSTASH_REDIS_REST_TOKEN="dummy_token"
 ENV DISABLE_DB_FOR_SITEMAP="true"
 
+# Build packages
+WORKDIR /app
+RUN pnpm --filter "./packages/**" build
+
 # Build
 WORKDIR /app/apps/web
 RUN pnpm run build
 
 # Runner
-FROM node:lts-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080

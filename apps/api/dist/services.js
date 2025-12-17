@@ -9,9 +9,5 @@ exports.storage = (0, storage_1.createStorage)({
     bucketName: env_1.env.GCS_BUCKET_NAME,
     options: {
         projectId: env_1.env.GCS_PROJECT_ID,
-        credentials: {
-            client_email: env_1.env.GCS_CLIENT_EMAIL,
-            private_key: env_1.env.GCS_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        }
     }
 });

@@ -69,16 +69,16 @@ async function avatarRoutes(fastify) {
         }
         try {
             // Assuming image field stores the storage key
-            const stream = await (0, storage_1.getObjectStream)(targetUser.image);
+            const stream = (0, storage_1.getObjectStream)(targetUser.image);
             // Determine content type (simple guess or stored)
             const contentType = targetUser.image.endsWith('.png') ? 'image/png' : 'image/jpeg';
             reply.header('Content-Type', contentType);
             // Cache control
             if (requesterId === userId) {
-                reply.header('Cache-Control', 'private, no-store'); // Self sees latest
+                reply.header('Cache-Control', 'private, max-age=60'); // Self sees latest (1 min cache)
             }
             else {
-                reply.header('Cache-Control', 'public, max-age=300'); // Others cache for 5m
+                reply.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=600'); // Others cache for 1h
             }
             return reply.send(stream);
         }

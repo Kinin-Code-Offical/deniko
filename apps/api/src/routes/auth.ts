@@ -1,9 +1,11 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { db } from '../db';
+import { Prisma } from '@deniko/db';
 import * as argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import { generateUniqueUsername } from '../lib/username';
+import { loginRateLimit } from '../lib/rate-limit';
 
 // Schemas
 const userSchema = z.object({
@@ -95,6 +97,12 @@ export async function authRoutes(fastify: FastifyInstance) {
 
     // Verify Credentials
     fastify.post('/adapter/verify-credentials', async (request, reply) => {
+        const { ip } = request;
+        const { success } = await loginRateLimit.limit(ip);
+        if (!success) {
+            return reply.code(429).send({ error: 'Too many requests' });
+        }
+
         const { email, password } = z.object({ email: z.string().email(), password: z.string() }).parse(request.body);
         const user = await db.user.findUnique({ where: { email } });
 
@@ -179,7 +187,7 @@ export async function authRoutes(fastify: FastifyInstance) {
         const token = randomBytes(32).toString("hex");
         const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-        await db.$transaction(async (tx) => {
+        await db.$transaction(async (tx: Prisma.TransactionClient) => {
             const user = await tx.user.create({
                 data: {
                     email: data.email,

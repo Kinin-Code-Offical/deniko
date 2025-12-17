@@ -39,6 +39,7 @@ const db_1 = require("../db");
 const services_1 = require("../services");
 const argon2 = __importStar(require("argon2"));
 const account_deletion_1 = require("../lib/account-deletion");
+const rate_limit_1 = require("../lib/rate-limit");
 // --- Schemas ---
 const profileBasicSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(2).max(50).optional(),
@@ -187,6 +188,10 @@ async function settingsRoutes(fastify) {
         const userId = request.headers['x-user-id'];
         if (!userId)
             return reply.code(401).send({ error: 'Unauthorized' });
+        const { success } = await rate_limit_1.passwordChangeRateLimit.limit(userId);
+        if (!success) {
+            return reply.code(429).send({ error: 'Too many requests' });
+        }
         const { currentPassword, newPassword } = changePasswordSchema.parse(request.body);
         const user = await db_1.db.user.findUnique({ where: { id: userId } });
         if (!user || !user.password)

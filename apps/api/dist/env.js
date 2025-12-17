@@ -18,8 +18,6 @@ const envSchema = zod_1.z.object({
     // Storage (Google Cloud Storage)
     GCS_BUCKET_NAME: zod_1.z.string().min(1),
     GCS_PROJECT_ID: zod_1.z.string().min(1),
-    GCS_CLIENT_EMAIL: zod_1.z.string().email(),
-    GCS_PRIVATE_KEY: zod_1.z.string().min(1),
     // Rate Limiting (Upstash Redis)
     UPSTASH_REDIS_REST_URL: zod_1.z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: zod_1.z.string().min(1),
