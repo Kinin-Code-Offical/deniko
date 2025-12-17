@@ -5,6 +5,7 @@ import { Prisma } from '@deniko/db';
 import { storage } from '../services';
 import * as argon2 from 'argon2';
 import { deleteUserAndRelatedData } from '../lib/account-deletion';
+import { passwordChangeRateLimit } from '../lib/rate-limit';
 
 // --- Schemas ---
 
@@ -160,6 +161,11 @@ export async function settingsRoutes(fastify: FastifyInstance) {
     fastify.post('/password', async (request, reply) => {
         const userId = request.headers['x-user-id'] as string;
         if (!userId) return reply.code(401).send({ error: 'Unauthorized' });
+
+        const { success } = await passwordChangeRateLimit.limit(userId);
+        if (!success) {
+            return reply.code(429).send({ error: 'Too many requests' });
+        }
 
         const { currentPassword, newPassword } = changePasswordSchema.parse(request.body);
 
