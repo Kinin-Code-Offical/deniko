@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS builder
+FROM node:25-alpine AS builder
 WORKDIR /app
 RUN apk add --no-cache libc6-compat openssl
 RUN npm install -g pnpm
@@ -15,7 +15,7 @@ RUN pnpm --filter @deniko/db generate
 WORKDIR /app/apps/api
 RUN pnpm build
 
-FROM node:lts-alpine AS runner
+FROM node:25-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080

@@ -1,5 +1,5 @@
 # check=skip=SecretsUsedInArgOrEnv
-FROM node:lts-alpine AS deps
+FROM node:25-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN npm install -g pnpm
@@ -15,7 +15,7 @@ COPY apps/web ./apps/web
 RUN pnpm install --frozen-lockfile
 
 # Builder
-FROM node:lts-alpine AS builder
+FROM node:25-alpine AS builder
 WORKDIR /app
 RUN npm install -g pnpm
 
@@ -25,7 +25,6 @@ COPY --from=deps /app/apps/web ./apps/web
 COPY --from=deps /app/package.json ./package.json
 COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=deps /app/patches ./patches
 
 # Build ENV
 ENV NEXTAUTH_URL="http://localhost:3000"
@@ -43,7 +42,7 @@ WORKDIR /app/apps/web
 RUN pnpm run build
 
 # Runner
-FROM node:lts-alpine AS runner
+FROM node:25-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
