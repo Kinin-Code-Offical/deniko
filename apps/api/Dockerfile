@@ -1,5 +1,6 @@
 FROM node:lts-alpine AS builder
 WORKDIR /app
+RUN apk add --no-cache libc6-compat openssl
 RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -7,6 +8,9 @@ COPY packages ./packages
 COPY apps/api ./apps/api
 
 RUN pnpm install --frozen-lockfile
+
+# Generate Prisma Client
+RUN pnpm --filter @deniko/db generate
 
 WORKDIR /app/apps/api
 RUN pnpm build

@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from "zod";
 import { db } from '../db';
+import { Prisma } from '@deniko/db';
 import * as argon2 from "argon2";
 import { logger } from "../logger";
 
@@ -60,7 +61,7 @@ export async function onboardingRoutes(fastify: FastifyInstance) {
 
             const hashedPassword = await argon2.hash(password);
 
-            await db.$transaction(async (tx) => {
+            await db.$transaction(async (tx: Prisma.TransactionClient) => {
                 // 1. Update User
                 await tx.user.update({
                     where: { id: userId },
