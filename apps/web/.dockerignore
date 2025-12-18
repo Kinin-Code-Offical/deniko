@@ -8,8 +8,7 @@ README.md
 !TECH_STACK.md
 .next
 .gemini
-yarn-debug.log
-yarn-error.log
+*.log
 .cursorrules
 .gitignore
 .github

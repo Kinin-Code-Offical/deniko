@@ -1,0 +1,56 @@
+{
+  // --- GEMINI CODE ASSIST (CLOUD CODE) AYARLARI ---
+
+  // Gemini'nin aktif olması ve satır içi (ghost text) öneri yapması için:
+  "cloudcode.duetAI.enableInlineCompletion": true,
+  
+  // Sohbet özelliğini aktif eder:
+  "cloudcode.duetAI.enableChat": true,
+
+  // ÖNEMLİ: Kendi GCP Proje ID'ni buraya yazmalısın (Billing ve Context için):
+  "cloudcode.project": "deniko",
+
+  // --- VS CODE EDİTÖR DAVRANIŞLARI (AI İçin Optimize Edildi) ---
+
+  // Satır içi önerilerin (gri yazılar) görünmesini sağlar:
+  "editor.inlineSuggest.enabled": true,
+
+  // Öneriyi kabul etmeden önce önizlemeyi gösterir:
+  "editor.suggest.preview": true,
+
+  // Parantezleri ve tırnakları otomatik tamamlar (AI bazen bunu atlayabilir):
+  "editor.autoClosingBrackets": "always",
+  "editor.autoClosingQuotes": "always",
+
+  // --- FORMATLAMA & TYPESCRIPT (Temiz kod için) ---
+
+  // Dosyayı kaydettiğinde otomatik formatla (AI kodunu düzeltmek için şart):
+  "editor.formatOnSave": true,
+
+  // TypeScript için varsayılan formatlayıcı (Prettier kullanıyorsan onu seçebilirsin):
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+
+  // --- GİZLİLİK & DOSYA HARİÇ TUTMA ---
+  
+  // Gemini'nin taramasını istemediğin, gereksiz büyük dosyaları hariç tut:
+  // (node_modules zaten varsayılan hariçtir ama garantiye alalım)
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.next": true // Eğer Next.js kullanıyorsan
+  },
+  
+  // Arama sonuçlarında sertifika dosyalarının içeriği çıkmasın (göz kirliliği önler):
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/*.pem": true,
+    "**/*.key": true
+  }
+}

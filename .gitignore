@@ -1,45 +1,83 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# -----------------------------
+# Dependencies / package managers
+# -----------------------------
+node_modules/
+**/node_modules/
 
-# dependencies
-**/node_modules
-**/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+.pnpm-store/
+**/.pnpm-store/
 
-# testing
-/coverage
-
-# next.js
-**/.next/
-**/.next/**out/
-
-# production
-*/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# pnpm logs
+pnpm-debug.log*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-**.env
-**.env.local
+# -----------------------------
+# Build outputs
+# -----------------------------
+.next/
+**/.next/
+out/
+**/out/
 
-# vercel
-.vercel
+dist/
+**/dist/
+build/
+**/build/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-.gemini
-*/generated/prisma
-node_modules
+coverage/
+**/coverage/
+
+# Turborepo / Next cache
+.turbo/
+**/.turbo/
+.cache/
+**/.cache/
+
+# -----------------------------
+# Environment files (never commit)
+# -----------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# -----------------------------
+# Logs / temp
+# -----------------------------
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+
+# -----------------------------
+# OS / IDE
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+.idea/
+*.iml
+
+# -----------------------------
+# Cloud / tooling local state
+# -----------------------------
+.vercel/
+.firebase/
+.gcloud/
+*.local
+
+# -----------------------------
+# Certificates / keys (just in case)
+# -----------------------------
+*.pem
+*.key
+*.crt
