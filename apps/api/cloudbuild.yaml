@@ -1,8 +1,9 @@
 substitutions:
   _REGION: "europe-west1"
   _AR_REPO: "deniko"
-  _IMAGE: "deniko-api"
-  _SERVICE: "deniko-api"
+  _API_IMAGE: "deniko-api"
+  _MIGRATE_IMAGE: "deniko-db-migrate"
+  _API_SERVICE: "deniko-api"
   _MIGRATE_JOB: "deniko-db-migrate"
 
 steps:
@@ -13,9 +14,9 @@ steps:
       - "-f"
       - "apps/api/Dockerfile"
       - "-t"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
       - "-t"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
       - "."
 
   - id: "Push API ($BUILD_ID)"
@@ -23,19 +24,47 @@ steps:
     waitFor: ["Build API"]
     args:
       - "push"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
 
   - id: "Push API (latest)"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["Build API"]
     args:
       - "push"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
 
-  # --- DB migrations: job image update + execute ---
+  - id: "Build Migrate Image"
+    name: "gcr.io/cloud-builders/docker"
+    waitFor: ["Build API"]
+    args:
+      - "build"
+      - "-f"
+      - "apps/api/Dockerfile"
+      - "--target"
+      - "migrate"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:$BUILD_ID"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:latest"
+      - "."
+
+  - id: "Push Migrate Image ($BUILD_ID)"
+    name: "gcr.io/cloud-builders/docker"
+    waitFor: ["Build Migrate Image"]
+    args:
+      - "push"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:$BUILD_ID"
+
+  - id: "Push Migrate Image (latest)"
+    name: "gcr.io/cloud-builders/docker"
+    waitFor: ["Build Migrate Image"]
+    args:
+      - "push"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:latest"
+
   - id: "Update migrate job image"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
-    waitFor: ["Push API ($BUILD_ID)"]
+    waitFor: ["Push Migrate Image ($BUILD_ID)"]
     entrypoint: "gcloud"
     args:
       - "run"
@@ -45,7 +74,7 @@ steps:
       - "--region"
       - "${_REGION}"
       - "--image"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:$BUILD_ID"
 
   - id: "Execute migrate job"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
@@ -60,7 +89,6 @@ steps:
       - "${_REGION}"
       - "--wait"
 
-  # --- Deploy API service after successful migrations ---
   - id: "Deploy API"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     waitFor: ["Execute migrate job"]
@@ -68,15 +96,17 @@ steps:
     args:
       - "run"
       - "deploy"
-      - "${_SERVICE}"
+      - "${_API_SERVICE}"
       - "--region"
       - "${_REGION}"
       - "--image"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
 
 images:
-  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
-  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:$BUILD_ID"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:latest"
 
 options:
   logging: CLOUD_LOGGING_ONLY

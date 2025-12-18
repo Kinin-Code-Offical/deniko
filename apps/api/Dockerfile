@@ -46,3 +46,29 @@ COPY --from=builder /app/apps/api/dist ./dist
 
 EXPOSE 8080
 CMD ["node", "dist/index.js"]
+
+# --- MIGRATE IMAGE (Cloud Run Job) ---
+FROM node:22-alpine AS migrate
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+
+# pnpm
+RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
+
+# workspace manifests (root)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY .npmrc* ./
+
+# workspace sources required for prisma
+COPY packages ./packages
+
+# Install deps (monorepo)
+RUN pnpm install --frozen-lockfile
+
+# Prisma generate + migrate deploy (db package)
+WORKDIR /app/packages/db
+RUN pnpm prisma generate
+
+# Default command for Cloud Run Job (no overrides needed)
+CMD ["pnpm","prisma","migrate","deploy"]
+
