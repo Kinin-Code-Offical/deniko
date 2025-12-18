@@ -17,7 +17,7 @@ const createStudentSchema = z.object({
   classroomIds: z.array(z.string()).optional().default([]),
 });
 
-const updateStudentSchema = z.object({
+export const updateStudentSchema = z.object({
   studentId: z.string(),
   name: z.string().min(2, "name_min_length"),
   surname: z.string().min(2, "surname_min_length"),
@@ -51,7 +51,7 @@ export async function createStudent(formData: FormData) {
   if (file && file.size > 0) {
     try {
       avatarUrl = await uploadFile(file, "avatars");
-    } catch (error) {
+    } catch (_error) {
       return { success: false, error: "failed_to_upload_avatar" };
     }
   } else if (selectedAvatar) {
@@ -113,7 +113,7 @@ export async function getInviteDetails(token: string) {
     const res = await internalApiFetch(`/student/invite/${token}`);
     if (!res.ok) return null;
     return await res.json();
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }
@@ -123,7 +123,7 @@ export async function getStudentProfileByToken(token: string) {
     const res = await internalApiFetch(`/student/token/${token}`);
     if (!res.ok) return null;
     return await res.json();
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }
@@ -136,7 +136,7 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema> & 
   if (data.avatar && data.avatar.size > 0) {
     try {
       avatarUrl = await uploadFile(data.avatar, "avatars");
-    } catch (error) {
+    } catch (_error) {
       return { success: false, error: "failed_to_upload_avatar" };
     }
   } else if (data.selectedAvatar) {
@@ -160,7 +160,7 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema> & 
 
     revalidatePath("/dashboard/students");
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: "unknown_error" };
   }
 }
@@ -179,7 +179,7 @@ export async function unlinkStudent(studentId: string) {
 
     revalidatePath("/dashboard/students");
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: "unknown_error" };
   }
 }
@@ -198,7 +198,7 @@ export async function deleteStudent(studentId: string) {
 
     revalidatePath("/dashboard/students");
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: "unknown_error" };
   }
 }
@@ -217,7 +217,7 @@ export async function deleteShadowStudent(studentId: string) {
 
     revalidatePath("/dashboard/students");
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: "unknown_error" };
   }
 }
@@ -237,7 +237,7 @@ export async function regenerateInviteToken(studentId: string) {
     const data = await res.json();
     revalidatePath("/dashboard/students");
     return { success: true, inviteToken: data.inviteToken };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: "unknown_error" };
   }
 }
@@ -260,7 +260,7 @@ export async function toggleInviteLink(studentId: string, enable: boolean) {
 
     revalidatePath("/dashboard/students");
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: "unknown_error" };
   }
 }
@@ -283,7 +283,7 @@ export async function updateStudentRelation(studentId: string, data: { customNam
 
     revalidatePath("/dashboard/students");
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: "unknown_error" };
   }
 }
@@ -303,7 +303,7 @@ export async function updateStudentSettings(studentId: string, formData: FormDat
   if (file && file.size > 0) {
     try {
       avatarUrl = await uploadFile(file, "avatars");
-    } catch (error) {
+    } catch (_error) {
       return { success: false, error: "failed_to_upload_avatar" };
     }
   }
@@ -322,7 +322,7 @@ export async function updateStudentSettings(studentId: string, formData: FormDat
 
     revalidatePath("/dashboard/students");
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
     return { success: false, error: "unknown_error" };
   }
 }

@@ -10,7 +10,7 @@ export function redirectToForbidden(lang: string) {
     redirect(`/${lang}/forbidden`);
 }
 
-export function redirectToNotFound(lang: string) {
+export function redirectToNotFound(_lang: string) {
     // Using standard notFound() which renders the closest not-found.tsx
     notFound();
 }

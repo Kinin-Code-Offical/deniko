@@ -30,6 +30,21 @@ export async function getUserById(id: string): Promise<User | null>
 |------|------|----------|
 | id | `string` | true |
 
+## verifyCredentials
+
+**Type**: `FunctionDeclaration`
+
+```typescript
+export async function verifyCredentials(email: string, password: string): Promise<User | null>
+```
+
+### Parameters
+
+| Name | Type | Required |
+|------|------|----------|
+| email | `string` | true |
+| password | `string` | true |
+
 ## getUserByUsername
 
 **Type**: `FunctionDeclaration`

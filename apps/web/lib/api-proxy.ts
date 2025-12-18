@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { env } from '@/lib/env';
 import { internalApiFetch } from "@/lib/internal-api";
 import "server-only";
 

@@ -27,7 +27,7 @@ export async function GET(
         } else if (res.status === 403) {
             return new NextResponse("Forbidden", { status: 403 });
         }
-    } catch (error) {
+    } catch (_error) {
         // Ignore error, fallback to default
     }
 

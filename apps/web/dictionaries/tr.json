@@ -971,6 +971,8 @@
       "attendance": "Devamsızlık",
       "classes": "Sınıflar"
     },
+    "lessons_coming_soon": "Ders içerikleri yakında...",
+    "homework_coming_soon": "Ödev içerikleri yakında...",
     "profile": {
       "title": "Profili Düzenle",
       "desc": "Öğrencinin kişisel bilgilerini ve iletişim detaylarını güncelleyin.",
@@ -1714,6 +1716,11 @@
           "message_min": "Mesaj en az 10 karakter olmalıdır"
         }
       }
+    },
+    "offline": {
+      "title": "Çevrimdışısınız",
+      "description": "Lütfen internet bağlantınızı kontrol edip tekrar deneyin.",
+      "retry": "Tekrar Dene"
     }
   }
 }

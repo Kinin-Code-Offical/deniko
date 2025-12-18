@@ -971,6 +971,8 @@
       "attendance": "Attendance",
       "classes": "Classes"
     },
+    "lessons_coming_soon": "Lessons content coming soon...",
+    "homework_coming_soon": "Homework content coming soon...",
     "overview": {
       "upcoming_lessons": "Upcoming Lessons",
       "no_upcoming_lessons": "No upcoming lessons.",
@@ -1714,6 +1716,11 @@
           "message_min": "Message must be at least 10 characters"
         }
       }
+    },
+    "offline": {
+      "title": "You are offline",
+      "description": "Please check your internet connection and try again.",
+      "retry": "Retry"
     }
   }
 }

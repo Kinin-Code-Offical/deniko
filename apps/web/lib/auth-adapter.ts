@@ -61,11 +61,11 @@ export function CustomAdapter(): Adapter {
             await fetchJson(`/auth/adapter/account/${provider}/${providerAccountId}`, { method: "DELETE" });
         },
         // Session methods are not implemented as we use JWT strategy
-        async createSession(session) { return session; },
-        async getSessionAndUser(sessionToken) { return null; },
-        async updateSession(session) { return null; },
-        async deleteSession(sessionToken) { return; },
+        async createSession(_session) { return _session; },
+        async getSessionAndUser(_sessionToken) { return null; },
+        async updateSession(_session) { return null; },
+        async deleteSession(_sessionToken) { return; },
         async createVerificationToken(verificationToken) { return verificationToken; },
-        async useVerificationToken({ identifier, token }) { return null; },
+        async useVerificationToken({ identifier: _identifier, token: _token }) { return null; },
     };
 }

@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import { auth } from "@/auth";
@@ -7,7 +6,6 @@ import { generatePersonSchema } from "@/lib/json-ld";
 import { env } from "@/lib/env";
 import { UserProfileHero } from "@/components/users/user-profile-hero";
 import { UserProfileTabs } from "@/components/users/user-profile-tabs";
-import { Lock } from "lucide-react";
 import { internalApiFetch } from "@/lib/internal-api";
 import { redirectToLogin, redirectToForbidden } from "@/lib/auth/redirects";
 import { getAvatarSrc } from "@/lib/avatar";
@@ -33,7 +31,7 @@ export async function generateMetadata({
     if (res.ok) {
       user = await res.json();
     }
-  } catch (e) {
+  } catch (_e) {
     // ignore
   }
 

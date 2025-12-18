@@ -27,7 +27,7 @@ export default async function ProfilePage({
     if (res.ok) {
       user = await res.json();
     }
-  } catch (e) {
+  } catch (_e) {
     // ignore
   }
 

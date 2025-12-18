@@ -7,15 +7,21 @@
 **Type**: `FunctionDeclaration`
 
 ```typescript
-export async function getStudents()
+export async function getStudents(lang?: string)
 ```
+
+### Parameters
+
+| Name | Type | Required |
+|------|------|----------|
+| lang | `string` | false |
 
 ## getStudent
 
 **Type**: `FunctionDeclaration`
 
 ```typescript
-export async function getStudent(id: string): Promise<StudentDetailResponse | null>
+export async function getStudent(id: string, lang?: string): Promise<StudentDetailResponse>
 ```
 
 ### Parameters
@@ -23,6 +29,7 @@ export async function getStudent(id: string): Promise<StudentDetailResponse | nu
 | Name | Type | Required |
 |------|------|----------|
 | id | `string` | true |
+| lang | `string` | false |
 
 ## StudentDetailResponse
 

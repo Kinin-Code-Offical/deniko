@@ -19,4 +19,3 @@ export function NotificationsForm(
   dictionary,
   lang,
 } | `NotificationsFormProps` | true |
-

@@ -1,4 +1,3 @@
-import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
 import { internalApiFetch } from "@/lib/internal-api";
 import "server-only";

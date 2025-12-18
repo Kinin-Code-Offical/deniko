@@ -16,6 +16,10 @@ export default async function RootLayout(
 |------|------|----------|
 | { children, params } | `Props` | true |
 
+## viewport
+
+**Type**: `VariableDeclaration`
+
 ## metadata
 
 **Type**: `VariableDeclaration`

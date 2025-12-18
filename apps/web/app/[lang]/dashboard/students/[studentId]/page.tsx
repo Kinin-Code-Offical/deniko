@@ -271,7 +271,7 @@ export default async function StudentPage({
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Lessons content coming soon...
+                {dictionary.student_detail.lessons_coming_soon}
               </p>
             </CardContent>
           </Card>
@@ -284,7 +284,7 @@ export default async function StudentPage({
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Homework content coming soon...
+                {dictionary.student_detail.homework_coming_soon}
               </p>
             </CardContent>
           </Card>

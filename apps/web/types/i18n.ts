@@ -984,6 +984,8 @@ export interface Dictionary {
       attendance: string;
       classes: string;
     };
+    lessons_coming_soon: string;
+    homework_coming_soon: string;
     profile: {
       title: string;
       desc: string;
@@ -1644,5 +1646,10 @@ export interface Dictionary {
       footer_terms: string;
       footer_privacy: string;
     };
+  };
+  offline: {
+    title: string;
+    description: string;
+    retry: string;
   };
 }
