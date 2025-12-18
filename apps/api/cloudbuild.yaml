@@ -33,15 +33,15 @@ steps:
       - "--all-tags"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}"
 
-  # Update migration job
-  - id: "Update migrate job"
+  # Deploy migration job
+  - id: "Deploy migrate job"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     waitFor: ["Push API"]
     entrypoint: "gcloud"
     args:
       - "run"
       - "jobs"
-      - "update"
+      - "deploy"
       - "${_MIGRATE_JOB}"
       - "--region"
       - "${_REGION}"
@@ -55,7 +55,7 @@ steps:
   # Run migration
   - id: "Execute migrate job"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
-    waitFor: ["Update migrate job"]
+    waitFor: ["Deploy migrate job"]
     entrypoint: "gcloud"
     args:
       - "run"

@@ -7,7 +7,11 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "start": "node dist/index.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "start:dev": "tsx watch src/index.ts",
+    "start:debug": "tsx watch --inspect src/index.ts",
+    "start:prod": "node dist/index.js",
+    "start:ci": "node dist/index.js"
   },
   "prisma": {
     "schema": "../../packages/db/prisma/schema.prisma"
