@@ -3,72 +3,120 @@ substitutions:
   _AR_REPO: "deniko"
   _API_IMAGE: "deniko-api"
   _WEB_IMAGE: "deniko-web"
+  _API_SERVICE: "deniko-api"
+  _WEB_SERVICE: "deniko-web"
+  _MIGRATE_JOB: "deniko-db-migrate"
 
 steps:
+  # Build API and Web in parallel
   - id: "Build API"
     name: "gcr.io/cloud-builders/docker"
     args:
-      [
-        "build",
-        "-f",
-        "apps/api/Dockerfile",
-        "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID",
-        "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest",
-        ".",
-      ]
+      - "build"
+      - "-f"
+      - "apps/api/Dockerfile"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
+      - "--cache-from"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
+      - "--build-arg"
+      - "BUILDKIT_INLINE_CACHE=1"
+      - "."
 
   - id: "Build Web"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["-"]
     args:
-      [
-        "build",
-        "-f",
-        "apps/web/Dockerfile",
-        "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID",
-        "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest",
-        ".",
-      ]
+      - "build"
+      - "-f"
+      - "apps/web/Dockerfile"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest"
+      - "--cache-from"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest"
+      - "--build-arg"
+      - "BUILDKIT_INLINE_CACHE=1"
+      - "."
 
-  - id: "Push API ($BUILD_ID)"
+  # Push images
+  - id: "Push API"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["Build API"]
     args:
-      [
-        "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID",
-      ]
+      - "push"
+      - "--all-tags"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}"
 
-  - id: "Push API (latest)"
-    name: "gcr.io/cloud-builders/docker"
-    waitFor: ["Build API"]
-    args:
-      [
-        "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest",
-      ]
-
-  - id: "Push Web ($BUILD_ID)"
+  - id: "Push Web"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["Build Web"]
     args:
-      [
-        "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID",
-      ]
+      - "push"
+      - "--all-tags"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}"
 
-  - id: "Push Web (latest)"
-    name: "gcr.io/cloud-builders/docker"
-    waitFor: ["Build Web"]
+  # Run database migration
+  - id: "Update migrate job"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    waitFor: ["Push API"]
+    entrypoint: "gcloud"
     args:
-      [
-        "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest",
-      ]
+      - "run"
+      - "jobs"
+      - "update"
+      - "${_MIGRATE_JOB}"
+      - "--region"
+      - "${_REGION}"
+      - "--image"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+      - "--command"
+      - "prisma"
+      - "--args"
+      - "migrate,deploy,--schema,./prisma/schema.prisma"
+
+  - id: "Execute migrate job"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    waitFor: ["Update migrate job"]
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "jobs"
+      - "execute"
+      - "${_MIGRATE_JOB}"
+      - "--region"
+      - "${_REGION}"
+      - "--wait"
+
+  # Deploy services after migration
+  - id: "Deploy API"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    waitFor: ["Execute migrate job"]
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "${_API_SERVICE}"
+      - "--region"
+      - "${_REGION}"
+      - "--image"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+
+  - id: "Deploy Web"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    waitFor: ["Push Web", "Execute migrate job"]
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "${_WEB_SERVICE}"
+      - "--region"
+      - "${_REGION}"
+      - "--image"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID"
 
 images:
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
@@ -78,4 +126,6 @@ images:
 
 options:
   logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
 timeout: "1800s"

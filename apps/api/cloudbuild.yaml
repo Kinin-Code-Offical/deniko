@@ -1,12 +1,13 @@
+# Trigger: apps/api/** changes only
 substitutions:
   _REGION: "europe-west1"
   _AR_REPO: "deniko"
   _API_IMAGE: "deniko-api"
-  _MIGRATE_IMAGE: "deniko-db-migrate"
   _API_SERVICE: "deniko-api"
   _MIGRATE_JOB: "deniko-db-migrate"
 
 steps:
+  # Build API
   - id: "Build API"
     name: "gcr.io/cloud-builders/docker"
     args:
@@ -17,54 +18,25 @@ steps:
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
       - "-t"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
-      - "."
-
-  - id: "Push API ($BUILD_ID)"
-    name: "gcr.io/cloud-builders/docker"
-    waitFor: ["Build API"]
-    args:
-      - "push"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
-
-  - id: "Push API (latest)"
-    name: "gcr.io/cloud-builders/docker"
-    waitFor: ["Build API"]
-    args:
-      - "push"
+      - "--cache-from"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
+      - "--build-arg"
+      - "BUILDKIT_INLINE_CACHE=1"
+      - "."
 
-  - id: "Build Migrate Image"
+  # Push API image
+  - id: "Push API"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["Build API"]
     args:
-      - "build"
-      - "-f"
-      - "apps/api/Dockerfile"
-      - "--target"
-      - "migrate"
-      - "-t"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:$BUILD_ID"
-      - "-t"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:latest"
-      - "."
-
-  - id: "Push Migrate Image ($BUILD_ID)"
-    name: "gcr.io/cloud-builders/docker"
-    waitFor: ["Build Migrate Image"]
-    args:
       - "push"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:$BUILD_ID"
+      - "--all-tags"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}"
 
-  - id: "Push Migrate Image (latest)"
-    name: "gcr.io/cloud-builders/docker"
-    waitFor: ["Build Migrate Image"]
-    args:
-      - "push"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:latest"
-
-  - id: "Update migrate job image"
+  # Update migration job
+  - id: "Update migrate job"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
-    waitFor: ["Push Migrate Image ($BUILD_ID)"]
+    waitFor: ["Push API"]
     entrypoint: "gcloud"
     args:
       - "run"
@@ -74,11 +46,16 @@ steps:
       - "--region"
       - "${_REGION}"
       - "--image"
-      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:$BUILD_ID"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+      - "--command"
+      - "prisma"
+      - "--args"
+      - "migrate,deploy,--schema,./prisma/schema.prisma"
 
+  # Run migration
   - id: "Execute migrate job"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
-    waitFor: ["Update migrate job image"]
+    waitFor: ["Update migrate job"]
     entrypoint: "gcloud"
     args:
       - "run"
@@ -89,6 +66,7 @@ steps:
       - "${_REGION}"
       - "--wait"
 
+  # Deploy API service
   - id: "Deploy API"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     waitFor: ["Execute migrate job"]
@@ -105,10 +83,9 @@ steps:
 images:
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
-  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:$BUILD_ID"
-  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_MIGRATE_IMAGE}:latest"
 
 options:
   logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
 
 timeout: "1800s"

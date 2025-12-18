@@ -44,28 +44,11 @@ COPY --from=builder /prod/api/node_modules ./node_modules
 COPY --from=builder /prod/api/package.json ./package.json
 COPY --from=builder /app/apps/api/dist ./dist
 
+# Copy Prisma schema for migrations
+COPY --from=builder /app/packages/db/prisma ./prisma
+
+# Install Prisma CLI for migrations
+RUN npm install -g prisma
+
 EXPOSE 8080
 CMD ["node", "dist/index.js"]
-
-# --- MIGRATE IMAGE (Cloud Run Job) ---
-FROM node:22-alpine AS migrate
-RUN apk add --no-cache libc6-compat openssl
-WORKDIR /app
-
-# pnpm
-RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
-
-# workspace manifests (root)
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./
-
-# workspace sources required for prisma (db paketi + bağımlı diğer workspace paketleri)
-COPY packages ./packages
-
-# Install deps (monorepo)
-RUN pnpm install --frozen-lockfile
-
-# Prisma generate (workspace root'tan, db paketine filtreleyerek)
-RUN pnpm -w --filter @deniko/db prisma generate
-
-# Migrate deploy (workspace root'tan, db paketine filtreleyerek)
-CMD ["pnpm","-w","--filter","@deniko/db","prisma","migrate","deploy"]
