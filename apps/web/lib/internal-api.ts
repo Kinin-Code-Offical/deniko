@@ -25,7 +25,7 @@ async function getAuthHeaders() {
         return {};
     }
 
-    // 1) En güvenilir yöntem: Cloud Run metadata server’dan ID token
+    // 1) En güvenilir yöntem: Cloud Run metadata server’dan ID token alma yöntemi
     try {
         const metaUrl =
             "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity" +
