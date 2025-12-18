@@ -3,14 +3,7 @@
 import { z } from "zod";
 import { sendSupportTicketEmail } from "@/lib/email";
 import logger from "@/lib/logger";
-
-const supportSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  subject: z.string().min(5),
-  type: z.enum(["general", "bug", "billing", "feature"]),
-  message: z.string().min(10),
-});
+import { supportSchema } from "@/lib/schemas/support";
 
 export type SupportState = {
   success?: boolean;

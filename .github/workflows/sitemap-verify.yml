@@ -75,7 +75,28 @@ jobs:
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
 
       - name: Run Sitemap Unit Tests
-        run: pnpm exec vitest run __tests__/sitemap.test.ts
+        run: pnpm -C apps/web exec vitest run __tests__/sitemap.test.ts
+        env:
+          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+          DIRECT_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+          NEXTAUTH_URL: "http://localhost:3000"
+          AUTH_SECRET: "dummy_secret_for_build"
+          AUTH_GOOGLE_ID: "dummy_google_id"
+          AUTH_GOOGLE_SECRET: "dummy_google_secret"
+          GCS_BUCKET_NAME: "dummy-bucket"
+          GCS_PROJECT_ID: "dummy-project"
+          SMTP_NOREPLY_HOST: "smtp.example.com"
+          SMTP_NOREPLY_PORT: "465"
+          SMTP_NOREPLY_USER: "no-replay@deniko.net"
+          SMTP_NOREPLY_PASSWORD: "dummy_password"
+          SMTP_NOREPLY_FROM: "no-replay@deniko.net"
+          SMTP_SUPPORT_HOST: "smtp.example.com"
+          SMTP_SUPPORT_PORT: "465"
+          SMTP_SUPPORT_USER: "no-replay@deniko.net"
+          SMTP_SUPPORT_PASSWORD: "dummy_password"
+          SMTP_SUPPORT_FROM: "support@deniko.net"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy_token"
 
       - name: Build Project (Generates sitemap.xml)
         run: pnpm run build

@@ -1,21 +1,12 @@
 "use server";
 
-import { z } from "zod";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { getDictionary } from "@/lib/get-dictionary";
 import type { Locale } from "@/i18n-config";
 import logger from "@/lib/logger";
 import { internalApiFetch } from "@/lib/internal-api";
-
-const privacySchema = z.object({
-    profileVisibility: z.enum(["public", "private"]),
-    showAvatar: z.boolean(),
-    showEmail: z.boolean(),
-    showPhone: z.boolean(),
-    allowMessages: z.boolean(),
-    showCourses: z.boolean(),
-});
+import { privacySchema } from "@/lib/schemas/privacy";
 
 export async function updateProfilePrivacyAction(input: unknown, lang: string) {
     const dictionary = await getDictionary(lang as Locale);

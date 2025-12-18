@@ -2,37 +2,47 @@ substitutions:
   _REGION: "europe-west1"
   _AR_REPO: "deniko"
   _IMAGE: "deniko-web"
+  _SERVICE: "deniko-web"
 
 steps:
   - id: "Build Web"
     name: "gcr.io/cloud-builders/docker"
     args:
-      [
-        "build",
-        "-f",
-        "apps/web/Dockerfile",
-        "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID",
-        "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest",
-        ".",
-      ]
+      - "build"
+      - "-f"
+      - "apps/web/Dockerfile"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest"
+      - "."
 
   - id: "Push Web ($BUILD_ID)"
     name: "gcr.io/cloud-builders/docker"
+    waitFor: ["Build Web"]
     args:
-      [
-        "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID",
-      ]
+      - "push"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
 
   - id: "Push Web (latest)"
     name: "gcr.io/cloud-builders/docker"
+    waitFor: ["Build Web"]
     args:
-      [
-        "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest",
-      ]
+      - "push"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest"
+
+  - id: "Deploy Web"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    waitFor: ["Push Web ($BUILD_ID)"]
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "${_SERVICE}"
+      - "--region"
+      - "${_REGION}"
+      - "--image"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
 
 images:
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
@@ -40,4 +50,5 @@ images:
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
 timeout: "1800s"
