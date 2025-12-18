@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { env } from "@/lib/env";
 import { createHmac } from "crypto";
+import { internalApiFetch } from "@/lib/internal-api";
+import { forwardProxyResponseOrRedirect } from "@/lib/api-response";
 
 export const dynamic = "force-dynamic";
 
@@ -26,10 +28,8 @@ export async function GET(
         .update(`${userId}:${requesterId}:${timestamp}`)
         .digest("hex");
 
-    const apiUrl = `${env.INTERNAL_API_BASE_URL}/avatar/${userId}`;
-
     try {
-        const apiRes = await fetch(apiUrl, {
+        const apiRes = await internalApiFetch(`/avatar/${userId}`, {
             headers: {
                 "X-Deniko-Requester-Id": requesterId,
                 "X-Deniko-Timestamp": timestamp,
@@ -38,29 +38,10 @@ export async function GET(
             cache: "no-store",
         });
 
-        if (apiRes.status === 404 || apiRes.status === 403) {
-            // Return 404 to prevent enumeration / leakage
-            return new NextResponse(null, { status: 404 });
-        }
+        // Use centralized proxy handler
+        // We want 404 to return 404 status (not redirect) for images/avatars
+        return await forwardProxyResponseOrRedirect(apiRes, request, { returnJsonOn404: false });
 
-        if (!apiRes.ok) {
-            return new NextResponse(null, { status: apiRes.status });
-        }
-
-        // Stream the image back
-        const headers = new Headers();
-        headers.set("Content-Type", apiRes.headers.get("Content-Type") || "image/jpeg");
-
-        // Cache control
-        const cacheControl = apiRes.headers.get("Cache-Control");
-        if (cacheControl) {
-            headers.set("Cache-Control", cacheControl);
-        }
-
-        return new NextResponse(apiRes.body, {
-            status: 200,
-            headers,
-        });
     } catch (error) {
         console.error("Avatar proxy error:", error);
         return new NextResponse(null, { status: 500 });

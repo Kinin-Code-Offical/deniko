@@ -1,7 +1,7 @@
 import { internalApiFetch } from "@/lib/internal-api";
+import { parseJsonOrRedirect } from "@/lib/api-response";
 
-export async function getClassrooms() {
+export async function getClassrooms(lang?: string) {
     const res = await internalApiFetch("/classroom");
-    if (!res.ok) return [];
-    return await res.json();
+    return parseJsonOrRedirect<any[]>(res, { lang });
 }

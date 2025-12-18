@@ -49,12 +49,20 @@ export async function getUserById(id: string): Promise<User | null> {
 }
 
 export async function verifyCredentials(email: string, password: string): Promise<User | null> {
-    const user = await fetchJson<RawUser>("/auth/adapter/verify-credentials", {
+    const res = await internalApiFetch("/auth/adapter/verify-credentials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
     });
-    if (!user) return null;
+
+    if (res.status === 401 || res.status === 404) return null;
+
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`User API Error: ${res.status} ${text}`);
+    }
+
+    const user = await res.json() as RawUser;
     return { ...user, emailVerified: user.emailVerified ? new Date(user.emailVerified) : null };
 }
 

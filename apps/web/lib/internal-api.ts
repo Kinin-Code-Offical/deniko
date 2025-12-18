@@ -55,6 +55,12 @@ async function getAuthHeaders() {
                 fallbackError: e instanceof Error ? e.message : String(e),
                 audience,
             });
+
+            // CRITICAL: Fail fast in production to prevent unauthenticated requests
+            if (runningOnCloudRun) {
+                throw new Error("FATAL: Could not obtain ID token in Cloud Run environment. Aborting internal API call.");
+            }
+
             return {};
         }
     }

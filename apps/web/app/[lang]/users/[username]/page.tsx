@@ -11,6 +11,7 @@ import { Lock } from "lucide-react";
 import { internalApiFetch } from "@/lib/internal-api";
 import { redirectToLogin, redirectToForbidden } from "@/lib/auth/redirects";
 import { getAvatarSrc } from "@/lib/avatar";
+import { parseJsonOrRedirect } from "@/lib/api-response";
 
 interface UserProfilePageProps {
   params: Promise<{
@@ -116,20 +117,9 @@ export default async function UserProfilePage({
   const dictionary = await getDictionary(lang);
   const session = await auth();
 
+  const res = await internalApiFetch(`/public/users/${username}`);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let user: any = null;
-  try {
-    const res = await internalApiFetch(`/public/users/${username}`);
-    if (res.ok) {
-      user = await res.json();
-    }
-  } catch (e) {
-    // ignore
-  }
-
-  if (!user) {
-    notFound();
-  }
+  const user = await parseJsonOrRedirect<any>(res, { lang });
 
   const viewerId = session?.user?.id;
   const isOwner = viewerId === user.id;

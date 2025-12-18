@@ -55,10 +55,33 @@ export default async function StudentsPage({
     redirect(`/${lang}/login`);
   }
 
-  const [students, classrooms] = await Promise.all([
+  const [studentsRaw, classrooms] = await Promise.all([
     getStudents(),
     getClassrooms(),
   ]);
+
+  const students = studentsRaw.map((item) => ({
+    id: item.student.id,
+    user: item.student.user,
+    tempFirstName: item.student.tempFirstName,
+    tempLastName: item.student.tempLastName,
+    tempAvatarKey: item.student.tempAvatarKey,
+    tempPhone: item.student.tempPhone,
+    relation: { customName: item.customName },
+    name:
+      item.customName ||
+      item.student.user?.name ||
+      `${item.student.tempFirstName || ""} ${item.student.tempLastName || ""}`.trim() ||
+      "Unknown",
+    email: item.student.user?.email || item.student.tempEmail,
+    status: item.status,
+    studentNo: item.student.studentNo,
+    inviteToken: item.student.inviteToken,
+    isClaimed: item.student.isClaimed,
+    gradeLevel: item.student.gradeLevel,
+    classrooms: item.student.classrooms,
+    phoneNumber: item.student.user?.phoneNumber || item.student.tempPhone,
+  }));
 
   return (
     <div className="space-y-6">
