@@ -51,7 +51,7 @@ jobs:
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
 
       - name: Generate Prisma Client
-        run: pnpm exec prisma generate
+        run: pnpm prisma:generate
         env:
           DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
           DIRECT_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
