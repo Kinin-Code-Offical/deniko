@@ -1,0 +1,56 @@
+# Git / CI metadata
+.git
+.gitignore
+.github
+
+# Node / pnpm caches
+node_modules
+**/node_modules
+.pnpm-store
+**/.pnpm-store
+
+# Next build outputs & caches
+.next
+**/.next
+out
+**/out
+.turbo
+**/.turbo
+.cache
+**/.cache
+
+# General build outputs
+dist
+**/dist
+build
+**/build
+coverage
+**/coverage
+
+# Env files (never send to docker build context)
+.env
+.env.*
+!**/.env.example
+!**/.env.*.example
+
+# Logs / temp
+*.log
+logs
+tmp
+temp
+*.tmp
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Local tooling state
+.vercel
+.firebase
+.gcloud
+
+# Large docs (optional; istersen kaldır)
+docs
+**/docs

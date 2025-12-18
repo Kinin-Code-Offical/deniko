@@ -5,7 +5,7 @@ RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
 # Deterministik pnpm
-RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Monorepo kök dosyalar
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./
@@ -46,9 +46,6 @@ COPY --from=builder /app/apps/api/dist ./dist
 
 # Copy Prisma schema for migrations
 COPY --from=builder /app/packages/db/prisma ./prisma
-
-# Install Prisma CLI for migrations
-RUN npm install -g prisma
 
 EXPOSE 8080
 CMD ["node", "dist/index.js"]
