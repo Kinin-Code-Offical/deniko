@@ -1,23 +1,43 @@
 substitutions:
   _REGION: "europe-west1"
-  _PROJECT: "deniko"
-  _REPO: "deniko"
+  _AR_REPO: "deniko"
   _IMAGE: "deniko-api"
 
 steps:
-  - name: gcr.io/cloud-builders/docker
+  - id: "Build API"
+    name: "gcr.io/cloud-builders/docker"
     args:
-      - build
-      - -f
-      - apps/api/Dockerfile
-      - -t
-      - ${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:latest
-      - .
+      [
+        "build",
+        "-f",
+        "apps/api/Dockerfile",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$SHORT_SHA",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest",
+        ".",
+      ]
 
-  - name: gcr.io/cloud-builders/docker
+  - id: "Push API ($SHORT_SHA)"
+    name: "gcr.io/cloud-builders/docker"
     args:
-      - push
-      - ${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:latest
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$SHORT_SHA",
+      ]
+
+  - id: "Push API (latest)"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest",
+      ]
 
 images:
-  - ${_REGION}-docker.pkg.dev/${_PROJECT}/${_REPO}/${_IMAGE}:latest
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$SHORT_SHA"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: "1200s"

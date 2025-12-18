@@ -1,62 +1,93 @@
+substitutions:
+  _REGION: "europe-west1"
+  _AR_REPO: "deniko"
+  _API_IMAGE: "deniko-api"
+  _WEB_IMAGE: "deniko-web"
+
 steps:
-  # -------------------------------------------------------------------------
-  # 1. Build API
-  # -------------------------------------------------------------------------
-  - name: "gcr.io/cloud-builders/docker"
+  # ---------------------------
+  # Build API (parallel)
+  # ---------------------------
+  - id: "Build API"
+    name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
-        "-t",
-        "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-api:latest",
         "-f",
         "apps/api/Dockerfile",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$SHORT_SHA",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest",
         ".",
       ]
-    id: "Build API"
 
-  # -------------------------------------------------------------------------
-  # 2. Build Web
-  # -------------------------------------------------------------------------
-  - name: "gcr.io/cloud-builders/docker"
+  # ---------------------------
+  # Build Web (parallel)
+  # ---------------------------
+  - id: "Build Web"
+    name: "gcr.io/cloud-builders/docker"
+    waitFor: ["-"]
     args:
       [
         "build",
-        "-t",
-        "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-web:latest",
         "-f",
         "apps/web/Dockerfile",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$SHORT_SHA",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest",
         ".",
       ]
-    id: "Build Web"
-    waitFor: ["-"] # Run in parallel with API build
 
-  # -------------------------------------------------------------------------
-  # 3. Push API
-  # -------------------------------------------------------------------------
-  - name: "gcr.io/cloud-builders/docker"
-    args:
-      [
-        "push",
-        "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-api:latest",
-      ]
-    id: "Push API"
+  # ---------------------------
+  # Push API
+  # ---------------------------
+  - id: "Push API"
+    name: "gcr.io/cloud-builders/docker"
     waitFor: ["Build API"]
-
-  # -------------------------------------------------------------------------
-  # 4. Push Web
-  # -------------------------------------------------------------------------
-  - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "push",
-        "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-web:latest",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$SHORT_SHA",
       ]
-    id: "Push Web"
+
+  - id: "Push API (latest)"
+    name: "gcr.io/cloud-builders/docker"
+    waitFor: ["Build API"]
+    args:
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest",
+      ]
+
+  # ---------------------------
+  # Push Web
+  # ---------------------------
+  - id: "Push Web"
+    name: "gcr.io/cloud-builders/docker"
     waitFor: ["Build Web"]
+    args:
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$SHORT_SHA",
+      ]
+
+  - id: "Push Web (latest)"
+    name: "gcr.io/cloud-builders/docker"
+    waitFor: ["Build Web"]
+    args:
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest",
+      ]
 
 images:
-  - "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-api:latest"
-  - "europe-west1-docker.pkg.dev/$PROJECT_ID/deniko/deniko-web:latest"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$SHORT_SHA"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$SHORT_SHA"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest"
 
 options:
   logging: CLOUD_LOGGING_ONLY
+timeout: "1800s"
