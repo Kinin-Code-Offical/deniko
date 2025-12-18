@@ -29,6 +29,10 @@ Welcome to the Deniko project documentation. This documentation is structured to
 - [Hardening Guide](./hardening.md) - Security checklist and best practices.
 - [Extensions](./extensions.md) - Potential future features.
 
+### ☁️ Deploy & Cloud Setup
+
+- [PowerShell ile Bulut Kurulum Adımları](./cloud-setup-powershell.md) - Google Cloud Storage, servis hesabı ve .env dosyalarını PowerShell ile hazırlama akışı.
+
 ### 📖 API Reference
 >
 > *Generated automatically via `pnpm docs:gen`*
