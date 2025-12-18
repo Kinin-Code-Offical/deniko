@@ -64,6 +64,6 @@ RUN pnpm install --frozen-lockfile
 # Prisma generate + migrate deploy (ROOT'tan, filter ile)
 RUN pnpm --filter @deniko/db generate
 
-# Cloud Run Job default command: migrate deploy
-CMD ["pnpm","--filter","@deniko/db","prisma","migrate","deploy"]
-
+# Prisma generate + migrate deploy (db package) — ROOT arama yukarı doğru olur
+RUN pnpm -C /app/packages/db prisma generate
+CMD ["pnpm","-C","/app/packages/db","prisma","migrate","deploy"]
