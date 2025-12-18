@@ -20,7 +20,7 @@
  * ```typescript
  * const db = createDb({ 
  *   isProduction: false, 
- *   datasourceUrl: 'postgresql://user:password@localhost:5432/mydb' 
+ *   datasourceUrl: 'postgresql://user:password@localhost:5432/db-name' 
  * });
  * ```
  */
