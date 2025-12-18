@@ -14,7 +14,7 @@ const EXCLUDE_FILES = [
     '.env.example',
     '.env.local',
     'internal-api.ts', // The helper itself is allowed to use the env var
-    'check-internal-api-usage.ts',
+    'check-internal-api-usage.ts', // This script itself
     'pnpm-lock.yaml',
     'env.ts', // Allowed to define default
 ];
@@ -24,12 +24,13 @@ const EXCLUDE_DIRS = [
     '.next',
     '.git',
     '.turbo',
+    'dist', // Output directory for compiled files
 ];
 
 function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
     const files = fs.readdirSync(dirPath);
 
-    files.forEach(function (file) {
+    files.forEach(function (file: string) {
         const fullPath = path.join(dirPath, file);
         if (fs.statSync(fullPath).isDirectory()) {
             if (!EXCLUDE_DIRS.includes(file)) {
@@ -64,7 +65,7 @@ async function checkFiles() {
                 console.error(`❌ Forbidden pattern "${pattern}" found in: ${relativePath}`);
                 // Print context
                 const lines = content.split('\n');
-                lines.forEach((line, index) => {
+                lines.forEach((line: string, index: number) => {
                     if (line.includes(pattern)) {
                         console.error(`   Line ${index + 1}: ${line.trim()}`);
                     }
