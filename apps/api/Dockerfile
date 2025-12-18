@@ -56,8 +56,7 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
 # workspace manifests (root)
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY .npmrc* ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./
 
 # workspace sources required for prisma
 COPY packages ./packages
