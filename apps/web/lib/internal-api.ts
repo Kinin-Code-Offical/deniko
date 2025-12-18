@@ -14,20 +14,52 @@ interface AuthClient {
 let client: AuthClient | undefined;
 
 async function getAuthHeaders() {
-    if (env.NODE_ENV !== "production") {
+    // Cloud Run ortamında değilsek token ekleme (local/dev)
+    const runningOnCloudRun = Boolean(process.env.K_SERVICE);
+    if (!runningOnCloudRun) return {};
+
+    // Audience mutlaka çağırdığın base URL ile aynı olmalı (trailing slash yok)
+    const audience = (BASE_URL || "").replace(/\/+$/, "");
+    if (!audience) {
+        logger.error("INTERNAL_API_BASE_URL is empty; cannot create ID token");
         return {};
     }
 
+    // 1) En güvenilir yöntem: Cloud Run metadata server’dan ID token
     try {
-        if (!client) {
-            client = await auth.getIdTokenClient(BASE_URL) as unknown as AuthClient;
+        const metaUrl =
+            "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity" +
+            `?audience=${encodeURIComponent(audience)}&format=full`;
+
+        const res = await fetch(metaUrl, {
+            headers: { "Metadata-Flavor": "Google" },
+        });
+
+        if (!res.ok) {
+            const body = await res.text().catch(() => "");
+            throw new Error(`metadata identity token fetch failed: ${res.status} ${body}`);
         }
-        return await client.getRequestHeaders();
+
+        const token = await res.text();
+        return { Authorization: `Bearer ${token}` };
     } catch (error) {
-        logger.error("Failed to get ID token for internal API", { error });
-        return {};
+        // 2) Fallback: google-auth-library (istersen kalsın)
+        try {
+            if (!client) {
+                client = (await auth.getIdTokenClient(audience)) as unknown as AuthClient;
+            }
+            return await client.getRequestHeaders();
+        } catch (e) {
+            logger.error("Failed to get ID token for internal API (metadata + google-auth failed)", {
+                error: error instanceof Error ? error.message : String(error),
+                fallbackError: e instanceof Error ? e.message : String(e),
+                audience,
+            });
+            return {};
+        }
     }
 }
+
 
 interface InternalApiOptions extends RequestInit {
     timeout?: number;
