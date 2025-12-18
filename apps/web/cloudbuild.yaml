@@ -12,18 +12,18 @@ steps:
         "-f",
         "apps/web/Dockerfile",
         "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$SHORT_SHA",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID",
         "-t",
         "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest",
         ".",
       ]
 
-  - id: "Push Web ($SHORT_SHA)"
+  - id: "Push Web ($BUILD_ID)"
     name: "gcr.io/cloud-builders/docker"
     args:
       [
         "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$SHORT_SHA",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID",
       ]
 
   - id: "Push Web (latest)"
@@ -35,7 +35,7 @@ steps:
       ]
 
 images:
-  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$SHORT_SHA"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$BUILD_ID"
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:latest"
 
 options:

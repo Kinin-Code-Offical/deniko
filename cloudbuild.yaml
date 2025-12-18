@@ -5,9 +5,6 @@ substitutions:
   _WEB_IMAGE: "deniko-web"
 
 steps:
-  # ---------------------------
-  # Build API (parallel)
-  # ---------------------------
   - id: "Build API"
     name: "gcr.io/cloud-builders/docker"
     args:
@@ -16,15 +13,12 @@ steps:
         "-f",
         "apps/api/Dockerfile",
         "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$SHORT_SHA",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID",
         "-t",
         "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest",
         ".",
       ]
 
-  # ---------------------------
-  # Build Web (parallel)
-  # ---------------------------
   - id: "Build Web"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["-"]
@@ -34,22 +28,19 @@ steps:
         "-f",
         "apps/web/Dockerfile",
         "-t",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$SHORT_SHA",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID",
         "-t",
         "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest",
         ".",
       ]
 
-  # ---------------------------
-  # Push API
-  # ---------------------------
-  - id: "Push API"
+  - id: "Push API ($BUILD_ID)"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["Build API"]
     args:
       [
         "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$SHORT_SHA",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID",
       ]
 
   - id: "Push API (latest)"
@@ -61,16 +52,13 @@ steps:
         "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest",
       ]
 
-  # ---------------------------
-  # Push Web
-  # ---------------------------
-  - id: "Push Web"
+  - id: "Push Web ($BUILD_ID)"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["Build Web"]
     args:
       [
         "push",
-        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$SHORT_SHA",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID",
       ]
 
   - id: "Push Web (latest)"
@@ -83,9 +71,9 @@ steps:
       ]
 
 images:
-  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$SHORT_SHA"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
-  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$SHORT_SHA"
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID"
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest"
 
 options:
