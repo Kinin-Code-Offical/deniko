@@ -52,18 +52,20 @@ FROM node:22-alpine AS migrate
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
+# pnpm
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
-# Monorepo kök dosyalar
+# workspace manifests (root)
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./
+
+# workspace sources required for prisma (db paketi + bağımlı diğer workspace paketleri)
 COPY packages ./packages
 
-# Bağımlılıklar
+# Install deps (monorepo)
 RUN pnpm install --frozen-lockfile
 
-# Prisma generate + migrate deploy (ROOT'tan, filter ile)
-RUN pnpm --filter @deniko/db generate
+# Prisma generate (workspace root'tan, db paketine filtreleyerek)
+RUN pnpm -w --filter @deniko/db prisma generate
 
-# Prisma generate + migrate deploy (db package) — ROOT arama yukarı doğru olur
-RUN pnpm -C /app/packages/db prisma generate
-CMD ["pnpm","-C","/app/packages/db","prisma","migrate","deploy"]
+# Migrate deploy (workspace root'tan, db paketine filtreleyerek)
+CMD ["pnpm","-w","--filter","@deniko/db","prisma","migrate","deploy"]
