@@ -5,7 +5,7 @@ export interface StorageConfig {
 }
 export declare const createStorage: (config: StorageConfig) => {
     bucket: import("@google-cloud/storage").Bucket;
-    getObjectStream(key: string): import("stream").Readable;
+    getObjectStream(key: string): import("node:stream").Readable;
     putObject(key: string, buffer: Buffer, mimeType: string): Promise<string>;
     listDefaultAvatars(): Promise<string[]>;
     getSignedUrl(key: string, options: {
