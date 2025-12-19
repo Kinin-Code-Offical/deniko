@@ -20,6 +20,7 @@
     "typecheck": "pnpm -r typecheck",
     "test:all": "pnpm -r test",
     "start:ci": "pnpm --filter deniko start:ci",
+    "sql:proxy": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-sql-proxy.ps1",
     "db:generate": "pnpm --filter @deniko/db generate",
     "db:migrate": "pnpm --filter @deniko/api exec prisma migrate dev",
     "db:studio": "pnpm --filter @deniko/api exec prisma studio",

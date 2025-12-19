@@ -1,0 +1,47 @@
+name: Prod Signals Scan
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  scan_logs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v2"
+        with:
+          workload_identity_provider: "projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider"
+          service_account: "my-service-account@my-project.iam.gserviceaccount.com"
+
+      - name: "Scan Cloud Run Logs"
+        run: |
+          # Fetch ERROR logs for the last hour
+          gcloud logging read "resource.type=cloud_run_revision AND severity>=ERROR AND timestamp>=\"$(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ)\"" \
+            --limit=50 \
+            --format="json" > error_logs.json
+
+          # Check if we have errors
+          ERROR_COUNT=$(jq length error_logs.json)
+          echo "Found $ERROR_COUNT errors in the last hour."
+
+          if [ "$ERROR_COUNT" -gt 0 ]; then
+            echo "::error::High error rate detected in Cloud Run logs!"
+            exit 1
+          fi
+        shell: bash
+
+      - name: Upload Log Artifact
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-logs
+          path: error_logs.json

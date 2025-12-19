@@ -1,0 +1,71 @@
+name: Nightly Heavy Audit
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  k6_performance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10.26.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Web
+        run: pnpm build:web
+
+      - name: Start Web
+        run: |
+          pnpm --filter deniko start:ci &
+          npx wait-on http://localhost:3000
+        env:
+          PORT: 3000
+
+      - name: Run k6
+        uses: grafana/run-k6-action@v1
+        with:
+          path: tests/perf/k6/smoke.js
+        env:
+          BASE_URL: http://localhost:3000
+
+  seo_crawl_audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10.26.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Web
+        run: pnpm build:web
+
+      - name: Start Web & Run Audit
+        run: |
+          pnpm --filter deniko start:ci &
+          PID=$!
+          npx wait-on http://localhost:3000
+          node scripts/ci/seo-audit.mjs
+          kill $PID
+        env:
+          BASE_URL: http://localhost:3000
