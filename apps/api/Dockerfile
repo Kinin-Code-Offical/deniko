@@ -47,6 +47,7 @@ RUN mkdir -p /prod/api/node_modules/.prisma
 RUN mkdir -p /prod/api/node_modules/@prisma
 RUN cp -L -r /app/node_modules/.prisma/* /prod/api/node_modules/.prisma/ || true
 RUN cp -L -r /app/node_modules/@prisma/client /prod/api/node_modules/@prisma/ || true
+RUN cp -L -r /app/node_modules/@prisma/client-runtime-utils /prod/api/node_modules/@prisma/ || true
 
 # 2. AŞAMA: RUNNER
 FROM node:22-alpine AS runner
