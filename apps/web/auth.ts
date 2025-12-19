@@ -10,6 +10,7 @@ import { assertLoginRateLimit } from "@/lib/rate-limit-login";
 import { getClientIp } from "@/lib/get-client-ip";
 import { logger } from "@/lib/logger";
 import { authConfig } from "./auth.config";
+import { internalApiFetch } from "@/lib/internal-api";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -139,6 +140,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (account?.provider === "google") {
         if (!user.email) return false;
+
+        // Sync Google Avatar (Fire and forget)
+        if (user.image) {
+          internalApiFetch("/auth/adapter/sync-google-avatar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: user.email, image: user.image }),
+          }).catch((err) => {
+            logger.error({ err, email: user.email }, "Failed to sync google avatar");
+          });
+        }
 
         const existingUser = await getUserByEmail(user.email);
 

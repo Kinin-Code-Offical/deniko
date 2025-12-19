@@ -11,3 +11,11 @@ export function getObjectStream(key: string) {
     const file = bucket.file(key);
     return file.createReadStream();
 }
+
+export async function uploadFile(key: string, buffer: Buffer, contentType: string) {
+    const file = bucket.file(key);
+    await file.save(buffer, {
+        contentType,
+        resumable: false,
+    });
+}

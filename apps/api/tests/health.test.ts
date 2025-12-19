@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import request from 'supertest';
 import { buildApp } from '../src/app';
 
 describe('Health Check', () => {
@@ -7,10 +6,14 @@ describe('Health Check', () => {
         const app = buildApp();
         await app.ready();
 
-        const response = await request(app.server)
-            .get('/health')
-            .expect(200);
+        const response = await app.inject({
+            method: 'GET',
+            url: '/health'
+        });
 
-        expect(response.body).toEqual({ ok: true });
+        expect(response.statusCode).toBe(200);
+        expect(response.json()).toEqual({ ok: true });
+
+        await app.close();
     });
 });
