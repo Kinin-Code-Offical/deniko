@@ -10,6 +10,7 @@ import { internalApiFetch } from "@/lib/internal-api";
 import { redirectToLogin, redirectToForbidden } from "@/lib/auth/redirects";
 import { getAvatarSrc } from "@/lib/avatar";
 import { parseJsonOrRedirect } from "@/lib/api-response";
+import type { UserWithProfile } from "@/types/user";
 
 interface UserProfilePageProps {
   params: Promise<{
