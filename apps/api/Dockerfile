@@ -45,8 +45,9 @@ COPY --from=builder /prod/api/node_modules ./node_modules
 COPY --from=builder /prod/api/package.json ./package.json
 COPY --from=builder /app/apps/api/dist ./dist
 
-# Copy Prisma schema for migrations
-COPY --from=builder /app/packages/db/prisma ./prisma
+# Copy Prisma schema and config for migrations
+COPY --from=builder /app/packages/db/prisma ./packages/db/prisma
+COPY --from=builder /app/packages/db/prisma.config.ts ./prisma.config.ts
 
 EXPOSE 8080
 CMD ["node", "dist/index.js"]

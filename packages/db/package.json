@@ -10,7 +10,7 @@
     }
   },
   "scripts": {
-    "build": "prisma generate && tsc && node -e \"require('fs').cpSync('src/generated', 'dist/generated', {recursive: true})\"",
+    "build": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\" && prisma generate && tsc && node -e \"require('fs').cpSync('src/generated', 'dist/generated', {recursive: true})\"",
     "generate": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/node": "^25.0.3",
     "@types/pg": "^8.16.0",
+    "dotenv": "^17.2.3",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },

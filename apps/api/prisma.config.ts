@@ -1,14 +1,20 @@
-/// <reference types="node" />
-import { defineConfig } from "prisma/config";
 import "dotenv/config";
+import { defineConfig, env } from "prisma/config";
 
-if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL environment variable is missing");
+function envOptional(name: string): string | undefined {
+    try {
+        return env(name);
+    } catch {
+        return undefined;
+    }
 }
 
 export default defineConfig({
+    engine: "classic",
     schema: "../../packages/db/prisma/schema.prisma",
     datasource: {
-        url: process.env.DATABASE_URL,
+        url: envOptional("DATABASE_URL"),
+        // @ts-expect-error: directUrl is not yet in the type definition
+        directUrl: envOptional("DIRECT_URL"),
     },
 });
