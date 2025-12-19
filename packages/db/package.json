@@ -11,6 +11,7 @@
   },
   "scripts": {
     "build": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\" && prisma generate && tsc",
+    "postinstall": "prisma generate",
     "generate": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",

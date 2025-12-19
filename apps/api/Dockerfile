@@ -22,6 +22,7 @@ COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 
 # 3. Install dependencies (Cached unless package.json files change)
+ENV CI=true
 RUN pnpm install --offline --frozen-lockfile
 
 # 4. Copy source code (This changes frequently)
