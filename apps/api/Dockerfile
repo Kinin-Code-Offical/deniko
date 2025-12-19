@@ -7,13 +7,26 @@ WORKDIR /app
 # Deterministik pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Monorepo kök dosyalar
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./
+# 1. Copy lockfile and fetch dependencies (Cached unless lockfile changes)
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch
+
+# 2. Copy workspace configs and package.json files (Cached unless these specific files change)
+COPY pnpm-workspace.yaml package.json .npmrc* ./
+COPY packages/db/package.json ./packages/db/
+COPY packages/db/prisma/schema.prisma ./packages/db/prisma/
+COPY packages/logger/package.json ./packages/logger/
+COPY packages/storage/package.json ./packages/storage/
+COPY packages/validation/package.json ./packages/validation/
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+
+# 3. Install dependencies (Cached unless package.json files change)
+RUN pnpm install --offline --frozen-lockfile
+
+# 4. Copy source code (This changes frequently)
 COPY packages ./packages
 COPY apps/api ./apps/api
-
-# Bağımlılıklar
-RUN pnpm install --frozen-lockfile
 
 # Prisma Client + paket build + API build
 RUN pnpm --filter @deniko/db generate

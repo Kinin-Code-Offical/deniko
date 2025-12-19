@@ -102,10 +102,6 @@ steps:
       - "0"
       - "--task-timeout"
       - "30m"
-      - "--command"
-      - "/app/node_modules/.bin/prisma"
-      - "--args"
-      - "migrate,deploy,--schema,./prisma/schema.prisma"
       - "--quiet"
 
   - id: "Execute migrate job"

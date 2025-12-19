@@ -5,6 +5,9 @@ substitutions:
   _API_IMAGE: "deniko-api"
   _API_SERVICE: "deniko-api"
   _MIGRATE_JOB: "deniko-db-migrate"
+  _API_SA: "deniko-api-sa@deniko.iam.gserviceaccount.com"
+  _DB_SECRET: "DATABASE_URL"
+  _DIRECT_DB_SECRET: "DIRECT_URL"
 
 steps:
   # Build API
@@ -47,10 +50,19 @@ steps:
       - "${_REGION}"
       - "--image"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+      - "--service-account"
+      - "${_API_SA}"
+      - "--set-secrets"
+      - "DATABASE_URL=${_DB_SECRET}:latest,DIRECT_URL=${_DIRECT_DB_SECRET}:latest"
       - "--command"
-      - "prisma"
+      - "/app/node_modules/.bin/prisma"
       - "--args"
-      - "migrate,deploy,--schema,./prisma/schema.prisma"
+      - "migrate,deploy,--schema,./packages/db/prisma/schema.prisma"
+      - "--max-retries"
+      - "0"
+      - "--task-timeout"
+      - "30m"
+      - "--quiet"
 
   # Run migration
   - id: "Execute migrate job"
@@ -79,6 +91,9 @@ steps:
       - "${_REGION}"
       - "--image"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+      - "--service-account"
+      - "${_API_SA}"
+      - "--quiet"
 
 images:
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
