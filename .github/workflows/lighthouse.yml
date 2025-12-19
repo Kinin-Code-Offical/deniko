@@ -103,9 +103,9 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
-          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          INTERNAL_API_BASE_URL: "http://127.0.0.1:4000"
           NEXT_PUBLIC_NOINDEX: "true"
-          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3000"
           NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
       - name: Start Server
@@ -114,7 +114,7 @@ jobs:
           API_PID=$!
           pnpm run start:ci &
           WEB_PID=$!
-          npx wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
+          npx wait-on --timeout 600000 tcp:127.0.0.1:4000 http-get://127.0.0.1:3000/api/health
           echo "API PID=$API_PID WEB PID=$WEB_PID" > ci-pids.txt
           sleep 2
         env:
@@ -139,9 +139,9 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
-          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          INTERNAL_API_BASE_URL: "http://127.0.0.1:4000"
           NEXT_PUBLIC_NOINDEX: "true"
-          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3000"
           NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
       - name: Stop Server
