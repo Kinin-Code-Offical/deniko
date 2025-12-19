@@ -95,6 +95,7 @@ export async function internalApiFetch(path: string, options: InternalApiOptions
             const id = setTimeout(() => controller.abort(), timeout);
 
             const response = await fetch(url, {
+                cache: "no-store",
                 ...init,
                 headers,
                 signal: controller.signal,
