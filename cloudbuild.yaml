@@ -102,6 +102,10 @@ steps:
       - "0"
       - "--task-timeout"
       - "30m"
+      - "--max-retries"
+      - "0"
+      - "--task-timeout"
+      - "30m"
       - "--quiet"
 
   - id: "Execute migrate job"

@@ -69,6 +69,9 @@ RUN pnpm --filter "./packages/**" build
 
 # Build web
 WORKDIR /app/apps/web
+# Ensure we don't try to connect to DB during build
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 RUN pnpm run build
 
 # --------------------------
