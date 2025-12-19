@@ -19,7 +19,6 @@ export default async function ProfilePage({
 
   if (!session?.user?.id) return null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let user: UserWithProfile | null = null;
   try {
     const res = await internalApiFetch("/settings", {
