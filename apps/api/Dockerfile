@@ -37,6 +37,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
 ENV HOSTNAME="0.0.0.0"
+ENV PATH="/app/node_modules/.bin:$PATH"
 
 RUN apk add --no-cache openssl libc6-compat
 
