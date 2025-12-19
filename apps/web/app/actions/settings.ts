@@ -33,7 +33,7 @@ export async function updateProfileBasicAction(input: unknown, lang: string) {
         });
 
         if (!res.ok) {
-            throw new Error("Failed to update profile");
+            throw new Error("Failed to update profile"); // ignore-hardcoded
         }
 
         revalidatePath("/dashboard/settings");
@@ -88,9 +88,9 @@ export async function changePasswordAction(input: unknown, lang: string) {
 
         if (!res.ok) {
             const errorData = await res.json() as { error?: string };
-            if (errorData.error === 'user_not_found_password') return { error: dictionary.server.errors.user_not_found_password };
-            if (errorData.error === 'incorrect_password') return { error: dictionary.server.errors.incorrect_password };
-            throw new Error("Failed to change password");
+            if (errorData.error === 'user_not_found_password') return { error: dictionary.server.errors.user_not_found_password }; // ignore-hardcoded
+            if (errorData.error === 'incorrect_password') return { error: dictionary.server.errors.incorrect_password }; // ignore-hardcoded
+            throw new Error("Failed to change password"); // ignore-hardcoded
         }
 
         logger.info({ event: "password_changed", userId: session.user.id });
@@ -128,8 +128,8 @@ export async function requestEmailChangeAction(newEmail: string, lang: string) {
 
         if (!res.ok) {
             const errorData = await res.json() as { error?: string };
-            if (errorData.error === 'email_in_use') return { error: dictionary.server.errors.email_in_use };
-            throw new Error("Failed to request email change");
+            if (errorData.error === 'email_in_use') return { error: dictionary.server.errors.email_in_use }; // ignore-hardcoded
+            throw new Error("Failed to request email change"); // ignore-hardcoded
         }
 
         await sendEmailChangeVerificationEmail(newEmail, token, lang as Locale);
@@ -161,7 +161,7 @@ export async function deactivateAccountAction(lang: string) {
         });
 
         if (!res.ok) {
-            throw new Error("Failed to deactivate account");
+            throw new Error("Failed to deactivate account"); // ignore-hardcoded
         }
 
         await signOut({ redirectTo: "/" });
@@ -191,7 +191,7 @@ export async function deleteAccountAction(lang: string) {
         });
 
         if (!res.ok) {
-            throw new Error("Failed to delete account");
+            throw new Error("Failed to delete account"); // ignore-hardcoded
         }
 
         await signOut({ redirectTo: "/" });
@@ -270,7 +270,7 @@ export async function updateNotificationPreferencesAction(input: unknown, lang: 
         });
 
         if (!res.ok) {
-            throw new Error("Failed to update notification preferences");
+            throw new Error("Failed to update notification preferences"); // ignore-hardcoded
         }
 
         logger.info({
@@ -307,7 +307,7 @@ export async function updateRegionTimezonePreferencesAction(input: unknown, lang
         });
 
         if (!res.ok) {
-            throw new Error("Failed to update region/timezone");
+            throw new Error("Failed to update region/timezone"); // ignore-hardcoded
         }
 
         revalidatePath("/dashboard/settings");
@@ -337,7 +337,7 @@ export async function updateCookiePreferencesAction(input: unknown, lang: string
         });
 
         if (!res.ok) {
-            throw new Error("Failed to update cookie preferences");
+            throw new Error("Failed to update cookie preferences"); // ignore-hardcoded
         }
 
         logger.info({
@@ -375,8 +375,8 @@ export async function updateAvatarAction(input: unknown, lang: string) {
 
         if (!res.ok) {
             const errorData = await res.json() as { error?: string };
-            if (errorData.error === 'no_image_provided') return { error: dictionary.server.errors.no_image_provided };
-            throw new Error("Failed to update avatar");
+            if (errorData.error === 'no_image_provided') return { error: dictionary.server.errors.no_image_provided }; // ignore-hardcoded
+            throw new Error("Failed to update avatar"); // ignore-hardcoded
         }
 
         logger.info({

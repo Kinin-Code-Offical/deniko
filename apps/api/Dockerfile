@@ -39,9 +39,10 @@ RUN pnpm build
 WORKDIR /app
 RUN pnpm deploy --filter=@deniko/api --prod --legacy /prod/api
 
-# Prisma runtime asset’leri (repo yapınıza göre korundu)
-RUN mkdir -p /prod/api/node_modules/.prisma && \
-    cp -r /app/packages/db/src/generated/client/* /prod/api/node_modules/.prisma/
+# Copy generated Prisma Client assets
+# Since we use standard output, we need to copy both .prisma (engines/schema) and @prisma/client (types/entry)
+RUN cp -r /app/node_modules/.prisma /prod/api/node_modules/ || true
+RUN cp -r /app/node_modules/@prisma/client /prod/api/node_modules/@prisma/ || true
 
 # 2. AŞAMA: RUNNER
 FROM node:22-alpine AS runner

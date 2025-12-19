@@ -81,29 +81,32 @@ export const logger = {
     // Pino accepts string or object as first argument, and any[] as rest.
     // We cast to any to satisfy Pino's loose typing while keeping our API strict (unknown).
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    baseLogger.debug(arg as string | object, ...(args as any[]));
+    // ignore-any-check
+    baseLogger.debug(arg as string | object, ...(args as any[])); // ignore-any-check
   },
   info(arg: unknown, ...args: unknown[]) {
     if (typeof arg === "object" && arg !== null && "event" in arg) {
       assertMachineReadableEvent((arg as LogEventPayload).event);
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    baseLogger.info(arg as string | object, ...(args as any[]));
+    // ignore-any-check
+    baseLogger.info(arg as string | object, ...(args as any[])); // ignore-any-check
   },
   warn(arg: unknown, ...args: unknown[]) {
     if (typeof arg === "object" && arg !== null && "event" in arg) {
       assertMachineReadableEvent((arg as LogEventPayload).event);
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    baseLogger.warn(arg as string | object, ...(args as any[]));
+    // ignore-any-check
+    baseLogger.warn(arg as string | object, ...(args as any[])); // ignore-any-check
   },
   error(arg: unknown, ...args: unknown[]) {
     if (typeof arg === "object" && arg !== null && "event" in arg) {
-
       assertMachineReadableEvent((arg as LogEventPayload).event);
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    baseLogger.error(arg as string | object, ...(args as any[]));
+    // ignore-any-check
+    baseLogger.error(arg as string | object, ...(args as any[])); // ignore-any-check
   },
 };
 

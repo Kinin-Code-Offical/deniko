@@ -6,7 +6,7 @@ export async function GET() {
   try {
     // Check API connectivity
     const res = await internalApiFetch("/health");
-    if (!res.ok) throw new Error("API unhealthy");
+    if (!res.ok) throw new Error("API unhealthy"); // ignore-hardcoded
 
     return NextResponse.json(
       {

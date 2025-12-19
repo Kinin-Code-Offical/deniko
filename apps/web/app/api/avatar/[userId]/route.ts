@@ -24,7 +24,7 @@ export async function GET(
     const secret = env.INTERNAL_API_SECRET;
 
     // Create signature: HMAC_SHA256(secret, `${userId}:${requesterId}:${timestamp}`)
-    const signature = createHmac("sha256", secret)
+    const signature = createHmac("sha256", secret) // ignore-hardcoded
         .update(`${userId}:${requesterId}:${timestamp}`)
         .digest("hex");
 

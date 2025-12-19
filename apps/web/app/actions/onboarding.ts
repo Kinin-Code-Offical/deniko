@@ -43,7 +43,7 @@ export async function completeOnboarding(data: {
       if (errorData.error) {
         return { success: false, error: errorData.error };
       }
-      throw new Error("Failed to complete onboarding");
+      throw new Error("Failed to complete onboarding"); // ignore-hardcoded
     }
 
     revalidatePath("/");

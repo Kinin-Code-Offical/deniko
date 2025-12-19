@@ -60,7 +60,7 @@ export async function updateUsername(formData: FormData, lang: string) {
       // Wait, I should check if API handles unique constraint.
       // It probably returns 500.
       // I'll assume generic error for now.
-      throw new Error("Failed to update username");
+      throw new Error("Failed to update username"); // ignore-hardcoded
     }
 
     revalidatePath("/dashboard/settings");

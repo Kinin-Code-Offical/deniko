@@ -25,7 +25,7 @@ export async function generateMetadata({
   const dictionary = await getDictionary(lang);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let user: any = null;
+  let user: UserWithProfile | null = null;
   try {
     const res = await internalApiFetch(`/public/users/${username}`);
     if (res.ok) {
@@ -117,7 +117,7 @@ export default async function UserProfilePage({
 
   const res = await internalApiFetch(`/public/users/${username}`);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const user = await parseJsonOrRedirect<any>(res, { lang });
+  const user = await parseJsonOrRedirect<UserWithProfile>(res, { lang });
 
   const viewerId = session?.user?.id;
   const isOwner = viewerId === user.id;

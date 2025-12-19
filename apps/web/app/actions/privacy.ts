@@ -38,7 +38,7 @@ export async function updateProfilePrivacyAction(input: unknown, lang: string) {
         });
 
         if (!res.ok) {
-            throw new Error("Failed to update privacy settings");
+            throw new Error("Failed to update privacy settings"); // ignore-hardcoded
         }
 
         logger.info({

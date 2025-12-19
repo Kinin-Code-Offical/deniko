@@ -41,10 +41,10 @@ exports.createDb = void 0;
  * });
  * ```
  */
-const client_1 = require("./generated/client");
+const client_1 = require("@prisma/client");
 const adapter_pg_1 = require("@prisma/adapter-pg");
 const pg_1 = require("pg");
-__exportStar(require("./generated/client"), exports);
+__exportStar(require("@prisma/client"), exports);
 const globalForPrisma = globalThis;
 const createDb = (config) => {
     if (globalForPrisma.prisma)

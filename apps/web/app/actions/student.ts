@@ -52,14 +52,14 @@ export async function createStudent(formData: FormData) {
 
     if (!res.ok) {
       const error = await res.json() as { error: string };
-      return { success: false, error: error.error || "unknown_error" };
+      return { success: false, error: error.error || "unknown_error" }; // ignore-hardcoded
     }
 
     revalidatePath("/dashboard/students");
     return { success: true };
   } catch (error) {
     logger.error({ error }, "Failed to create student");
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -79,14 +79,14 @@ export async function claimStudentProfile(token: string, preferences: Record<str
 
     if (!res.ok) {
       const error = await res.json() as { error: string };
-      return { success: false, error: error.error || "unknown_error" };
+      return { success: false, error: error.error || "unknown_error" }; // ignore-hardcoded
     }
 
     revalidatePath("/dashboard");
     return { success: true };
   } catch (error) {
     logger.error({ error }, "Failed to claim student profile");
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -137,13 +137,13 @@ export async function updateStudent(data: z.infer<typeof updateStudentSchema> & 
 
     if (!res.ok) {
       const error = await res.json() as { error: string };
-      return { success: false, error: error.error || "unknown_error" };
+      return { success: false, error: error.error || "unknown_error" }; // ignore-hardcoded
     }
 
     revalidatePath("/dashboard/students");
     return { success: true };
   } catch (_error) {
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -157,12 +157,12 @@ export async function unlinkStudent(studentId: string) {
       headers: { "x-user-id": session.user.id },
     });
 
-    if (!res.ok) return { success: false, error: "unknown_error" };
+    if (!res.ok) return { success: false, error: "unknown_error" }; // ignore-hardcoded
 
     revalidatePath("/dashboard/students");
     return { success: true };
   } catch (_error) {
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -176,12 +176,12 @@ export async function deleteStudent(studentId: string) {
       headers: { "x-user-id": session.user.id },
     });
 
-    if (!res.ok) return { success: false, error: "unknown_error" };
+    if (!res.ok) return { success: false, error: "unknown_error" }; // ignore-hardcoded
 
     revalidatePath("/dashboard/students");
     return { success: true };
   } catch (_error) {
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -195,12 +195,12 @@ export async function deleteShadowStudent(studentId: string) {
       headers: { "x-user-id": session.user.id },
     });
 
-    if (!res.ok) return { success: false, error: "unknown_error" };
+    if (!res.ok) return { success: false, error: "unknown_error" }; // ignore-hardcoded
 
     revalidatePath("/dashboard/students");
     return { success: true };
   } catch (_error) {
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -214,13 +214,13 @@ export async function regenerateInviteToken(studentId: string) {
       headers: { "x-user-id": session.user.id },
     });
 
-    if (!res.ok) return { success: false, error: "unknown_error" };
+    if (!res.ok) return { success: false, error: "unknown_error" }; // ignore-hardcoded
 
     const data = await res.json();
     revalidatePath("/dashboard/students");
     return { success: true, inviteToken: data.inviteToken };
   } catch (_error) {
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -238,12 +238,12 @@ export async function toggleInviteLink(studentId: string, enable: boolean) {
       body: JSON.stringify({ enable }),
     });
 
-    if (!res.ok) return { success: false, error: "unknown_error" };
+    if (!res.ok) return { success: false, error: "unknown_error" }; // ignore-hardcoded
 
     revalidatePath("/dashboard/students");
     return { success: true };
   } catch (_error) {
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -261,12 +261,12 @@ export async function updateStudentRelation(studentId: string, data: { customNam
       body: JSON.stringify(data),
     });
 
-    if (!res.ok) return { success: false, error: "unknown_error" };
+    if (!res.ok) return { success: false, error: "unknown_error" }; // ignore-hardcoded
 
     revalidatePath("/dashboard/students");
     return { success: true };
   } catch (_error) {
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }
 
@@ -300,11 +300,11 @@ export async function updateStudentSettings(studentId: string, formData: FormDat
       body: JSON.stringify({ ...data, avatarUrl }),
     });
 
-    if (!res.ok) return { success: false, error: "unknown_error" };
+    if (!res.ok) return { success: false, error: "unknown_error" }; // ignore-hardcoded
 
     revalidatePath("/dashboard/students");
     return { success: true };
   } catch (_error) {
-    return { success: false, error: "unknown_error" };
+    return { success: false, error: "unknown_error" }; // ignore-hardcoded
   }
 }

@@ -10,7 +10,7 @@
     }
   },
   "scripts": {
-    "build": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\" && prisma generate && tsc && node -e \"require('fs').cpSync('src/generated', 'dist/generated', {recursive: true})\"",
+    "build": "node -e \"require('fs').rmSync('dist', {recursive: true, force: true})\" && prisma generate && tsc",
     "generate": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",

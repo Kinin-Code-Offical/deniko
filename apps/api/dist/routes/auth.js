@@ -40,6 +40,7 @@ const argon2 = __importStar(require("argon2"));
 const crypto_1 = require("crypto");
 const username_1 = require("../lib/username");
 const rate_limit_1 = require("../lib/rate-limit");
+const avatar_utils_1 = require("../lib/avatar-utils");
 // Schemas
 const userSchema = zod_1.z.object({
     name: zod_1.z.string().nullable().optional(),
@@ -95,12 +96,54 @@ async function authRoutes(fastify) {
     // Create User
     fastify.post('/adapter/user', async (request, reply) => {
         const data = userSchema.parse(request.body);
+        let finalImage = data.image;
+        // Avatar Logic
+        if (data.image && (data.image.startsWith('http://') || data.image.startsWith('https://'))) {
+            // If image is a URL (e.g. from Google), upload it to storage
+            const uploadedKey = await (0, avatar_utils_1.uploadGoogleAvatar)(data.image);
+            if (uploadedKey) {
+                finalImage = uploadedKey;
+            }
+            else {
+                // Fallback to default if upload fails
+                finalImage = (0, avatar_utils_1.getRandomDefaultAvatar)();
+            }
+        }
+        else if (!data.image) {
+            // If no image provided, assign random default avatar
+            finalImage = (0, avatar_utils_1.getRandomDefaultAvatar)();
+        }
         return await db_1.db.user.create({
             data: {
                 ...data,
+                image: finalImage,
                 emailVerified: data.emailVerified ? new Date(data.emailVerified) : null,
             }
         });
+    });
+    // Sync Google Avatar (for existing users)
+    fastify.post('/adapter/sync-google-avatar', async (request, reply) => {
+        const schema = zod_1.z.object({
+            email: zod_1.z.string().email(),
+            image: zod_1.z.string().url(),
+        });
+        const { email, image } = schema.parse(request.body);
+        const user = await db_1.db.user.findUnique({ where: { email } });
+        if (!user)
+            return reply.code(404).send({ error: 'User not found' });
+        // Rule: Only update if current avatar is null or a default avatar
+        // Do NOT overwrite if user has set a custom avatar
+        if (!user.image || (0, avatar_utils_1.isDefaultAvatar)(user.image)) {
+            const newKey = await (0, avatar_utils_1.uploadGoogleAvatar)(image);
+            if (newKey) {
+                await db_1.db.user.update({
+                    where: { id: user.id },
+                    data: { image: newKey }
+                });
+                return { success: true, updated: true };
+            }
+        }
+        return { success: true, updated: false };
     });
     // Get User by ID
     fastify.get('/adapter/user/:id', async (request, reply) => {

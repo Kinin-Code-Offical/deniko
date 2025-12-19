@@ -6,6 +6,7 @@ import { PrivacyPreferencesCard } from "@/components/dashboard/profile/privacy-p
 import { ActivityStatsCard } from "@/components/dashboard/profile/activity-stats-card";
 import { NotificationsPermissionsCard } from "@/components/dashboard/profile/notifications-permissions-card";
 import { internalApiFetch } from "@/lib/internal-api";
+import { UserWithProfile } from "@/types/user";
 
 export default async function ProfilePage({
   params,
@@ -19,7 +20,7 @@ export default async function ProfilePage({
   if (!session?.user?.id) return null;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let user: any = null;
+  let user: UserWithProfile | null = null;
   try {
     const res = await internalApiFetch("/settings", {
       headers: { "x-user-id": session.user.id },

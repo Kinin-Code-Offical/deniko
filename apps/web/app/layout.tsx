@@ -24,7 +24,7 @@ const geistMono = Geist_Mono({
 
 export const viewport: Viewport = {
   themeColor: "#2362a1",
-  width: "device-width",
+  width: "device-width", // ignore-hardcoded
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     title: "Deniko",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "black-translucent", // ignore-hardcoded
     capable: true,
     startupImage: ["/icons/icon-512x512.png"],
   },

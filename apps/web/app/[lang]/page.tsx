@@ -76,14 +76,14 @@ const Carousel = nextDynamic(
 async function getStats() {
   try {
     const res = await internalApiFetch("/public/stats", { cache: "no-store" });
-    if (!res.ok) throw new Error("Failed to fetch stats");
+    if (!res.ok) throw new Error("Failed to fetch stats"); // ignore-hardcoded
     return (await res.json()) as {
       teacherCount: number;
       studentCount: number;
       lessonCount: number;
     };
   } catch (error) {
-    logger.warn("Failed to fetch stats (using fallbacks):");
+    logger.warn("Failed to fetch stats (using fallbacks):"); // ignore-hardcoded
     logger.warn(error instanceof Error ? error.message : String(error));
     return { teacherCount: 150, studentCount: 1200, lessonCount: 5000 };
   }

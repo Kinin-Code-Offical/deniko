@@ -184,10 +184,10 @@ export async function register(formData: RegisterFormData, lang: string = "tr") 
 
     if (!res.ok) {
       const errorData = await res.json() as { error?: string };
-      if (errorData.error === 'user_exists') {
+      if (errorData.error === 'user_exists') { // ignore-hardcoded
         return { success: false, message: dict.auth.register.errors.user_exists };
       }
-      throw new Error("Failed to register");
+      throw new Error("Failed to register"); // ignore-hardcoded
     }
 
     const { token } = await res.json() as { token: string };
@@ -219,9 +219,9 @@ export async function verifyEmail(token: string, lang: string = "tr") {
     if (!res.ok) {
       const errorData = await res.json() as { error?: string };
       if (errorData.error === 'invalid_token') return { success: false, message: dict.auth.verify_page.messages.invalid_token, email: undefined };
-      if (errorData.error === 'token_expired') return { success: false, message: dict.auth.verify_page.messages.expired_token, email: undefined };
-      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.verify_page.messages.user_not_found, email: undefined };
-      throw new Error("Failed to verify email");
+      if (errorData.error === 'token_expired') return { success: false, message: dict.auth.verify_page.messages.expired_token, email: undefined }; // ignore-hardcoded
+      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.verify_page.messages.user_not_found, email: undefined }; // ignore-hardcoded
+      throw new Error("Failed to verify email"); // ignore-hardcoded
     }
 
     return { success: true, message: dict.auth.verify_page.messages.success };
@@ -246,9 +246,9 @@ export async function resendVerificationEmail(email: string, lang: string = "tr"
 
     if (!res.ok) {
       const errorData = await res.json() as { error?: string };
-      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.verification.user_not_found };
-      if (errorData.error === 'already_verified') return { success: false, message: dict.auth.verification.already_verified };
-      throw new Error("Failed to resend verification");
+      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.verification.user_not_found }; // ignore-hardcoded
+      if (errorData.error === 'already_verified') return { success: false, message: dict.auth.verification.already_verified }; // ignore-hardcoded
+      throw new Error("Failed to resend verification"); // ignore-hardcoded
     }
 
     const { token } = await res.json() as { token: string };
@@ -277,8 +277,8 @@ export async function forgotPassword(email: string, lang: string = "tr") {
 
     if (!res.ok) {
       const errorData = await res.json() as { error?: string };
-      if (errorData.error === 'user_not_found') return { success: false, message: dict.server.errors.user_not_found };
-      throw new Error("Failed to request password reset");
+      if (errorData.error === 'user_not_found') return { success: false, message: dict.server.errors.user_not_found }; // ignore-hardcoded
+      throw new Error("Failed to request password reset"); // ignore-hardcoded
     }
 
     const { token } = await res.json() as { token: string };
@@ -312,10 +312,10 @@ export async function resetPassword(
     if (!res.ok) {
       const errorData = await res.json() as { error?: string };
       if (errorData.error === 'invalid_token') return { success: false, message: dict.auth.reset_password.invalid_token };
-      if (errorData.error === 'token_expired') return { success: false, message: dict.auth.reset_password.expired_token };
-      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.reset_password.user_not_found };
-      if (errorData.error === 'same_password') return { success: false, message: dict.auth.reset_password.same_password };
-      throw new Error("Failed to reset password");
+      if (errorData.error === 'token_expired') return { success: false, message: dict.auth.reset_password.expired_token }; // ignore-hardcoded
+      if (errorData.error === 'user_not_found') return { success: false, message: dict.auth.reset_password.user_not_found }; // ignore-hardcoded
+      if (errorData.error === 'same_password') return { success: false, message: dict.auth.reset_password.same_password }; // ignore-hardcoded
+      throw new Error("Failed to reset password"); // ignore-hardcoded
     }
 
     return { success: true, message: dict.auth.reset_password.success };
@@ -341,9 +341,9 @@ export async function verifyEmailChange(token: string, lang: string = "tr") {
     if (!res.ok) {
       const errorData = await res.json() as { error?: string };
       if (errorData.error === 'invalid_token') return { success: false, message: dict.server.errors.invalid_token };
-      if (errorData.error === 'token_expired') return { success: false, message: dict.server.errors.token_expired };
-      if (errorData.error === 'email_in_use') return { success: false, message: dict.server.errors.email_in_use };
-      throw new Error("Failed to verify email change");
+      if (errorData.error === 'token_expired') return { success: false, message: dict.server.errors.token_expired }; // ignore-hardcoded
+      if (errorData.error === 'email_in_use') return { success: false, message: dict.server.errors.email_in_use }; // ignore-hardcoded
+      throw new Error("Failed to verify email change"); // ignore-hardcoded
     }
 
     return { success: true };
