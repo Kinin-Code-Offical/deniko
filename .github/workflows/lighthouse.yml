@@ -68,6 +68,10 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          NEXT_PUBLIC_NOINDEX: "true"
+          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
       - name: Push Database Schema
         run: pnpm --filter @deniko/db db:push
@@ -99,6 +103,10 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          NEXT_PUBLIC_NOINDEX: "true"
+          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
       - name: Start Server
         run: |
@@ -127,6 +135,10 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          NEXT_PUBLIC_NOINDEX: "true"
+          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12

@@ -49,6 +49,10 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          NEXT_PUBLIC_NOINDEX: "true"
+          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
       - name: Generate Prisma Client
         run: pnpm prisma:generate
@@ -73,6 +77,10 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          NEXT_PUBLIC_NOINDEX: "true"
+          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
       - name: Run Sitemap Unit Tests
         run: pnpm -C apps/web exec vitest run __tests__/sitemap.test.ts
@@ -97,6 +105,10 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          NEXT_PUBLIC_NOINDEX: "true"
+          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
       - name: Build Project (Generates sitemap.xml)
         run: pnpm run build
@@ -126,3 +138,7 @@ jobs:
           SMTP_SUPPORT_FROM: "support@deniko.net"
           UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          INTERNAL_API_BASE_URL: "http://localhost:4000"
+          NEXT_PUBLIC_NOINDEX: "true"
+          NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+          NEXT_PUBLIC_GA_ID: "G-DUMMY"
