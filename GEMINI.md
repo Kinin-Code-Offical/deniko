@@ -1,62 +1,54 @@
----
-applyTo: "deniko/**"
----
+# PROJE KURALLARI VE AI DAVRANIŞLARI
 
-# Copilot Instructions for deniko (Monorepo Final Rules)
+Bu proje Next.js 16 (App Router), React 19 ve Tailwind CSS v4 kullanan bir Monorepo'dur. Aşağıdaki kurallar **kesindir**.
 
-## 0) Output Format
+## 1. Mimari ve İzinler (ÇOK ÖNEMLİ)
 
-- Varsayılan olarak yalnızca kod üret.
-- Mevcut dosyayı düzeltirken sadece ilgili bölümü değiştir.
-- Her dosya için tek bir uygun code block ver (ts/tsx/js/json/yml/md).
+- **Web Tarafı Kısıtlamaları (`apps/web`):**
+  - ❌ **ASLA** `prisma` veya `@deniko/db` import etme.
+  - ❌ **ASLA** veritabanına doğrudan bağlanma.
+  - ✅ Veri çekmek için `apps/api`'ye HTTP isteği at veya Server Action kullan.
+  - ✅ Paylaşılan tipler için `@deniko/validation` veya `@deniko/logger` kullan.
 
-## 1) Repo Mimarisi (ZORUNLU)
+- **API Tarafı (`apps/api`):**
+  - ✅ Veritabanı işlemleri (Prisma) sadece burada yapılır.
+  - ✅ Hassas işlemler (Mail, Storage, Cron) burada barınır.
 
-- Monorepo: `apps/web` (Next.js) + `apps/api` (backend) + `packages/*` (shared).
-- **DB/Prisma yalnızca `apps/api` veya `packages/db` içinde olabilir.**
-- **`apps/web` içinde @prisma/client, prisma.*, packages/db importu YASAK.**
-- Storage/Mail/Redis gibi secret gerektiren servisler yalnızca `apps/api` tarafında çalışır.
-- `packages/*` içinde **process.env kullanımı YASAK** (config parametre ile gelir).
+## 2. TypeScript ve Kod Kalitesi
 
-## 2) TypeScript Kuralları (NO ANY)
+- **Strict Typing:** `any` kullanımı **YASAK**. Bilinmeyen veriler için `unknown` kullan ve Zod ile doğrula.
+- **Interface vs Type:** React prop'ları ve obje tanımları için `interface` yerine `type` tercih et.
+- **Fonksiyonlar:** Tüm export edilen fonksiyonların dönüş tipi (`ReturnType`) açıkça belirtilmelidir.
+- **Async/Await:** `.then()` zincirleri yerine her zaman `async/await` kullan.
 
-- `any` kesinlikle kullanılmayacak (explicit veya implicit).
-- `unknown` kullan ve daralt (type guard) ya da generics ile tip ver.
-- Her exported function için dönüş tipi belirt.
-- API response tipleri `ApiResponse<T>` gibi generics ile yazılacak.
-- JSON parse/response için tipli helper kullan (zod validate veya typed decode).
+## 3. Next.js 16 ve React 19 Kuralları
 
-## 3) Next.js (apps/web) Kuralları
+- **Server Components:** Varsayılan olarak tüm bileşenler Server Component'tir. Sadece `useState`, `useEffect` veya event listener gerekiyorsa dosyanın en başına `'use client'` ekle.
+- **Async Components:** Veri çeken bileşenleri `async function` olarak tanımla.
+- **Formlar:** React 19 `useActionState` ve `useFormStatus` hook'larını kullan (eski `useFormState` yerine).
+- **Görüntü Optimizasyonu:** Her zaman `next/image` kullan. Sabit boyutlar yerine `fill` ve `sizes` prop'larını tercih et.
 
-- Server/Client ayrımı doğru olacak; gereksiz `use client` yok.
-- Server-only modüllerde en üste `import "server-only";`
-- Internal API çağrıları tek wrapper üzerinden:
-  - `INTERNAL_API_BASE_URL` sadece server-side kullanılır.
-- Web build sırasında DB bağlantısı denemesi olmayacak:
-  - DB gerektiren her şey `apps/api` endpointine taşınır.
-  - Statik prerender DB çağrısı yaratıyorsa ilgili route/layout: `export const dynamic = "force-dynamic";`
+## 4. Tailwind CSS v4 ve UI
 
-## 4) API (apps/api) Kuralları
+- **Config:** `tailwind.config.js` dosyası arama; v4 CSS-first konfigürasyon kullanır.
+- **Responsive:** Mobil öncelikli (mobile-first) yaklaşım zorunludur. `sm:`, `md:`, `lg:` prefixlerini kullan.
+- **Renkler:** Hardcoded hex kodları (örn: `#F00`) yerine CSS değişkenlerini (örn: `bg-primary`, `text-destructive`) kullan.
 
-- Prisma client sadece burada (veya packages/db üzerinden) kullanılacak.
-- Env validation (zod) sadece API tarafında DB/Storage/Mail secret’ları zorunlu tutar.
-- Hata yönetimi: anlamlı HTTP status + error response.
+## 5. Dosya ve Klasör Yapısı
 
-## 5) Env Düzeni
+- **Page Component:** `page.tsx` dosyaları sadece veri çekme ve layout düzeni içermeli, karmaşık mantığı `components/` altındaki bileşenlere taşı.
+- **Dosya İsimleri:** `kebab-case` kullan (örn: `user-profile-card.tsx`).
+- **Route Handlers:** API route'ları `app/api/.../route.ts` içinde tanımlanır.
 
-- `apps/web/.env.example`: sadece Auth.js + NEXT_PUBLIC + INTERNAL_API_BASE_URL
-- `apps/api/.env.example`: DB + Storage + Mail + RateLimit
-- LHCI/GitHub token gibi şeyler `.env` değil GitHub Secrets’ta.
+## 6. Güvenlik ve Environment
 
-## 6) Test / CI
+- **Environment Variables:**
+  - `process.env` kullanırken type-safe olduğundan emin ol.
+  - Client tarafında sadece `NEXT_PUBLIC_` ile başlayan değişkenleri kullan.
+  - Secret'ları (DB şifresi, API Key) asla client componentlere geçirme.
+- **SSL/DB:** Google Cloud SQL bağlantıları için sertifikalar base64 decode edilerek kullanılır (bkz: `.cursorrules` legacy).
 
-- Root komutları:
-  - `pnpm lint` => `pnpm -r lint`
-  - `pnpm test:all` => `pnpm -r test`
-  - `pnpm build` => `pnpm -r build`
-- Testler deterministik; DB yoksa skip/guard.
+## 7. Test ve Dokümantasyon
 
-## 7) Güvenlik
-
-- Secret stringleri loglama; logger redaction uygula.
-- Client’a secret taşıyan env ya da response üretme.
+- Yeni bir özellik eklediğinde ilgili `README.md` dosyasını güncelle.
+- Kritik mantık değişikliklerinde `pnpm test:cli` komutunu çalıştırarak mimariyi bozmadığından emin ol.

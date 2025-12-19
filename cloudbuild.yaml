@@ -7,10 +7,26 @@ substitutions:
   _WEB_SERVICE: "deniko-web"
   _MIGRATE_JOB: "deniko-db-migrate"
 
+  # Runtime service accounts (sende mevcut)
+  _API_SA: "deniko-api-sa@deniko.iam.gserviceaccount.com"
+  _WEB_SA: "deniko-web-sa@deniko.iam.gserviceaccount.com"
+
+  # Secret names (value yazmıyoruz)
+  _DB_SECRET: "DATABASE_URL"
+  _DIRECT_DB_SECRET: "DIRECT_URL"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+  substitution_option: ALLOW_LOOSE
+
+timeout: "1800s"
+
 steps:
   # Build API and Web in parallel
   - id: "Build API"
     name: "gcr.io/cloud-builders/docker"
+    env: ["DOCKER_BUILDKIT=1"]
     args:
       - "build"
       - "-f"
@@ -28,6 +44,7 @@ steps:
   - id: "Build Web"
     name: "gcr.io/cloud-builders/docker"
     waitFor: ["-"]
+    env: ["DOCKER_BUILDKIT=1"]
     args:
       - "build"
       - "-f"
@@ -59,7 +76,7 @@ steps:
       - "--all-tags"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}"
 
-  # Run database migration
+  # Deploy & execute database migration job (after API image pushed)
   - id: "Deploy migrate job"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     waitFor: ["Push API"]
@@ -73,10 +90,20 @@ steps:
       - "${_REGION}"
       - "--image"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+      - "--service-account"
+      - "${_API_SA}"
+      - "--set-secrets"
+      - "DATABASE_URL=${_DB_SECRET}:latest,DIRECT_URL=${_DIRECT_DB_SECRET}:latest"
+      - "--max-retries"
+      - "0"
+      - "--task-timeout"
+      - "30m"
+      # Prisma PATH'e bağlı kalmadan çalıştır
       - "--command"
-      - "prisma"
+      - "node"
       - "--args"
-      - "migrate,deploy,--schema,./prisma/schema.prisma"
+      - "./node_modules/prisma/build/index.js,migrate,deploy,--schema,./prisma/schema.prisma"
+      - "--quiet"
 
   - id: "Execute migrate job"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
@@ -90,6 +117,7 @@ steps:
       - "--region"
       - "${_REGION}"
       - "--wait"
+      - "--quiet"
 
   # Deploy services after migration
   - id: "Deploy API"
@@ -104,6 +132,9 @@ steps:
       - "${_REGION}"
       - "--image"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
+      - "--service-account"
+      - "${_API_SA}"
+      - "--quiet"
 
   - id: "Deploy Web"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
@@ -117,15 +148,12 @@ steps:
       - "${_REGION}"
       - "--image"
       - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID"
+      - "--service-account"
+      - "${_WEB_SA}"
+      - "--quiet"
 
 images:
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:$BUILD_ID"
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_API_IMAGE}:latest"
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:$BUILD_ID"
   - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_WEB_IMAGE}:latest"
-
-options:
-  logging: CLOUD_LOGGING_ONLY
-  machineType: E2_HIGHCPU_8
-
-timeout: "1800s"

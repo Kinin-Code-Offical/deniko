@@ -1,75 +1,43 @@
-# 🤖 AI Context & Project Overview
+# 🤖 Deniko AI Context & Architecture Reference
 
-This document provides high-level context for AI assistants (Copilot, ChatGPT, Claude, etc.) working on the Deniko project.
+## 🎯 Project Identity
 
-## 🎯 Project Mission
+**Deniko** is a SaaS platform designed for private tutors and coaching centers. It is a strictly typed **Monorepo** application managed by **pnpm workspaces**.
 
-Deniko is a SaaS platform for private tutors and coaching centers. It aims to digitize the management of students, lessons, and payments.
+## 🏗️ Monorepo Architecture
 
-## 🏗️ Architecture Overview (Monorepo)
+| Path | Role | Tech Stack | Port | Critical Rules |
+|------|------|------------|------|----------------|
+| **`apps/web`** | Frontend / BFF | Next.js 16 (App Router), Auth.js v5 | 3000 | **NO DB Access.** i18n Strict. |
+| **`apps/api`** | Backend / Core | Fastify, Node.js 22 | 4000 | **Direct DB Access.** Business Logic. |
+| **`packages/db`** | Database Layer | Prisma 7, PostgreSQL 18 | - | Imported ONLY by `apps/api`. |
+| **`packages/*`** | Shared Libs | Logger, Storage, Validation | - | Stateless utilities. |
 
-The project is a **Monorepo** managed by **pnpm workspaces**.
+## 🧩 Development Patterns
 
-### 📂 Structure
+### 1. Internationalization (i18n) - STRICT
 
-- **`apps/web`**: Next.js 16 (App Router) application.
-  - **Role:** Frontend UI, Auth (NextAuth v5), Server Actions (BFF pattern).
-  - **Port:** 3000
-- **`apps/api`**: Fastify (Node.js) application.
-  - **Role:** Core business logic, heavy processing, internal API.
-  - **Port:** 4000
-- **`packages/db`**: Shared Prisma ORM configuration.
-  - **Role:** Database client generator, schema definition.
-- **`packages/logger`**: Shared Pino logger configuration.
-- **`packages/validation`**: Shared Zod schemas.
-- **`packages/storage`**: Shared Google Cloud Storage wrapper.
+- **Routing:** All visible pages MUST reside in `app/[lang]/`.
+- **Dictionaries:** Located in `apps/web/dictionaries/{lang}.json`.
+- **Usage Rule:**
+  - ❌ NEVER hardcode visible text (e.g., `<p>Hello</p>`).
+  - ✅ ALWAYS use dictionaries (e.g., `<p>{dict.auth.login}</p>`).
+  - Server Components: Fetch via `getDictionary(lang)`.
+  - Client Components: Pass dictionary parts as props.
 
-### 🛠️ Tech Stack
+### 2. Data Flow (Strict Separation)
 
-- **Frontend:** Next.js 16, React 19, Tailwind CSS v4, Shadcn UI.
-- **Backend:** Fastify (API), Next.js Server Actions (Web).
-- **Database:** PostgreSQL 18 (managed via Prisma 7).
-- **Auth:** Auth.js (NextAuth) v5 with JWT strategy.
-- **Infrastructure:** Docker, Google Cloud Run.
+- **Web:** Calls `apps/api` via `fetch` or Server Actions. No direct DB access.
+- **API:** Handles Prisma and heavy processing.
 
-## 🧩 Key Patterns
+### 3. Styling (Tailwind v4)
 
-### 1. Internationalization (i18n)
+- Use Tailwind v4 classes directly (no config file).
+- Use CSS variables for colors (e.g., `bg-primary`, `text-muted-foreground`).
 
-- **Strategy:** Path-based routing (`/[lang]/...`) in `apps/web`.
-- **Implementation:** Server-side dictionary fetching.
-- **Rule:** Do not hardcode text. Always use `dictionary.section.key`.
+## 🛠️ Tech Stack
 
-### 2. Data Fetching & State
-
-- **Web (Server Components):** Fetch data directly from `apps/api` (via internal fetch) or DB (read-only optimization).
-- **Web (Client Components):** Use Server Actions.
-- **API:** Fastify routes handle core logic (`apps/api/src/routes`).
-
-### 3. Styling
-
-- **Tailwind CSS v4:** Utility-first.
-- **Shadcn UI:** Components in `apps/web/components/ui`.
-- **Dark Mode:** `next-themes`.
-
-### 4. Type Safety
-
-- **Strict Mode:** Enabled.
-- **No `any`:** Forbidden.
-- **Zod:** Mandatory for all input validation (API & Forms).
-
-## 🚀 Recent Changes & Status
-
-- **Database:** Upgraded to PostgreSQL 18.
-- **ORM:** Upgraded to Prisma 7.
-- **Security:** Rate limiting implemented (Redis/Upstash).
-- **PWA:** Splash screens and manifest optimized.
-- **Build:** Dockerfiles optimized for pnpm workspaces (patches removed).
-
-## 📝 Rules for AI
-
-1. **Context Awareness:** Check if you are in `apps/web` or `apps/api`.
-2. **Imports:** Use workspace packages (`@deniko/db`, `@deniko/logger`) instead of relative paths where possible.
-3. **I18n:** Always consider the `lang` parameter in Next.js pages.
-4. **Icons:** Use `lucide-react`.
-5. **Validation:** Always validate inputs with Zod.
+- **Framework:** Next.js 16.0.10
+- **Language:** TypeScript 5.9+ (Strict)
+- **Styling:** Tailwind CSS v4.1
+- **Icons:** Lucide React

@@ -1,9 +1,31 @@
-# PROJE KURALLARI
+# PROJE KURALLARI VE AI DAVRANIŞLARI
 
-1. **Veritabanı Bağlantısı:** Google Cloud SQL (Postgres) kullanıyoruz.
-2. **SSL Yönetimi:**
-   - Asla `fs.readFileSync` ile sertifika dosyası okuma.
-   - Sertifikalar Environment Variable içinde BASE64 formatındadır.
-   - Kullanım: `Buffer.from(process.env.DB_CA_BASE64, 'base64').toString('ascii')`
-3. **Secrets:** Şifreleri hardcode etme, `process.env` kullan. Cloud Run'da Secret Manager'dan otomatik inject edilir.
-4. **Altyapı:** Uygulama Cloud Run'da çalışacak (Stateless).
+Bu proje **Next.js 16**, **React 19** ve **Tailwind CSS v4** kullanan bir Monorepo'dur.
+
+## 1. 🌍 Internationalization (i18n) Kuralları (KESİN)
+
+- **Hardcode Yasak:** Arayüzde görünen hiçbir metni (buton yazısı, başlık, hata mesajı) doğrudan yazma.
+- **Sözlük Kullanımı:**
+  - Metinleri `apps/web/dictionaries/en.json` ve `tr.json` dosyalarına ekle.
+  - Bileşenlerde `dict` prop'u üzerinden eriş (örn: `dict.dashboard.welcome`).
+- **Route Yapısı:** Yeni sayfaları mutlaka `app/[lang]/` altına oluştur.
+
+## 2. Mimari ve İzinler
+
+- **Web Tarafı (`apps/web`):**
+  - ❌ `prisma`, `@deniko/db` import etmek YASAK.
+  - ❌ Veritabanına bağlanmak YASAK.
+  - ✅ Veri için `apps/api`'ye istek at.
+- **API Tarafı (`apps/api`):**
+  - ✅ Tüm DB ve Secret işlemleri burada yapılır.
+
+## 3. TypeScript ve React 19
+
+- **Strict Typing:** `any` kullanma. Bilinmeyen veriyi Zod ile doğrula.
+- **Server Components:** Varsayılan olarak Server Component yaz. Etkileşim gerekiyorsa `'use client'` ekle.
+- **Formlar:** React 19 `useActionState` ve `useFormStatus` hook'larını kullan.
+
+## 4. Tailwind CSS v4
+
+- `tailwind.config.js` arama. V4 CSS-first yapıdadır.
+- Renkler için hardcode hex yerine `bg-primary`, `text-destructive` gibi semantic classları kullan.
