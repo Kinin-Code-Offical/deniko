@@ -8,6 +8,32 @@ on:
 jobs:
   k6_performance:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+      DIRECT_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+      NEXTAUTH_URL: "http://127.0.0.1:3000"
+      AUTH_SECRET: "dummy_secret_for_ci"
+      AUTH_GOOGLE_ID: "dummy_google_id"
+      AUTH_GOOGLE_SECRET: "dummy_google_secret"
+      GCS_BUCKET_NAME: "dummy-bucket"
+      GCS_PROJECT_ID: "dummy-project"
+      SMTP_NOREPLY_HOST: "smtp.example.com"
+      SMTP_NOREPLY_PORT: "465"
+      SMTP_NOREPLY_USER: "noreply@deniko.net"
+      SMTP_NOREPLY_PASSWORD: "dummy_password"
+      SMTP_NOREPLY_FROM: "noreply@deniko.net"
+      SMTP_SUPPORT_HOST: "smtp.example.com"
+      SMTP_SUPPORT_PORT: "465"
+      SMTP_SUPPORT_USER: "support@deniko.net"
+      SMTP_SUPPORT_PASSWORD: "dummy_password"
+      SMTP_SUPPORT_FROM: "support@deniko.net"
+      UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+      UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+      INTERNAL_API_BASE_URL: "http://127.0.0.1:4000"
+      INTERNAL_API_SECRET: "dev-secret-key"
+      NEXT_PUBLIC_NOINDEX: "true"
+      NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3000"
+      NEXT_PUBLIC_GA_ID: "G-DUMMY"
     steps:
       - uses: actions/checkout@v4
 
@@ -23,25 +49,66 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Web
-        run: pnpm build:web
+      - name: Build (workspace)
+        run: pnpm build
 
-      - name: Start Web
+      - name: Start API + Web
+        shell: bash
         run: |
+          set -euo pipefail
+          pnpm --filter @deniko/api start:ci &
+          API_PID=$!
           pnpm --filter deniko start:ci &
-          npx wait-on http://localhost:3000
-        env:
-          PORT: 3000
+          WEB_PID=$!
+          pnpm --filter deniko exec wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
+          echo "API PID=$API_PID WEB PID=$WEB_PID" > ci-pids.txt
 
       - name: Run k6
         uses: grafana/run-k6-action@v1
         with:
           path: tests/perf/k6/smoke.js
         env:
-          BASE_URL: http://localhost:3000
+          BASE_URL: http://127.0.0.1:3000
+
+      - name: Stop API + Web
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          if [ -f ci-pids.txt ]; then
+            API_PID=$(sed -n 's/^API PID=\([0-9]\+\).*$/\1/p' ci-pids.txt)
+            WEB_PID=$(sed -n 's/^.*WEB PID=\([0-9]\+\)$/\1/p' ci-pids.txt)
+            kill "$WEB_PID" "$API_PID" 2>/dev/null || true
+          fi
 
   seo_crawl_audit:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+      DIRECT_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+      NEXTAUTH_URL: "http://127.0.0.1:3000"
+      AUTH_SECRET: "dummy_secret_for_ci"
+      AUTH_GOOGLE_ID: "dummy_google_id"
+      AUTH_GOOGLE_SECRET: "dummy_google_secret"
+      GCS_BUCKET_NAME: "dummy-bucket"
+      GCS_PROJECT_ID: "dummy-project"
+      SMTP_NOREPLY_HOST: "smtp.example.com"
+      SMTP_NOREPLY_PORT: "465"
+      SMTP_NOREPLY_USER: "noreply@deniko.net"
+      SMTP_NOREPLY_PASSWORD: "dummy_password"
+      SMTP_NOREPLY_FROM: "noreply@deniko.net"
+      SMTP_SUPPORT_HOST: "smtp.example.com"
+      SMTP_SUPPORT_PORT: "465"
+      SMTP_SUPPORT_USER: "support@deniko.net"
+      SMTP_SUPPORT_PASSWORD: "dummy_password"
+      SMTP_SUPPORT_FROM: "support@deniko.net"
+      UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+      UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+      INTERNAL_API_BASE_URL: "http://127.0.0.1:4000"
+      INTERNAL_API_SECRET: "dev-secret-key"
+      NEXT_PUBLIC_NOINDEX: "true"
+      NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3000"
+      NEXT_PUBLIC_GA_ID: "G-DUMMY"
     steps:
       - uses: actions/checkout@v4
 
@@ -57,15 +124,26 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Web
-        run: pnpm build:web
+      - name: Build (workspace)
+        run: pnpm build
 
       - name: Start Web & Run Audit
+        shell: bash
         run: |
+          set -euo pipefail
+          pnpm --filter @deniko/api start:ci &
+          API_PID=$!
           pnpm --filter deniko start:ci &
-          PID=$!
-          npx wait-on http://localhost:3000
-          node scripts/ci/seo-audit.mjs
-          kill $PID
-        env:
-          BASE_URL: http://localhost:3000
+          WEB_PID=$!
+          pnpm --filter deniko exec wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
+          BASE_URL=http://127.0.0.1:3000 node scripts/ci/seo-audit.mjs
+          kill "$WEB_PID" "$API_PID"
+
+      - name: Upload SEO audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-audit
+          path: |
+            seo-audit.json
+            seo-audit.md

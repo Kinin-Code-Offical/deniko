@@ -110,9 +110,13 @@ jobs:
 
       - name: Start Server
         run: |
+          pnpm --filter @deniko/api start:ci &
+          API_PID=$!
           pnpm run start:ci &
+          WEB_PID=$!
           npx wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
-          sleep 5
+          echo "API PID=$API_PID WEB PID=$WEB_PID" > ci-pids.txt
+          sleep 2
         env:
           DATABASE_URL: "postgresql://user:password@localhost:5432/testdb"
           DIRECT_URL: "postgresql://user:password@localhost:5432/testdb"
@@ -140,10 +144,21 @@ jobs:
           NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
           NEXT_PUBLIC_GA_ID: "G-DUMMY"
 
+      - name: Stop Server
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          if [ -f ci-pids.txt ]; then
+            API_PID=$(sed -n 's/^API PID=\([0-9]\+\).*$/\1/p' ci-pids.txt)
+            WEB_PID=$(sed -n 's/^.*WEB PID=\([0-9]\+\)$/\1/p' ci-pids.txt)
+            kill "$WEB_PID" "$API_PID" 2>/dev/null || true
+          fi
+
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
         with:
-          configPath: "./lighthouserc.js"
+          configPath: "./apps/web/lighthouserc.js"
           uploadArtifacts: true
           temporaryPublicStorage: true
         env:

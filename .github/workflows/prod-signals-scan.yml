@@ -4,44 +4,114 @@ on:
   schedule:
     - cron: "0 */6 * * *" # Every 6 hours
   workflow_dispatch:
+    inputs:
+      gcp_project_id:
+        description: "GCP project id (falls back to vars.GCP_PROJECT_ID)"
+        required: false
+        type: string
+      workload_identity_provider:
+        description: "Workload Identity Provider resource name (falls back to vars.GCP_WIF_PROVIDER)"
+        required: false
+        type: string
+      service_account:
+        description: "Service account email to impersonate (falls back to vars.GCP_WIF_SERVICE_ACCOUNT)"
+        required: false
+        type: string
+      api_service:
+        description: "Cloud Run service name for API"
+        required: false
+        default: "deniko-api"
+        type: string
+      web_service:
+        description: "Cloud Run service name for Web"
+        required: false
+        default: "deniko-web"
+        type: string
+      lookback_minutes:
+        description: "How far back to scan logs"
+        required: false
+        default: "60"
+        type: string
+      error_threshold:
+        description: "Fail if ERROR count exceeds this"
+        required: false
+        default: "0"
+        type: string
 
 jobs:
   scan_logs:
     runs-on: ubuntu-latest
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
 
-      - id: "auth"
-        name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v2"
+      - id: auth
+        name: Authenticate to Google Cloud (WIF)
+        uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: "projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider"
-          service_account: "my-service-account@my-project.iam.gserviceaccount.com"
+          workload_identity_provider: ${{ inputs.workload_identity_provider || vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ inputs.service_account || vars.GCP_WIF_SERVICE_ACCOUNT }}
 
-      - name: "Scan Cloud Run Logs"
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ inputs.gcp_project_id || vars.GCP_PROJECT_ID }}
+
+      - name: Scan Cloud Run ERROR logs
+        shell: bash
+        env:
+          API_SERVICE: ${{ inputs.api_service || 'deniko-api' }}
+          WEB_SERVICE: ${{ inputs.web_service || 'deniko-web' }}
+          LOOKBACK_MINUTES: ${{ inputs.lookback_minutes || '60' }}
+          ERROR_THRESHOLD: ${{ inputs.error_threshold || '0' }}
         run: |
-          # Fetch ERROR logs for the last hour
-          gcloud logging read "resource.type=cloud_run_revision AND severity>=ERROR AND timestamp>=\"$(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ)\"" \
-            --limit=50 \
-            --format="json" > error_logs.json
+          set -euo pipefail
 
-          # Check if we have errors
-          ERROR_COUNT=$(jq length error_logs.json)
-          echo "Found $ERROR_COUNT errors in the last hour."
+          SINCE="$(date -u -d "${LOOKBACK_MINUTES} minutes ago" +%Y-%m-%dT%H:%M:%SZ)"
+          echo "Scanning since: ${SINCE}"
 
-          if [ "$ERROR_COUNT" -gt 0 ]; then
-            echo "::error::High error rate detected in Cloud Run logs!"
+          query_for_service() {
+            local svc="$1"
+            echo "resource.type=cloud_run_revision AND resource.labels.service_name=${svc} AND severity>=ERROR AND timestamp>=\"${SINCE}\""
+          }
+
+          gcloud logging read "$(query_for_service "${API_SERVICE}")" --limit=200 --format=json > api_error_logs.json || echo "[]" > api_error_logs.json
+          gcloud logging read "$(query_for_service "${WEB_SERVICE}")" --limit=200 --format=json > web_error_logs.json || echo "[]" > web_error_logs.json
+
+          API_ERRORS=$(jq length api_error_logs.json)
+          WEB_ERRORS=$(jq length web_error_logs.json)
+          TOTAL_ERRORS=$((API_ERRORS + WEB_ERRORS))
+
+          echo "API errors: ${API_ERRORS}"
+          echo "WEB errors: ${WEB_ERRORS}"
+          echo "TOTAL errors: ${TOTAL_ERRORS}"
+
+          cat > prod-signals-summary.json <<EOF
+          {
+            "since": "${SINCE}",
+            "api_service": "${API_SERVICE}",
+            "web_service": "${WEB_SERVICE}",
+            "api_errors": ${API_ERRORS},
+            "web_errors": ${WEB_ERRORS},
+            "total_errors": ${TOTAL_ERRORS},
+            "error_threshold": ${ERROR_THRESHOLD}
+          }
+          EOF
+
+          if [ "${TOTAL_ERRORS}" -gt "${ERROR_THRESHOLD}" ]; then
+            echo "::error::Cloud Run ERROR count ${TOTAL_ERRORS} exceeded threshold ${ERROR_THRESHOLD}"
             exit 1
           fi
-        shell: bash
 
-      - name: Upload Log Artifact
-        if: failure()
+      - name: Upload scan artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: error-logs
-          path: error_logs.json
+          name: prod-signals-scan
+          path: |
+            prod-signals-summary.json
+            api_error_logs.json
+            web_error_logs.json
