@@ -24,9 +24,10 @@
  * });
  * ```
  */
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
+export { Prisma };
 export * from '@prisma/client';
 export declare const createDb: (config: {
     isProduction: boolean;
     datasourceUrl?: string;
-}) => PrismaClient<import("@prisma/client").Prisma.PrismaClientOptions, never, import(".prisma/client/runtime/client").DefaultArgs>;
+}) => PrismaClient<Prisma.PrismaClientOptions, never, import(".prisma/client/runtime/client").DefaultArgs>;

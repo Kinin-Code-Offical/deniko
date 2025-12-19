@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createDb = void 0;
+exports.createDb = exports.Prisma = void 0;
 /**
  * Creates and returns a Prisma client instance with optional connection pooling.
  *
@@ -42,6 +42,7 @@ exports.createDb = void 0;
  * ```
  */
 const client_1 = require("@prisma/client");
+Object.defineProperty(exports, "Prisma", { enumerable: true, get: function () { return client_1.Prisma; } });
 const adapter_pg_1 = require("@prisma/adapter-pg");
 const pg_1 = require("pg");
 __exportStar(require("@prisma/client"), exports);
