@@ -24,7 +24,7 @@ Bu proje, Deniko platformunun kullanıcı arayüzünü oluşturan **Next.js 16**
 ### Gereksinimler
 
 - Node.js 22+
-- pnpm 9+
+- pnpm 10+
 - `.env` dosyası (bkz. `.env.example`)
 - `apps/api` servisinin çalışıyor olması gerekir (API çağrıları için).
 
@@ -46,7 +46,7 @@ pnpm lint
 
 ## 📂 Klasör Yapısı
 
-```
+```dir
 src/ (veya kök dizin)
 ├── app/
 │   ├── [lang]/           # Çoklu dil destekli sayfalar

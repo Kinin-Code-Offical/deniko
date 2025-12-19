@@ -7,19 +7,21 @@
     "concurrently": "^9.2.1"
   },
   "scripts": {
-    "dev:web": "pnpm -C apps/web dev",
-    "dev:api": "pnpm -C apps/api dev",
+    "dev:web": "pnpm --filter deniko dev",
+    "dev:api": "pnpm --filter @deniko/api dev",
     "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:api\"",
-    "build:web": "pnpm -C apps/web build",
-    "build:api": "pnpm -C apps/api build",
+    "build:web": "pnpm --filter deniko build",
+    "build:api": "pnpm --filter @deniko/api build",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test:all": "pnpm -r test",
     "db:generate": "pnpm --filter @deniko/db generate",
+    "db:migrate": "pnpm --filter @deniko/api exec prisma migrate dev",
+    "db:studio": "pnpm --filter @deniko/api exec prisma studio",
     "prisma:generate": "pnpm --filter @deniko/db generate",
-    "prisma:migrate": "pnpm -C apps/api prisma migrate dev",
-    "prisma:studio": "pnpm -C apps/api prisma studio",
+    "prisma:migrate": "pnpm --filter @deniko/api exec prisma migrate dev",
+    "prisma:studio": "pnpm --filter @deniko/api exec prisma studio",
     "docs:gen": "pnpm dlx tsx apps/web/scripts/generate-docs.ts"
   },
   "pnpm": {

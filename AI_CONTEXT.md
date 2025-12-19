@@ -7,7 +7,7 @@
 ## 🏗️ Monorepo Architecture
 
 | Path | Role | Tech Stack | Port | Critical Rules |
-|------|------|------------|------|----------------|
+| :--- | :--- | :--------- | :--- | :------------- |
 | **`apps/web`** | Frontend / BFF | Next.js 16 (App Router), Auth.js v5 | 3000 | **NO DB Access.** i18n Strict. |
 | **`apps/api`** | Backend / Core | Fastify, Node.js 22 | 4000 | **Direct DB Access.** Business Logic. |
 | **`packages/db`** | Database Layer | Prisma 7, PostgreSQL 18 | - | Imported ONLY by `apps/api`. |
@@ -37,7 +37,7 @@
 
 ## 🛠️ Tech Stack
 
-- **Framework:** Next.js 16.0.10
+- **Framework:** Next.js 16.1.0
 - **Language:** TypeScript 5.9+ (Strict)
 - **Styling:** Tailwind CSS v4.1
 - **Icons:** Lucide React

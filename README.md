@@ -7,7 +7,7 @@ Deniko, öğretmenler ve öğrenciler için geliştirilmiş kapsamlı bir eğiti
 ### Gereksinimler
 
 - Node.js 22+
-- pnpm 9+
+- pnpm 10+
 - PostgreSQL 18 Veritabanı
 - Google Cloud Storage Hesabı (veya emülatör)
 - Docker (Opsiyonel, container ile çalıştırmak için)

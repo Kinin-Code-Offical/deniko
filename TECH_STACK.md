@@ -29,7 +29,7 @@ This document lists the core technologies and libraries used in the Deniko proje
 ### Database (`packages/db`)
 
 - **Database:** PostgreSQL `v18`
-- **ORM:** Prisma `^7.1.0`
+- **ORM:** Prisma `^7.2.0`
   - `@prisma/client`
   - `@prisma/adapter-pg`
 
@@ -45,5 +45,5 @@ This document lists the core technologies and libraries used in the Deniko proje
 - **Cloud Provider:** Google Cloud Platform (Cloud Run, Cloud SQL, Cloud Storage)
 - **Rate Limiting:** Upstash Redis
 
----
-_Last Updated: December 18, 2025_
+---time
+_Last Updated: December 19, 2025_

@@ -25,7 +25,7 @@ Bu API servisi **Internal (Dahili)** olarak tasarlanmıştır.
 ### Gereksinimler
 
 - Node.js 22+
-- pnpm 9+
+- pnpm 10+
 - PostgreSQL 18
 - `.env` dosyası (bkz. `.env.example`)
 
@@ -50,7 +50,7 @@ pnpm test
 Tüm route'lar `src/routes/index.ts` dosyasında kayıt edilir.
 
 | Prefix | Modül | Açıklama |
-|--------|-------|----------|
+| :-------- | :------- | :---------- |
 | `/auth` | Auth | Kullanıcı ve hesap yönetimi (NextAuth adapter işlemleri). |
 | `/avatar` | Avatar | Kullanıcı profil fotoğraflarını sunma ve yükleme. |
 | `/files` | Files | Genel dosya yükleme ve indirme işlemleri. |
@@ -67,7 +67,7 @@ Tüm route'lar `src/routes/index.ts` dosyasında kayıt edilir.
 
 ## 📂 Klasör Yapısı
 
-```
+```dir
 src/
 ├── routes/         # API endpoint tanımları
 ├── services/       # İş mantığı servisleri (Prisma, Storage vb.)
