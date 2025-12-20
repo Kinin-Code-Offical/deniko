@@ -1,0 +1,112 @@
+name: Scan Logs
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        # Using credentials_json as the single source of truth for auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Scan Logs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          
+          # Configuration (defaults from previous workflow)
+          API_SERVICE="deniko-api"
+          WEB_SERVICE="deniko-web"
+          LOOKBACK_MINUTES="60"
+          
+          SINCE="$(date -u -d "${LOOKBACK_MINUTES} minutes ago" +%Y-%m-%dT%H:%M:%SZ)"
+          echo "Scanning since: ${SINCE}"
+
+          query_for_service() {
+            local svc="$1"
+            echo "resource.type=cloud_run_revision AND resource.labels.service_name=${svc} AND severity>=ERROR AND timestamp>=\"${SINCE}\""
+          }
+
+          echo "Scanning API logs..."
+          gcloud logging read "$(query_for_service "${API_SERVICE}")" --limit=200 --format=json > out/api_error_logs.json || echo "[]" > out/api_error_logs.json
+          
+          echo "Scanning Web logs..."
+          gcloud logging read "$(query_for_service "${WEB_SERVICE}")" --limit=200 --format=json > out/web_error_logs.json || echo "[]" > out/web_error_logs.json
+
+          # Combine logs into a single file for upload
+          echo "Scan Summary - $(date)" > out/scan.log
+          echo "----------------------------------------" >> out/scan.log
+          echo "API Errors:" >> out/scan.log
+          cat out/api_error_logs.json >> out/scan.log
+          echo "" >> out/scan.log
+          echo "----------------------------------------" >> out/scan.log
+          echo "Web Errors:" >> out/scan.log
+          cat out/web_error_logs.json >> out/scan.log
+
+      - name: Upload Scan Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-logs
+          path: out/
+
+  upload_and_notify:
+    needs: scan
+    # Run only on non-PR events (push to main, schedule, dispatch)
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        # Using credentials_json as the single source of truth for auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Download Scan Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: scan-logs
+          path: out
+
+      - name: Upload to GCS
+        run: |
+          BUCKET_NAME="${{ secrets.CI_LOGS_BUCKET }}"
+          if [ -z "$BUCKET_NAME" ]; then
+            echo "CI_LOGS_BUCKET secret is not set. Skipping upload."
+            exit 0
+          fi
+          
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          # Uploading the combined log file
+          gsutil cp out/scan.log "gs://${BUCKET_NAME}/scan-logs/scan-${TIMESTAMP}.log"
+
+      - name: Notify Failure
+        if: failure()
+        run: |
+          WEBHOOK_URL="${{ secrets.NOTIFY_WEBHOOK }}"
+          if [ -n "$WEBHOOK_URL" ]; then
+            curl -X POST -H "Content-Type: application/json" \
+              -d '{"text": "🚨 Log Scan Failed! Check GitHub Actions."}' \
+              "$WEBHOOK_URL"
+          fi
