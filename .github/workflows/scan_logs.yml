@@ -29,12 +29,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p out
-          
+
           # Configuration (defaults from previous workflow)
           API_SERVICE="deniko-api"
           WEB_SERVICE="deniko-web"
           LOOKBACK_MINUTES="60"
-          
+
           SINCE="$(date -u -d "${LOOKBACK_MINUTES} minutes ago" +%Y-%m-%dT%H:%M:%SZ)"
           echo "Scanning since: ${SINCE}"
 
@@ -45,7 +45,7 @@ jobs:
 
           echo "Scanning API logs..."
           gcloud logging read "$(query_for_service "${API_SERVICE}")" --limit=200 --format=json > out/api_error_logs.json || echo "[]" > out/api_error_logs.json
-          
+
           echo "Scanning Web logs..."
           gcloud logging read "$(query_for_service "${WEB_SERVICE}")" --limit=200 --format=json > out/web_error_logs.json || echo "[]" > out/web_error_logs.json
 
@@ -96,7 +96,7 @@ jobs:
             echo "CI_LOGS_BUCKET secret is not set. Skipping upload."
             exit 0
           fi
-          
+
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
           # Uploading the combined log file
           gsutil cp out/scan.log "gs://${BUCKET_NAME}/scan-logs/scan-${TIMESTAMP}.log"
