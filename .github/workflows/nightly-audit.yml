@@ -56,11 +56,25 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          pnpm --filter @deniko/api start:ci &
+
+          # Start API server
+          pnpm --filter @deniko/api start:ci > api-server.log 2>&1 &
           API_PID=$!
+          echo "API Server started with PID $API_PID"
+
+          # Wait for API server
+          echo "Waiting for API server on port 4000..."
+          npx wait-on --timeout 60000 tcp:127.0.0.1:4000 || (echo "API Server failed to start. Logs:" && cat api-server.log && exit 1)
+
+          # Start Web server
           pnpm --filter deniko start:ci &
           WEB_PID=$!
+          echo "Web Server started with PID $WEB_PID"
+
+          # Wait for Web server health check
+          echo "Waiting for Web server health check..."
           pnpm --filter deniko exec wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
+
           echo "API PID=$API_PID WEB PID=$WEB_PID" > ci-pids.txt
 
       - name: Run k6
@@ -131,12 +145,28 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          pnpm --filter @deniko/api start:ci &
+
+          # Start API server
+          pnpm --filter @deniko/api start:ci > api-server.log 2>&1 &
           API_PID=$!
+          echo "API Server started with PID $API_PID"
+
+          # Wait for API server
+          echo "Waiting for API server on port 4000..."
+          npx wait-on --timeout 60000 tcp:127.0.0.1:4000 || (echo "API Server failed to start. Logs:" && cat api-server.log && exit 1)
+
+          # Start Web server
           pnpm --filter deniko start:ci &
           WEB_PID=$!
+          echo "Web Server started with PID $WEB_PID"
+
+          # Wait for Web server health check
+          echo "Waiting for Web server health check..."
           pnpm --filter deniko exec wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
+
+          # Run Audit
           BASE_URL=http://127.0.0.1:3000 node scripts/ci/seo-audit.mjs
+
           kill "$WEB_PID" "$API_PID"
 
       - name: Upload SEO audit artifacts

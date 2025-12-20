@@ -110,11 +110,24 @@ jobs:
 
       - name: Start Server
         run: |
-          pnpm --filter @deniko/api start:ci &
+          # Start API server and redirect output to a file for debugging
+          pnpm --filter @deniko/api start:ci > api-server.log 2>&1 &
           API_PID=$!
+          echo "API Server started with PID $API_PID"
+
+          # Wait for API server to be ready (tcp check)
+          echo "Waiting for API server on port 4000..."
+          npx wait-on --timeout 60000 tcp:127.0.0.1:4000 || (echo "API Server failed to start. Logs:" && cat api-server.log && exit 1)
+
+          # Start Web server
           pnpm run start:ci &
           WEB_PID=$!
-          npx wait-on --timeout 600000 tcp:127.0.0.1:4000 http-get://127.0.0.1:3000/api/health
+          echo "Web Server started with PID $WEB_PID"
+
+          # Wait for Web server health check
+          echo "Waiting for Web server health check..."
+          npx wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
+
           echo "API PID=$API_PID WEB PID=$WEB_PID" > ci-pids.txt
           sleep 2
         env:
