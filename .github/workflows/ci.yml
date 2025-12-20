@@ -1,0 +1,200 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  # Dummy environment variables for build/test
+  DATABASE_URL: "postgresql://user:password@localhost:5432/testdb"
+  DIRECT_URL: "postgresql://user:password@localhost:5432/testdb"
+  NEXTAUTH_URL: "http://127.0.0.1:3000"
+  AUTH_SECRET: "dummy_secret_for_ci"
+  AUTH_GOOGLE_ID: "dummy_google_id"
+  AUTH_GOOGLE_SECRET: "dummy_google_secret"
+  GCS_BUCKET_NAME: "dummy-bucket"
+  GCS_PROJECT_ID: "dummy-project"
+  SMTP_NOREPLY_HOST: "smtp.example.com"
+  SMTP_NOREPLY_PORT: "465"
+  SMTP_NOREPLY_USER: "noreply@deniko.net"
+  SMTP_NOREPLY_PASSWORD: "dummy_password"
+  SMTP_NOREPLY_FROM: "noreply@deniko.net"
+  SMTP_SUPPORT_HOST: "smtp.example.com"
+  SMTP_SUPPORT_PORT: "465"
+  SMTP_SUPPORT_USER: "support@deniko.net"
+  SMTP_SUPPORT_PASSWORD: "dummy_password"
+  SMTP_SUPPORT_FROM: "support@deniko.net"
+  UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+  UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+  INTERNAL_API_BASE_URL: "http://127.0.0.1:4000"
+  INTERNAL_API_SECRET: "dev-secret-key"
+  NEXT_PUBLIC_NOINDEX: "true"
+  NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3000"
+  NEXT_PUBLIC_GA_ID: "G-DUMMY"
+  # Skip env validation during build
+  SKIP_ENV_VALIDATION: "true"
+  CI: "true"
+
+jobs:
+  verify:
+    name: Verify (Lint, Typecheck, Test)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Push Database Schema
+        run: pnpm --filter @deniko/db db:push
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Run Tests
+        run: pnpm test:all
+
+  build:
+    name: Build
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Project
+        run: pnpm build
+
+      - name: Upload Web Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: |
+            apps/web/.next
+            apps/web/public
+            apps/web/package.json
+            apps/web/next.config.ts
+            apps/web/lighthouserc.js
+
+      - name: Upload API Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-build
+          path: |
+            apps/api/dist
+            apps/api/package.json
+
+  audit:
+    name: Audit (Lighthouse)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download Web Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: apps/web
+
+      - name: Download API Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: api-build
+          path: apps/api
+
+      - name: Install Lighthouse CLI
+        run: npm install -g @lhci/cli
+
+      - name: Start Server & Run Lighthouse
+        run: |
+          # Start API server
+          pnpm --filter @deniko/api start:ci > api-server.log 2>&1 &
+          API_PID=$!
+          echo "API Server started with PID $API_PID"
+          
+          # Wait for API server
+          echo "Waiting for API server on port 4000..."
+          npx wait-on --timeout 60000 tcp:127.0.0.1:4000 || (echo "API Server failed to start. Logs:" && cat api-server.log && exit 1)
+          
+          # Start Web server
+          pnpm --filter deniko start:ci &
+          WEB_PID=$!
+          echo "Web Server started with PID $WEB_PID"
+          
+          # Wait for Web server health check
+          echo "Waiting for Web server health check..."
+          npx wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
+          
+          # Run Lighthouse
+          lhci autorun
+          
+          kill "$WEB_PID" "$API_PID"
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  docker:
+    name: Docker Verify
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Web Docker Image
+        run: docker build -f apps/web/Dockerfile .
+
+      - name: Build API Docker Image
+        run: docker build -f apps/api/Dockerfile .
