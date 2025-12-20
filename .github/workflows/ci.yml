@@ -164,23 +164,23 @@ jobs:
           pnpm --filter @deniko/api start:ci > api-server.log 2>&1 &
           API_PID=$!
           echo "API Server started with PID $API_PID"
-          
+
           # Wait for API server
           echo "Waiting for API server on port 4000..."
           npx wait-on --timeout 60000 tcp:127.0.0.1:4000 || (echo "API Server failed to start. Logs:" && cat api-server.log && exit 1)
-          
+
           # Start Web server
           pnpm --filter deniko start:ci &
           WEB_PID=$!
           echo "Web Server started with PID $WEB_PID"
-          
+
           # Wait for Web server health check
           echo "Waiting for Web server health check..."
           npx wait-on --timeout 600000 http-get://127.0.0.1:3000/api/health
-          
+
           # Run Lighthouse
           lhci autorun
-          
+
           kill "$WEB_PID" "$API_PID"
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
