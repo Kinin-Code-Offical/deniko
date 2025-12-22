@@ -56,7 +56,7 @@ jobs:
           service_account: ${{ inputs.service_account || vars.GCP_WIF_SERVICE_ACCOUNT }}
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v3
         with:
           project_id: ${{ inputs.gcp_project_id || vars.GCP_PROJECT_ID }}
 
