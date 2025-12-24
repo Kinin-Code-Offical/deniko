@@ -37,7 +37,7 @@
     "@deniko/logger": "workspace:*",
     "@deniko/validation": "workspace:*",
     "@ducanh2912/next-pwa": "^10.2.9",
-    "@formatjs/intl-localematcher": "^0.7.2",
+    "@formatjs/intl-localematcher": "^0.7.3",
     "@hookform/resolvers": "^5.2.2",
     "@next/bundle-analyzer": "^16.1.0",
     "@radix-ui/react-accordion": "^1.2.12",
