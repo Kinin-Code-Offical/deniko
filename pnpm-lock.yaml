@@ -106,7 +106,7 @@ importers:
         version: 0.7.3
       '@hookform/resolvers':
         specifier: ^5.2.2
-        version: 5.2.2(react-hook-form@7.68.0(react@19.2.3))
+        version: 5.2.2(react-hook-form@7.69.0(react@19.2.3))
       '@next/bundle-analyzer':
         specifier: ^16.1.0
         version: 16.1.0
@@ -210,8 +210,8 @@ importers:
         specifier: ^5.5.6
         version: 5.5.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react-hook-form:
-        specifier: ^7.68.0
-        version: 7.68.0(react@19.2.3)
+        specifier: ^7.69.0
+        version: 7.69.0(react@19.2.3)
       react-phone-number-input:
         specifier: ^3.4.14
         version: 3.4.14(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -5434,8 +5434,8 @@ packages:
       react: '>=16.4.0'
       react-dom: '>=16.4.0'
 
-  react-hook-form@7.68.0:
-    resolution: {integrity: sha512-oNN3fjrZ/Xo40SWlHf1yCjlMK417JxoSJVUXQjGdvdRCU07NTFei1i1f8ApUAts+IVh14e4EdakeLEA+BEAs/Q==}
+  react-hook-form@7.69.0:
+    resolution: {integrity: sha512-yt6ZGME9f4F6WHwevrvpAjh42HMvocuSnSIHUGycBqXIJdhqGSPQzTpGF+1NLREk/58IdPxEMfPcFCjlMhclGw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -7959,10 +7959,10 @@ snapshots:
     dependencies:
       hono: 4.10.6
 
-  '@hookform/resolvers@5.2.2(react-hook-form@7.68.0(react@19.2.3))':
+  '@hookform/resolvers@5.2.2(react-hook-form@7.69.0(react@19.2.3))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.68.0(react@19.2.3)
+      react-hook-form: 7.69.0(react@19.2.3)
 
   '@humanfs/core@0.19.1': {}
 
@@ -12194,7 +12194,7 @@ snapshots:
       react-dom: 19.2.3(react@19.2.3)
       tslib: 2.8.1
 
-  react-hook-form@7.68.0(react@19.2.3):
+  react-hook-form@7.69.0(react@19.2.3):
     dependencies:
       react: 19.2.3
 
