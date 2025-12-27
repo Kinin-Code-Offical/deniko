@@ -22,7 +22,7 @@ jobs:
           credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v3
 
       - name: Scan Logs
         shell: bash
@@ -81,7 +81,7 @@ jobs:
           credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v3
 
       - name: Download Scan Artifacts
         uses: actions/download-artifact@v7
