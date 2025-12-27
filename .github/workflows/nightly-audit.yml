@@ -171,7 +171,7 @@ jobs:
 
       - name: Upload SEO audit artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: seo-audit
           path: |
