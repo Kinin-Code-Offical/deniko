@@ -60,7 +60,7 @@ jobs:
           cat out/web_error_logs.json >> out/scan.log
 
       - name: Upload Scan Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: scan-logs
           path: out/
