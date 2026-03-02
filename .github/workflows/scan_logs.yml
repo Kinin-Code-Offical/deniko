@@ -84,7 +84,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v3
 
       - name: Download Scan Artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: scan-logs
           path: out
